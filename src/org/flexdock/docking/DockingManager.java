@@ -18,32 +18,22 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Insets;
-import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
-import java.util.HashMap;
 import java.util.WeakHashMap;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
 import org.flexdock.docking.config.ConfigurationManager;
-import org.flexdock.util.ResourceManager;
-import org.flexdock.util.RootSwingContainer;
+import org.flexdock.docking.drag.DragPipeline;
+import org.flexdock.docking.drag.DragToken;
+import org.flexdock.util.RootWindow;
+import org.flexdock.util.SwingUtility;
 
 
 /**
@@ -81,151 +71,19 @@ import org.flexdock.util.RootSwingContainer;
  * 
  * @author Chris Butler
  */
-public class DockingManager extends JPanel {
-	private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
-	private static final HashMap GLASSPANES_BY_ROOT_CONTAINER = new HashMap();
-	private static final HashMap DEFAULT_CURSOR_IMAGES = createCursorImages();
-	private static final Image EMPTY_IMAGE = ResourceManager.createImage("resources/images/emptyIcon.gif");
+public class DockingManager {
+	private static final DockingManager SINGLETON = new DockingManager();
 	private static final WeakHashMap CACHED_DRAG_INITIATORS_BY_COMPONENT = new WeakHashMap();
 
-	private Dockable dockableImpl;
-	private Component currentMouseoverComponent;
-	private Point mouseLocation;
-	private Point mouseOffsetFromDragSource;
-	private boolean mouseOutOfBounds;
-	private RootSwingContainer rootContainer;
-	private DragEventManager dragEventManger;
-	private Image currentMouseImage;
-	private Dimension dragSourceSize;
-	private Component cachedGlassPane;
-	private String currentDockingRegion;
-	private EventListener[] cachedListeners;
-	private Point lastMouse;
 
-	private DockingManager(RootSwingContainer root) {
-		super(null);
-		rootContainer = root;
-		setOpaque(false);
-		setBorder(null);
-		mouseOffsetFromDragSource = new Point();
-		setCursor(ResourceManager.createCursor("resources/images/emptyIcon.gif", new Point(8, 8), "Empty"));
-		dragEventManger = new DragEventManager();
-		addMouseListener(dragEventManger);
+	private DockingManager() {
 	}
 	
 	
-	private static DockingManager getDockingManager(Component c) {
-		if (c == null)
-			return null;
-
-		RootSwingContainer root = RootSwingContainer.getRootContainer(c);
-		return getDockingManager(root);
-	}
-	
-	public static DockingManager getDockingManager(RootSwingContainer root) {
-		if(root==null)
-			return null;
-			
-		DockingManager mgr = (DockingManager) GLASSPANES_BY_ROOT_CONTAINER.get(root.getRootContainer());
-		if (mgr == null) {
-			mgr = new DockingManager(root);
-			GLASSPANES_BY_ROOT_CONTAINER.put(root.getRootContainer(), mgr);
-		}
-		return mgr;
-	}
-	
-
-	/**
-	 * Overridden to ensure empty insets.
-	 * @return    <code>new Insets(0, 0, 0, 0)</code>
-	 */
-	public Insets getInsets() {
-		return new Insets(0, 0, 0, 0);
+	private static DockingManager getDockingManager() {
+		return SINGLETON;
 	}
 
-	/**
-	 * Overridden to ensure empty insets.  Calls <code>getInsets()</code>.
-	 * @return    <code>new Insets(0, 0, 0, 0)</code>
-	 */
-	public Insets getInsets(Insets insets) {
-		return getInsets();
-	}
-
-	/**
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
-	protected void paintComponent(Graphics g) {
-		paintComponentImpl(g);
-	}
-
-	/**
-	 * Overridden to ensure a null border.  Will call <code>super.setBorder(null)</code>.
-	 */
-	public void setBorder(Border border) {
-		super.setBorder(null);
-	}
-
-	/**
-	 * Overridden to ensure transparency.  Will call <code>super.setOpaque(false)</code>.
-	 */
-	public void setOpaque(boolean isOpaque) {
-		super.setOpaque(false);
-	}
-
-	/**
-	 * Overridden to do nothing.
-	 * @return    returns a null reference
-	 */
-	public Component add(Component comp, int index) {
-		return null;
-	}
-
-	/**
-	 * Overridden to do nothing.
-	 */
-	public void add(Component comp, Object constraints, int index) {
-	}
-
-	/**
-	 * Overridden to do nothing.
-	 */
-	public void add(Component comp, Object constraints) {
-	}
-
-	/**
-	 * Overridden to do nothing.
-	 * @return    returns a null reference
-	 */
-	public Component add(Component comp) {
-		return null;
-	}
-
-	/**
-	 * Overridden to do nothing.
-	 * @return    returns a null reference
-	 */
-	public Component add(String name, Component comp) {
-		return null;
-	}
-
-	/**
-	 * Overridden to ensure a null layout.  Will call <code>super.setLayout(null)</code>.
-	 */
-	public void setLayout(LayoutManager mgr) {
-		super.setLayout(null);
-	}
-
-	private static HashMap createCursorImages() {
-		HashMap map = new HashMap();
-		map.put(DockingPort.NORTH_REGION, ResourceManager.createImage("resources/images/upArrow.gif"));
-		map.put(DockingPort.SOUTH_REGION, ResourceManager.createImage("resources/images/downArrow.gif"));
-		map.put(DockingPort.EAST_REGION, ResourceManager.createImage("resources/images/rightArrow.gif"));
-		map.put(DockingPort.WEST_REGION, ResourceManager.createImage("resources/images/leftArrow.gif"));
-		map.put(DockingPort.CENTER_REGION, ResourceManager.createImage("resources/images/stacked.gif"));
-		map.put(DockingPort.UNKNOWN_REGION, ResourceManager.createImage("resources/images/notAllowed.gif"));
-		map.put(DockingPort.EMPTY_REGION, EMPTY_IMAGE);
-		return map;
-	}
 
 	/**
 	 * Dispatches to <code>startDrag(Component c, Point mousePosition, String tabTitle)</code>, passing
@@ -267,9 +125,9 @@ public class DockingManager extends JPanel {
 		if (mousePosition == null)
 			return;
 
-		Dockable initiator = getDragInitiator(c, tabTitle, allowResize);
-		if (initiator != null)
-			startDrag(initiator, mousePosition);
+		Dockable dockable = getDockableForComponent(c, tabTitle, allowResize);
+		if (dockable != null)
+			startDrag(dockable, mousePosition);
 	}
 
 	/**
@@ -297,10 +155,24 @@ public class DockingManager extends JPanel {
 		Component c = dockable.getInitiator();
 		if (c == null || dockable.getDockable()==null)
 			return;
-
-		DockingManager mgr = getDockingManager(c);
+/*
+		DockingManager mgr = getDockingManager();
 		if (mgr != null)
 			mgr.startDragImpl(dockable, mousePoint);
+*/			
+	}
+	
+	private static void startDrag(Dockable dockable, MouseEvent me, PipelineManager pipelineMgr) {
+		if (dockable == null)
+			return;
+
+		Component c = dockable.getInitiator();
+		if (c == null || dockable.getDockable()==null)
+			return;
+
+		DockingManager mgr = getDockingManager();
+		if (mgr != null)
+			mgr.startDragImpl(dockable, me, pipelineMgr);
 	}
 
 	/**
@@ -329,9 +201,18 @@ public class DockingManager extends JPanel {
 		if (dockable == null)
 			return;
 
-		DockingManager mgr = getDockingManager(dockable.getDockable());
+//		DockingManager mgr = getDockingManager();
+//		if (mgr != null)
+//			mgr.stopDragImpl(dockable);
+	}
+	
+	private static void stopDrag(Dockable dockable, DragToken token) {
+		if (dockable == null)
+			return;
+
+		DockingManager mgr = getDockingManager();
 		if (mgr != null)
-			mgr.stopDragImpl(dockable);
+			mgr.stopDragImpl(dockable, token);
 	}
 	
 	
@@ -350,7 +231,7 @@ public class DockingManager extends JPanel {
 		if(dockable==null)
 			return;
 			
-		DockingManager mgr = getDockingManager(dockable.getDockable());
+		DockingManager mgr = getDockingManager();
 		if (mgr != null)
 			mgr.undockImpl(dockable);
 	}
@@ -358,6 +239,7 @@ public class DockingManager extends JPanel {
 	private void undockImpl(Dockable dockable) {
 		Component dragSrc = dockable.getDockable();
 		Container parent = dragSrc.getParent();
+		RootWindow rootWin = RootWindow.getRootContainer(parent);
 		
 		// if there's no parent container, then we really don't have anything from which to to 
 		// undock this component, now do we?
@@ -373,52 +255,10 @@ public class DockingManager extends JPanel {
 		else
 			// otherwise, just remove the component
 			parent.remove(dragSrc);
-		revalidateComponent(rootContainer.getContentPane());
-	}
-	
-	
-
-	private static DockingPortCursorPane createDockingPortCursorProxy(DockingPort port) {
-		DockingPortCursorPane mainPane = new DockingPortCursorPane(port, DockingPort.CENTER_REGION);
-		Insets insets = port.getDockingInsets();
-		if (insets == null)
-			insets = EMPTY_INSETS;
-
-		mainPane.createNorthRegion(insets.top);
-		mainPane.createSouthRegion(insets.bottom);
-		mainPane.createEastRegion(insets.right);
-		mainPane.createWestRegion(insets.left);
-
-		return mainPane;
-	}
-
-	private Image getCursorImageForRegion(String region) {
-		if (region == null)
-			region = DockingPort.UNKNOWN_REGION;
 		
-		CursorProvider provider = dockableImpl.getCursorProvider();
-		Image image = provider==null? null: getCursorFromProvider(provider, region);
-		
-		if(image==null)
-			image = (Image) DEFAULT_CURSOR_IMAGES.get(region);
-		if (image == null)
-			return getCursorImageForRegion(DockingPort.UNKNOWN_REGION);
-		return image;
+		SwingUtility.revalidateComponent(rootWin.getContentPane());
 	}
-	
-	private Image getCursorFromProvider(CursorProvider provider, String region) {
-		if(DockingPort.NORTH_REGION.equals(region))
-			return provider.getNorthImage();
-		if(DockingPort.SOUTH_REGION.equals(region))
-			return provider.getSouthImage();
-		if(DockingPort.EAST_REGION.equals(region))
-			return provider.getEastImage();
-		if(DockingPort.WEST_REGION.equals(region))
-			return provider.getWestImage();
-		if(DockingPort.CENTER_REGION.equals(region))
-			return provider.getCenterImage();
-		return provider.getDisallowedImage();
-	}
+
 
 
 	/**
@@ -434,8 +274,8 @@ public class DockingManager extends JPanel {
 		if (evtSrc == null)
 			return;
 
-		Dockable init = getDragInitiator(evtSrc, desc, allowResize);
-		registerDockable(init);
+		Dockable dockable = getDockableForComponent(evtSrc, desc, allowResize);
+		registerDockable(dockable);
 	}
 
 	/**
@@ -449,21 +289,21 @@ public class DockingManager extends JPanel {
 	 *
 	 * @param init the Dockable that is being initialized.
 	 */
-	public static void registerDockable(Dockable init) {
-		if (init == null || init.getDockable() == null || init.getInitiator()==null)
+	public static void registerDockable(Dockable dockable) {
+		if (dockable == null || dockable.getDockable() == null || dockable.getInitiator()==null)
 			return;
 
-		DragInitiationListener listener = getInitiationListener(init);
-		if (listener == null) {
-			listener = new DragInitiationListener();
-			listener.setInitiator(init);
-			init.getInitiator().addMouseMotionListener(listener);
+		PipelineManager pipelineMgr = getPipelineManager(dockable);
+		if (pipelineMgr == null) {
+			pipelineMgr = new PipelineManager(dockable);
+			dockable.getInitiator().addMouseMotionListener(pipelineMgr);
+			dockable.getInitiator().addMouseListener(pipelineMgr);
 		}
-		CACHED_DRAG_INITIATORS_BY_COMPONENT.put(init.getDockable(), init);
+		CACHED_DRAG_INITIATORS_BY_COMPONENT.put(dockable.getDockable(), dockable);
 		
 		// allow the configuration manager to keep track of this dockable.  This 
 		// will allow docking configurations to survive JVM instances.
-		ConfigurationManager.registerDockable(init);
+		ConfigurationManager.registerDockable(dockable);
 	}
 
 	public static Dockable getRegisteredDockable(Component comp) {
@@ -471,10 +311,10 @@ public class DockingManager extends JPanel {
 	}
 
 	private static Dockable getDragInitiator(Component c) {
-		return getDragInitiator(c, null, false);
+		return getDockableForComponent(c, null, false);
 	}
 
-	private static Dockable getDragInitiator(Component c, String desc, boolean allowResize) {
+	private static Dockable getDockableForComponent(Component c, String desc, boolean allowResize) {
 		if (c == null)
 			return null;
 
@@ -487,14 +327,12 @@ public class DockingManager extends JPanel {
 		return initiator;
 	}
 
-	private static DragInitiationListener getInitiationListener(Dockable init) {
-		EventListener[] listeners = init.getInitiator().getListeners(MouseMotionListener.class);
-		if (listeners == null || listeners.length == 0)
-			return null;
+	private static PipelineManager getPipelineManager(Dockable dockable) {
+		EventListener[] listeners = dockable.getInitiator().getListeners(MouseMotionListener.class);
 
 		for (int i = 0; i < listeners.length; i++) {
-			if (listeners[i] instanceof DragInitiationListener)
-				return (DragInitiationListener) listeners[i];
+			if (listeners[i] instanceof PipelineManager)
+				return (PipelineManager) listeners[i];
 		}
 		return null;
 	}
@@ -543,7 +381,7 @@ public class DockingManager extends JPanel {
 	}
 
 	/**
-	 * Sets the docking description for the Dockable instance.  THe docking description is used as the
+	 * Sets the docking description for the Dockable instance.  The docking description is used as the
 	 * tab-title when docking within a tabbed pane. 
 	 *
 	 * @param dockable the Dockable instance we're describing
@@ -554,256 +392,6 @@ public class DockingManager extends JPanel {
 			dockable.setDockableDesc(desc);
 	}
 
-
-	private void startDragImpl(Dockable initiator, Point mousePoint) {
-		// remove any cruft left over from the last drag operation.  This is probably sloppy as we
-		// should keep better track of what components we do and don't have.  But this
-		// can be dealt with later.
-		removeAll();
-
-		// set the current drag initiator
-		dockableImpl = initiator;
-
-		// insert ourselves as the glassPane on the root container during the drag
-		// operation.
-		cachedGlassPane = rootContainer.getGlassPane();
-		rootContainer.setGlassPane(this);
-
-		// initialize coordinate info for the drag operation
-		Component dragSrc = dockableImpl.getDockable();
-		dragSourceSize = dragSrc.getSize();
-		initMouseCursorOffset(mousePoint);
-		determineMouseLocationBasedOnDragSource(mousePoint);
-		currentDockingRegion = null;
-		lastMouse = null;
-
-		// initialize listeners on the drag-source
-		initializeListenerCaching();
-		dockableImpl.getInitiator().addMouseMotionListener(dragEventManger);
-		dockableImpl.getInitiator().addMouseListener(dragEventManger);
-
-		// show the new glassPane.
-		setVisible(true);
-
-		// start dragging
-		manageCursor();
-		
-		
-	}
-
-	private void stopDragImpl(Dockable init) {
-		// this method isn't reentrant, but it may be invoked twice (once by the drag-source
-		// and once by the glassPane).  we only want it to execute once.  there is no race-condition
-		// here as we don't care which event gets here first.  it'll merely lock out other subsequent calls.
-		// (note: this method isn't synchronized.  swing event-processing is single-threaded, so we shouldn't
-		// have concurrency issues to deal with).
-		if (dockableImpl == null || init == null || dockableImpl.getDockable() != init.getDockable())
-			return;
-
-		// perform the drop operation.
-		boolean docked = dropComponent();
-		
-		// cache a temporary reference to the dockableImpl for later (after we null it out)
-		Dockable tmpReference = dockableImpl;
-
-		// remove the listeners from the drag-source and all the old ones back in
-		Component dragSrc = dockableImpl.getDockable();
-		dockableImpl.getInitiator().removeMouseMotionListener(dragEventManger);
-		dockableImpl.getInitiator().removeMouseListener(dragEventManger);
-		restoreCachedListeners();
-		DragInitiationListener initiator = getInitiationListener(dockableImpl);
-		if (initiator != null)
-			initiator.setEnabled(true);
-
-		// among other things, this will lock out other calls to this method after the drag has 
-		// been stopped
-		dockableImpl = null;
-
-		// hide the glass pane before swapping out.  If we swap out the glasspane before
-		// hiding, we'll run into problems w/the mouse cursor later.
-		setVisible(false);
-		
-		// return the root container to its original state  
-		rootContainer.setGlassPane(cachedGlassPane);
-		cachedGlassPane = null;
-
-		// perform post-drag operations
-		if (docked) {
-			DockingPort port = ((DockingPortCursorPane) currentMouseoverComponent).dockingPort;
-			port.dockingComplete(currentDockingRegion);
-			tmpReference.dockingCompleted();
-		}
-		else
-			tmpReference.dockingCanceled();
-			
-		// remove the reference to the current docking region.  we don't need it anymore.
-		currentDockingRegion = null;
-	}
-
-	private void paintComponentImpl(Graphics g) {
-		if (currentDockingRegion == null)
-			resolveMouseCursorRegion();
-		if (!mouseOutOfBounds)
-			g.drawImage(currentMouseImage, mouseLocation.x - 8, mouseLocation.y - 8, null, null);
-
-		Color cached = g.getColor();
-		g.setColor(Color.black);
-		g.drawRect(mouseLocation.x - mouseOffsetFromDragSource.x, mouseLocation.y - mouseOffsetFromDragSource.y, dragSourceSize.width, dragSourceSize.height);
-		g.setColor(cached);
-	}
-
-	private void initializeListenerCaching() {
-		// it's easier for us if we remove the MouseMostionListener associated with the dragSource 
-		// before dragging, so normally we'll try to do that.  However, if developers really want to
-		// keep them in there, then they can implement the Dockable interface for their dragSource and 
-		// let mouseMotionListenersBlockedWhileDragging() return false
-		if (!dockableImpl.mouseMotionListenersBlockedWhileDragging())
-			return;
-
-		Component initiator = dockableImpl.getInitiator();
-		cachedListeners = initiator.getListeners(MouseMotionListener.class);
-		if (cachedListeners != null) {
-			for (int i = 0; i < cachedListeners.length; i++)
-				initiator.removeMouseMotionListener((MouseMotionListener) cachedListeners[i]);
-		}
-	}
-
-	private void restoreCachedListeners() {
-		if (cachedListeners == null)
-			return;
-
-		Component initiator = dockableImpl.getInitiator();
-		for (int i = 0; i < cachedListeners.length; i++)
-			initiator.addMouseMotionListener((MouseMotionListener) cachedListeners[i]);
-		cachedListeners = null;
-	}
-
-	private void determineMouseLocationBasedOnDragSource(Point dragSourcePoint) {
-		if(mouseLocation!=null) {
-			if(lastMouse==null)
-				lastMouse = (Point)mouseLocation.clone();
-			else
-				lastMouse.setLocation(mouseLocation);
-		}
-		mouseLocation = SwingUtilities.convertPoint(dockableImpl.getInitiator(), dragSourcePoint, this);
-	}
-
-	private Component resolveCurrentMouseoverComponent() {
-		return SwingUtilities.getDeepestComponentAt(this, mouseLocation.x, mouseLocation.y);
-	}
-
-	private void manageCursor() {
-		try {
-			if (mouseOutOfBounds) {
-				currentMouseoverComponent = null;
-				return;
-			}
-
-			// as the mouse moves around, we'll be covering the glasspane with dockingPort proxies.
-			// if the current mouse location is already covered by a proxy, then we don't need to go
-			// any further
-			currentMouseoverComponent = resolveCurrentMouseoverComponent();
-			if (currentMouseoverComponent != this)
-				return;
-
-			// there isn't a dockingPort proxy at the current mouse location.  resolve the underlying
-			// dockingPort to see if a proxy is needed.
-			DockingPort port = resolveDockingPortComponent();
-			if (port == null)
-				return;
-
-			// the mouse is located over a dockingPort that has no associated cursor proxy.  create one
-			// and add it to the glasspane.  we can do an explicit cast here to Component from DockingPort 
-			// because resolveDockingPortComponent() won't return a DockingPort that isn't also a Component.
-			Component dockingCmp = (Component) port;
-			Point proxyLoc = SwingUtilities.convertPoint(dockingCmp.getParent(), dockingCmp.getLocation(), this);
-			Dimension proxySize = dockingCmp.getSize();
-
-			DockingPortCursorPane proxy = createDockingPortCursorProxy(port);
-			super.add(proxy);
-			proxy.setBounds(proxyLoc.x, proxyLoc.y, proxySize.width, proxySize.height);
-			revalidate();
-			resolveCurrentMouseoverComponent();
-		} finally {
-			resolveMouseCursorRegion();
-			if(lastMouse==null)
-				repaint();
-			else
-				repaintRect();
-		}
-	}
-	
-	private void repaintRect() {
-		// this is a critical piece of code.  because we're doing our own graphics w/out component layering, 
-		// the current component has no concept of a 'damaged' area.  thus, when we call repaint(), it 
-		// repaints the entire screen.  when the canvas size reaches around 800x600 and there is a complex 
-		// layout underneath the glasspane, there become very noticeable delays while the screen updates 
-		// (I timed them around 170-220ms between invocations of paintComponent()).  In this method, we keep
-		// track of the area we need to repaint and try to keep things to a minimum.  This gives us a very
-		// noticeable improvement in repaints during a drag operation. 
-		int minX = Math.min(lastMouse.x, mouseLocation.x);
-		int minY = Math.min(lastMouse.y, mouseLocation.y);
-		int maxX = Math.max(lastMouse.x, mouseLocation.x);
-		int maxY = Math.max(lastMouse.y, mouseLocation.y);
-		int w = dragSourceSize.width + maxX - minX;
-		int h = dragSourceSize.height + maxY - minY;
-		repaint(minX - mouseOffsetFromDragSource.x - 10, minY - mouseOffsetFromDragSource.y-10, w+20, h+20);
-		// clear out the mouse image.  this is actually only useful when the image is outside
-		// of the drag-rectangle
-		repaint(lastMouse.x-12, lastMouse.y-12, 24, 24);
-	}
-
-	private void resolveMouseCursorRegion() {
-		// if the mouse is out of bounds, then we don't need any special image to represent the cursor
-		if (mouseOutOfBounds) {
-			currentDockingRegion = DockingPort.UNKNOWN_REGION;
-			currentMouseImage = EMPTY_IMAGE;
-			return;
-		}
-
-		// if there is no dockingport cursor proxy beneath the mouse, then we're dealing with
-		// an unknown region.
-		if (currentMouseoverComponent == this || currentMouseoverComponent == null) {
-			currentDockingRegion = DockingPort.UNKNOWN_REGION;
-			currentMouseImage = getCursorImageForRegion(currentDockingRegion);
-			return;
-		}
-
-		// there is some dockingport cursor proxy beneath the mouse.  determine the appropriate
-		// mouse cursor image based upon the proxy region.
-		DockingPortCursorPane proxy = (DockingPortCursorPane) currentMouseoverComponent;
-		currentDockingRegion = proxy.region;
-		// if the underlying dockingport doesn't allow docking in the specified region, then override
-		// the region with UNKNOWN
-		if (!proxy.dockingPort.allowsDocking(currentDockingRegion))
-			currentDockingRegion = DockingPort.UNKNOWN_REGION;
-		else if (proxy.dockingPort.getDockedComponent() == dockableImpl.getDockable())
-			currentDockingRegion = DockingPort.UNKNOWN_REGION;
-
-		currentMouseImage = getCursorImageForRegion(currentDockingRegion);
-	}
-
-	private DockingPort resolveDockingPortComponent() {
-		return resolveDockingPortComponent(mouseLocation, rootContainer);
-	}
-
-	private DockingPort resolveDockingPortComponent(Point mouseLoc, RootSwingContainer root) {
-		Point loc = SwingUtilities.convertPoint(this, mouseLoc, root.getContentPane());
-		Component deepestComponent = SwingUtilities.getDeepestComponentAt(root.getContentPane(), loc.x, loc.y);
-		if (deepestComponent == null)
-			return null;
-
-		// we're assured here the the deepest component is both a Component and DockingPort in
-		// this case, so we're okay to return here.
-		if (deepestComponent instanceof DockingPort)
-			return (DockingPort) deepestComponent;
-
-		// getAncestorOfClass() will either return a null or a Container that is also an instance of
-		// DockingPort.  Since Container is a subclass of Component, we're fine in returning both
-		// cases.
-		return (DockingPort) SwingUtilities.getAncestorOfClass(DockingPort.class, deepestComponent);
-	}
-	
 	private static String generatePersistentId(Object obj) {
 		String pId = obj.getClass().getName();
 		String baseId = pId;
@@ -812,22 +400,97 @@ public class DockingManager extends JPanel {
 		
 		return pId;
 	}
+	
+	private static void initializeListenerCaching(DragToken token) {
+		// it's easier for us if we remove the MouseMostionListener associated with the dragSource 
+		// before dragging, so normally we'll try to do that.  However, if developers really want to
+		// keep them in there, then they can implement the Dockable interface for their dragSource and 
+		// let mouseMotionListenersBlockedWhileDragging() return false
+//		if (!dockableImpl.mouseMotionListenersBlockedWhileDragging())
+//			return;
 
-	private boolean dropComponent() {
-		if (DockingPort.UNKNOWN_REGION.equals(currentDockingRegion))
+		Component dragSrc = token.getDragSource();
+		EventListener[] cachedListeners = dragSrc.getListeners(MouseMotionListener.class);
+		token.setCachedListeners(cachedListeners);
+		MouseMotionListener pipelineListener = token.getPipelineListener();
+		
+		// remove all of the MouseMotionListeners
+		for (int i = 0; i < cachedListeners.length; i++) {
+			dragSrc.removeMouseMotionListener((MouseMotionListener) cachedListeners[i]);
+		}
+		// then, re-add the PipelineManager
+		if(pipelineListener!=null)
+			dragSrc.addMouseMotionListener(pipelineListener);
+	}
+
+	private static void restoreCachedListeners(DragToken token) {
+		Component dragSrc = token.getDragSource();
+		EventListener[] cachedListeners = token.getCachedListeners();
+		MouseMotionListener pipelineListener = token.getPipelineListener();		
+
+		// remove the pipeline listener
+		if(pipelineListener!=null)
+			dragSrc.removeMouseMotionListener(pipelineListener);
+			
+		// now, re-add all of the original MouseMotionListeners
+		for (int i = 0; i < cachedListeners.length; i++)
+			dragSrc.addMouseMotionListener((MouseMotionListener) cachedListeners[i]);
+	}
+
+	private void startDragImpl(Dockable dockable, MouseEvent me, PipelineManager mgr) {
+		DragToken token = new DragToken(dockable.getDockable(), me);
+		token.setPipelineListener(mgr);
+		// initialize listeners on the drag-source
+		initializeListenerCaching(token);
+
+		DragPipeline pipeline = new DragPipeline();
+		mgr.pipeline = pipeline;
+		pipeline.open(token);
+	}
+
+	private void stopDragImpl(Dockable dockable, DragToken token) {
+		if (dockable == null || dockable.getDockable()==null)
+			return;
+
+		// perform the drop operation.
+		boolean docked = dropComponent(dockable, token);
+
+		// remove the listeners from the drag-source and all the old ones back in
+		restoreCachedListeners(token);
+
+		// perform post-drag operations
+		if (docked) {
+			DockingPort port = token.getTargetPort();
+			port.dockingComplete(token.getTargetRegion());
+			dockable.dockingCompleted();
+		}
+		else
+			dockable.dockingCanceled();
+	}
+
+	private boolean dropComponent(Dockable dockable, DragToken token) {
+		String region = token.getTargetRegion();
+		if (DockingPort.UNKNOWN_REGION.equals(region))
 			return false;
 
-		if (!(currentMouseoverComponent instanceof DockingPortCursorPane))
+		if (token.getTargetPort()==null)
 			return false;
-
-		DockingPort target = ((DockingPortCursorPane) currentMouseoverComponent).dockingPort;
+			
+		DockingPort target = token.getTargetPort();
 		Component docked = target.getDockedComponent();
-		Component dragSrc = dockableImpl.getDockable();
-		if (dragSrc == docked)
+		Component dockableCmp = dockable.getDockable();
+		if (dockableCmp == docked)
 			return false;
+
+		// obtain a reference to the content pane that holds the target DockingPort.
+		// also, determine the mouse location relative to the content pane.
+		// we must do this before undocking, since these values may change afterward.
+		RootWindow rootWin = RootWindow.getRootContainer((Component)target);
+		Container contentPane = rootWin.getContentPane();
+		Point mouseOnContentPane = token.getCurrentMouse(contentPane);
 
 		// undock the current Dockable instance from it's current parent container
-		undockImpl(dockableImpl);
+		undockImpl(dockable);
 
 		// when the original parent reevaluates its container tree after undocking, it checks to see how 
 		// many immediate child components it has.  split layouts and tabbed interfaces may be managed by 
@@ -837,17 +500,34 @@ public class DockingManager extends JPanel {
 		// In this case, the target we had resolved earlier may have been removed from the component tree 
 		// and may no longer be valid.  to be safe, we'll resolve the target docking port again and see if 
 		// it has changed.  if so, we'll adopt the resolved port as our new target.
-		DockingPort resolvedTarget = resolveDockingPortComponent();
+		DockingPort resolvedTarget = resolveDockingPortComponent(mouseOnContentPane, contentPane);
 		if (resolvedTarget != target) {
 			target = resolvedTarget;
 			// reset this field for reuse outside this method
-			((DockingPortCursorPane) currentMouseoverComponent).dockingPort = target;
+			token.setTarget(target, region);
 		}
 
-		boolean ret = target.dock(dragSrc, dockableImpl.getDockableDesc(), currentDockingRegion, dockableImpl.isDockedLayoutResizable());
-		revalidateComponent((Component) target);
+		boolean ret = target.dock(dockableCmp, dockable.getDockableDesc(), region, dockable.isDockedLayoutResizable());
+		SwingUtility.revalidateComponent((Component) target);
 		return ret;
 	}
+	
+	private DockingPort resolveDockingPortComponent(Point mouse, Container contentPane) {
+		Component deepestComponent = SwingUtilities.getDeepestComponentAt(contentPane, mouse.x, mouse.y);
+		if (deepestComponent == null)
+			return null;
+	
+		// we're assured here the the deepest component is both a Component and DockingPort in
+		// this case, so we're okay to return here.
+		if (deepestComponent instanceof DockingPort)
+			return (DockingPort) deepestComponent;
+	
+		// getAncestorOfClass() will either return a null or a Container that is also an instance of
+		// DockingPort.  Since Container is a subclass of Component, we're fine in returning both
+		// cases.
+		return (DockingPort) SwingUtilities.getAncestorOfClass(DockingPort.class, deepestComponent);
+	}
+
 	
 	private DockingPort getParentDockingPort(Component comp) {
 		DockingPort port = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, comp);
@@ -857,114 +537,46 @@ public class DockingManager extends JPanel {
 		return port.hasDockedChild(comp)? port: null;
 	}
 
-	private void revalidateComponent(Component comp) {
-		if (comp instanceof JComponent)
-			 ((JComponent) comp).revalidate();
-	}
-
-	private void initMouseCursorOffset(Point mouseRelativeToDragSource) {
-		// the drag-initiator component may be different than the ultimate drag-source (for 
-		// example, a dockable component may use a child subcomponent to initiate its drag, much
-		// like a JInternalFrame's titlePane initiates drag opeartions for its parent frame).
-		// in this case, we'll need to convert the mouse point to determine the real offset needed
-		// for drawing the rectangular outline during the drag operation.
-		boolean conversionNeeded = dockableImpl.getInitiator() != dockableImpl.getDockable();
-		if (conversionNeeded)
-			mouseRelativeToDragSource = SwingUtilities.convertPoint(dockableImpl.getInitiator(), mouseRelativeToDragSource, dockableImpl.getDockable());
-
-		mouseOffsetFromDragSource.x = mouseRelativeToDragSource.x;
-		mouseOffsetFromDragSource.y = mouseRelativeToDragSource.y;
-	}
-
-
-	private class DragEventManager extends MouseAdapter implements MouseMotionListener {
+	
+	private static class PipelineManager extends MouseAdapter implements MouseMotionListener {
+		private Dockable dockable;
+		private DragPipeline pipeline;
+		
+		private PipelineManager(Dockable dockable) {
+			this.dockable = dockable;
+		}
+		
 		public void mouseDragged(MouseEvent e) {
-			// e.getSource() is the drag-initiator, so we'll need to convert the mouse
-			// coordinates to the glassPane coordinate space
-			determineMouseLocationBasedOnDragSource(e.getPoint());
-			manageCursor();
+			if(dockable==null || !dockable.isDockingEnabled())
+				return;
+				
+			if(pipeline==null || !pipeline.isOpen()) {
+				DragToken token = new DragToken(dockable.getDockable(), e);
+				token.setPipelineListener(this);
+				// initialize listeners on the drag-source
+				initializeListenerCaching(token);
+		
+				DragPipeline pipeline = new DragPipeline();
+				this.pipeline = pipeline;
+				pipeline.open(token);
+			}
+			else
+				pipeline.processDragEvent(e);
 		}
 
 		public void mouseMoved(MouseEvent e) {
 			// doesn't do anything
 		}
 
-		public void mouseEntered(MouseEvent e) {
-			// e.getSource() is the glassPane, not the drag-source
-			mouseOutOfBounds = false;
-		}
-
-		public void mouseExited(MouseEvent e) {
-			// e.getSource() is the glassPane, not the drag-source
-			mouseOutOfBounds = true;
-		}
-
 		public void mouseReleased(MouseEvent e) {
-			stopDragImpl(dockableImpl);
-		}
-	}
+			if(!dockable.isDockingEnabled())
+				return;
 
-	private static class DockingPortCursorPane extends JPanel {
-		private String region;
-		private DockingPort dockingPort;
-
-		private DockingPortCursorPane(DockingPort port, String cursorRegion) {
-			super(null);
-			this.setOpaque(false);
-			region = cursorRegion;
-			dockingPort = port;
-			if (DockingPort.CENTER_REGION.equals(region))
-				this.setLayout(new BorderLayout(0, 0));
+			stopDrag(dockable, pipeline.getDragToken());				
+			if(pipeline!=null)
+				pipeline.close();
+			pipeline = null;
 		}
 
-		private void createNorthRegion(int height) {
-			createRegion(height, DockingPort.NORTH_REGION, BorderLayout.NORTH);
-		}
-
-		private void createSouthRegion(int height) {
-			createRegion(height, DockingPort.SOUTH_REGION, BorderLayout.SOUTH);
-		}
-
-		private void createEastRegion(int width) {
-			createRegion(width, DockingPort.EAST_REGION, BorderLayout.EAST);
-		}
-
-		private void createWestRegion(int width) {
-			createRegion(width, DockingPort.WEST_REGION, BorderLayout.WEST);
-		}
-
-		private void createRegion(int dim, String cursorRegion, String layoutRegion) {
-			DockingPortCursorPane pane = new DockingPortCursorPane(dockingPort, cursorRegion);
-			Dimension d = pane.getPreferredSize();
-			pane.setPreferredSize(new Dimension(dim, dim));
-			super.add(pane, layoutRegion);
-		}
-	}
-
-	private static class DragInitiationListener extends MouseMotionAdapter {
-		private boolean enabled;
-		private Dockable initiator;
-
-		private DragInitiationListener() {
-			setEnabled(true);
-		}
-
-		public void mouseDragged(MouseEvent e) {
-			if (enabled && initiator != null && initiator.isDockingEnabled()) {
-				// by disabling the listener here, we don't process any events after the drag-start.  
-				// The DockingManager is responsible for re-enabling this listener after the drag
-				// operation has finished.
-				setEnabled(false);
-				startDrag(initiator, e.getPoint());
-			}
-		}
-
-		private void setInitiator(Dockable init) {
-			initiator = init;
-		}
-
-		private void setEnabled(boolean b) {
-			enabled = b;
-		}
 	}
 }
