@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 import org.flexdock.docking.drag.outline.AbstractRubberBand;
 import org.flexdock.docking.drag.outline.RubberBandFactory;
-import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
 
 public class DragPipeline {
@@ -138,44 +137,70 @@ public class DragPipeline {
 
 		// hide the rubber band
 		rubberBand.clear();
-		
-		// get the new rubber band rect
-		final Rectangle screenRect = dragToken.getDragRect(true);
-		
-		// get a painter for post-paint operations
-		Runnable postPainter = getPostPainter(screenRect);
-		
-		// if we haven't changed glasspanes
+
+		// if the glasspane hasn't changed, then reprocess on the current glasspane
 		if(newGlassPane==currentGlasspane) {
-			// just redraw the rubberband if there's no current glasspane
-			if(currentGlasspane==null) {
-				deferRubberBandDrawing(screenRect);
-				return;
-			}
-			// otherwise, process the drag event on the current glasspane
-			// and repaint it.
-			currentGlasspane.setPostPainter(postPainter);
-			currentGlasspane.processDragEvent(dragToken);
+			dontSwitchGlassPanes();
 			return;
 		}
 		
-		// if we got here, then there was a transition between glasspanes.
-		// clear out the old one
-		if(currentGlasspane!=null) {
-			currentGlasspane.clear();
+		// process transitions from a glasspane to a null area
+		if(newGlassPane==null) {
+			transitionToNullArea();
+			return;
 		}
+		
+		// process transitions from null area to a glasspane
+		if(currentGlasspane==null) {
+//			System.out.println("from null");
+			transitionFromNullArea(newGlassPane);
+			return;
+		}
+
+		// otherwise, transition from one glasspane to another
+		// clear out the old glasspane
+		currentGlasspane.clear();
+		// reassign to the new glasspane
+		currentGlasspane = newGlassPane;
+		// now process the new glasspane and redraw the rubberband
+		Rectangle screenRect = dragToken.getDragRect(true);
+		currentGlasspane.setPostPainter(getPostPainter(screenRect));
+		currentGlasspane.processDragEvent(dragToken);
+	}
+
+	private void dontSwitchGlassPanes() {
+		// just redraw the rubberband if there's no current glasspane
+		Rectangle screenRect = dragToken.getDragRect(true);
+		if(currentGlasspane==null) {
+			drawRubberBand(screenRect);
+			return;
+		}
+		
+		// otherwise, process the drag event on the current glasspane
+		// and repaint it.
+		currentGlasspane.setPostPainter(getPostPainter(screenRect));
+		currentGlasspane.processDragEvent(dragToken);
+	}
+	
+	private void transitionToNullArea() {
+		// set the new glasspane reference
+		DragGlasspane pane = currentGlasspane;
+		currentGlasspane = null;
+		
+		// clear out the old glasspane and redraw the rubberband
+		Rectangle screenRect = dragToken.getDragRect(true);
+		pane.setPostPainter(null);
+		pane.clear();		
+	}
+	
+	private void transitionFromNullArea(DragGlasspane newGlassPane) {
 		// set the new glasspane reference
 		currentGlasspane = newGlassPane;
 		
-		// if there's no current glasspane, then just redraw the rubber band
-		if(currentGlasspane==null)
-			deferRubberBandDrawing(screenRect);
-		// otherwise, process the drag event on the current glasspane
-		// and repaint it.
-		else {
-			currentGlasspane.setPostPainter(postPainter);
-			currentGlasspane.processDragEvent(dragToken);
-		}
+		// process the new glasspane
+		Rectangle screenRect = dragToken.getDragRect(true);
+		currentGlasspane.setPostPainter(null);
+		currentGlasspane.processDragEvent(dragToken);
 	}
 
 	
@@ -185,12 +210,13 @@ public class DragPipeline {
 
 	
 	private Runnable getPostPainter(final Rectangle rect) {
-		if(!ResourceManager.isWindowsPlatform())
-			return null;
+//		if(!ResourceManager.isWindowsPlatform())
+//			return null;
 		
 		return new Runnable() {
 			public void run() {
 				deferRubberBandDrawing(rect);
+//				drawRubberBand(rect);
 			}
 		};
 	}
