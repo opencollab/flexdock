@@ -28,10 +28,10 @@
 	<target name="build.with.dll" depends="clean, compile.dll, compile, jar"/>
 
 	<target name="clean">
-        <delete>
+        <delete failonerror="false">
         	<fileset dir="${bin.dir}" includes="**/*"/>
         </delete>
-        <delete>
+        <delete failonerror="false">
         	<fileset dir="${dist.dir}" includes="**/*"/>
         </delete>
 	</target>
