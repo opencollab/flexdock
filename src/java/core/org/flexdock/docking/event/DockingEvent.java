@@ -19,6 +19,7 @@ public class DockingEvent extends EventObject {
 	public static final int DROP_STARTED = 1;
 	public static final int DOCKING_COMPLETE = 2;
 	public static final int DOCKING_CANCELED = 3;
+        public static final int UNDOCKING_COMPLETE = 4;
 
 	private DockingPort oldPort;
 	private DockingPort newPort;
