@@ -1,0 +1,7 @@
+Notes:
+
+To build, create a directory called Docking and extract everything to there.  Move to the Docking directory 
+and type "ant".  The resulting docking.jar may be found in "Docking/output".
+
+To create javadocs, use the javadoc target by typing "ant javadoc" at the command-line.  The javadocs will
+be generated in "Docking/output/docs".
