@@ -160,25 +160,29 @@ public class PropertySet {
 	
 	public Class toClass(String key) throws ClassNotFoundException {
 		String type = getString(key);
-		if(type==null)
+		return resolveClass(type);
+	}
+	
+	protected Class resolveClass(String className) throws ClassNotFoundException {
+		if(className==null)
 			return null;
 
-		if("int".equals(type))
+		if("int".equals(className))
 			return int.class;
-		if("long".equals(type))
+		if("long".equals(className))
 			return long.class;
-		if("boolean".equals(type))
+		if("boolean".equals(className))
 			return boolean.class;
-		if("float".equals(type))
+		if("float".equals(className))
 			return float.class;
-		if("double".equals(type))
+		if("double".equals(className))
 			return double.class;
-		if("byte".equals(type))
+		if("byte".equals(className))
 			return byte.class;
-		if("short".equals(type))
+		if("short".equals(className))
 			return short.class;
 		
-		return Class.forName(type);
+		return Class.forName(className);
 	}
 	
 	public String toString() {
