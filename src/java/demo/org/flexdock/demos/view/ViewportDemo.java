@@ -28,7 +28,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
-import org.flexdock.view.viewport.Viewport;
+import org.flexdock.view.Viewport;
 
 /**
  * @author Christopher Butler
@@ -84,7 +84,7 @@ public class ViewportDemo extends JFrame {
 		p.setBorder(new LineBorder(Color.GRAY, 1));
 		
 		
-		JTextField t = new JTextField();
+		JTextField t = new JTextField(text);
 		t.setPreferredSize(new Dimension(100, 20));
 		p.add(t);
 		
