@@ -23,8 +23,6 @@ import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.Window;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
@@ -32,13 +30,13 @@ import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.DockingPort;
 import org.flexdock.view.View;
-import org.flexdock.view.viewport.Viewport;
+import org.flexdock.view.Viewport;
 
 /**
  * @author Andreas Ernst
  * @author Christopher Butler
  */
-public class ViewFrame extends JDialog implements FocusListener {
+public class ViewFrame extends JDialog {
 	private Viewport viewport;
 	
 	public static ViewFrame create(Component c) {
@@ -74,7 +72,6 @@ public class ViewFrame extends JDialog implements FocusListener {
 
 		viewport = new FloatingViewport(this);
 		setContentPane(viewport);
-		addFocusListener(this);
     }
 
     // override
@@ -93,14 +90,6 @@ public class ViewFrame extends JDialog implements FocusListener {
     	
     	viewport.dock(view);
     }
-
-	public void focusGained(FocusEvent e) {
-		viewport.requestActivation(null);
-	}
-
-	public void focusLost(FocusEvent e) {
-	
-	}
 	
 	public void destroy() {
 		setVisible(false);
