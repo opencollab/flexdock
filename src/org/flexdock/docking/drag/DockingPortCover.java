@@ -46,7 +46,9 @@ public class DockingPortCover extends JComponent {
 	
 	public void processDragEvent(DragToken token) {
 		currentMouse = token.getCurrentMouse(this);
-		token.setTarget(dockingPort, getRegion());
+		String region = getRegion();
+		token.setTarget(dockingPort, region);
+//		setCursor(CursorFactory.getCursor(region));
 		repaint();
 	}
 
@@ -85,11 +87,7 @@ public class DockingPortCover extends JComponent {
 		
 		Rectangle r = getPreviewRect();
 		previewDelegate.drawPreview((Graphics2D)g, r);
-		
-//		g.fillRect(0, 0, getWidth(), getHeight());
-
 	}
-
 	
 	private Rectangle getPreviewRect() {
 		Point mouse = currentMouse;
