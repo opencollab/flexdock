@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
@@ -18,6 +19,7 @@ import java.awt.Window;
 
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
@@ -182,5 +184,64 @@ public class SwingUtility {
     		poly.ypoints[i] += deltaY;
     	}
     }
+    
+    public static void focus(Component c) {
+		RootWindow window = RootWindow.getRootContainer(c);
+		if(window==null)
+			return;
+
+		Component root = window.getRootContainer();
+		for(Component parent=c.getParent(); parent!=root; parent=c.getParent()) {
+			if(parent instanceof JTabbedPane) {
+				((JTabbedPane)parent).setSelectedComponent(c);
+			}
+			c = parent;
+		}
+	    c.requestFocus();
+    }
+    
+    
+    public static Component getNearestFocusableComponent(Component c) {
+    	return getNearestFocusableComponent(c, null);
+    }
+    
+	public static Component getNearestFocusableComponent(Component c, Container desiredRoot) {
+		if(c==null) 
+			c = desiredRoot;
+		if(c==null)
+			c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+		
+		boolean cachedFocusCycleRoot = false;
+		// make the desiredRoot into a focusCycleRoot
+		if(desiredRoot!=null) {
+			cachedFocusCycleRoot = desiredRoot.isFocusCycleRoot();
+			if(!cachedFocusCycleRoot)
+				desiredRoot.setFocusCycleRoot(true);
+		}
+		
+		Container focusRoot = null;
+		if(c instanceof Container) {
+			Container cnt = (Container)c;
+			focusRoot = cnt.isFocusCycleRoot(cnt)? cnt: cnt.getFocusCycleRootAncestor();
+		}
+		else 
+			focusRoot = c.getFocusCycleRootAncestor();
+		
+		Component focuser = null;
+		if(focusRoot!=null)
+			focuser = focusRoot.getFocusTraversalPolicy().getLastComponent(focusRoot);
+		
+		// restore the desiredRoot to its previous state
+		if(desiredRoot!=null && !cachedFocusCycleRoot) {
+			desiredRoot.setFocusCycleRoot(cachedFocusCycleRoot);			
+		}
+		return focuser;
+	}
+	
+	public static void activateWindow(Component c) {
+		RootWindow window = RootWindow.getRootContainer(c);
+		if(window!=null && !window.isActive())
+			window.toFront();
+	}
 
 }
