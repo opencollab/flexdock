@@ -15,7 +15,7 @@ import javax.swing.border.LineBorder;
 
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
-import org.flexdock.view.frame.ViewFrame;
+import org.flexdock.view.floating.ViewFrame;
 
 /**
  * @author Christopher Butler
