@@ -107,18 +107,44 @@ public class DockingWindow extends JPanel {
 
 
     public class FloatingWindow extends Floater implements WindowListener {
+        // instance data
+
+        private Dimension mSavedSize;
+
         // constructor
 
-        public FloatingWindow(Frame owner, String title, boolean modal) {
-            super(owner, title, modal);
+        public FloatingWindow(Frame owner, DockingWindow panel, boolean modal) {
+            super(owner, panel.getName(), modal);
+
+            setTitle(panel.getTitle());
 
             addWindowListener(this);
         }
 
-        public FloatingWindow(Dialog owner, String title, boolean modal) {
-            super(owner, title, modal);
+        public FloatingWindow(Dialog owner, DockingWindow panel, boolean modal) {
+            super(owner, panel.getName(), modal);
+
+            setTitle(panel.getTitle());
 
             addWindowListener(this);
+        }
+
+        // public
+
+        public void showPanel(DockingWindow panel) {
+            mSavedSize = panel.getSize();
+
+            Header header = (Header) panel.removeHeader();
+
+            setTitleBar(header);
+            header.enableDrag(true);
+
+            getContentPane().add(panel, BorderLayout.CENTER);
+
+            panel.setVisible(true);
+
+            validate(); // whatever...
+            ((Window) this).show();
         }
 
         // implement WindowListener
@@ -134,21 +160,6 @@ public class DockingWindow extends JPanel {
         public void windowDeiconified(WindowEvent e) {}
         public void windowIconified(WindowEvent e) {}
         public void windowOpened(WindowEvent e) {}
-
-        // override
-
-        public Component add(DockingWindow panel) {
-            Header header = (Header) panel.removeHeader();
-
-            setTitleBar(header);
-            header.enableDrag(true);
-
-            getContentPane().add(panel, BorderLayout.CENTER);
-
-            panel.setVisible(true);
-
-            return panel;
-        }
     } // class FloatingWindow
 
     // class Header
@@ -364,15 +375,13 @@ public class DockingWindow extends JPanel {
         FloatingWindow floatingWindow;
 
         if (window instanceof Frame)
-            floatingWindow = new FloatingWindow((Frame) window, panel.getName(), false);
+            floatingWindow = new FloatingWindow((Frame) window, panel, false);
 
         else if (window instanceof Dialog)
-            floatingWindow = new FloatingWindow((Dialog) window, panel.getName(), false);
+            floatingWindow = new FloatingWindow((Dialog) window, panel, false);
 
         else
-            floatingWindow = new FloatingWindow((Frame) null, panel.getName(), false);
-
-        floatingWindow.setTitle(panel.getTitle());
+            floatingWindow = new FloatingWindow((Frame) null, panel, false);
 
         if ( mFloatingHints != null)
             floatingWindow.setBounds(mFloatingHints);
@@ -428,12 +437,8 @@ public class DockingWindow extends JPanel {
     public void minimizePanel() {
         // unfloat
         
-        if ( isFloating()) {
-            mFloatingWindow.setVisible(false);
-
-            addHeader(mFloatingWindow.removeTitleBar());
-            mHeader.enableDrag(false);
-        } // if
+        if ( isFloating())
+            unfloatPanel();
 
         setMinimized(true);
     }
@@ -450,26 +455,28 @@ public class DockingWindow extends JPanel {
     public void dockPanel() {
         // unfloat
 
-        if ( isFloating()) {
-            mFloatingWindow.setVisible(false);
-
-            addHeader(mFloatingWindow.removeTitleBar());
-            mHeader.enableDrag(false);
-
-            setFloating(false);
-        } // if
+        if ( isFloating())
+            unfloatPanel();
 
         setMinimized(false);
         setDocked(true);
     }
 
+    public void unfloatPanel() {
+        mFloatingWindow.setVisible(false);
+
+        addHeader(mFloatingWindow.removeTitleBar());
+        mHeader.enableDrag(false);
+        setSize(mFloatingWindow.mSavedSize);
+
+        setFloating(false);
+    }
+
     public void floatPanel() {
         FloatingWindow floatingWindow = getFloatingWindow(SwingUtilities.getWindowAncestor(this), true); // create on demand
 
-        floatingWindow.add(this); // removes header
-
-        floatingWindow.validate(); // whatever...
-        ((Window) floatingWindow).show();
+        floatingWindow.showPanel(this); // removes header
+        mHeader.enableDrag(true);
 
         setFloating(true);
         setMinimized(false);

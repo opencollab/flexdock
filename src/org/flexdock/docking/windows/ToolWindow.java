@@ -389,10 +389,10 @@ public class ToolWindow extends DockingWindow {
 
     // instance data
 
-    private DragBorder   mDragBorder;
-    private DockingWindowBar     mDockingWindowBar;
-    private DockingFrame mFrame;
-    private boolean      mPinned = false;
+    private DragBorder       mDragBorder;
+    private DockingWindowBar mDockingWindowBar;
+    private DockingFrame     mFrame;
+    private boolean          mPinned = false;
 
     // constructor
 
@@ -613,6 +613,7 @@ public class ToolWindow extends DockingWindow {
         setPinned(true);
 
         mFrame.validate();
+        mFrame.repaint();
     }
 
     //private static boolean sSilent = false;
@@ -652,14 +653,8 @@ public class ToolWindow extends DockingWindow {
     public void dockPanel() {
        // unfloat
 
-        if ( isFloating()) {
-            mFloatingWindow.setVisible(false);
-
-            addHeader(mFloatingWindow.removeTitleBar());
-            mHeader.enableDrag(false);
-
-            setFloating(false);
-        } // if
+        if ( isFloating())
+            unfloatPanel();
 
         int finalSize = 0;
 
