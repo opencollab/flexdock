@@ -28,8 +28,13 @@ public class Viewport extends DefaultDockingPort {
 	static {
 		DockingManager.setDockingStrategy(Viewport.class, ViewDockingStrategy.getInstance());
 	}
-	
+
 	public Viewport() {
+		this(null);
+	}
+	
+	public Viewport(String portId) {
+		super(portId);
 		blockedRegions = new HashSet(5);
 		setBorderManager(new StandardBorderManager());
 	}

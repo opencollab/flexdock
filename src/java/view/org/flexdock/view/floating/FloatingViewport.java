@@ -27,7 +27,8 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 	protected Point dragOffset;
 	protected boolean titlebarDrag;
 	
-	public FloatingViewport(ViewFrame frame) {
+	public FloatingViewport(ViewFrame frame, String persistentId) {
+		super(persistentId);
 		getDockingProperties().setSingleTabsAllowed(true);
 		setTabsAsDragSource(true);
 		this.frame = frame;
