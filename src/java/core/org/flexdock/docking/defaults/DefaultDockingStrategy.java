@@ -55,10 +55,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		// notify the dockable
 		EventDispatcher.notifyDockingMonitor(dockable, evt);
 		
-		if (results.success) 
-			return true;
-
-		return false;
+		return results.success; 
 	}
 	
 	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {

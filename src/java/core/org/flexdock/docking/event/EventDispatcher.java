@@ -36,6 +36,9 @@ public class EventDispatcher {
 			case DockingEvent.DOCKING_CANCELED:
 				listener.dockingCanceled(evt);
 				break;
+			case DockingEvent.UNDOCKING_COMPLETE:
+				listener.undockingComplete(evt);
+				break;
 		}
 	}
 }

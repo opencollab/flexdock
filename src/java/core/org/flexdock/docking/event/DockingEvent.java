@@ -12,14 +12,14 @@ import org.flexdock.docking.DockingPort;
 
 /**
  * @author Kevin Duffey
- * @author Christopher Butler 
+ * @author Christopher Butler
  */
 public class DockingEvent extends EventObject {
 	public static final int DRAG_STARTED = 0;
 	public static final int DROP_STARTED = 1;
 	public static final int DOCKING_COMPLETE = 2;
 	public static final int DOCKING_CANCELED = 3;
-        public static final int UNDOCKING_COMPLETE = 4;
+	public static final int UNDOCKING_COMPLETE = 4;
 
 	private DockingPort oldPort;
 	private DockingPort newPort;
@@ -52,7 +52,7 @@ public class DockingEvent extends EventObject {
 		this.region = DockingPort.UNKNOWN_REGION;
 		setOverWindow(true);
 	}
-	
+
 	/**
 	 * Returns the old docking port which the source <code>Dockable</code> was
 	 * originally docked to.
@@ -84,7 +84,6 @@ public class DockingEvent extends EventObject {
 		return eventType;
 	}
 
-
 	public boolean isConsumed() {
 		return consumed;
 	}
@@ -93,7 +92,6 @@ public class DockingEvent extends EventObject {
 		this.consumed = true;
 	}
 
-
 	public AWTEvent getTrigger() {
 		return trigger;
 	}
@@ -101,9 +99,9 @@ public class DockingEvent extends EventObject {
 	public void setTrigger(AWTEvent trigger) {
 		this.trigger = trigger;
 	}
-	
+
 	public Object getTriggerSource() {
-		return trigger==null? null: trigger.getSource();
+		return trigger == null ? null : trigger.getSource();
 	}
 
 	public String getRegion() {
@@ -111,11 +109,10 @@ public class DockingEvent extends EventObject {
 	}
 
 	public void setRegion(String region) {
-		if(!DockingManager.isValidDockingRegion(region))
+		if (!DockingManager.isValidDockingRegion(region))
 			region = DockingPort.UNKNOWN_REGION;
 		this.region = region;
 	}
-
 
 	public boolean isOverWindow() {
 		return overWindow;
