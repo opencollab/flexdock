@@ -9,7 +9,7 @@ package org.flexdock.docking.drag.outline.win32;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
-import org.flexdock.docking.drag.outline.AbstractRubberBand;
+import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.ResourceManager;
 
 /**
@@ -18,7 +18,7 @@ import org.flexdock.util.ResourceManager;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class Win32RubberBand extends AbstractRubberBand {
+public class Win32RubberBand extends RubberBand {
 	private static final String NATIVE_RESOURCE = "org/flexdock/docking/drag/outline/win32/RubberBand.dll";
 	private static final String NATIVE_LIB = "RubberBand";
 	
@@ -33,7 +33,7 @@ public class Win32RubberBand extends AbstractRubberBand {
 		ResourceManager.loadLibrary(NATIVE_LIB, NATIVE_RESOURCE);
 	}
 	
-	private Win32RubberBand() {
+	public Win32RubberBand() {
 		
 	}
 	
@@ -56,9 +56,5 @@ public class Win32RubberBand extends AbstractRubberBand {
 			drawRectangle(r.x, r.y, r.width, r.height);
 		else
 			clearRectangle(r.x, r.y, r.width, r.height);
-	}
-	
-	public static AbstractRubberBand getInstance() {
-		return SINGLETON;
 	}
 }

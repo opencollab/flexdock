@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Stroke;
 
+import org.flexdock.docking.drag.effects.DefaultPreview;
+
 public class XORPreview extends DefaultPreview {
 	
 	public void drawPreview(Graphics2D g, Polygon p) {

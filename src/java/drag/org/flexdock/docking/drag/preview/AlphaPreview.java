@@ -21,6 +21,8 @@ package org.flexdock.docking.drag.preview;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 
+import org.flexdock.docking.drag.effects.DefaultPreview;
+
 
 public class AlphaPreview extends DefaultPreview {
 
