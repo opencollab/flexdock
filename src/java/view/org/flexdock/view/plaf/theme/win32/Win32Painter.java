@@ -11,25 +11,22 @@ import javax.swing.JComponent;
 import org.flexdock.view.ext.DefaultPainter;
 
 /**
+ * @author Christopher Butler
  * @author Claudio Romano
  */
 public class Win32Painter extends DefaultPainter {
 
-    public void paint(Graphics g, boolean active, JComponent titlebar) {
-        int y = 2;
-        int h = titlebar.getHeight() - 4;
-        int w = titlebar.getWidth();
-
+    public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         Color c = getBackgroundColor(active);
         g.setColor(c);
 
         // fill up the whole width if we're active
         if (active) {
-            g.fillRect(0, y, w, h);
+            g.fillRect(0, 0, width, height);
             return;
         }
 
         // otherwise, fill up the center part and draw an outline
-        g.fillRect(1, y + 1, w - 2, h - 2);
+        g.fillRect(1, 1, width - 2, height - 2);
     }
 }
