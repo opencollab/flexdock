@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<project name="flexdock" basedir="." >
+    <property name="project" value="${ant.project.name}"/>
+    <property name="java.src.dir" value="${basedir}/src/java" />
+    <property name="resource.src.dir" value="${basedir}/src/resources" />
+    <property name="build.dir" value="${basedir}/build" />
+    <property name="doc.dir" value="${build.dir}/docs" />
+    <property name="classes.dir" value="${build.dir}/classes" />
+    <property name="dist.dir" value="${basedir}/dist" />
+    <property name="version" value="0.3.4" />
+
+	<target name="init">
+		<mkdir dir="${doc.dir}" />
+		<mkdir dir="${dist.dir}" />
+        <mkdir dir="${classes.dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${doc.dir}/*"/>
+        <delete dir="${classes.dir}/*"/>
+        <delete dir="${dist.dir}/*"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<javac srcdir="${java.src.dir}" destdir="${classes.dir}"/>
+		<copy todir="${classes.dir}">
+			<fileset dir="${resource.src.dir}" />
+		</copy>
+		<!-- CVS won't allow us to check in a DLL, so we've renamed it RubberBand.gif.         -->
+		<!-- We need to copy to the output directory and rename back to DLL during the build.  -->		
+		<copy file="${java.src.dir}/org/flexdock/docking/drag/outline/win32/RubberBand.gif"
+		      tofile="${classes.dir}/org/flexdock/docking/drag/outline/win32/RubberBand.dll"/>
+	</target>
+
+	<target name="javadoc">
+		<javadoc sourcepath="${java.src.dir}" destdir="${doc.dir}" packagenames="org.flexdock.*"/>
+	</target>
+
+	<target name="jar" depends="init, compile">
+		<jar jarfile="${dist.dir}/${project}-${version}.jar" basedir="${classes.dir}" />
+	</target>	
+</project>
