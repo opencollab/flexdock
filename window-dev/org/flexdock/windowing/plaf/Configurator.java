@@ -22,10 +22,8 @@ import org.w3c.dom.NodeList;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Configurator implements XMLConstants {
-	public static final String DEFAULT_PREFS_URI = "org/flexdock/windowing/view-prefs-default.xml";
-	public static final String PREFS_URI = "view-prefs.xml";
-
-
+	public static final String DEFAULT_PREFS_URI = "org/flexdock/windowing/flexview-themes-default.xml";
+	public static final String PREFS_URI = "flexview-themes.xml";
 	
 	public static Document loadUserPrefs() {
 		return ResourceManager.getDocument(PREFS_URI);
@@ -63,27 +61,54 @@ public class Configurator implements XMLConstants {
 				map.put(key, elem);
 		}
 	}
+
+	public static PropertySet[] getProperties(String tagName) {
+		HashMap map = getNamedElementsByTagName(tagName);
+		if(map==null)
+			return new PropertySet[0];
+		
+		String[] names = (String[])map.keySet().toArray(new String[0]);
+		return getProperties(names, map);
+	}
 	
 	public static PropertySet getProperties(String name, String tagName) {
 		HashMap map = getNamedElementsByTagName(tagName);
 		if(map==null)
 			return null;
-	
 		return getProperties(name, map);
 	}
 	
+	public static PropertySet[] getProperties(String[] names, String tagName) {
+		HashMap map = names==null? null: getNamedElementsByTagName(tagName);
+		if(map==null)
+			return new PropertySet[0];
+		return getProperties(names, map);
+	}
+	
+	public static PropertySet[] getProperties(String[] names, HashMap cache) {
+		PropertySet[] properties = new PropertySet[names.length];
+		for(int i=0; i<names.length; i++) {
+			properties[i] = getProperties(names[i], cache);
+		}
+		return properties;		
+	}
+	
 	private static PropertySet getProperties(String elemName, HashMap cache) {
-		Element elem = (Element)cache.get(elemName);
+		Element elem = isNull(elemName)? null: (Element)cache.get(elemName);
 		if(elem==null)
 			return null;
 		
 		PropertySet set = new PropertySet();
+		set.setName(elemName);
 
 		// load all the parent properties first, so we can add/overwrite our own later
 		String parentName = elem.getAttribute(EXTENDS_KEY);
 		PropertySet parent = isNull(parentName)? null: getProperties(parentName, cache);
 		if(parent!=null)
 			set.setAll(parent);
+		
+		// get the default handler name
+		String propertyHandlerName = getPropertyHandlerName(elem);
 		
 		NodeList list = elem.getElementsByTagName(PROPERTY_KEY);
 		int len = list.getLength();
@@ -93,7 +118,7 @@ public class Configurator implements XMLConstants {
 			if(!isNull(key)) {
 				String value = elem.getAttribute(VALUE_KEY);
 				String handler = elem.getAttribute(HANDLER_KEY);
-				Object resource = getResource(value, handler);
+				Object resource = getResource(value, handler, propertyHandlerName);
 				if(resource!=null) {
 					set.setProperty(key, resource); 
 				}
@@ -102,7 +127,15 @@ public class Configurator implements XMLConstants {
 		return set;
 	}
 	
-	public static Object getResource(String stringValue, String handlerName) {
+	private static String getPropertyHandlerName(Element elem) {
+		 String handlerName = elem.getAttribute(PROP_HANDLER_KEY);
+		 if(isNull(handlerName))
+		 	handlerName = ResourceHandlerFactory.getPropertyHandler(elem.getTagName());
+		 return isNull(handlerName)? null: handlerName;
+	}
+	
+	public static Object getResource(String stringValue, String currentHandlerName, String defaultHandlerName) {
+		String handlerName = isNull(currentHandlerName)? defaultHandlerName: currentHandlerName;
 		if(isNull(handlerName))
 			return nullify(stringValue);
 		

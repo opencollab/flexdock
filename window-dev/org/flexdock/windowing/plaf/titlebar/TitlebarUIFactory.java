@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import org.flexdock.windowing.plaf.Configurator;
 import org.flexdock.windowing.plaf.PropertySet;
+import org.flexdock.windowing.plaf.titlebar.buttons.ButtonUIFactory;
 
 /**
  * @author Christopher Butler
@@ -17,8 +18,16 @@ import org.flexdock.windowing.plaf.PropertySet;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class TitlebarUIFactory implements TitlebarConstants {
-	public static final String TITLEBAR_KEY = "titlebar";
+public class TitlebarUIFactory {
+	public static final String TITLEBAR_KEY = "titlebar-ui";
+	
+	public static final String DEFAULT_HEIGHT = "default.height";
+	public static final String FONT_COLOR = "font.color";
+	public static final String FONT_COLOR_ACTIVE = "font.color.active";
+	public static final String BACKGROUND_COLOR = "bgcolor";
+	public static final String BACKGROUND_COLOR_ACTIVE = "bgcolor.active";
+
+	
 	private static final HashMap UI_CACHE = new HashMap();
 	
 	public static TitlebarUI getUI(String name) {
@@ -41,12 +50,13 @@ public class TitlebarUIFactory implements TitlebarConstants {
 		PropertySet properties = Configurator.getProperties(name, TITLEBAR_KEY);
 		
 		TitlebarUI ui = new TitlebarUI();
+		ui.setUiName(properties.getName());
 		ui.setDefaultHeight(properties.getInt(DEFAULT_HEIGHT));
-		ui.setActiveBackground(properties.getColor(ACTIVE_BACKGROUND_COLOR));
-		ui.setActiveFont(properties.getColor(ACTIVE_FONT_COLOR));
-		ui.setInactiveBackground(properties.getColor(INACTIVE_BACKGROUND_COLOR));
-		ui.setInactiveFont(properties.getColor(INACTIVE_FONT_COLOR));
-		ui.setPreferredButtonUI(properties.getString(BUTTON_UI));
+		ui.setActiveBackground(properties.getColor(BACKGROUND_COLOR_ACTIVE));
+		ui.setActiveFont(properties.getColor(FONT_COLOR_ACTIVE));
+		ui.setInactiveBackground(properties.getColor(BACKGROUND_COLOR));
+		ui.setInactiveFont(properties.getColor(FONT_COLOR));
+		ui.setPreferredButtonUI(properties.getString(ButtonUIFactory.BUTTON_KEY));
 		
 		return ui;
 	}

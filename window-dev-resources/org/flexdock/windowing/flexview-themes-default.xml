@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flexview-themes>
+
+	<!-- Map the PLAFs to specific view-types -->
+	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
+	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
+				handler="org.flexdock.windowing.plaf.resolvers.SkinLFResolver" />
+
+	<!-- Create a set of resource handlers -->
+	<handler name="color" value="org.flexdock.windowing.plaf.resources.ColorResourceHandler" />
+	<handler name="font" value="org.flexdock.windowing.plaf.resources.FontResourceHandler" />
+	<handler name="image" value="org.flexdock.windowing.plaf.resources.ImageResourceHandler" />
+	<handler name="icon" value="org.flexdock.windowing.plaf.resources.ImageIconResourceHandler" />
+	<handler name="plaf" value="org.flexdock.windowing.plaf.resources.PlafResourceHandler" />
+	<handler name="square-bevel-border" value="org.flexdock.windowing.ext.SquareBevelBorderResource" />
+	
+	<!-- Specify a set of default property handlers for specific tags. -->
+	<!-- For instance, a <prop-handler> with name="icon-resource" and  -->
+	<!-- value="icon" will apply the "icon" resource handler as the    -->
+	<!-- default handler for all properties inside of any              -->
+	<!-- <icon-resource> tag.                                          -->
+	<prop-handler name="icon-resource" value="icon"/>
+	
+	<view-ui name="default" extends="win32" />
+	
+
+	<!-- Begin Windows Classic -->
+	<theme name="win32" description="Windows Classic">
+		<view-ui name="win32">
+			<property name="titlebar-ui" value="win32"/>
+		</view-ui>
+	
+		<!-- List the various titlebars that are available -->
+		<titlebar-ui name="win32">
+			<property name="button-ui" value="win32"/>
+			<property name="icon-map" value="win32" />
+		</titlebar-ui>
+		
+		<!-- List the various action button types available -->
+		<button-ui name="win32">
+			<property name="border.hover" value="1, #FFFFFF, #808080" handler="square-bevel-border" />
+			<property name="border.pressed" value="1, #808080, #FFFFFF" handler="square-bevel-border" />
+		</button-ui>
+	
+		<!-- List the available icon maps -->	
+		<icon-map name="win32">
+			<property name="close" value="win32.close" />
+			<property name="pin" value="win32.pin" />
+		</icon-map>
+		
+		<!-- List available icons -->
+		<icon-resource name="win32.close">
+			<property name="default" value="org/flexdock/windowing/titlebar/win32/close_default.png" />
+			<property name="active" value="org/flexdock/windowing/titlebar/win32/close_active.png" />
+		</icon-resource>
+		<icon-resource name="win32.pin">
+			<property name="default" value="org/flexdock/windowing/titlebar/win32/pin_default.png" />
+			<property name="active" value="org/flexdock/windowing/titlebar/win32/pin_active.png" />
+		</icon-resource>
+	</theme>
+	<!-- End Windows Classic -->
+
+</flexview-themes>

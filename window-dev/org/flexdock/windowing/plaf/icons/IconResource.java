@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.plaf.titlebar.buttons;
+package org.flexdock.windowing.plaf.icons;
 
 import javax.swing.Icon;
 import javax.swing.plaf.UIResource;
@@ -82,4 +82,5 @@ public class IconResource implements UIResource {
 	public void setIconPressed(Icon iconPressed) {
 		this.iconPressed = iconPressed;
 	}
+
 }

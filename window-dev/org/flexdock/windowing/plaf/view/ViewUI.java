@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.views;
+package org.flexdock.windowing.plaf.view;
 
 import java.awt.Graphics;
 
@@ -18,6 +18,7 @@ import javax.swing.plaf.ComponentUI;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ViewUI extends ComponentUI {
+	protected String uiName;
 	protected String preferredTitlebarUI;
 	
 	public void installUI(JComponent c) {
@@ -42,5 +43,13 @@ public class ViewUI extends ComponentUI {
 
 	public void setPreferredTitlebarUI(String preferredTitlebarUI) {
 		this.preferredTitlebarUI = preferredTitlebarUI;
+	}
+	
+	public String getUiName() {
+		return uiName;
+	}
+
+	public void setUiName(String uiName) {
+		this.uiName = uiName;
 	}
 }

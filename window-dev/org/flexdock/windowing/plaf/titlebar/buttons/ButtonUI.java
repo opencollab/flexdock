@@ -19,7 +19,8 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import org.flexdock.windowing.titlebar.Titlebar;
+import org.flexdock.windowing.Titlebar;
+import org.flexdock.windowing.plaf.icons.IconResource;
 
 /**
  * @author Christopher Butler
@@ -27,7 +28,10 @@ import org.flexdock.windowing.titlebar.Titlebar;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class ButtonUI extends BasicButtonUI implements ButtonConstants {
+public class ButtonUI extends BasicButtonUI {
+	public static final String ICON_RESOURCE = "flexdock.button.icon.resource";
+	
+	protected String uiName;
 	protected Border borderDefault;
 	protected Border borderDefaultHover;
 	protected Border borderActive;
@@ -174,6 +178,15 @@ public class ButtonUI extends BasicButtonUI implements ButtonConstants {
 		button.setRequestFocusEnabled(false);
 	}
 
+
+	public String getUiName() {
+		return uiName;
+	}
+
+	public void setUiName(String uiName) {
+		this.uiName = uiName;
+	}
+	
     protected void installKeyboardActions(AbstractButton b){
     	// do nothing
     }
@@ -193,4 +206,24 @@ public class ButtonUI extends BasicButtonUI implements ButtonConstants {
     }
 
 
+
+	public void setBorderActive(Border borderActive) {
+		this.borderActive = borderActive;
+	}
+
+	public void setBorderActiveHover(Border borderActiveHover) {
+		this.borderActiveHover = borderActiveHover;
+	}
+
+	public void setBorderDefault(Border borderDefault) {
+		this.borderDefault = borderDefault;
+	}
+
+	public void setBorderDefaultHover(Border borderDefaultHover) {
+		this.borderDefaultHover = borderDefaultHover;
+	}
+
+	public void setBorderPressed(Border borderPressed) {
+		this.borderPressed = borderPressed;
+	}
 }

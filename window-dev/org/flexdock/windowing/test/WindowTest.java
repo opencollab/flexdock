@@ -9,10 +9,12 @@ package org.flexdock.windowing.test;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 /**
  * @author Christopher Butler
@@ -46,6 +48,9 @@ public class WindowTest {
 		}
 		
 		*/
+		
+		PropertyChangeListener[] listeners = UIManager.getPropertyChangeListeners();
+		System.out.println(listeners.length);
 		
 	}
 	

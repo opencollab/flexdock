@@ -12,11 +12,14 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.plaf.ComponentUI;
 
-import org.flexdock.windowing.titlebar.Titlebar;
+import org.flexdock.windowing.Titlebar;
+import org.flexdock.windowing.plaf.icons.IconMap;
+import org.flexdock.windowing.plaf.icons.IconResource;
 
 /**
  * @author Christopher Butler
@@ -24,15 +27,17 @@ import org.flexdock.windowing.titlebar.Titlebar;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class TitlebarUI extends ComponentUI implements TitlebarConstants {
+public class TitlebarUI extends ComponentUI {
 	public static final int MINIMUM_HEIGHT = 12;
 
+	protected String uiName;
 	protected String preferredButtonUI;
 	protected Color activeFont;
 	protected Color inactiveFont;
 	protected Color activeBackground;
 	protected Color inactiveBackground;
 	protected int defaultHeight = MINIMUM_HEIGHT;
+	protected IconMap defaultIcons;
 	
 	public void installUI(JComponent c) {
 		// TODO Auto-generated method stub
@@ -170,5 +175,31 @@ public class TitlebarUI extends ComponentUI implements TitlebarConstants {
 	 */
 	public void setInactiveFont(Color inactiveFont) {
 		this.inactiveFont = inactiveFont;
+	}
+	
+
+	public String getUiName() {
+		return uiName;
+	}
+
+	public void setUiName(String uiName) {
+		this.uiName = uiName;
+	}
+
+	public IconMap getDefaultIcons() {
+		return defaultIcons;
+	}
+
+	public void setDefaultIcons(IconMap defaultIcons) {
+		this.defaultIcons = defaultIcons;
+	}
+
+	public IconResource getIcons(Action action) {
+		String key = action==null? null: (String)action.getValue(Action.NAME);
+		return getIcons(key);
+	}
+	
+	public IconResource getIcons(String key) {
+		return defaultIcons==null? null: defaultIcons.getIcons(key);
 	}
 }

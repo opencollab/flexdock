@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.titlebar;
+package org.flexdock.windowing;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,7 +17,9 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
+import org.flexdock.windowing.plaf.PlafManager;
 import org.flexdock.windowing.plaf.titlebar.TitlebarUI;
+import org.flexdock.windowing.plaf.titlebar.TitlebarUIFactory;
 
 /**
  * @author Christopher Butler
@@ -26,6 +28,7 @@ import org.flexdock.windowing.plaf.titlebar.TitlebarUI;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Titlebar extends JComponent {
+	private String preferredUi;
 	private Icon titleIcon;
 	private String titleText;
 	private List actionList;
@@ -48,6 +51,13 @@ public class Titlebar extends JComponent {
 	public Titlebar(String title, Action[] actions) {
 		setText(title);
 		setActions(actions);
+	}
+	
+	public void setPreferredUI(String uiName) {
+		boolean change = preferredUi==null? preferredUi!=uiName: !preferredUi.equals(uiName);
+		preferredUi = uiName;
+		if(change)
+			updateUI();
 	}
 	
 	public void setText(String text) {
@@ -213,4 +223,10 @@ public class Titlebar extends JComponent {
 		if(ui instanceof TitlebarUI)
 			((TitlebarUI)ui).layoutButtons(this);
 	}
+	
+    public void updateUI() {
+    	TitlebarUI tbUI = preferredUi==null? 
+    			(TitlebarUI)PlafManager.getUI(this):  TitlebarUIFactory.getUI(preferredUi);
+        setUI(tbUI);
+    }
 }

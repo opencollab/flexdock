@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.views;
+package org.flexdock.windowing;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -14,7 +14,8 @@ import java.awt.PopupMenu;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.flexdock.windowing.titlebar.Titlebar;
+import org.flexdock.windowing.plaf.PlafManager;
+import org.flexdock.windowing.plaf.view.ViewUI;
 
 /**
  * @author Christopher Butler
@@ -29,8 +30,18 @@ public class View extends JComponent {
 	
 	public View() {
 		setLayout(null);
-		setTitlebar(new Titlebar());
+		setTitlebar(createTitlebar());
 		setContentPane(new JPanel());
+	}
+	
+	protected Titlebar createTitlebar() {
+		Titlebar tbar = new Titlebar();
+		tbar.setPreferredUI(getPreferredTitlebarUIName());
+		return tbar;
+	}
+	
+	protected String getPreferredTitlebarUIName() {
+		return ui instanceof ViewUI? ((ViewUI)ui).getPreferredTitlebarUI(): null;		
 	}
 
 	public Container getContentPane() {
@@ -109,7 +120,10 @@ public class View extends JComponent {
 		return this;
 	}
 	
-
+    public void updateUI() {
+        setUI((ViewUI)PlafManager.getUI(this));
+    }
+    
 	public Component add(Component comp, int index) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
@@ -160,5 +174,4 @@ public class View extends JComponent {
 			throw new RuntimeException("The remove() method is may not be called directly.");
 		super.remove(popup);
 	}
-
 }
