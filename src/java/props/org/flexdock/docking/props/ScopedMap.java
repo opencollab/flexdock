@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author cb8167
+ * @author Christopher Butler
  */
 public interface ScopedMap {
 	public Map getRoot();

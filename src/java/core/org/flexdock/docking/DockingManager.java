@@ -22,7 +22,6 @@ import java.awt.Component;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
@@ -33,6 +32,7 @@ import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.util.ClassMapping;
 import org.flexdock.util.SwingUtility;
 
 
@@ -74,8 +74,7 @@ import org.flexdock.util.SwingUtility;
 public class DockingManager {
 	private static final DockingManager SINGLETON = new DockingManager();
 	private static final WeakHashMap DOCKABLES_BY_COMPONENT = new WeakHashMap();
-	private static final HashMap DOCKING_STRATEGIES = new HashMap();
-	protected static final DockingStrategy DEFAULT_STRATEGY = new DefaultDockingStrategy();
+	private static final ClassMapping DOCKING_STRATEGIES = new ClassMapping(DefaultDockingStrategy.class, new DefaultDockingStrategy());
 	private static Object persistentIdLock = new Object();
 	
 	private DockingStrategy defaultDocker;
@@ -374,15 +373,10 @@ public class DockingManager {
 	}
 	
 	public static void setDockingStrategy(Class c, DockingStrategy strategy) {
-		if(c==null)
-			return;
-		
-		synchronized(DOCKING_STRATEGIES) {
-			if(strategy==null)
-				DOCKING_STRATEGIES.remove(c);
-			else
-				DOCKING_STRATEGIES.put(c, strategy);
-		}
+		if(strategy==null)
+			DOCKING_STRATEGIES.removeClassMapping(c);
+		else
+			DOCKING_STRATEGIES.addClassMapping(c, strategy.getClass(), strategy);
 	}
 	
 	public static DockingStrategy getDockingStrategy(Object obj) {
@@ -391,19 +385,7 @@ public class DockingManager {
 	}
 	
 	public static DockingStrategy getDockingStrategy(Class classKey) {
-		if(classKey==null)
-			return DEFAULT_STRATEGY;
-		
-		DockingStrategy strategy = null;
-		
-		synchronized(DOCKING_STRATEGIES) {
-			for(Class c=classKey; c!=null && strategy==null; c=c.getSuperclass()) {
-				strategy = (DockingStrategy)DOCKING_STRATEGIES.get(c);
-			}
-		}
-		
-		if(strategy==null)
-			strategy = DEFAULT_STRATEGY;
+		DockingStrategy strategy = (DockingStrategy)DOCKING_STRATEGIES.getClassInstance(classKey);
 		return strategy;
 	}
 	

@@ -5,7 +5,7 @@ package org.flexdock.docking.event;
 
 
 /**
- * @author cb8167
+ * @author Christopher Butler
  */
 public interface DockingMonitor {
 	public void addDockingListener(DockingListener listener);

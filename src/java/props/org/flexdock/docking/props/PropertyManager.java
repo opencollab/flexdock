@@ -6,10 +6,10 @@ package org.flexdock.docking.props;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.ClassMapping;
 import org.flexdock.util.Utilities;
 
 /**
@@ -18,8 +18,7 @@ import org.flexdock.util.Utilities;
 public class PropertyManager {
 	public static final String DOCKABLE_PROPERTIES_KEY = DockableProps.class.getName();
 	public static final String DOCKINGPORT_PROPERTIES_KEY = DockingPortProps.class.getName();
-	private static final WeakHashMap DOCKABLE_PROP_TYPES = new WeakHashMap();
-	
+	private static final ClassMapping DOCKABLE_PROPS_MAPPING = new ClassMapping(ScopedDockableProps.class, null);
 	
 	public static DockingPortProps getDockingPortRoot() {
 		return ScopedDockingPortProps.ROOT_PROPS;
@@ -37,9 +36,7 @@ public class PropertyManager {
 		if(!Dockable.class.isAssignableFrom(dockable) || !DockableProps.class.isAssignableFrom(propType))
 			return;
 
-		synchronized(DOCKABLE_PROP_TYPES) {
-			DOCKABLE_PROP_TYPES.put(dockable, propType);
-		}
+		DOCKABLE_PROPS_MAPPING.addClassMapping(dockable, propType);
 	}
 	
 	
@@ -110,9 +107,7 @@ public class PropertyManager {
 	
 	private static DockableProps createDockableProps(Dockable d) {
 		Class key = d.getClass();
-		Class c = (Class)DOCKABLE_PROP_TYPES.get(key);
-		if(c==null)
-			return new ScopedDockableProps();
+		Class c = DOCKABLE_PROPS_MAPPING.getClassMapping(key);
 		return (DockableProps)Utilities.createInstance(c.getName());
 	}
 
