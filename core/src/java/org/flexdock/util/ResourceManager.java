@@ -89,6 +89,23 @@ public class ResourceManager {
 	}
 	
 	/**
+	 * Returns an <code>Image</code> object based on the specified resource URL.  
+	 * Does not perform any caching on the <code>Image</code> object, so a new object will be created 
+	 * with each call to this method.
+	 * 
+	 * @param imageLocation the <code>URL</code> indicating where the image resource may be found.
+	 * @exception NullPointerException if specified resource cannot be found.
+	 * @return an <code>Image</code> created from the specified resource URL
+	 */
+	public static Image createImage(URL imageLocation) {
+		try {
+			return Toolkit.getDefaultToolkit().createImage(imageLocation);
+		} catch(NullPointerException e) {
+			throw new NullPointerException("Unable to locate image: " + imageLocation);
+		}
+	}
+	
+	/**
 	 * Returns an <code>ImageIcon</code> object based on the specified resource URL.  
 	 * Uses the <code>ImageIcon</code> constructor internally instead of dispatching to 
 	 * <code>createImage(String url)</code>, so <code>Image</code> objects are cached via the 
@@ -107,6 +124,27 @@ public class ResourceManager {
 		}
 	}
 
+	/**
+	 * Returns a <code>Cursor</code> object based on the specified resource URL.  
+	 * Throws a <code>NullPointerException</code> if specified resource cannot be found.
+	 * Dispatches to <code>createImage(URL imageLocation)</code>, so <code>Image</code> objects are 
+	 * <b>not</b> cached via the<code>MediaTracker</code>.
+	 * 
+	 * @param imageURL the <code>URL</code> indicating where the image resource may be found.
+     * @param hotPoint the X and Y of the large cursor's hot spot.  The
+     * hotSpot values must be less than the Dimension returned by
+     * getBestCursorSize().
+	 * @param name a localized description of the cursor, for Java Accessibility use.
+	 * @exception NullPointerException if specified resource cannot be found.
+	 * @exception IndexOutOfBoundsException if the hotSpot values are outside
+	 * @return a <code>Cursor</code> created from the specified resource URL
+	 */
+	public static Cursor createCursor(URL imageURL, Point hotPoint, String name) {
+		Image image = createImage(imageURL);
+		Cursor c = Toolkit.getDefaultToolkit().createCustomCursor(image, hotPoint, name);
+		return c;
+	}
+	
 	/**
 	 * Returns a <code>Cursor</code> object based on the specified resource URL.  
 	 * Throws a <code>NullPointerException</code> if specified resource cannot be found.
