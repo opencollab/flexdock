@@ -23,6 +23,7 @@ import java.awt.Point;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
+import org.flexdock.docking.state.DockingPortState;
 
 /**
  * This interface is designed to specify the API's required by <code>DockingManager</code> for placing
@@ -103,5 +104,12 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	public int getTabPlacement();
 	
 	public ScaledInsets getRegionInsets();
+	
+	
+	public Object getClientProperty(Object key);
+	
+	public void putClientProperty(Object key, Object value);
+	
+	public DockingPortState getDockingProperties();
 	
 }

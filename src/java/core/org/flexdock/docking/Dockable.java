@@ -22,6 +22,7 @@ import java.awt.Component;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
+import org.flexdock.docking.state.DockableState;
 
 
 /**
@@ -105,4 +106,10 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	public ScaledInsets getSiblingInsets();
 	
 	public ScaledInsets getRegionInsets();
+	
+	public Object getClientProperty(Object key);
+	
+	public void putClientProperty(Object key, Object value);
+	
+	public DockableState getDockingProperties();
 }

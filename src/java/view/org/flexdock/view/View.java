@@ -26,6 +26,8 @@ import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.state.DockableState;
+import org.flexdock.docking.state.StateManager;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.view.floating.FloatingStrategy;
 import org.flexdock.view.floating.FloatingViewport;
@@ -399,5 +401,9 @@ public class View extends JComponent implements Dockable {
 
 	public ScaledInsets getSiblingInsets() {
 		return siblingInsets;
+	}
+
+	public DockableState getDockingProperties() {
+		return StateManager.getDockableState(this);
 	}
 }

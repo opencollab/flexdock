@@ -20,12 +20,15 @@ package org.flexdock.docking.defaults;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.state.DockableState;
+import org.flexdock.docking.state.StateManager;
 
 /**
  * This class models a <code>Dockable</code> implementation for wrapping a <code>Component</code>.  It is 
@@ -59,6 +62,7 @@ public class DockableComponentWrapper implements Dockable {
 	private String persistentId;
 	private boolean territorial;
 	private ArrayList dockingListeners;
+	private Hashtable clientProperties;
 
 	/**
 	 * Creates a <code>DockableComponentWrapper</code> instance using the specified source component, 
@@ -91,6 +95,12 @@ public class DockableComponentWrapper implements Dockable {
 		dockedLayoutResizable = resizable;
 		persistentId = id;
 		dockingListeners = new ArrayList(0);
+	}
+	
+	private Hashtable getClientProperties() {
+		if(clientProperties==null)
+			clientProperties = new Hashtable(2);
+		return clientProperties;
 	}
 	
 	/**
@@ -218,5 +228,17 @@ public class DockableComponentWrapper implements Dockable {
 
 	public ScaledInsets getSiblingInsets() {
 		return null;
+	}
+	
+	public Object getClientProperty(Object key) {
+		return getClientProperties().get(key);
+	}
+
+	public void putClientProperty(Object key, Object value) {
+		getClientProperties().put(key, value);
+	}
+
+	public DockableState getDockingProperties() {
+		return StateManager.getDockableState(this);
 	}
 }

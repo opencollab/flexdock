@@ -28,6 +28,8 @@ import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
 import org.flexdock.docking.drag.DragManager;
+import org.flexdock.docking.state.DockableState;
+import org.flexdock.docking.state.StateManager;
 
 
 /**
@@ -169,6 +171,9 @@ public class DockingManager {
 		
 		// add the dockable as its own listener
 		dockable.addDockingListener(dockable);
+		
+		// make sure we have docking-properties initialized
+		DockableState props = StateManager.getDockableState(dockable);
 		
 		// allow the configuration manager to keep track of this dockable.  This 
 		// will allow docking configurations to survive JVM instances.
