@@ -84,6 +84,9 @@ public class DragGlasspane extends JComponent {
 		Point rectLoc = ((Container)port).getLocationOnScreen();
 		SwingUtilities.convertPointFromScreen(rectLoc, this);
 		rect.setLocation(rectLoc);
+
+		// don't immediately redraw the rubberband after adding a new cover
+		setPostPainter(null);
 		
 		DockingPortCover coverPanel = new DockingPortCover(port);
 		add(coverPanel);
@@ -160,6 +163,10 @@ public class DragGlasspane extends JComponent {
 		// on the current one
 		if(currentCover!=newCover && currentCover!=null)
 			currentCover.setCurrentRegion(null);
+		
+		// don't immediately redraw the rubberband when switching covers 
+		// or regions
+		setPostPainter(null);
 
 		// now, assign the currentCover to the new one and repaint
 		currentCover = newCover;
