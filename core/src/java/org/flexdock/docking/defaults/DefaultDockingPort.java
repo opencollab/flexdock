@@ -41,6 +41,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.config.ConfigurationManager;
+import org.flexdock.util.Utilities;
 
 
 /**
@@ -847,6 +848,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	 * Default implementation of the SubComponentProvider interface.
 	 */
 	private static class DefaultComponentProvider implements SubComponentProvider {
+		public static final String INITIAL_TAB_POSITION = "SubComponentProvider.init.tab.position";
 	
 		/**
 		 * @see org.flexdock.docking.SubComponentProvider#createChildPort()
@@ -870,7 +872,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		 * @see org.flexdock.docking.SubComponentProvider#createTabbedPane()
 		 */
 		public JTabbedPane createTabbedPane() {
-			return new JTabbedPane();
+			JTabbedPane pane = new JTabbedPane();
+			pane.setTabPlacement(getInitialTabPosition());
+			return pane;
 		}
 		
 		/**
@@ -878,6 +882,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		 */
 		public double getInitialDividerLocation() {
 			return 0.5d;
+		}
+		
+		private static int getInitialTabPosition() {
+			String position = System.getProperty(INITIAL_TAB_POSITION);
+			int pos = Utilities.getInt(position, JTabbedPane.BOTTOM);
+			return pos<JTabbedPane.TOP || pos>JTabbedPane.RIGHT? JTabbedPane.BOTTOM: pos;
 		}
 	}
 	
