@@ -30,6 +30,12 @@ import java.io.OutputStream;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * This class provides <code>static</code> convenience methods for resource management, including resource
@@ -228,9 +234,34 @@ public class ResourceManager {
 		System.load(file.getAbsolutePath());
 	}
 	
+	public static Document getDocument(String uri) {
+		URL resource = getResource(uri);
+		return getDocument(resource);
+	}
+
+	public static Document getDocument(URL url) {
+		if(url==null)
+			return null;
+		
+		InputStream inStream = null;
+		try {
+			inStream = url.openStream();
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			return builder.parse(inStream);
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		finally {
+			close(inStream);
+		}
+		return null;
+	}
 	
-
-
 	private static void close(InputStream in) {
 		try {
 			if(in!=null)
