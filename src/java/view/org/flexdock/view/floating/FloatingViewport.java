@@ -1,7 +1,7 @@
 /*
  * Created on Mar 10, 2005
  */
-package org.flexdock.view.frame;
+package org.flexdock.view.floating;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -25,6 +25,7 @@ import org.flexdock.view.viewport.Viewport;
 public class FloatingViewport extends Viewport implements MouseListener, MouseMotionListener {
 	protected ViewFrame frame;
 	protected Point dragOffset;
+	protected boolean titlebarDrag;
 	
 	public FloatingViewport(ViewFrame frame) {
 		setSingleTabsAllowed(true);
@@ -90,13 +91,12 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 		Dockable dockable = (Dockable)evt.getSource();
 		if(dockable instanceof View) {
 			View view = (View)dockable;
-			if(dragSrc==view.getTitlebar() && !evt.isRedispatched())
-				evt.consume();
+			titlebarDrag = dragSrc==view.getTitlebar() && !evt.isRedispatched();
+			if(titlebarDrag) {
+				evt.consume();	
+			}
 		}
 	}
-
-
-
 
 	public void dockingComplete(DockingEvent evt) {
 		super.dockingComplete(evt);
@@ -121,10 +121,12 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 	}
 	
 	public void mouseDragged(MouseEvent e) {
-		Point loc = e.getPoint();
-		SwingUtilities.convertPointToScreen(loc, (Component)e.getSource());
-		SwingUtility.subtract(loc, dragOffset);
-		frame.setLocation(loc);
+		if(titlebarDrag) {
+			Point loc = e.getPoint();
+			SwingUtilities.convertPointToScreen(loc, (Component)e.getSource());
+			SwingUtility.subtract(loc, dragOffset);
+			frame.setLocation(loc);			
+		}
 	}
 
 	public void mouseClicked(MouseEvent e) {
