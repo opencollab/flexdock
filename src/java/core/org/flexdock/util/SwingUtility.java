@@ -6,6 +6,7 @@
  */
 package org.flexdock.util;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -242,6 +243,59 @@ public class SwingUtility {
 		RootWindow window = RootWindow.getRootContainer(c);
 		if(window!=null && !window.isActive())
 			window.toFront();
+	}
+	
+    /* Color utility */
+    
+    /**
+    * @param color
+    * @param factor
+    * @return a new color, brighter than the one passed as argument by a percentage factor
+    * 
+    * <br>author Cyril Gambis  - [Mar 17, 2005]
+    */
+   public static Color brighter(Color color, double factor) {
+		int red = color.getRed();
+		int green = color.getGreen();
+		int blue = color.getBlue();
+
+		int i = (int) (1.0 / (1.0 - factor));
+		if (red == 0 && green == 0 && blue == 0) {
+			return new Color(i, i, i);
+		}
+		if (red > 0 && red < i) {
+			red = i;
+		}
+		if (green > 0 && green < i) {
+			green = i;
+		}
+		if (blue > 0 && blue < i) {
+			blue = i;
+		}
+
+		return new Color(Math.min((int) (red / factor), 255), Math.min((int) (green / factor), 255), Math.min((int) (blue / factor), 255));
+	}
+
+	/**
+	 * @param color
+	 * @param factor
+	 * @return a new color, darker than the one passed as argument by a percentage factor
+	 * 
+	 * <br>author Cyril Gambis  - [Mar 17, 2005]
+	 */
+	public static Color darker(Color color, double factor) {
+		return new Color(Math.max((int) (color.getRed() * factor), 0), Math.max((int) (color.getGreen() * factor), 0), Math.max((int) (color.getBlue() * factor), 0));
+	}
+
+	/**
+	 * @param color
+	 * @return the grey color corresponding to the color passed as parameter
+	 * 
+	 * <br>author Cyril Gambis  - [Mar 17, 2005]
+	 */
+	public static Color grayScale(Color color) {
+		int grayTone = ((color.getRed() + color.getGreen() + color.getBlue())/3);
+		return new Color(grayTone, grayTone, grayTone);
 	}
 
 }
