@@ -84,6 +84,19 @@
 		</exec>
 	</target>
 
+	<!-- creates a source distribution -->
+    <target name="jar-src" depends="init">
+        <jar jarfile="${dist.dir}/${ant.project.name}-${version}-src.jar" >
+            <fileset dir="${java.src.core}"/>
+            <fileset dir="${java.src.demo}"/>
+            <fileset dir="${java.src.drag}"/>
+            <fileset dir="${java.src.misc}"/>
+            <fileset dir="${java.src.props}"/>
+            <fileset dir="${java.src.test}"/>
+            <fileset dir="${java.src.view}"/>
+        </jar>
+    </target>
+	
 <!--
 	<target name="javadoc">
 		<javadoc sourcepath="${java.src.dir}" destdir="${doc.dir}" packagenames="org.flexdock.*"/>
