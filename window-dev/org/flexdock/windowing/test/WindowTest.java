@@ -6,7 +6,6 @@
  */
 package org.flexdock.windowing.test;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.MediaTracker;
@@ -14,12 +13,6 @@ import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import org.flexdock.windowing.View;
-import org.flexdock.windowing.plaf.ViewFactory;
 
 /**
  * @author Christopher Butler
@@ -29,7 +22,7 @@ import org.flexdock.windowing.plaf.ViewFactory;
  */
 public class WindowTest {
 	public static void main(String[] args) {
-		JFrame f = new JFrame();
+/*		JFrame f = new JFrame();
 		f.setSize(600, 500);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		

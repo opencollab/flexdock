@@ -6,7 +6,6 @@
  */
 package org.flexdock.windowing.titlebar;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,8 +17,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 
-import org.flexdock.windowing.Titlebar;
-import org.flexdock.windowing.TitlebarUI;
+import org.flexdock.windowing.plaf.titlebar.TitlebarUI;
 
 /**
  * @author Christopher Butler
@@ -27,33 +25,29 @@ import org.flexdock.windowing.TitlebarUI;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class DefaultTitlebar extends JComponent implements Titlebar {
+public class Titlebar extends JComponent {
 	private Icon titleIcon;
 	private String titleText;
 	private List actionList;
 	private HashMap actionButtons;
 	private AbstractButton[] buttonList;
-	private TitlebarUI uiDelegate;
-	private boolean focused;
-	private TitlebarInfo info;
+	private boolean active;
 	
-	public DefaultTitlebar() {
+	public Titlebar() {
 		this(null, null);
 	}
 	
-	public DefaultTitlebar(String title) {
+	public Titlebar(String title) {
 		this(title, null);
 	}
 	
-	public DefaultTitlebar(Action[] actions) {
+	public Titlebar(Action[] actions) {
 		this(null, actions);
 	}
 	
-	public DefaultTitlebar(String title, Action[] actions) {
+	public Titlebar(String title, Action[] actions) {
 		setText(title);
 		setActions(actions);
-		uiDelegate = new DefaultTitlebarUI();
-		info = new TitlebarInfo(this);
 	}
 	
 	public void setText(String text) {
@@ -198,19 +192,15 @@ public class DefaultTitlebar extends JComponent implements Titlebar {
 		titleIcon = icon;
 	}
 	
-	public boolean isFocused() {
-		return focused;
+	public boolean isActive() {
+		return active;
 	}
 	
-	public void setFocused(boolean b) {
-		if(b!=focused) {
-			focused = b;
+	public void setActive(boolean b) {
+		if(b!=active) {
+			active = b;
 			repaint();
 		}
-	}
-	
-	public int getPreferredHeight() {
-		return uiDelegate.getDefaultHeight();
 	}
 	
 	public AbstractButton createActionButton(Action action) {
@@ -220,27 +210,7 @@ public class DefaultTitlebar extends JComponent implements Titlebar {
 	}
 	
 	public void doLayout() {
-		updateInfo();
-		uiDelegate.layoutButtons(info);
-	}
-	
-	public void paint(Graphics g) {
-		updateInfo();
-		uiDelegate.paint(g, info);
-	}
-	
-	private void updateInfo() {
-		info.text = getText();
-		info.icon = getIcon();
-		info.buttons = buttonList;
-		info.inFocus = focused;		
-	}
-	
-	public void setUI(TitlebarUI ui) {
-		this.uiDelegate = ui;
-	}
-	
-	public TitlebarUI getUI() {
-		return uiDelegate;
+		if(ui instanceof TitlebarUI)
+			((TitlebarUI)ui).layoutButtons(this);
 	}
 }

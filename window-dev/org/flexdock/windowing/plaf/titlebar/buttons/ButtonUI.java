@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.plaf.buttons;
+package org.flexdock.windowing.plaf.titlebar.buttons;
 
 import java.awt.Container;
 import java.awt.Graphics;
@@ -19,8 +19,7 @@ import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 
-import org.flexdock.windowing.Titlebar;
-import org.flexdock.windowing.plaf.ActionButtonConstants;
+import org.flexdock.windowing.titlebar.Titlebar;
 
 /**
  * @author Christopher Butler
@@ -28,16 +27,12 @@ import org.flexdock.windowing.plaf.ActionButtonConstants;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class ActionButtonUI extends BasicButtonUI implements ActionButtonConstants {
-	protected BorderResource borderResource;
-	
-	public void setBorderResource(BorderResource resource) {
-		borderResource = resource;
-	}
-	
-	public BorderResource getBorderResource() {
-		return borderResource;
-	}	
+public class ButtonUI extends BasicButtonUI implements ButtonConstants {
+	protected Border borderDefault;
+	protected Border borderDefaultHover;
+	protected Border borderActive;
+	protected Border borderActiveHover;
+	protected Border borderPressed;
 	
 	public void paint(Graphics g, JComponent c) {
 		AbstractButton b = (AbstractButton) c;
@@ -74,21 +69,21 @@ public class ActionButtonUI extends BasicButtonUI implements ActionButtonConstan
 	}
 
 	protected Border getPressedBorder(AbstractButton button) {
-		Border border = getActionBorder(true, true, true);
+		Border border = borderPressed;
 		if(border==null)
 			border = getHoverBorder(button, true);
 		return border;
 	}
 	
 	protected Border getHoverBorder(AbstractButton button, boolean active) {
-		Border border = getActionBorder(false, active, true);
+		Border border = active? borderActiveHover: borderDefaultHover;
 		if(border==null)
 			border = getDefaultBorder(button, active);
 		return border;
 	}
 	
 	protected Border getDefaultBorder(AbstractButton button, boolean active) {
-		return getActionBorder(false, active, false);
+		return active? borderActive: borderDefault;
 	}
 
 	
@@ -121,7 +116,7 @@ public class ActionButtonUI extends BasicButtonUI implements ActionButtonConstan
 	protected Icon getPressedIcon(AbstractButton button) {
 		Icon icon = button.getPressedIcon();
 		if(icon==null)
-			icon = getActionIcon(button, ICON_PRESSED);
+			icon = getActionIcon(button, true, true, true);
 		if(icon==null)
 			icon = getHoverIcon(button, true);
 		return icon;
@@ -129,10 +124,8 @@ public class ActionButtonUI extends BasicButtonUI implements ActionButtonConstan
 	
 	protected Icon getHoverIcon(AbstractButton button, boolean active) {
 		Icon icon = button.getRolloverIcon();
-		if(icon==null && active)
-			icon = getActionIcon(button, ICON_HOVER_ACTIVE);
 		if(icon==null)
-			icon = getActionIcon(button, ICON_HOVER_INACTIVE);
+			icon = getActionIcon(button, false, active, true);
 		if(icon==null)
 			icon = getDefaultIcon(button, active);
 		return icon;
@@ -140,31 +133,27 @@ public class ActionButtonUI extends BasicButtonUI implements ActionButtonConstan
 	
 	protected Icon getDefaultIcon(AbstractButton button, boolean active) {
 		Icon icon = button.getIcon();
-		if(icon==null && active)
-			icon = getActionIcon(button, ICON_DEFAULT_ACTIVE);
 		if(icon==null)
-			icon = getActionIcon(button, ICON_DEFAULT_INACTIVE);
+			icon = getActionIcon(button, false, active, false);
 		return icon;
 	}
 	
-	protected Icon getActionIcon(AbstractButton button, String key) {
+	protected Icon getActionIcon(AbstractButton button, boolean pressed, boolean active, boolean hover) {
 		Action action = button.getAction();
-		return action==null? null: (Icon)action.getValue(key); 
-	}
-	
-	protected Border getActionBorder(boolean pressed, boolean active, boolean hover) {
-		if(pressed)
-			return borderResource.getPressedBorder();
+		IconResource resource = action==null? null: (IconResource)action.getValue(ICON_RESOURCE);
+		if(resource==null)
+			return null;
 		
+		if(pressed)
+			return resource.getIconPressed();
 		if(active) {
 			if(hover)
-				return borderResource.getActiveHoverBorder();
-			return borderResource.getActiveDefaultBorder();
+				return resource.getIconActiveHover();
+			return resource.getIconActive();
 		}
-		
 		if(hover)
-			return borderResource.getInactiveHoverBorder();
-		return borderResource.getInactiveDefaultBorder();
+			return resource.getIconHover();
+		return resource.getIcon();
 	}
 	
 	protected boolean isPressed(AbstractButton button) {
@@ -174,12 +163,8 @@ public class ActionButtonUI extends BasicButtonUI implements ActionButtonConstan
 	
 	protected boolean isParentActive(AbstractButton button) {
 		Container parent = button.getParent();
-		return parent instanceof Titlebar? ((Titlebar)parent).isFocused(): false;
+		return parent instanceof Titlebar? ((Titlebar)parent).isActive(): false;
 	}
-	
-	
-	
-	
 	
 	
 	public void installUI(JComponent c) {

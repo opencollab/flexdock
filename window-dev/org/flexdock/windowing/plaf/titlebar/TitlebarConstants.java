@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.plaf;
+package org.flexdock.windowing.plaf.titlebar;
 
 /**
  * @author Christopher Butler
@@ -14,7 +14,8 @@ package org.flexdock.windowing.plaf;
  */
 public interface TitlebarConstants {
 	public static final String DEFAULT_HEIGHT = "default.height";
-	public static final String UI_DELEGATE = "ui.delegate";
+	public static final String BUTTON_UI = "button.ui";
+	
 	public static final String ACTIVE_FONT_COLOR = "active.font.color";
 	public static final String INACTIVE_FONT_COLOR = "inactive.font.color";	
 	

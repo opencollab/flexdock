@@ -14,9 +14,7 @@ import java.awt.PopupMenu;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.flexdock.windowing.Titlebar;
-import org.flexdock.windowing.View;
-import org.flexdock.windowing.titlebar.DefaultTitlebar;
+import org.flexdock.windowing.titlebar.Titlebar;
 
 /**
  * @author Christopher Butler
@@ -24,14 +22,14 @@ import org.flexdock.windowing.titlebar.DefaultTitlebar;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class DefaultView extends JComponent implements View {
+public class View extends JComponent {
 	protected Titlebar titlepane;
 	protected Container contentPane;
 	protected boolean addRemoveAllowed;
 	
-	public DefaultView() {
+	public View() {
 		setLayout(null);
-		setTitlebar(new DefaultTitlebar());
+		setTitlebar(new Titlebar());
 		setContentPane(new JPanel());
 	}
 
@@ -97,7 +95,7 @@ public class DefaultView extends JComponent implements View {
 	
 	public void doLayout() {
 		Component titlebar = getTitlePane();
-		int titleHeight = titlebar==null? 0: titlepane.getPreferredHeight();
+		int titleHeight = titlebar==null? 0: titlepane.getPreferredSize().height;
 		int w = getWidth();
 		int h = getHeight();
 		

@@ -1,5 +1,5 @@
 /*
- * Created on Feb 27, 2005
+ * Created on Feb 28, 2005
  *
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
@@ -10,34 +10,34 @@ import java.awt.Color;
 import java.awt.Image;
 import java.util.HashMap;
 
-import javax.swing.UIManager;
-
 /**
  * @author Christopher Butler
  *
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class UIResource {
+public class PropertySet {
 	private HashMap properties;
 	
-	public UIResource() {
+	public PropertySet() {
 		properties = new HashMap();
 	}
 	
-	public UIResource(int size) {
+	public PropertySet(int size) {
 		properties = new HashMap(size);
 	}
+
+	public void setAll(PropertySet set) {
+		if(set!=null)
+			properties.putAll(set.properties);
+	}
 	
-	void setProperty(String key, Object value) {
+	public void setProperty(String key, Object value) {
 		properties.put(key, value);
 	}
 	
 	public Object getProperty(String key) {
-		if(key==null)
-			return null;
-		Object property = properties.get(key);
-		return property==null? UIManager.getDefaults().get(key): property;
+		return properties.get(key);
 	}
 	
 	public Color getColor(String key) {
