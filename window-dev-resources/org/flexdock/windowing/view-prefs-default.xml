@@ -2,11 +2,11 @@
 <view-prefs>
 
 	<!-- Map the PLAFs to specific view-types -->
-	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" view="default" />
-	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" view="default" />
-	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" view="default" />
-	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" view="default" />
-	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" view="default" 
+	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
+	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
 				handler="org.flexdock.windowing.plaf.resolvers.SkinLFResolver" />
 
 	<!-- Create a set of resource handlers -->
