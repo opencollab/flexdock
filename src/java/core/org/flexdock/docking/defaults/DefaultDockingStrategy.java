@@ -29,13 +29,13 @@ import org.flexdock.util.SwingUtility;
  */
 public class DefaultDockingStrategy implements DockingStrategy {
 
-	public void dock(Dockable dockable, DockingPort port, String region) {
-		dock(dockable, port, region, null);
+	public boolean dock(Dockable dockable, DockingPort port, String region) {
+		return dock(dockable, port, region, null);
 	}
 
-	public void dock(Dockable dockable, DockingPort port, String region, DragToken token) {
+	public boolean dock(Dockable dockable, DockingPort port, String region, DragToken token) {
 		if(!isDockingPossible(dockable, port, region, token))
-			return;
+			return false;
 		
 		// cache the old parent
 		DockingPort oldPort = DockingUtility.getParentDockingPort(dockable);
@@ -54,6 +54,11 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		EventDispatcher.notifyDockingMonitor(newPort, evt);
 		// notify the dockable
 		EventDispatcher.notifyDockingMonitor(dockable, evt);
+		
+		if (results.success) 
+			return true;
+
+		return false;
 	}
 	
 	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
@@ -112,9 +117,9 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		return results;
 	}
 	
-	public void undock(Dockable dockable) {
+	public boolean undock(Dockable dockable) {
 		if(dockable==null)
-			return;
+			return false;
 		
 		Component dragSrc = dockable.getDockable();
 		Container parent = dragSrc.getParent();
@@ -123,23 +128,37 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		// if there's no parent container, then we really don't have anything from which to to 
 		// undock this component, now do we?
 		if(parent==null)
-			return;
+			return false;
 		
+		boolean success = false;
 		DockingPort dockingPort = DockingUtility.getParentDockingPort(dragSrc);
-		if(dockingPort!=null)
+		if(dockingPort!=null) {
 			// if 'dragSrc' is currently docked, then undock it instead of using a 
 			// simple remove().  this will allow the DockingPort to do any of its own 
 			// cleanup operations associated with component removal.
-			dockingPort.undock(dragSrc);
-		else
+			success = dockingPort.undock(dragSrc);
+		} else {
 			// otherwise, just remove the component
 			parent.remove(dragSrc);
+			success = true;
+		}
 		
-		if(rootWin!=null)
+		if(rootWin != null) {
 			SwingUtility.revalidateComponent(rootWin.getContentPane());
 	}
 	
-	protected class DockingResults {
+		if (success) {
+			DockingEvent dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_COMPLETE);
+			// notify the docking port
+			EventDispatcher.notifyDockingMonitor(dockingPort, dockingEvent);
+			// notify the dockable
+			EventDispatcher.notifyDockingMonitor(dockable, dockingEvent);
+		}
+
+		return success;
+	}
+	
+	protected static class DockingResults {
 		public DockingResults(DockingPort port, boolean status) {
 			dropTarget = port;
 			success = status;

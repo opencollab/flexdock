@@ -121,28 +121,23 @@ public class DockingManager {
 	 *
 	 * @param dockable the <code>Dockable</code> we wish to undock
 	 */
-	public static void undock(Dockable dockable) {
+	public static boolean undock(Dockable dockable) {
 		DockingManager mgr = getDockingManager();
 		if (mgr != null)
-			mgr.defaultDocker.undock(dockable);
+			return mgr.defaultDocker.undock(dockable);
+
+		return false; //TODO think of changing it to runtime exception I don't see a situation
+		//when there would be no default docker.
 	}
 
-	public static void dock(Dockable dockable, DockingPort port, String region) {
+	public static boolean dock(Dockable dockable, DockingPort port, String region) {
 		DockingManager mgr = getDockingManager();
 		if (mgr != null)
-			mgr.defaultDocker.dock(dockable, port,  region);
+			return mgr.defaultDocker.dock(dockable, port,  region);
+	
+		return false; //TODO think of changing it to runtime exception I don't see a situation
+		//when there would be no docker.
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 	public static boolean isValidDockingRegion(String region) {
 		return DockingPort.CENTER_REGION.equals(region) || DockingPort.NORTH_REGION.equals(region) || 
