@@ -15,7 +15,7 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import org.flexdock.windowing.plaf.PlafManager;
-import org.flexdock.windowing.plaf.view.ViewUI;
+import org.flexdock.windowing.plaf.theme.ViewUI;
 
 /**
  * @author Christopher Butler
@@ -29,9 +29,14 @@ public class View extends JComponent {
 	protected boolean addRemoveAllowed;
 	
 	public View() {
+		this(null);
+	}
+	
+	public View(String title) {
 		setLayout(null);
 		setTitlebar(createTitlebar());
 		setContentPane(new JPanel());
+		setTitle(title==null? "": title);
 	}
 	
 	protected Titlebar createTitlebar() {
@@ -115,10 +120,10 @@ public class View extends JComponent {
 		}
 		contentPane.setBounds(0, titleHeight, w, h-titleHeight);
 	}
+
 	
-	public Component self() {
-		return this;
-	}
+	
+	
 	
     public void updateUI() {
         setUI((ViewUI)PlafManager.getUI(this));

@@ -19,6 +19,7 @@ public interface XMLConstants {
 	public static final String ATTRIBUTE_KEY = "attribute";
 	public static final String PROPERTY_KEY = "property";
 	public static final String NAME_KEY = "name";
+	public static final String DESC_KEY = "description";
 	public static final String VALUE_KEY = "value";
 	public static final String EXTENDS_KEY = "extends";
 	public static final String HANDLER_KEY = "handler";

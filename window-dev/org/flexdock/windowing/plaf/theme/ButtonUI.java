@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.plaf.titlebar.buttons;
+package org.flexdock.windowing.plaf.theme;
 
 import java.awt.Container;
 import java.awt.Graphics;
@@ -20,6 +20,8 @@ import javax.swing.plaf.basic.BasicButtonListener;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 import org.flexdock.windowing.Titlebar;
+import org.flexdock.windowing.plaf.IFlexViewComponentUI;
+import org.flexdock.windowing.plaf.PropertySet;
 import org.flexdock.windowing.plaf.icons.IconResource;
 
 /**
@@ -28,10 +30,14 @@ import org.flexdock.windowing.plaf.icons.IconResource;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class ButtonUI extends BasicButtonUI {
-	public static final String ICON_RESOURCE = "flexdock.button.icon.resource";
+public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
+	public static final String BORDER = "border";
+	public static final String BORDER_HOVER = "border.hover";
+	public static final String BORDER_ACTIVE = "border.active";
+	public static final String BORDER_ACTIVE_HOVER = "border.active.hover";
+	public static final String BORDER_PRESSED = "border.pressed";
 	
-	protected String uiName;
+	protected PropertySet creationParameters;
 	protected Border borderDefault;
 	protected Border borderDefaultHover;
 	protected Border borderActive;
@@ -177,15 +183,6 @@ public class ButtonUI extends BasicButtonUI {
 		button.setRolloverEnabled(true);
 		button.setRequestFocusEnabled(false);
 	}
-
-
-	public String getUiName() {
-		return uiName;
-	}
-
-	public void setUiName(String uiName) {
-		this.uiName = uiName;
-	}
 	
     protected void installKeyboardActions(AbstractButton b){
     	// do nothing
@@ -225,5 +222,21 @@ public class ButtonUI extends BasicButtonUI {
 
 	public void setBorderPressed(Border borderPressed) {
 		this.borderPressed = borderPressed;
+	}
+
+	public PropertySet getCreationParameters() {
+		return creationParameters;
+	}
+	public void setCreationParameters(PropertySet creationParameters) {
+		this.creationParameters = creationParameters;
+		initializeCreationParameters();
+	}
+	
+	public void initializeCreationParameters() {
+		setBorderDefault(creationParameters.getBorder(BORDER));
+		setBorderDefaultHover(creationParameters.getBorder(BORDER_HOVER));
+		setBorderActive(creationParameters.getBorder(BORDER_ACTIVE));
+		setBorderActiveHover(creationParameters.getBorder(BORDER_ACTIVE_HOVER));
+		setBorderPressed(creationParameters.getBorder(BORDER_PRESSED));
 	}
 }

@@ -24,11 +24,11 @@
 	<!-- <icon-resource> tag.                                          -->
 	<prop-handler name="icon-resource" value="icon"/>
 	
-	<view-ui name="default" extends="win32" />
-	
+	<!-- Point the default theme to windows classic -->
+	<theme name="default" ref="win32" />
 
 	<!-- Begin Windows Classic -->
-	<theme name="win32" description="Windows Classic">
+	<theme name="win32" description="Windows Classic" view-ui="win32">
 		<view-ui name="win32">
 			<property name="titlebar-ui" value="win32"/>
 		</view-ui>

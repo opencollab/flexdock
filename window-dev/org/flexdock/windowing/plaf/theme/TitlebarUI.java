@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.plaf.titlebar;
+package org.flexdock.windowing.plaf.theme;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -15,11 +15,12 @@ import java.awt.Graphics;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
-import javax.swing.plaf.ComponentUI;
 
 import org.flexdock.windowing.Titlebar;
+import org.flexdock.windowing.plaf.FlexViewComponentUI;
 import org.flexdock.windowing.plaf.icons.IconMap;
 import org.flexdock.windowing.plaf.icons.IconResource;
+import org.flexdock.windowing.plaf.icons.IconResourceFactory;
 
 /**
  * @author Christopher Butler
@@ -27,11 +28,14 @@ import org.flexdock.windowing.plaf.icons.IconResource;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class TitlebarUI extends ComponentUI {
+public class TitlebarUI extends FlexViewComponentUI {
+	public static final String DEFAULT_HEIGHT = "default.height";
+	public static final String FONT_COLOR = "font.color";
+	public static final String FONT_COLOR_ACTIVE = "font.color.active";
+	public static final String BACKGROUND_COLOR = "bgcolor";
+	public static final String BACKGROUND_COLOR_ACTIVE = "bgcolor.active";
 	public static final int MINIMUM_HEIGHT = 12;
-
-	protected String uiName;
-	protected String preferredButtonUI;
+	
 	protected Color activeFont;
 	protected Color inactiveFont;
 	protected Color activeBackground;
@@ -96,6 +100,16 @@ public class TitlebarUI extends ComponentUI {
 
 	}
 	
+	public void configureAction(Action action) {
+		if(action==null)
+			return;
+		
+		String name = (String)action.getValue(Action.NAME);
+		IconMap iconMap = IconResourceFactory.getIconMap(name);
+		if(iconMap!=null)
+			action.putValue(ICON_RESOURCE, iconMap);
+	}
+	
 	protected int getIconMargin(Icon icon) {
 		return 3;
 	}
@@ -121,13 +135,6 @@ public class TitlebarUI extends ComponentUI {
 		return new Dimension(10, getDefaultHeight());
 	}
 
-	public String getPreferredButtonUI() {
-		return preferredButtonUI;
-	}
-
-	public void setPreferredButtonUI(String preferredButtonUI) {
-		this.preferredButtonUI = preferredButtonUI;
-	}
 	/**
 	 * @return Returns the activeBackground.
 	 */
@@ -176,15 +183,8 @@ public class TitlebarUI extends ComponentUI {
 	public void setInactiveFont(Color inactiveFont) {
 		this.inactiveFont = inactiveFont;
 	}
-	
 
-	public String getUiName() {
-		return uiName;
-	}
 
-	public void setUiName(String uiName) {
-		this.uiName = uiName;
-	}
 
 	public IconMap getDefaultIcons() {
 		return defaultIcons;
@@ -201,5 +201,17 @@ public class TitlebarUI extends ComponentUI {
 	
 	public IconResource getIcons(String key) {
 		return defaultIcons==null? null: defaultIcons.getIcons(key);
+	}
+
+	public void initializeCreationParameters() {
+		setDefaultHeight(creationParameters.getInt(DEFAULT_HEIGHT));
+		setActiveBackground(creationParameters.getColor(BACKGROUND_COLOR_ACTIVE));
+		setActiveFont(creationParameters.getColor(FONT_COLOR_ACTIVE));
+		setInactiveBackground(creationParameters.getColor(BACKGROUND_COLOR));
+		setInactiveFont(creationParameters.getColor(FONT_COLOR));
+	}
+	
+	public String getPreferredButtonUI() {
+		return creationParameters.getString(UIFactory.BUTTON_KEY);
 	}
 }

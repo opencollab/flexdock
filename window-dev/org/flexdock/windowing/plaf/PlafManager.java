@@ -15,12 +15,11 @@ import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 
 import org.flexdock.docking.windows.util.TitleBar;
+import org.flexdock.windowing.Button;
 import org.flexdock.windowing.View;
 import org.flexdock.windowing.plaf.mappings.PlafMappingFactory;
-import org.flexdock.windowing.plaf.titlebar.TitlebarUI;
-import org.flexdock.windowing.plaf.titlebar.TitlebarUIFactory;
-import org.flexdock.windowing.plaf.view.ViewUI;
-import org.flexdock.windowing.plaf.view.ViewUIFactory;
+import org.flexdock.windowing.plaf.theme.Theme;
+import org.flexdock.windowing.plaf.theme.UIFactory;
 
 /**
  * @author Christopher Butler
@@ -43,13 +42,12 @@ public class PlafManager {
 	}
 	
 	public static void installSystemPlafMapping() {
-		String viewRef = PlafMappingFactory.getInstalledPlafReference();
-		ViewUI viewUI = ViewUIFactory.getUI(viewRef);
-		String tbarRef = viewUI==null? null: viewUI.getPreferredTitlebarUI();
-		TitlebarUI titlebarUI = TitlebarUIFactory.getUI(tbarRef);
+		String themeRef = PlafMappingFactory.getInstalledPlafReference();
+		Theme theme = UIFactory.getTheme(themeRef);
 
-		uiDefaults.put(View.class, viewUI);
-		uiDefaults.put(TitleBar.class, titlebarUI);
+		uiDefaults.put(View.class, theme.getViewUI());
+		uiDefaults.put(TitleBar.class, theme.getTitlebarUI());
+		uiDefaults.put(Button.class, theme.getButtonUI());
 	}
 	
 	public static ComponentUI getUI(JComponent target) {

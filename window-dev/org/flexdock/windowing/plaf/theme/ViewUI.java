@@ -4,12 +4,13 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.windowing.plaf.view;
+package org.flexdock.windowing.plaf.theme;
 
 import java.awt.Graphics;
 
 import javax.swing.JComponent;
-import javax.swing.plaf.ComponentUI;
+
+import org.flexdock.windowing.plaf.FlexViewComponentUI;
 
 /**
  * @author Christopher Butler
@@ -17,9 +18,7 @@ import javax.swing.plaf.ComponentUI;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class ViewUI extends ComponentUI {
-	protected String uiName;
-	protected String preferredTitlebarUI;
+public class ViewUI extends FlexViewComponentUI {
 	
 	public void installUI(JComponent c) {
 		// TODO Auto-generated method stub
@@ -36,20 +35,11 @@ public class ViewUI extends ComponentUI {
 		super.uninstallUI(c);
 	}
 
+	public void initializeCreationParameters() {
+
+	}
 	
 	public String getPreferredTitlebarUI() {
-		return preferredTitlebarUI;
-	}
-
-	public void setPreferredTitlebarUI(String preferredTitlebarUI) {
-		this.preferredTitlebarUI = preferredTitlebarUI;
-	}
-	
-	public String getUiName() {
-		return uiName;
-	}
-
-	public void setUiName(String uiName) {
-		this.uiName = uiName;
+		return creationParameters.getString(UIFactory.TITLEBAR_KEY);
 	}
 }

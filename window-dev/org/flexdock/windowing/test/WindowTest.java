@@ -6,15 +6,19 @@
  */
 package org.flexdock.windowing.test;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.beans.PropertyChangeListener;
 import java.net.URL;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.UIManager;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import org.flexdock.windowing.View;
 
 /**
  * @author Christopher Butler
@@ -24,18 +28,18 @@ import javax.swing.UIManager;
  */
 public class WindowTest {
 	public static void main(String[] args) {
-/*		JFrame f = new JFrame();
+		JFrame f = new JFrame();
 		f.setSize(600, 500);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel p = new JPanel(new BorderLayout());
 		p.setBorder(new EmptyBorder(20, 20, 20, 20));
 		
-		View view = ViewFactory.createView("Test View");
-		Icon icon = loadIcon(view.self());
+		View view = new View("Test View");
+		Icon icon = loadIcon(view);
 		view.getTitlebar().setIcon(icon);
-		view.getTitlebar().setFocused(true);
-		p.add(view.self(), BorderLayout.CENTER);
+		view.getTitlebar().setActive(true);
+		p.add(view, BorderLayout.CENTER);
 		
 		f.setContentPane(p);
 		f.setVisible(true);
@@ -48,9 +52,6 @@ public class WindowTest {
 		}
 		
 		*/
-		
-		PropertyChangeListener[] listeners = UIManager.getPropertyChangeListeners();
-		System.out.println(listeners.length);
 		
 	}
 	

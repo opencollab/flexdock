@@ -8,6 +8,7 @@ package org.flexdock.windowing.plaf.icons;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.flexdock.windowing.plaf.Configurator;
@@ -31,15 +32,21 @@ public class IconResourceFactory implements XMLConstants {
 	public static final String PRESSED = "pressed";
 	private static final HashMap RESOURCE_CACHE = new HashMap();
 	private static final HashMap RESOURCE_MAP_CACHE = new HashMap();
+	private static final HashSet BAD_RESOURCE_NAMES = new HashSet();
 
 	public static IconMap getIconMap(String name) {
-		if(Configurator.isNull(name))
+		if(Configurator.isNull(name) || BAD_RESOURCE_NAMES.contains(name))
 			return null;
 		
 		IconMap map = (IconMap)RESOURCE_MAP_CACHE.get(name);
 		if(map==null) {
 			map = loadIconMap(name);
-			if(map!=null) {
+			if(map==null) {
+				synchronized(BAD_RESOURCE_NAMES) {
+					BAD_RESOURCE_NAMES.add(name);
+				}
+			}
+			else {
 				synchronized(RESOURCE_MAP_CACHE) {
 					RESOURCE_MAP_CACHE.put(name, map);		
 				}

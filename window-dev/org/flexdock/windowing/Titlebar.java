@@ -11,15 +11,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 
 import org.flexdock.windowing.plaf.PlafManager;
-import org.flexdock.windowing.plaf.titlebar.TitlebarUI;
-import org.flexdock.windowing.plaf.titlebar.TitlebarUIFactory;
+import org.flexdock.windowing.plaf.theme.TitlebarUI;
 
 /**
  * @author Christopher Butler
@@ -33,7 +30,7 @@ public class Titlebar extends JComponent {
 	private String titleText;
 	private List actionList;
 	private HashMap actionButtons;
-	private AbstractButton[] buttonList;
+	private Button[] buttonList;
 	private boolean active;
 	
 	public Titlebar() {
@@ -91,7 +88,7 @@ public class Titlebar extends JComponent {
 			return;
 
 		// create the button
-		AbstractButton button = createActionButton(action);
+		Button button = createActionButton(action);
 		button.setIcon(icon);
 		// cache the button
 		actionButtons.put(key, button);
@@ -104,7 +101,7 @@ public class Titlebar extends JComponent {
 	}
 	
 	private void regenerateButtonList() {
-		AbstractButton[] list = new AbstractButton[actionList.size()];
+		Button[] list = new Button[actionList.size()];
 		for(int i=0; i<list.length; i++) {
 			Action action = (Action)actionList.get(i);
 			String key = getKey(action);
@@ -133,8 +130,8 @@ public class Titlebar extends JComponent {
 		return (Action[])actionList.toArray(new Action[0]);
 	}
 	
-	protected AbstractButton getButton(String key) {
-		return (AbstractButton)actionButtons.get(key);
+	protected Button getButton(String key) {
+		return (Button)actionButtons.get(key);
 	}
 	
 	protected boolean hasAction(String key) {
@@ -162,7 +159,7 @@ public class Titlebar extends JComponent {
 			return;
 		
 		// Remove button associated with this action.
-		AbstractButton button = getButton(key);
+		Button button = getButton(key);
 		remove(button);
 		actionButtons.remove(key);
 		// remove the action
@@ -179,7 +176,7 @@ public class Titlebar extends JComponent {
 			Action action = (Action)actionList.get(0);
 			String key = getKey(action);
 			// Remove button associated with this action.
-			AbstractButton button = getButton(key);
+			Button button = getButton(key);
 			remove(button);
 			actionButtons.remove(key);
 			// remove the action
@@ -213,9 +210,11 @@ public class Titlebar extends JComponent {
 		}
 	}
 	
-	public AbstractButton createActionButton(Action action) {
-		AbstractButton button = new JButton();
+	public Button createActionButton(Action action) {
+		Button button = new Button();
 		button.setAction(action);
+		if(ui instanceof TitlebarUI)
+			((TitlebarUI)ui).configureAction(action);
 		return button;
 	}
 	
@@ -225,8 +224,6 @@ public class Titlebar extends JComponent {
 	}
 	
     public void updateUI() {
-    	TitlebarUI tbUI = preferredUi==null? 
-    			(TitlebarUI)PlafManager.getUI(this):  TitlebarUIFactory.getUI(preferredUi);
-        setUI(tbUI);
+    	setUI(PlafManager.getUI(this));
     }
 }
