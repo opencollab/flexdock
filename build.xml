@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<project name="flexdock" basedir="." default="build.default">
+
+	<!-- build-source properties -->
+    <property name="java.src" value="${basedir}/src/java" />
+    <property name="java.src.core" value="${java.src}/core" />
+    <property name="java.src.demo" value="${java.src}/demo" />
+    <property name="java.src.misc" value="${java.src}/misc" />
+    <property name="java.src.test" value="${java.src}/test" />
+    <property name="java.src.view" value="${java.src}/view" />
+    
+    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.misc};${java.src.test};${java.src.view};" />
+    <property name="resource.dir" value="${basedir}/resources" />
+
+    <!-- build-output properties -->
+    <property name="doc.dir" value="${basedir}/docs" />
+    <property name="bin.dir" value="${basedir}/bin" />
+    <property name="dist.dir" value="${basedir}/dist" />
+    <property name="version" value="0.3.4" />
+    
+    <!-- native build properties -->
+	<property name="sdk.home" value="C:\j2sdk1.4.2_03"/>
+	<property name="dll.build.dir" value="C:\TEMP"/>
+	
+	
+	<!-- build targets -->
+	<target name="build.default" depends="clean, compile, jar"/>
+	<target name="build.with.dll" depends="clean, compile.dll, compile, jar"/>
+
+	<target name="clean">
+        <delete>
+        	<fileset dir="${bin.dir}" includes="**/*"/>
+        </delete>
+        <delete>
+        	<fileset dir="${dist.dir}" includes="**/*"/>
+        </delete>
+	</target>
+
+	<target name="init">
+		<!-- <mkdir dir="${doc.dir}" /> -->
+        <mkdir dir="${bin.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+	
+	<target name="init.resources">
+		<copy todir="${bin.dir}">
+			<fileset dir="${resource.dir}/core" />
+			<fileset dir="${resource.dir}/demo" />
+			<fileset dir="${resource.dir}/misc" />
+			<fileset dir="${resource.dir}/view" />
+		</copy>
+	</target>
+	
+	<target name="compile" depends="init, init.resources">
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.core}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.demo}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.misc}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.test}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.view}" destdir="${bin.dir}"/>
+	</target>
+
+	
+	<!-- 
+		This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
+		Also, it requires MinGW to compile the DLL.
+	-->
+	<target name="compile.dll" depends="init">
+		<property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
+		<property name="dll.dir" value="${basedir}\resources\core\org\flexdock\docking\drag\outline\win32" />
+		
+		<!-- Cleanup existing DLL -->
+		<delete file="${dll.dir}/RubberBand.dll" /> 
+		<!-- Create the object file -->
+		<exec executable="gcc">
+			<arg line='-c -I"${sdk.home}\include" -I"${sdk.home}\include\win32" -o ${dll.build.dir}\RubberBand.o ${c.dir}\RubberBand.c' />
+		</exec>
+		<!-- Link the shared resource -->
+		<exec executable="gcc">
+			<arg line='-mwindows -shared -o ${dll.dir}\RubberBand.dll ${dll.build.dir}\RubberBand.o ${c.dir}\RubberBand.def' />
+		</exec>
+	</target>
+	
+<!--	
+	<target name="javadoc">
+		<javadoc sourcepath="${java.src.dir}" destdir="${doc.dir}" packagenames="org.flexdock.*"/>
+	</target>
+-->
+
+	<target name="jar" depends="init, compile">
+		<jar jarfile="${dist.dir}/${ant.project.name}-${version}.jar" basedir="${bin.dir}" />
+	</target>
+	
+
+</project>
