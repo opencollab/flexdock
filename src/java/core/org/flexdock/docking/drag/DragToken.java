@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
 
 import javax.swing.SwingUtilities;
@@ -19,14 +18,14 @@ public class DragToken {
 	private Point mouseOffset;
 	private Point currentMouse;
 	private EventListener[] cachedListeners;
-	private MouseMotionListener pipelineListener;
+	private DragManager dragListener;
 	private DockingPort targetPort;
 	private String targetRegion;
 	private boolean overWindow;
 	private boolean pseudoDrag;
 
 	
-	public DragToken(Component dockable, MouseEvent evt) {
+	public DragToken(Component dockable, Point dragOrigin, MouseEvent evt) {
 		if(dockable==null)
 			throw new NullPointerException("'dockable' parameter cannot be null.");
 		if(evt==null)
@@ -34,7 +33,9 @@ public class DragToken {
 		if(!(evt.getSource() instanceof Component))
 			throw new IllegalArgumentException("'evt.getSource()' must be an instance of java.awt.Component.");
 		
-		init(dockable, (Component)evt.getSource(), evt.getPoint(), false);
+		if(dragOrigin==null)
+			dragOrigin = evt.getPoint();
+		init(dockable, (Component)evt.getSource(), dragOrigin, false);
 	}
 	
 	public DragToken(Component dockable, Component dragSource, Point currentMouse) {
@@ -134,12 +135,12 @@ public class DragToken {
 		cachedListeners = listeners;
 	}
 
-	public MouseMotionListener getPipelineListener() {
-		return pipelineListener;
+	public DragManager getDragListener() {
+		return dragListener;
 	}
 
-	public void setPipelineListener(MouseMotionListener pipelineListener) {
-		this.pipelineListener = pipelineListener;
+	public void setDragListener(DragManager listener) {
+		this.dragListener = listener;
 	}
 
 	public boolean isOverWindow() {
