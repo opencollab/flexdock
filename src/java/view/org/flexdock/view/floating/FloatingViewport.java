@@ -17,7 +17,7 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.Titlebar;
 import org.flexdock.view.View;
-import org.flexdock.view.viewport.Viewport;
+import org.flexdock.view.Viewport;
 
 /**
  * @author Christopher Butler
