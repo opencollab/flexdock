@@ -7,28 +7,35 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JComponent;
+import javax.swing.UIManager;
 
 /**
  * @author Claudio Romano
  */
 public class DefaultPainter implements Painter {
-
+    public static final Color DEFAULT_BG_COLOR = UIManager.getColor( "Panel.background");
+    public static final Color DEFAULT_BG_COLOR_ACTIVE = UIManager.getColor( "InternalFrame.activeTitleBackground");
+    
     protected PainterResource painterResource;
 
-    public void paint(Graphics g, boolean active, JComponent titlebar) {
-        int w = titlebar.getWidth();
-        int h = titlebar.getHeight();
-
+    public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         Color c = getBackgroundColor(active);
 
         g.setColor(c);
-        g.fillRect(0, 0, w, h);
+        g.fillRect(0, 0, width, height);
 
     }
 
     protected Color getBackgroundColor(boolean active) {
-        Color color = active ? painterResource.getBgColorActiv() : painterResource.getBgColor();
-        return color == null ? painterResource.getBgColor() : color;
+        return active ? getBackgroundColorActive() :  getBackgroundColorInactive();
+    }
+    
+    protected Color getBackgroundColorInactive() {
+        return painterResource.getBgColor()==null ? DEFAULT_BG_COLOR : painterResource.getBgColor();
+    }
+    
+    protected Color getBackgroundColorActive( ) {
+        return painterResource.getBgColorActive()==null ? DEFAULT_BG_COLOR_ACTIVE : painterResource.getBgColorActive();
     }
 
     /**

@@ -34,15 +34,15 @@ public class PainterResource extends PropertySet{
     /**
      * @return Returns the bgColorActiv.
      */
-    public Color getBgColorActiv() {
+    public Color getBgColorActive() {
         return getColor( BACKGROUND_COLOR_ACTIVE);
     }
     
     /**
      * @param bgColorActiv The bgColorActiv to set.
      */
-    public void setBgColorActiv(Color bgColorActiv) {
-        setProperty( BACKGROUND_COLOR_ACTIVE, bgColorActiv);
+    public void setBgColorActive(Color bgColorActive) {
+        setProperty( BACKGROUND_COLOR_ACTIVE, bgColorActive);
     }
     
     /**

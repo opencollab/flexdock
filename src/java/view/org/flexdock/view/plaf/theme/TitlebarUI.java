@@ -76,7 +76,14 @@ public class TitlebarUI extends FlexViewComponentUI {
 	}
 	
 	protected void paintBackground(Graphics g, Titlebar titlebar) {
-        painter.paint( g, titlebar.isActive(), titlebar);
+	    Rectangle paintArea = getPaintAreaRectangle(titlebar); 
+	    g.translate( paintArea.x, paintArea.y);
+        painter.paint( g, paintArea.width, paintArea.height, titlebar.isActive(), titlebar);
+        g.translate( -paintArea.x, -paintArea.y);
+	}
+	
+	protected Rectangle getPaintAreaRectangle(Titlebar titlebar) {
+	    return new Rectangle(0,0, titlebar.getWidth(), titlebar.getHeight());
 	}
 	
 	protected void paintTitle(Graphics g, Titlebar titlebar) {
@@ -109,10 +116,14 @@ public class TitlebarUI extends FlexViewComponentUI {
 		icon.paintIcon(titlebar, g, r.x, r.y);
 	}
 	
-	protected void paintBorder(Graphics g, Titlebar tilebar) {
-		Border border = getBorder(tilebar);
-		if(border!=null)
-			border.paintBorder(tilebar, g, 0, 0, tilebar.getWidth(), tilebar.getHeight());
+	protected void paintBorder(Graphics g, Titlebar titlebar) {
+		Border border = getBorder(titlebar);
+		if(border!=null) {
+		    Rectangle rectangle = getPaintAreaRectangle( titlebar);
+		    g.translate( rectangle.x, rectangle.y);
+			border.paintBorder(titlebar, g, 0, 0, rectangle.width, rectangle.height);
+			g.translate( -rectangle.x, -rectangle.y);
+		}
 	}
 	
 	protected Rectangle getIconRect(Titlebar titlebar) {
@@ -137,8 +148,9 @@ public class TitlebarUI extends FlexViewComponentUI {
 	}
 	
 	public void layoutButtons(Titlebar titlebar) {
-		int h = titlebar.getHeight();
-		int x = titlebar.getWidth()-h;
+		int margin = getButtonMargin();
+		int h = titlebar.getHeight()-2*margin;
+		int x = titlebar.getWidth()-margin-h;
 		
 		Component[] c = titlebar.getComponents();
 		for(int i=0; i<c.length; i++) {
@@ -146,9 +158,13 @@ public class TitlebarUI extends FlexViewComponentUI {
 				continue;
 			
 			Button b = (Button)c[i];
-			b.setBounds(x, 0, h, h);
+			b.setBounds(x, margin, h, h);
 			x -= h;
 		}
+	}
+	
+	protected int getButtonMargin() {
+	    return 0;
 	}
 	
 	public void configureAction(Action action) {
