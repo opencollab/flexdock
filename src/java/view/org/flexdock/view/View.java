@@ -298,30 +298,32 @@ public class View extends JComponent implements Dockable {
 		getDockingProperties().setDockableDesc(tabText);
 	}
 	
-	public void dock(Dockable dockable) {
-		dock(dockable, Viewport.CENTER_REGION);
+	public boolean dock(Dockable dockable) {
+		return dock(dockable, Viewport.CENTER_REGION);
 	}
 	
 	public DockingPort getDockingPort() {
 		return (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, this);
 	}
 	
-	public void dock(Dockable dockable, String relativeRegion) {
-		dock(dockable, relativeRegion, UNSPECIFIED_SIBLING_PREF);
+	public boolean dock(Dockable dockable, String relativeRegion) {
+		return dock(dockable, relativeRegion, UNSPECIFIED_SIBLING_PREF);
 	}
 	
-	public void dock(Dockable dockable, String relativeRegion, float newPref) {
+	public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
 		if(dockable==null)
-			return;
+			throw new IllegalArgumentException("Dockable cannot be null");
 		
 		if(!DockingManager.isValidDockingRegion(relativeRegion))
 			throw new IllegalArgumentException("'" + relativeRegion + "' is not a valid docking region.");
 
-		setSiblingPreference(relativeRegion, newPref);
+		setSiblingPreference(relativeRegion, ratio);
 		
 		DockingPort port = getDockingPort();
 		if(port!=null)
-			DockingManager.dock(dockable, port, relativeRegion);
+			return DockingManager.dock(dockable, port, relativeRegion);
+
+		return false;
 	}
 	
 	protected void setSiblingPreference(String region, float size) {
@@ -374,6 +376,12 @@ public class View extends JComponent implements Dockable {
 	}
 
 	public void dragStarted(DockingEvent evt) {
+	}
+	
+	/**
+	 * @see org.flexdock.docking.event.DockingListener#undockingComplete(org.flexdock.docking.event.DockingEvent)
+	 */
+	public void undockingComplete(DockingEvent evt) {
 	}
 	
 	public void dropStarted(DockingEvent evt) {
