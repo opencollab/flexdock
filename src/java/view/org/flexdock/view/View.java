@@ -378,9 +378,6 @@ public class View extends JComponent implements Dockable {
 	public void dragStarted(DockingEvent evt) {
 	}
 	
-	/**
-	 * @see org.flexdock.docking.event.DockingListener#undockingComplete(org.flexdock.docking.event.DockingEvent)
-	 */
 	public void undockingComplete(DockingEvent evt) {
 	}
 	
