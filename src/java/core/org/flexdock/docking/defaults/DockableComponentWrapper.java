@@ -185,7 +185,7 @@ public class DockableComponentWrapper implements Dockable {
 	/**
 	 * @see org.flexdock.docking.Dockable#isTerritorial()
 	 */
-	public boolean isTerritorial(Dockable dockable) {
+	public boolean isTerritorial(Dockable dockable, String region) {
 		return territorial;
 	}
 

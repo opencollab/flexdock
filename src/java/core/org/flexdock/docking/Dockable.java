@@ -101,7 +101,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	 * target <code>DockingPort</code> on how to handle multi-Dockable layouts and implies no
 	 * guarantee as to whether the return value will be honored.
 	 */
-	public boolean isTerritorial(Dockable dockable);
+	public boolean isTerritorial(Dockable dockable, String region);
 	
 	public ScaledInsets getSiblingInsets();
 	

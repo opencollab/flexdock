@@ -44,10 +44,10 @@ public class View extends JComponent implements Dockable {
 	protected boolean addRemoveAllowed;
 	protected String viewTabText;
 	protected boolean dockingEnabled;
-	protected boolean territorial;
 	protected ArrayList dockingListeners;
 	protected ScaledInsets siblingInsets;
 	protected boolean active;
+	
 	// TODO: Remove activeStateLocked flag.  This needs to be controlled by our forthcoming property manager.
 	protected boolean activeStateLocked;
 	
@@ -275,12 +275,8 @@ public class View extends JComponent implements Dockable {
 		return dockingEnabled;
 	}
 
-	public boolean isTerritorial(Dockable dockable) {
-		return territorial;
-	}
-
-	public void setTerritorial(boolean b) {
-		territorial = b;
+	public boolean isTerritorial(Dockable dockable, String region) {
+		return false;
 	}
 
 	public boolean mouseMotionListenersBlockedWhileDragging() {

@@ -66,7 +66,7 @@ public class Viewport extends DefaultDockingPort {
 		
 		// otherwise, only allow docking in the CENTER if the dockable 
 		// doesn't mind
-		return !dockable.isTerritorial(null);
+		return !dockable.isTerritorial(null, DockingPort.CENTER_REGION);
 	}
 	
 	public boolean dock(Dockable dockable) {
