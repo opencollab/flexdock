@@ -15,6 +15,7 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.drag.outline.AbstractRubberBand;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 
@@ -22,8 +23,10 @@ public class DragGlasspane extends JComponent {
 	private DockingPortCover previousCover;
 	private Component cachedGlassPane;
 	private RootWindow rootWindow;
+	private AbstractRubberBand globalRubberBand;
 	
-	public DragGlasspane() {
+	public DragGlasspane(AbstractRubberBand rubberBand) {
+		globalRubberBand = rubberBand;
 		setLayout(null);
 	}
 
@@ -84,7 +87,7 @@ public class DragGlasspane extends JComponent {
 		SwingUtilities.convertPointFromScreen(rectLoc, this);
 		rect.setLocation(rectLoc);
 		
-		DockingPortCover coverPanel = new DockingPortCover(port);
+		DockingPortCover coverPanel = new DockingPortCover(port, globalRubberBand);
 		add(coverPanel);
 		coverPanel.setBounds(rect);
 		coverPanel.setVisible(true);
@@ -144,8 +147,13 @@ public class DragGlasspane extends JComponent {
 	}
 	
 	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+		// make sure the global rubber band is cleared before we paint.
+		// otherwise, we may end up with XOR-outline artifacts on our
+		// Graphics context
+		globalRubberBand.clear();
 		
+		// now we're free to paint
+		super.paintComponent(g);
 //		g.fillRect(0, 0, getWidth(), getHeight());
 	}
 }

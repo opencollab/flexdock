@@ -9,6 +9,7 @@ import java.util.HashMap;
 import javax.swing.JComponent;
 
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.drag.outline.AbstractRubberBand;
 import org.flexdock.docking.drag.preview.AlphaPreview;
 import org.flexdock.docking.drag.preview.DragPreview;
 import org.flexdock.util.SwingUtility;
@@ -27,9 +28,11 @@ public class DockingPortCover extends JComponent {
 	private Point currentMouse;
 	private DragPreview previewDelegate;
 	private DockingPort dockingPort;
+	private AbstractRubberBand globalRubberBand;
 	
-	public DockingPortCover(DockingPort port) {
+	public DockingPortCover(DockingPort port, AbstractRubberBand rubberBand) {
 		dockingPort = port;
+		globalRubberBand = rubberBand;
 //		previewDelegate = new XORPreview();
 		previewDelegate = new AlphaPreview();
 		
@@ -76,6 +79,12 @@ public class DockingPortCover extends JComponent {
 
 	
 	protected void paintComponent(Graphics g) {
+		// make sure the global rubber band is cleared before we paint.
+		// otherwise, we may end up with XOR-outline artifacts on our
+		// Graphics context
+		globalRubberBand.clear();
+		
+		// now we're free to paint
 		if(currentMouse==null)
 			return;
 
