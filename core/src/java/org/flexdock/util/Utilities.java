@@ -19,4 +19,16 @@ public class Utilities {
 		} catch(InterruptedException ignored) {
 		}
 	}
+	
+	public static int getInt(String data) {
+		return getInt(data, 0);
+	}
+	
+	public static int getInt(String data, int defaultValue) {
+		try {
+			return Integer.parseInt(data);
+		} catch(Exception e) {
+			return defaultValue;
+		}
+	}
 }
