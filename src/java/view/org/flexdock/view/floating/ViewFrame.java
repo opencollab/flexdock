@@ -70,7 +70,9 @@ public class ViewFrame extends JDialog {
         setUndecorated(true);
         getRootPane().setWindowDecorationStyle(JRootPane.NONE);
 
-		viewport = new FloatingViewport(this);
+        //TODO I am not sure null should be passed here,
+        // maybe we should use our IDPersistentIdProvider
+        viewport = new FloatingViewport(this, null);
 		setContentPane(viewport);
     }
 
