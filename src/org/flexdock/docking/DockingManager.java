@@ -478,7 +478,7 @@ public class DockingManager extends JPanel {
 		if (c == null)
 			return null;
 
-		Dockable initiator = (Dockable) CACHED_DRAG_INITIATORS_BY_COMPONENT.get(c);
+		Dockable initiator = getRegisteredDockable(c);
 		if (initiator == null) {
 			String persistentId = generatePersistentId(c);
 			initiator = DockableComponentWrapper.create(c, persistentId, desc, allowResize);
@@ -748,6 +748,9 @@ public class DockingManager extends JPanel {
 		int w = dragSourceSize.width + maxX - minX;
 		int h = dragSourceSize.height + maxY - minY;
 		repaint(minX - mouseOffsetFromDragSource.x - 10, minY - mouseOffsetFromDragSource.y-10, w+20, h+20);
+		// clear out the mouse image.  this is actually only useful when the image is outside
+		// of the drag-rectangle
+		repaint(lastMouse.x-12, lastMouse.y-12, 24, 24);
 	}
 
 	private void resolveMouseCursorRegion() {
