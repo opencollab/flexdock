@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<project name="docking" default="clean.compile.archive">
+<project name="flexdock" default="clean.compile.archive">
   
    <target name="init">
       <property name="project" value="${ant.project.name}"/>
@@ -9,7 +9,7 @@
       <property name="tmp" value="${output}/tmp" /> 
       <property name="doc" value="${output}/docs" />
       <property name="resourceOut" value="${tmp}/resources" />
-      <property name="version" value="0.3.2" />
+      <property name="version" value="0.3.4" />
       
       <mkdir dir="${output}" />
       <mkdir dir="${tmp}" />
