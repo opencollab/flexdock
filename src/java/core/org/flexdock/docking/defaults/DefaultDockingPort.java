@@ -870,6 +870,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public void dropStarted(DockingEvent evt) {
 	}
 	
+	/**
+	 * @see org.flexdock.docking.event.DockingListener#undockingComplete(org.flexdock.docking.event.DockingEvent)
+	 */
+	public void undockingComplete(DockingEvent evt) {
+	}
+	
 	public DockingPortProps getDockingProperties() {
 		return PropertyManager.getDockingPortProps(this);
 	}

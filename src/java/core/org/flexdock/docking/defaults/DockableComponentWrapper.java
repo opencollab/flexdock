@@ -153,6 +153,12 @@ public class DockableComponentWrapper implements Dockable {
 	public void dockingComplete(DockingEvent evt) {
 	}
 
+	/**
+	 * @see org.flexdock.docking.event.DockingListener#undockingComplete(org.flexdock.docking.event.DockingEvent)
+	 */
+	public void undockingComplete(DockingEvent evt) {
+	}
+	
 	public void dragStarted(DockingEvent evt) {
 	}
 	
