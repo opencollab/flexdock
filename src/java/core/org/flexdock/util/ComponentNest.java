@@ -11,7 +11,7 @@ import javax.swing.JRootPane;
 import org.flexdock.docking.Dockable;
 
 /**
- * @author cb8167
+ * @author Christopher Butler
  */
 public class ComponentNest {
 	public Component searchSrc;
@@ -52,7 +52,7 @@ public class ComponentNest {
    			return true;
    		
    		// special case
-   		if(clazz==Dockable.class || obj instanceof JComponent) {
+   		if(clazz==Dockable.class && obj instanceof JComponent) {
    			return ((JComponent)obj).getClientProperty(Dockable.DOCKABLE_INDICATOR)==Boolean.TRUE;
    		}
    		

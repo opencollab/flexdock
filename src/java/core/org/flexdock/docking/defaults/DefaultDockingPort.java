@@ -249,7 +249,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public String getRegion(Point p) {
 		if(p==null)
 			return UNKNOWN_REGION;
-		
+
 		RegionChecker regionChecker = getDockingProperties().getRegionChecker();
 		Dockable d = getDockableAt(p);
 		Component regionTest = this;
@@ -259,7 +259,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			p = SwingUtilities.convertPoint(this, p, regionTest);
 		}
 
-		return regionChecker.getRegion(regionTest, p); 
+		return regionChecker.getRegion(regionTest, p);
 	}
 	
 	public Dockable getDockableAt(Point p) {

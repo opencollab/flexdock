@@ -24,11 +24,18 @@ public abstract class DefaultPreview implements DragPreview {
 	public static final int DEFAULT_TAB_HEIGHT = 20;
 	
 	public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget) {
-		if(dockable==null || hover==null || port==null || targetRegion==null || paintingTarget==null)
+		if(dockable==null || port==null || targetRegion==null || paintingTarget==null)
 			return null;
 
 		if(DockingPort.UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(targetRegion, dockable))
 			return null;
+		
+		// if we're not hovering over another Dockable then the DockingPort we're over is empty.
+		// return its bounds.
+		if(hover==null) {
+			Rectangle portBounds = ((Component)port).getBounds();
+			return createPolyRect(portBounds);
+		}
 		
 		Polygon p = null;
 		Component srcAxes = hover.getDockable();

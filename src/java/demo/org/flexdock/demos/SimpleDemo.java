@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.flexdock.docking.DockingManager;
@@ -41,6 +42,7 @@ public class SimpleDemo extends JFrame {
 		// create and register the Dockable panel
 		JPanel p = new JPanel();
 		p.setBackground(color);
+		p.add(new JLabel("Drag Me"));
 		DockingManager.registerDockable(p, desc);
 		 
 		// dock the panel and return the DockingPort
@@ -50,7 +52,7 @@ public class SimpleDemo extends JFrame {
 	
 	private DefaultDockingPort createDockingPort() {
 		DefaultDockingPort port = new DefaultDockingPort();
-		port.setBackground(Color.lightGray);
+		port.setBackground(Color.ORANGE);
 		port.setPreferredSize(new Dimension(100, 100));
 		return port;
 	}

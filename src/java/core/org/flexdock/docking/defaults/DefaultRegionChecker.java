@@ -18,10 +18,26 @@ import org.flexdock.docking.RegionChecker;
  *
  */
 public class DefaultRegionChecker implements RegionChecker {
+	
 	public String getRegion(Component c, Point p) {
-		if(c==null || p==null || !c.getBounds().contains(p))
+		if(c==null || p==null)
 			return DockingPort.UNKNOWN_REGION;
 
+		// make sure the point is actually inside of the target dockingport
+		Rectangle targetArea = c.getBounds();
+		// if our target component is the dockingport itself, then getBounds() would
+		// have returned a target area relative to the dockingport's parent.  reset
+		// relative to the dockingport.
+		if(c instanceof DockingPort)
+			targetArea.setLocation(0, 0);
+		if(!targetArea.contains(p))
+			return DockingPort.UNKNOWN_REGION;
+		
+		// if our target component is the dockingport, then the dockingport is 
+		// currently empty and all points within it are in the CENTER
+		if(c instanceof DockingPort)
+			return DockingPort.CENTER_REGION;
+		
 		// start with the north region
 		Rectangle north = getNorthRegion(c);
 		int rightX = north.x + north.width;
