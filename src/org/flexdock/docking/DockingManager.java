@@ -561,7 +561,7 @@ public class DockingManager {
 		public void mouseDragged(MouseEvent e) {
 			if(dockable==null || !dockable.isDockingEnabled())
 				return;
-				
+
 			if(pipeline==null || !pipeline.isOpen()) {
 				DragToken token = new DragToken(dockable.getDockable(), e);
 				token.setPipelineListener(this);
@@ -581,7 +581,7 @@ public class DockingManager {
 		}
 
 		public void mouseReleased(MouseEvent e) {
-			if(!dockable.isDockingEnabled())
+			if(pipeline==null || !dockable.isDockingEnabled())
 				return;
 
 			stopDrag(dockable, pipeline.getDragToken());				
