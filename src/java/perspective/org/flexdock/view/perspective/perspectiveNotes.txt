@@ -1,0 +1,11 @@
+Some thoughts.
+
+Is it ok that perspective holds information
+views that are RELATIVELY docked to each other.
+
+It seems to be alright but the problem might arise
+when some deletes certain view from
+the perspective or view becomes undocked and
+can no longer be relatively addressed unless
+a view is removed or undocked other view takes over
+this view and new mapping info (ViewDockingInfo) is added.
