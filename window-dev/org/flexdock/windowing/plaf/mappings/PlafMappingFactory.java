@@ -6,8 +6,10 @@
  */
 package org.flexdock.windowing.plaf.mappings;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
@@ -24,8 +26,11 @@ import org.w3c.dom.Element;
  */
 public class PlafMappingFactory implements XMLConstants {
 	public static final String PLAF_KEY = "plaf";
-	private static final HashMap plafMappings = loadPlafMappings();
+	private static final HashMap PLAF_MAPPINGS = loadPlafMappings();
 	
+	public static List getAvailablePlafNames() { 
+		return new ArrayList(PLAF_MAPPINGS.keySet());
+	}
 	
 	public static String getInstalledPlafReference() {
 		LookAndFeel currentPlaf = UIManager.getLookAndFeel();
@@ -40,7 +45,7 @@ public class PlafMappingFactory implements XMLConstants {
 		if(key==null)
 			return null;
 
-		Object value = plafMappings.get(key);
+		Object value = PLAF_MAPPINGS.get(key);
 		if(value instanceof String)
 			return (String)value;
 		
