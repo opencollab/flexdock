@@ -1,8 +1,5 @@
 /*
  * Created on Mar 10, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.flexdock.util;
 
@@ -12,9 +9,6 @@ import javax.swing.JRootPane;
 
 /**
  * @author cb8167
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ComponentNest {
 	public Component searchSrc;

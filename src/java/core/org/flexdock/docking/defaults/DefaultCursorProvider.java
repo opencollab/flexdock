@@ -1,8 +1,5 @@
 /*
  * Created on Aug 28, 2004
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.flexdock.docking.defaults;
 
@@ -15,9 +12,6 @@ import org.flexdock.util.ResourceManager;
 
 /**
  * @author Christopher Butler
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class DefaultCursorProvider implements CursorProvider {
 	private static final String NORTH_IMG = "upArrow.gif";
@@ -53,46 +47,27 @@ public class DefaultCursorProvider implements CursorProvider {
 		return ResourceManager.createCursor(url, new Point(8, 8), null);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.flexdock.docking.CursorProvider#getCenterCursor()
-	 */
 	public Cursor getCenterCursor() {
-		// TODO Auto-generated method stub
 		return center;
 	}
-	/* (non-Javadoc)
-	 * @see org.flexdock.docking.CursorProvider#getDisallowedCursor()
-	 */
+
 	public Cursor getDisallowedCursor() {
-		// TODO Auto-generated method stub
 		return blocked;
 	}
-	/* (non-Javadoc)
-	 * @see org.flexdock.docking.CursorProvider#getEastCursor()
-	 */
+
 	public Cursor getEastCursor() {
-		// TODO Auto-generated method stub
 		return east;
 	}
-	/* (non-Javadoc)
-	 * @see org.flexdock.docking.CursorProvider#getNorthCursor()
-	 */
+
 	public Cursor getNorthCursor() {
-		// TODO Auto-generated method stub
 		return north;
 	}
-	/* (non-Javadoc)
-	 * @see org.flexdock.docking.CursorProvider#getSouthCursor()
-	 */
+
 	public Cursor getSouthCursor() {
-		// TODO Auto-generated method stub
 		return south;
 	}
-	/* (non-Javadoc)
-	 * @see org.flexdock.docking.CursorProvider#getWestCursor()
-	 */
+
 	public Cursor getWestCursor() {
-		// TODO Auto-generated method stub
 		return west;
 	}
 }

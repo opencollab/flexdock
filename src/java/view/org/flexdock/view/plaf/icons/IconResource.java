@@ -1,8 +1,5 @@
 /*
  * Created on Feb 28, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.flexdock.view.plaf.icons;
 
@@ -11,9 +8,6 @@ import javax.swing.plaf.UIResource;
 
 /**
  * @author Christopher Butler
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class IconResource implements UIResource {
 	private Icon icon;

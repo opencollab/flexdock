@@ -37,9 +37,6 @@ import org.flexdock.view.viewport.Viewport;
 /**
  * @author Andreas Ernst
  * @author Christopher Butler
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class ViewFrame extends JDialog implements FocusListener {
 	private Viewport viewport;

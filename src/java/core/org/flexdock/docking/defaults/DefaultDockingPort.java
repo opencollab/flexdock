@@ -916,17 +916,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	}
 	
 	public void dockingCanceled(DockingEvent evt) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void dockingComplete(DockingEvent evt) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public void dragStarted(DockingEvent evt) {
-		// TODO Auto-generated method stub
 	}
 	
 	public void dropStarted(DockingEvent evt) {

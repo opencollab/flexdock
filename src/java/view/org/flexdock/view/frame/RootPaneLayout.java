@@ -32,9 +32,6 @@ import javax.swing.JLayeredPane;
 /**
  * @author Andreas Ernst
  * @author Christopher Butler
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class RootPaneLayout implements LayoutManager2, Serializable {
 	private RootPane pane;

@@ -1,8 +1,5 @@
 /*
  * Created on Mar 11, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.flexdock.docking.drag.preview;
 
@@ -21,9 +18,6 @@ import org.flexdock.util.SwingUtility;
 
 /**
  * @author Christopher Butler
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public abstract class DefaultPreview implements DragPreview {
 	public static final int DEFAULT_TAB_WIDTH = 50;

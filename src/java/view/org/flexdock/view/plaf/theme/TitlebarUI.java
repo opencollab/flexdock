@@ -1,8 +1,5 @@
 /*
  * Created on Feb 27, 2005
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.flexdock.view.plaf.theme;
 
@@ -26,9 +23,6 @@ import org.flexdock.view.plaf.icons.IconResourceFactory;
 
 /**
  * @author Christopher Butler
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class TitlebarUI extends FlexViewComponentUI {
 	public static final String DEFAULT_HEIGHT = "default.height";
@@ -48,7 +42,6 @@ public class TitlebarUI extends FlexViewComponentUI {
 	protected IconMap defaultIcons;
 	
 	public void installUI(JComponent c) {
-		// TODO Auto-generated method stub
 		super.installUI(c);
 		Dimension d = c.getPreferredSize();
 		d.height = getDefaultHeight();
@@ -59,7 +52,6 @@ public class TitlebarUI extends FlexViewComponentUI {
 	}
 
 	public void uninstallUI(JComponent c) {
-		// TODO Auto-generated method stub
 		super.uninstallUI(c);
 	}
 
