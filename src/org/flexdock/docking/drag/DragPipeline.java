@@ -75,7 +75,7 @@ public class DragPipeline {
 	}
 
 	private DragGlasspane createGlassPane() {
-		DragGlasspane pane = new DragGlasspane(rubberBand);
+		DragGlasspane pane = new DragGlasspane();
 		pane.addMouseListener(paneMonitor);
 		return pane;
 	}
@@ -132,38 +132,79 @@ public class DragPipeline {
 	}
 	
 	private void processDragEventImpl(MouseEvent me) {
-
 		dragToken.updateMouse(me);
 		me.consume();
+
+		// hide the rubber band
+		rubberBand.clear();
 		
+		// get the new rubber band rect
+		final Rectangle screenRect = dragToken.getDragRect(true);
 		
-		if(currentGlasspane!=newGlassPane) {
-			// if we're switching out to use an null glasspane, 
-			// we want to clear out the current glasspane and 
-			// show the global rubber band
-			if(newGlassPane==null) {
-				currentGlasspane.clear();
+		// get a painter for post-paint operations
+		Runnable postPainter = getPostPainter(screenRect);
+		
+		// if we haven't changed glasspanes
+		if(newGlassPane==currentGlasspane) {
+			// just redraw the rubberband if there's no current glasspane
+			if(currentGlasspane==null) {
+				deferRubberBandDrawing(screenRect);
+				return;
 			}
-			else {
-				rubberBand.clear();
-				newGlassPane.clear();
-			}
-			currentGlasspane = newGlassPane;
+			// otherwise, process the drag event on the current glasspane
+			// and repaint it.
+			currentGlasspane.setPostPainter(postPainter);
+			currentGlasspane.processDragEvent(dragToken);
+			return;
 		}
 		
+		// if we got here, then there was a transition between glasspanes.
+		// clear out the old one
+		if(currentGlasspane!=null) {
+			currentGlasspane.clear();
+		}
+		// set the new glasspane reference
+		currentGlasspane = newGlassPane;
+		
+		// if there's no current glasspane, then just redraw the rubber band
 		if(currentGlasspane==null)
-			drawRubberBand();
-		else
+			deferRubberBandDrawing(screenRect);
+		// otherwise, process the drag event on the current glasspane
+		// and repaint it.
+		else {
+			currentGlasspane.setPostPainter(postPainter);
 			currentGlasspane.processDragEvent(dragToken);
+		}
 	}
 
+	
 	private void setCurrentGlassPane(DragGlasspane gp) {
 		newGlassPane = gp;
 	}
 
-	private void drawRubberBand() {
-		Rectangle screenRect = dragToken.getDragRect(true);
-		rubberBand.paint(screenRect);
+	
+	private Runnable getPostPainter(final Rectangle rect) {
+		return new Runnable() {
+			public void run() {
+				deferRubberBandDrawing(rect);
+			}
+		};
+	}
+	private void deferRubberBandDrawing(final Rectangle rect) {
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						drawRubberBand(rect);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+	}
+	private void drawRubberBand(Rectangle rect) {
+		rubberBand.paint(rect);
 	}
 	
 	

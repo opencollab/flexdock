@@ -9,10 +9,8 @@ import java.util.HashMap;
 import javax.swing.JComponent;
 
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.drag.outline.AbstractRubberBand;
 import org.flexdock.docking.drag.preview.AlphaPreview;
 import org.flexdock.docking.drag.preview.DragPreview;
-import org.flexdock.util.SwingUtility;
 
 
 public class DockingPortCover extends JComponent {
@@ -25,14 +23,13 @@ public class DockingPortCover extends JComponent {
 	private HashMap regionMap;
 	private HashMap previewMap;
 	
-	private Point currentMouse;
 	private DragPreview previewDelegate;
 	private DockingPort dockingPort;
-	private AbstractRubberBand globalRubberBand;
+	private String currentRegion;
+	private Point currentMouse;
 	
-	public DockingPortCover(DockingPort port, AbstractRubberBand rubberBand) {
+	public DockingPortCover(DockingPort port) {
 		dockingPort = port;
-		globalRubberBand = rubberBand;
 //		previewDelegate = new XORPreview();
 		previewDelegate = new AlphaPreview();
 		
@@ -46,13 +43,13 @@ public class DockingPortCover extends JComponent {
 		regionMap = new HashMap();
 	}
 
-	
-	public void processDragEvent(DragToken token) {
+	String getDragTokenRegion(DragToken token) {
 		currentMouse = token.getCurrentMouse(this);
-		String region = getRegion();
-		token.setTarget(dockingPort, region);
-//		setCursor(CursorFactory.getCursor(region));
-		repaint();
+		return getRegion(currentMouse);
+	}
+	
+	DockingPort getPort() {
+		return dockingPort;
 	}
 
 	public void doLayout() {
@@ -76,30 +73,33 @@ public class DockingPortCover extends JComponent {
 		regionMap.put(westRegion, DockingPort.WEST_REGION);
 		regionMap.put(centerRegion, DockingPort.CENTER_REGION);
 	}
-
 	
+	void setCurrentRegion(String region) {
+		currentRegion = region;
+	}
+	
+	String getCurrentRegion() {
+		return currentRegion;
+	}
+
+
 	protected void paintComponent(Graphics g) {
-		// make sure the global rubber band is cleared before we paint.
-		// otherwise, we may end up with XOR-outline artifacts on our
-		// Graphics context
-		globalRubberBand.clear();
-		
-		// now we're free to paint
-		if(currentMouse==null)
+		if(currentRegion==null)
 			return;
 
 		// Testing code during drag operation
+		/*
 		SwingUtility.drawRect(g, northRegion);
 		SwingUtility.drawRect(g, southRegion);
 		SwingUtility.drawRect(g, eastRegion);
 		SwingUtility.drawRect(g, westRegion);
+		*/
 		
-		Rectangle r = getPreviewRect();
+		Rectangle r = getPreviewRect(currentMouse);
 		previewDelegate.drawPreview((Graphics2D)g, r);
 	}
 	
-	private Rectangle getPreviewRect() {
-		Point mouse = currentMouse;
+	private Rectangle getPreviewRect(Point mouse) {
 		int w = getWidth();
 		int h = getHeight();
 		int h2 = getHeight()/2;
@@ -115,15 +115,8 @@ public class DockingPortCover extends JComponent {
 			return new Rectangle(0, 0, w2, h);
 		return new Rectangle(0, 0, w, h);
 	}
-
-
-	public void clear() {
-		currentMouse = null;
-		repaint();
-	}
 	
-	private String getRegion() {
-		Point mouse = currentMouse;
+	private String getRegion(Point mouse) {
 		for(int i=0; i<regions.length; i++) {
 			if(regions[i].contains(mouse))
 				return (String)regionMap.get(regions[i]);
