@@ -297,5 +297,11 @@ public class SwingUtility {
 		int grayTone = ((color.getRed() + color.getGreen() + color.getBlue())/3);
 		return new Color(grayTone, grayTone, grayTone);
 	}
+	
+	public static void putClientProperty(Component c, Object key, Object value) {
+		if(c instanceof JComponent) {
+			((JComponent)c).putClientProperty(key, value);
+		}
+	}
 
 }

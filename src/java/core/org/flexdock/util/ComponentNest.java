@@ -5,7 +5,10 @@ package org.flexdock.util;
 
 import java.awt.Component;
 
+import javax.swing.JComponent;
 import javax.swing.JRootPane;
+
+import org.flexdock.docking.Dockable;
 
 /**
  * @author cb8167
@@ -23,7 +26,7 @@ public class ComponentNest {
 
 		Component c = searchSrc;
 		while(c!=null && !(c instanceof JRootPane)) {
-			if(nest.child==null && childClass.isAssignableFrom(c.getClass())) {
+			if(nest.child==null && isInstanceOf(c, childClass)) {
 				nest.child = c;
 			}
 			else  if(isParentContainer(c, parentClass)) {
@@ -43,6 +46,19 @@ public class ComponentNest {
    		else
    			return parentClass.isAssignableFrom(c.getClass());
    	}
+   	
+   	private static boolean isInstanceOf(Object obj, Class clazz) {
+   		if(clazz.isAssignableFrom(obj.getClass()))
+   			return true;
+   		
+   		// special case
+   		if(clazz==Dockable.class || obj instanceof JComponent) {
+   			return ((JComponent)obj).getClientProperty(Dockable.DOCKABLE_INDICATOR)==Boolean.TRUE;
+   		}
+   		
+   		return false;
+   	}
+   	
    	
 	private ComponentNest(Component searchSrc, Component child, Component parent) {
 		this.searchSrc = searchSrc;

@@ -34,6 +34,7 @@ import org.flexdock.docking.props.DockableProps;
  * @author Chris Butler
  */
 public interface Dockable extends DockingListener, DockingMonitor {
+	public static final String DOCKABLE_INDICATOR = "Dockable.DOCKABLE_INDICATOR";
 	/**
 	 * Returns the Component that is to be dragged and docked.  This may or may not be the same as the 
 	 * Component returned by <code>getInitiator()</code>.

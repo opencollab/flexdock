@@ -33,6 +33,7 @@ import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.util.SwingUtility;
 
 
 /**
@@ -189,9 +190,16 @@ public class DockingManager {
 	public static Dockable registerDockable(Dockable dockable) {
 		if (dockable == null || dockable.getDockable() == null || dockable.getDragSources()==null)
 			return null;
-
-
+		
 		DOCKABLES_BY_COMPONENT.put(dockable.getDockable(), dockable);
+		
+		// flag the component as dockable, in case it doesn't 
+		// implement the interface directly
+		Component c = dockable.getDockable();
+		SwingUtility.putClientProperty(c, Dockable.DOCKABLE_INDICATOR, Boolean.TRUE);
+		
+		// add drag listeners
+		updateDragListeners(dockable);
 		
 		// add the dockable as its own listener
 		dockable.addDockingListener(dockable);

@@ -86,7 +86,7 @@ public class DragGlasspane extends JComponent {
 		DockingPort port = (DockingPort)dropTargets.parent;
 		// this is the dockable we're currently hovered over, not the one
 		// being dragged
-		Dockable hover = (Dockable)dropTargets.child;
+		Dockable hover = getHoverDockable(dropTargets);
 		
 		Point mousePoint = token.getCurrentMouse((Component)port);
 		region = port==null? DockingPort.UNKNOWN_REGION: port.getRegion(mousePoint);
@@ -100,12 +100,19 @@ public class DragGlasspane extends JComponent {
 		repaint();
 	}
 	
+	private Dockable getHoverDockable(ComponentNest nest) {
+		Component c = nest.child;
+		if(c instanceof Dockable)
+			return (Dockable)c;
+		return DockingManager.getRegisteredDockable(c);
+	}
+	
 	protected void createPreviewPolygon(DragToken token, DockingPort port, Dockable hover, String region) {
 		DragPreview preview = getPreviewDelegate(token.getDockable(), port);
 		if(preview==null)
 			previewPoly = null;
 		else
-			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this);		
+			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this);
 	}
 	
 	public void clear() {
