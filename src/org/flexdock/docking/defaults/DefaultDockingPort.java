@@ -23,7 +23,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.Point;
 import java.awt.Window;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.util.HashSet;
 import java.util.WeakHashMap;
 
@@ -34,6 +38,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.config.ConfigurationManager;
 
@@ -111,6 +116,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	private boolean resizableDesired;
 	private BorderManager borderManager;
 	private String persistentId;
+	private boolean singleTabsAllowed;
+	private boolean tabbedDragSource;
+
 	
 	/**
 	 * Creates a new <code>DefaultDockingPort</code> with a <code>null</code> persistent ID, 
@@ -170,12 +178,32 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			((Container)port).add(c);
 	}
 
+	private void dockCmp(DockingPort port, Component c, String desc) {
+		port.dock(c, desc, DockingPort.CENTER_REGION, true);
+	}	
+
 	
 	/**
 	 * @see org.flexdock.docking.DockingPort#allowsDocking(java.lang.String)
 	 */
 	public boolean allowsDocking(String region) {
 		return dockingAllowed && isValidDockingRegion(region);
+	}
+
+	public void setSingleTabsAllowed(boolean b) {
+		singleTabsAllowed = b;
+	}
+	
+	public boolean areSingleTabsAllowed() {
+		return singleTabsAllowed;
+	}
+	
+	public void setTabsAsDragSource(boolean b) {
+		tabbedDragSource = b;
+	}
+	
+	public boolean areTabsDragSource() {
+		return tabbedDragSource;
 	}
 
 	/**
@@ -235,7 +263,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	
 	private JTabbedPane createTabbedPane() {
 		JTabbedPane pane = subComponentProvider==null? null: subComponentProvider.createTabbedPane();
-		return pane==null? DEFAULT_CMP_PROVIDER.createTabbedPane(): pane;
+		if(pane==null)
+			pane = DEFAULT_CMP_PROVIDER.createTabbedPane();
+
+		TabListener tl = new TabListener();
+		pane.addMouseListener(tl);
+		pane.addMouseMotionListener(tl);
+		return pane;
 	}
 	
 	private int tabPlacement;
@@ -302,16 +336,23 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		if(comp==docked)
 			return false;
 		
+		// if there is nothing currently in the docking port, then we can only 
+		// dock into the CENTER region.
+		if(docked==null)
+			region = DockingPort.CENTER_REGION;
+		
 		resizableDesired = resizable;
 		COMPONENT_TITLES.put(comp, desc);
-		if(docked==null) {
+		
+
+		if(!singleTabsAllowed && docked==null) {
 			setComponent(comp);
 			evaluateDockingBorderStatus();
 			return true;
 		}
 		
 		boolean success = DockingPort.CENTER_REGION.equals(region)? 
-				dockInCenterRegion(comp): dockInOuterRegion(comp, region);
+				dockInCenterRegion(comp): dockInOuterRegion(comp, region, desc);
 			
 		if(success) {
 			evaluateDockingBorderStatus();
@@ -366,8 +407,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			return false;
 		
 		// remove the currently docked component and add it to the tabbed pane
-		remove(docked);
-		tabs.add(docked, getValidTabTitle(tabs, docked));
+		if(docked!=null) {
+			remove(docked);
+			tabs.add(docked, getValidTabTitle(tabs, docked));
+		}
 		
 		// add the new component to the tabbed pane
 		tabs.add(comp, getValidTabTitle(tabs, comp));
@@ -386,7 +429,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public void dockingComplete(String region) {
 	}
 	
-	private boolean dockInOuterRegion(Component comp, String region) {
+	private boolean dockInOuterRegion(Component comp, String region, String desc) {
 		// cache the current size and cut it in half for later in the method.
 		Dimension halfSize = getSize();
 		halfSize.width /= 2;
@@ -400,7 +443,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		DockingPort oldContent = createChildPort();
 		DockingPort newContent = createChildPort();
 		addCmp(oldContent, docked);
-		addCmp(newContent, comp);
+		dockCmp(newContent, comp, desc);
 		
 		// put the ports in the correct order and add them to a new wrapper panel
 		DockingPort[] ports = putPortsInOrder(oldContent, newContent, region);
@@ -575,6 +618,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public void reevaluateContainerTree() {
 		reevaluateDockingWrapper();
 		reevaluateTabbedPane();
+
+
 		evaluateDockingBorderStatus();
 	}
 	
@@ -638,9 +683,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		
 		JTabbedPane tabs = (JTabbedPane)docked;
 		int componentCount = tabs.getComponentCount();
-		// we don't have to do anything special here if there is more than one tab
-		if(componentCount>1)
+		// we don't have to do anything special here if there is more than the
+		// minimum number of allowable tabs
+		int minTabs = singleTabsAllowed? 0: 1;
+		if(componentCount>minTabs) {
 			return;
+		}
 			
 		// otherwise, pull out the component in the remaining tab (if it exists), and 
 		// add it to ourselves as a direct child (ditching the JTabbedPane).
@@ -648,6 +696,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		removeAll();
 		if(comp!=null)
 			setComponent(comp);
+		
+			
+
+		Container parent = getParent();
+		Container grandParent = parent==null? null: parent.getParent();
+		// if our TabbedPane's last component was removed, then the TabbedPane itself has now been removed.
+		// if we're a child port within a JSplitPane within another DockingPort, then we ourselved need to be
+		// removed from the component tree, since we don't have any content.		
+		if(comp==null && parent instanceof JSplitPane && grandParent instanceof DefaultDockingPort) {
+			parent.remove(this);
+			((DefaultDockingPort)grandParent).reevaluateContainerTree();
+		}
 	}
 	
 
@@ -792,7 +852,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		 * @see org.flexdock.docking.SubComponentProvider#createChildPort()
 		 */
 		public DockingPort createChildPort() {
-			return new DefaultDockingPort();
+			return new DefaultDockingPort() {
+				public String toString() {
+					return "Child Port";
+				}
+			};
 		}
 	
 		/**
@@ -814,6 +878,50 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		 */
 		public double getInitialDividerLocation() {
 			return 0.5d;
+		}
+	}
+	
+	private class TabListener extends MouseAdapter implements MouseMotionListener {
+		private Dockable dockable;
+		
+		public void mouseMoved(MouseEvent me) {
+			// does nothing
+		}
+		
+		public void mouseDragged(MouseEvent me) {
+			redispatchToDockable(me);
+		}
+		
+		public void mouseReleased(MouseEvent me) {
+			redispatchToDockable(me);
+			dockable = null;
+		}
+		
+		public void mousePressed(MouseEvent me) {
+			if(!(me.getSource() instanceof JTabbedPane)) {
+				dockable = null;
+				return;
+			}
+			
+			JTabbedPane pane = (JTabbedPane)me.getSource();
+			Point p = me.getPoint();
+			int tabIndex = pane.indexAtLocation(p.x, p.y);
+			if(tabIndex==-1) {
+				dockable = null;
+				return;
+			}
+
+			dockable = DockingManager.getRegisteredDockable(pane.getComponentAt(tabIndex));
+			redispatchToDockable(me);
+		}
+		
+		private void redispatchToDockable(MouseEvent me) {
+			if(!tabbedDragSource || dockable==null)
+				return;
+				
+			Component dragSrc = dockable.getInitiator();
+			MouseEvent evt = SwingUtilities.convertMouseEvent((Component)me.getSource(), me, dragSrc);
+			dragSrc.dispatchEvent(evt);
 		}
 	}
 
