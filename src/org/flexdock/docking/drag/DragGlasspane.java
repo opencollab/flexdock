@@ -129,6 +129,9 @@ public class DragGlasspane extends JComponent {
 			cover.processDragEvent(token);
 			previousCover = cover;
 		}
+		else {
+			//TODO: Draw AWT-independent rubber band
+		}
 	}
 	
 	public void clear() {
