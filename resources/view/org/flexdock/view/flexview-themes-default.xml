@@ -5,7 +5,7 @@
 	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
 	<plaf name="apple.laf.AquaLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
-	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="win32" />
+	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="eclipse2" />
 	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
 	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
 				handler="org.flexdock.view.plaf.mappings.SkinLFResolver" />
@@ -19,6 +19,7 @@
 	<handler name="square-bevel-border" value="org.flexdock.view.ext.SquareBevelBorderResource" />
 	<handler name="paint" value="org.flexdock.view.plaf.resources.PainterResourceHandler" />
 	<handler name="rounded-border" value="org.flexdock.view.ext.RoundedBorderResource" />
+	<handler name="raised-border" value="org.flexdock.view.ext.RaisedBorderResource" />
 	
 	<!-- Specify a set of default property handlers for specific tags. -->
 	<!-- For instance, a <prop-handler> with name="icon-resource" and  -->
@@ -39,20 +40,21 @@
 			<property name="default.height" value="20" />
 			<property name="font" value="Dialog, 0, 11" handler="font"/>
 			<property name="font.color" value="#000000" handler="color"/>
-			<property name="painter" value="gradientPainter" handler="paint"/>
+			<property name="font.color.active" value="#FFFFFF" handler="color"/>
+			<property name="painter" value="defaultPainter" handler="paint"/>
 		</titlebar-ui>
 		
 		<!-- List the various painters available -->
 		<painter-resource name="defaultPainter">
 			<property name="classname" value="org.flexdock.view.ext.DefaultPainter"/>
 			<property name="bgcolor" value="#D4D0C8" handler="color"/>
-			<property name="bgcolor.active" value="#D4D0C8" handler="color"/>
 		</painter-resource>
 
 		<painter-resource name="gradientPainter">
 			<property name="classname" value="org.flexdock.view.ext.GradientPainter"/>
 			<property name="bgcolor" value="#D4D0C8" handler="color"/>
 			<property name="bgcolor.active" value="#D4D0C8" handler="color"/>
+			<property name="grayscale" value="1"/>
 		</painter-resource>
 		
 		<!-- List the various action button types available -->
@@ -74,9 +76,9 @@
 		<titlebar-ui name="win32" extends="default">
 			<property name="classname" value="org.flexdock.view.plaf.theme.win32.Win32TitlebarUI" />
 			<property name="icon-map" value="win32" />
-			<property name="font.color.active" value="#FFFFFF" handler="color"/>
-			<property name="border" value="1, #808080" handler="rounded-border"/>			
-			<property name="painter" value="win32Painter" handler="paint"/>
+			<property name="font" value="Tahoma, 0, 11" handler="font"/>
+			<property name="border" value="#808080" handler="rounded-border"/>			
+			<property name="painter" value="win32Painter" handler="paint"/> 
 		</titlebar-ui>
 		
 		<!-- List the various painters available -->
@@ -85,6 +87,7 @@
 			<property name="bgcolor" value="#C4C1BC" handler="color"/>
 			<property name="bgcolor.active" value="#0A246A" handler="color"/>
 		</painter-resource>
+		
 	
 		<!-- List the available icon maps -->	
 		<icon-map name="win32">
@@ -103,5 +106,68 @@
 		</icon-resource>
 	</theme>
 	<!-- End Windows Classic -->
+	
+	<!-- Begin Office XP -->
+	<theme name="officeXP" description="Office XP" view-ui="officeXP">
+		<view-ui name="officeXP">
+			<property name="titlebar-ui" value="officeXP"/>
+		</view-ui>
+	
+		<!-- List the various titlebars that are available -->
+		<titlebar-ui name="officeXP" extends="win32">
+			<property name="classname" value="org.flexdock.view.plaf.theme.officexp.OfficeXPTitlebarUI" />
+			<property name="font.color.active" value="#000000" handler="color"/>	
+			<property name="border" value="#7FA7E1" handler="rounded-border"/>
+			<property name="border.active" value="#FFAD55" handler="rounded-border"/>
+			<property name="painter" value="officeXPPainter" handler="paint"/> 
+		</titlebar-ui>
+		
+		<painter-resource name="officeXPPainter">
+			<property name="classname" value="org.flexdock.view.plaf.theme.officexp.OfficeXPPainter"/>
+			<property name="bgcolor" value="#DAEAFD" handler="color"/>
+			<property name="bgcolor.active" value="#FFD289" handler="color"/>
+			<property name="gradient.color" value="#7FA7E1" handler="color"/>
+			<property name="gradient.color.active" value="#FFAD55" handler="color"/>
+		</painter-resource>		
+	</theme>
+	<!-- End Office XP -->
+	
+	<!-- Begin Eclipse 2.0 -->
+	<theme name="eclipse2" description="Eclipse 2.0" view-ui="eclipse2">
+		<view-ui name="eclipse2">
+			<property name="titlebar-ui" value="eclipse2"/>
+		</view-ui>
+	
+		<!-- List the various titlebars that are available -->
+		<titlebar-ui name="eclipse2" extends="default">
+			<property name="classname" value="org.flexdock.view.plaf.theme.eclipse2.EclipseTitlebarUI" />
+			<property name="icon-map" value="eclipse2" />
+			<property name="border" value="" handler="raised-border"/>
+			<property name="border.active" value="" handler="raised-border"/>
+			<property name="font.color.active" value="#FFFFFF" handler="color"/>	
+			<property name="painter" value="eclipsePainter" handler="paint"/> 
+		</titlebar-ui>
+		
+		<painter-resource name="eclipsePainter">
+			<property name="classname" value="org.flexdock.view.plaf.theme.eclipse2.EclipseGradientPainter"/>
+		</painter-resource>
+	
+		<!-- List the available icon maps -->	
+		<icon-map name="eclipse2">
+			<property name="close" value="gradient.close" />
+			<property name="pin" value="gradient.pin" />
+		</icon-map>
+		
+		<!-- List available icons -->
+		<icon-resource name="gradient.close">
+			<property name="default" value="org/flexdock/view/titlebar/eclipse2/close_default.gif" />
+			<property name="active" value="org/flexdock/view/titlebar/eclipse2/close_default.gif" />
+		</icon-resource>
+		<icon-resource name="gradient.pin">
+			<property name="default" value="org/flexdock/view/titlebar/eclipse2/pin_default.gif" />
+			<property name="active" value="org/flexdock/view/titlebar/eclipse2/pin_default.gif" />
+		</icon-resource>
+	</theme>
+	<!-- End Eclipse 2.0 -->
 
 </flexview-themes>
