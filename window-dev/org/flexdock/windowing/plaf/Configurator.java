@@ -53,16 +53,23 @@ public class Configurator implements XMLConstants {
 			return;
 		
 		NodeList elements = document.getElementsByTagName(tagName);
-		HashMap map = new HashMap(elements.getLength());
 		
 		for(int i=0; i<elements.getLength(); i++) {
 			Element elem = (Element)elements.item(i);
 			String key = elem.getAttribute(NAME_KEY);
+			boolean inherit = "true".equals(elem.getAttribute(INHERITS_KEY));
 			if(!isNull(key)) {
-				map.put(key, elem);
+				
+				if(inherit) {
+					// mark as overridden, so we don't overwrite it in the cache
+					Element oldValue = (Element)cache.get(key);
+					if(oldValue!=null) {
+						cache.put(OVERRIDDEN_KEY + key, oldValue);
+					}
+				}
+				cache.put(key, elem);
 			}
 		}
-		cache.putAll(map);
 	}
 
 	public static PropertySet[] getProperties(String tagName) {
@@ -109,6 +116,13 @@ public class Configurator implements XMLConstants {
 		PropertySet parent = isNull(parentName)? null: getProperties(parentName, cache);
 		if(parent!=null)
 			set.setAll(parent);
+		
+		// check to see if we're supposed to inherit from an overridden element
+		if("true".equalsIgnoreCase(elem.getAttribute(INHERITS_KEY))) {
+			PropertySet overridden = getProperties(OVERRIDDEN_KEY + elemName, cache);
+			if(overridden!=null)
+				set.setAll(overridden);
+		}
 		
 		// get the default handler name
 		String propertyHandlerName = getPropertyHandlerName(elem);

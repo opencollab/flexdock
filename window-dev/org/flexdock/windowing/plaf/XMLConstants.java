@@ -24,5 +24,6 @@ public interface XMLConstants {
 	public static final String EXTENDS_KEY = "extends";
 	public static final String HANDLER_KEY = "handler";
 	public static final String PROP_HANDLER_KEY = "prop-handler";
-	
+	public static final String INHERITS_KEY = "inherits";	
+	public static final String OVERRIDDEN_KEY = "flexview.element.overridden.";	
 }
