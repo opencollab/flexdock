@@ -1,8 +1,6 @@
 /*
  * Created on 18.03.2005
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 package org.flexdock.view.plaf.resources;
 
@@ -12,10 +10,8 @@ import org.flexdock.view.plaf.Configurator;
 import org.flexdock.view.plaf.PropertySet;
 
 /**
- * @author cro
+ * @author Claudio Romano
  *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
  */
 public class PainterResourceHandler extends ResourceHandler {
     public static final String PAINTER_RESOURCE_KEY = "painter-resource";
@@ -25,8 +21,6 @@ public class PainterResourceHandler extends ResourceHandler {
 	public static final String BACKGROUND_COLOR_ACTIVE = "bgcolor.active";
     
     public Object getResource(String stringValue) {
-        System.out.println(stringValue);
-        
         PropertySet propertySet = Configurator.getProperties(stringValue, PAINTER_RESOURCE_KEY);
         PainterResource pr = createResource( propertySet);
         
