@@ -16,6 +16,7 @@ import javax.swing.JComponent;
 
 import org.flexdock.view.Button;
 import org.flexdock.view.Titlebar;
+import org.flexdock.view.ext.Painter;
 import org.flexdock.view.plaf.FlexViewComponentUI;
 import org.flexdock.view.plaf.icons.IconMap;
 import org.flexdock.view.plaf.icons.IconResource;
@@ -31,7 +32,10 @@ public class TitlebarUI extends FlexViewComponentUI {
 	public static final String FONT_COLOR_ACTIVE = "font.color.active";
 	public static final String BACKGROUND_COLOR = "bgcolor";
 	public static final String BACKGROUND_COLOR_ACTIVE = "bgcolor.active";
+    public static final String PAINTER = "painter";
 	public static final int MINIMUM_HEIGHT = 12;
+	
+	
 	
 	protected Font font;
 	protected Color activeFont;
@@ -40,6 +44,7 @@ public class TitlebarUI extends FlexViewComponentUI {
 	protected Color inactiveBackground;
 	protected int defaultHeight = MINIMUM_HEIGHT;
 	protected IconMap defaultIcons;
+	protected Painter painter;
 	
 	public void installUI(JComponent c) {
 		super.installUI(c);
@@ -64,13 +69,7 @@ public class TitlebarUI extends FlexViewComponentUI {
 	}
 	
 	protected void paintBackground(Graphics g, Titlebar titlebar) {
-		int w = titlebar.getWidth();
-		int h = titlebar.getHeight();
-
-		Color c = getBackgroundColor(titlebar.isActive());
-	
-		g.setColor(c);
-		g.fillRect(0, 0, w, h);
+        painter.paint( g, titlebar.isActive(), titlebar);
 	}
 	
 	protected void paintTitle(Graphics g, Titlebar titlebar) {
@@ -249,6 +248,20 @@ public class TitlebarUI extends FlexViewComponentUI {
 	public IconResource getIcons(String key) {
 		return defaultIcons==null? null: defaultIcons.getIcons(key);
 	}
+	
+
+    /**
+     * @return Returns the painterResource.
+     */
+    public Painter getPainter() {
+        return painter;
+    }
+    /**
+     * @param painterResource The painterResource to set.
+     */
+    public void setPainter(Painter painter) {
+        this.painter = painter;
+    }
 
 	public void initializeCreationParameters() {
 		setActiveBackground(creationParameters.getColor(BACKGROUND_COLOR_ACTIVE));
@@ -258,6 +271,7 @@ public class TitlebarUI extends FlexViewComponentUI {
 		setDefaultHeight(creationParameters.getInt(DEFAULT_HEIGHT));
 		setFont(creationParameters.getFont(FONT));
 		setDefaultIcons(creationParameters.getString(IconResourceFactory.ICON_MAP_KEY));
+		setPainter((Painter)creationParameters.getProperty(PAINTER));
 	}
 	
 	public String getPreferredButtonUI() {
