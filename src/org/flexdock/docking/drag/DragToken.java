@@ -3,6 +3,7 @@ package org.flexdock.docking.drag;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
@@ -68,6 +69,18 @@ public class DragToken {
 		if(relativeToScreen)
 			SwingUtilities.convertPointToScreen(p, dragSource);
 		return p;
+	}
+	
+	public Rectangle getDragRect(boolean relativeToScreen) {
+		Point p = getCurrentMouse(relativeToScreen);
+		Point offset = getMouseOffset();
+		p.x += offset.x;
+		p.y += offset.y;
+		
+		Rectangle r = new Rectangle(getDragSize());
+		r.setLocation(p);
+		return r;
+		
 	}
 	
 	public Point getCurrentMouse(Component target) {
