@@ -26,7 +26,7 @@ public class ComponentNest {
 			if(nest.child==null && childClass.isAssignableFrom(c.getClass())) {
 				nest.child = c;
 			}
-			else if(parentClass.isAssignableFrom(c.getClass())) {
+			else  if(isParentContainer(c, parentClass)) {
 				nest.parent = c;
 				break;
 			}
@@ -36,10 +36,22 @@ public class ComponentNest {
     	return nest;
    	}
    	
+   	private static boolean isParentContainer(Component c, Class parentClass) {
+   		if(parentClass==RootWindow.class) {
+   			return RootWindow.isValidRootContainer(c);
+   		}
+   		else
+   			return parentClass.isAssignableFrom(c.getClass());
+   	}
+   	
 	private ComponentNest(Component searchSrc, Component child, Component parent) {
 		this.searchSrc = searchSrc;
 		this.child = child;
 		this.parent = parent;
+	}
+	
+	public boolean isFull() {
+		return child!=null && parent!=null;
 	}
    	
    	public int hashCode() {
