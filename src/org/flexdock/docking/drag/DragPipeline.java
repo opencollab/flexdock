@@ -2,7 +2,6 @@ package org.flexdock.docking.drag;
 
 import java.awt.Component;
 import java.awt.EventQueue;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -12,7 +11,6 @@ import java.util.HashMap;
 import org.flexdock.docking.drag.outline.AbstractRubberBand;
 import org.flexdock.docking.drag.outline.RubberBandFactory;
 import org.flexdock.util.RootWindow;
-import org.flexdock.util.SwingUtility;
 
 public class DragPipeline {
 	private GlassPaneMonitor paneMonitor;
@@ -20,7 +18,6 @@ public class DragPipeline {
 	private HashMap rootWindows;
 	private DragGlasspane currentGlasspane;
 	private DragGlasspane newGlassPane;
-	private DragGlasspane prevGlassPane;
 	
 	private boolean open;
 	private DragToken dragToken;
@@ -78,7 +75,7 @@ public class DragPipeline {
 	}
 
 	private DragGlasspane createGlassPane() {
-		DragGlasspane pane = new DragGlasspane();
+		DragGlasspane pane = new DragGlasspane(rubberBand);
 		pane.addMouseListener(paneMonitor);
 		return pane;
 	}
@@ -146,7 +143,6 @@ public class DragPipeline {
 			// show the global rubber band
 			if(newGlassPane==null) {
 				currentGlasspane.clear();
-				prevGlassPane = currentGlasspane;
 			}
 			else {
 				rubberBand.clear();
@@ -168,28 +164,7 @@ public class DragPipeline {
 	private void drawRubberBand() {
 		Rectangle screenRect = dragToken.getDragRect(true);
 		rubberBand.paint(screenRect);
-		if(prevGlassPane==null)
-			return;
-		
-		Rectangle r = prevGlassPane.getBounds();
-		Point[] vertices = SwingUtility.getPoints(screenRect, prevGlassPane);
-		for(int i=0; i<vertices.length && repaintCount<3; i++) {
-			if(r.contains(vertices[i])) {
-				prevGlassPane.repaint();
-				return;
-			}
-		}
-		
-		if(repaintCount<3) {
-			prevGlassPane.repaint();
-			repaintCount++;
-			return;
-		}
-		prevGlassPane = null;
-		repaintCount = 0;
 	}
-	
-	private int repaintCount;
 	
 	
 	private class GlassPaneMonitor extends MouseAdapter {
