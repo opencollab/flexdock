@@ -1,6 +1,5 @@
 /*
  * Created on 20.03.2005
- *
  */
 package org.flexdock.view.ext;
 
@@ -9,29 +8,27 @@ import java.awt.Graphics;
 
 import javax.swing.JComponent;
 
-
 /**
  * @author Claudio Romano
- *
  */
 public class DefaultPainter implements Painter {
-    
-    private PainterResource painterResource;
 
+    protected PainterResource painterResource;
 
     public void paint(Graphics g, boolean active, JComponent titlebar) {
-		int w = titlebar.getWidth();
-		int h = titlebar.getHeight();
+        int w = titlebar.getWidth();
+        int h = titlebar.getHeight();
 
-		Color c = getBackgroundColor(active);
-	
-		g.setColor(c);
-		g.fillRect(0, 0, w, h);
+        Color c = getBackgroundColor(active);
+
+        g.setColor(c);
+        g.fillRect(0, 0, w, h);
 
     }
-    
-    private Color getBackgroundColor(boolean active) {
-        return active ? painterResource.getBgColorActiv() : painterResource.getBgColor(); 
+
+    protected Color getBackgroundColor(boolean active) {
+        Color color = active ? painterResource.getBgColorActiv() : painterResource.getBgColor();
+        return color == null ? painterResource.getBgColor() : color;
     }
 
     /**
@@ -40,6 +37,7 @@ public class DefaultPainter implements Painter {
     public PainterResource getPainterResource() {
         return painterResource;
     }
+
     /**
      * @param painterResource The painterResource to set.
      */
