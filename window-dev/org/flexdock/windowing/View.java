@@ -11,9 +11,12 @@ import java.awt.Container;
 import java.awt.MenuComponent;
 import java.awt.PopupMenu;
 
+import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.flexdock.util.ResourceManager;
 import org.flexdock.windowing.plaf.PlafManager;
 import org.flexdock.windowing.plaf.theme.ViewUI;
 
@@ -35,9 +38,14 @@ public class View extends JComponent {
 	public View(String title) {
 		setLayout(null);
 		setTitlebar(createTitlebar());
-		setContentPane(new JPanel());
+		setContentPane(createContentPane());
 		setTitle(title==null? "": title);
 		updateUI();
+	}
+	
+	protected Container createContentPane() {
+		JPanel p = new JPanel();
+		return p;
 	}
 	
 	protected Titlebar createTitlebar() {
@@ -54,6 +62,21 @@ public class View extends JComponent {
 
 	public Titlebar getTitlebar() {
 		return titlepane;
+	}
+	
+	public void addAction(Action action) {
+		if(titlepane!=null)
+			titlepane.addAction(action);
+	}
+	
+	public void setIcon(Icon icon) {
+		if(titlepane!=null)
+			titlepane.setIcon(icon);
+	}
+	
+	public void setIcon(String imgUri) {
+		Icon icon = imgUri==null? null: ResourceManager.createIcon(imgUri);
+		setIcon(icon);
 	}
 
 	public void setContentPane(Container c) {
@@ -113,7 +136,6 @@ public class View extends JComponent {
 		int titleHeight = titlebar==null? 0: titlepane.getPreferredSize().height;
 		int w = getWidth();
 		int h = getHeight();
-		
 		if(titlepane!=null) {
 			((Component)titlepane).setBounds(0, 0, w, titleHeight);
 		}

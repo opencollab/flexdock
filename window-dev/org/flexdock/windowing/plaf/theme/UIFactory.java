@@ -21,6 +21,7 @@ import org.w3c.dom.Element;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class UIFactory implements XMLConstants {
+	public static final String DEFAULT = "default";
 	public static final String THEME_KEY = "theme";
 	public static final String VIEW_KEY = "view-ui";
 	public static final String TITLEBAR_KEY = "titlebar-ui";
@@ -141,16 +142,13 @@ public class UIFactory implements XMLConstants {
 		theme.setName(name);
 		theme.setDescription(desc);
 
-		ViewUI viewUI = Configurator.isNull(view)? null: getViewUI(view);
-		TitlebarUI titlebarUI = viewUI==null? null: getTitlebarUI(viewUI.getPreferredTitlebarUI());
-		ButtonUI buttonUI = titlebarUI==null? null: getButtonUI(titlebarUI.getPreferredButtonUI());
+		ViewUI viewUI = Configurator.isNull(view)? getViewUI(DEFAULT): getViewUI(view);
+		TitlebarUI titlebarUI = viewUI==null? getTitlebarUI(DEFAULT): getTitlebarUI(viewUI.getPreferredTitlebarUI());
+		ButtonUI buttonUI = titlebarUI==null? getButtonUI(DEFAULT): getButtonUI(titlebarUI.getPreferredButtonUI());
 		
-		if(viewUI!=null)
-			theme.setViewUI(viewUI);
-		if(titlebarUI!=null)
-			theme.setTitlebarUI(titlebarUI);
-		if(buttonUI!=null)
-			theme.setButtonUI(buttonUI);
+		theme.setViewUI(viewUI);
+		theme.setTitlebarUI(titlebarUI);
+		theme.setButtonUI(buttonUI);
 		
 		return theme;
 	}

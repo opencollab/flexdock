@@ -14,8 +14,8 @@ import javax.swing.JComponent;
 import javax.swing.UIManager;
 import javax.swing.plaf.ComponentUI;
 
-import org.flexdock.docking.windows.util.TitleBar;
 import org.flexdock.windowing.Button;
+import org.flexdock.windowing.Titlebar;
 import org.flexdock.windowing.View;
 import org.flexdock.windowing.plaf.mappings.PlafMappingFactory;
 import org.flexdock.windowing.plaf.theme.Theme;
@@ -45,9 +45,15 @@ public class PlafManager {
 		String themeRef = PlafMappingFactory.getInstalledPlafReference();
 		Theme theme = UIFactory.getTheme(themeRef);
 
-		uiDefaults.put(View.class, theme.getViewUI());
-		uiDefaults.put(TitleBar.class, theme.getTitlebarUI());
-		uiDefaults.put(Button.class, theme.getButtonUI());
+		uiDefaults.clear();
+		setProperty(View.class, theme.getViewUI());
+		setProperty(Titlebar.class, theme.getTitlebarUI());
+		setProperty(Button.class, theme.getButtonUI());
+	}
+	
+	private static void setProperty(Object key, Object value) {
+		if(key!=null && value!=null)
+			uiDefaults.put(key, value);
 	}
 	
 	public static ComponentUI getUI(JComponent target) {

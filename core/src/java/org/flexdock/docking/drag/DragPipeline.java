@@ -152,7 +152,6 @@ public class DragPipeline {
 		
 		// process transitions from null area to a glasspane
 		if(currentGlasspane==null) {
-//			System.out.println("from null");
 			transitionFromNullArea(newGlassPane);
 			return;
 		}

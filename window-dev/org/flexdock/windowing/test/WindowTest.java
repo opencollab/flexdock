@@ -7,18 +7,18 @@
 package org.flexdock.windowing.test;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.net.URL;
+import java.awt.event.ActionEvent;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.flexdock.windowing.View;
+
+import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
 /**
  * @author Christopher Butler
@@ -28,6 +28,11 @@ import org.flexdock.windowing.View;
  */
 public class WindowTest {
 	public static void main(String[] args) {
+		try {
+			UIManager.setLookAndFeel(WindowsLookAndFeel.class.getName());
+		} catch(Exception e) {
+		}
+		
 		JFrame f = new JFrame();
 		f.setSize(600, 500);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,43 +41,23 @@ public class WindowTest {
 		p.setBorder(new EmptyBorder(20, 20, 20, 20));
 		
 		View view = new View("Test View");
-		Icon icon = loadIcon(view);
-		view.getTitlebar().setIcon(icon);
-		view.getTitlebar().setActive(true);
-		p.add(view, BorderLayout.CENTER);
+		view.setIcon("org/flexdock/windowing/test/titlebar/msvs001.png");
+		view.addAction(new EmptyAction("close"));
+		view.addAction(new EmptyAction("pin"));
 		
+		p.add(view, BorderLayout.CENTER);
 		f.setContentPane(p);
 		f.setVisible(true);
 
-		/*
-		UIDefaults defaults = UIManager.getDefaults();
-		for(Enumeration en=defaults.keys(); en.hasMoreElements();) {
-			Object key = en.nextElement();
-			System.out.println(key + "=" + defaults.get(key));
-		}
-		
-		*/
-		
+//		view.getTitlebar().setActive(true);
 	}
 	
-	private static Icon loadIcon(Component c) {
-		String uri = "org/flexdock/windowing/titlebar/msvs001.png";
-		URL url = WindowTest.class.getClassLoader().getResource(uri);
-		if(url==null)
-			url = WindowTest.class.getClassLoader().getResource("/" + uri);
-
-		if(url==null)
-			return null;
-
-        Image image = c.getToolkit().getImage(url);
-        MediaTracker tracker = new MediaTracker(c);
-        tracker.addImage(image, 0);
-        try {
-            // wait until the image is fully loaded
-            tracker.waitForAll();
-        } catch (InterruptedException ie) {
-        }
-        return new ImageIcon(image);
+	private static class EmptyAction extends AbstractAction {
+		private EmptyAction(String name) {
+			putValue(Action.NAME, name);
+		}
+		public void actionPerformed(ActionEvent e) {
+		}
 	}
 	
 }

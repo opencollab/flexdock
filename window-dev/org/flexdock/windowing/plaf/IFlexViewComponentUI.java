@@ -12,7 +12,7 @@ package org.flexdock.windowing.plaf;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public interface IFlexViewComponentUI {
+public interface IFlexViewComponentUI extends XMLConstants {
 	public static final String ICON_RESOURCE = "flexdock.button.icon.resource";
 	
 	public PropertySet getCreationParameters();

@@ -21,7 +21,6 @@ public class Button extends JButton {
 	
 	public Button(Action action) {
 		setAction(action);
-		updateUI();
 	}
 	
 	public void updateUI() {

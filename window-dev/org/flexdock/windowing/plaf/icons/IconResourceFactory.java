@@ -104,44 +104,57 @@ public class IconResourceFactory implements XMLConstants {
 		return icons;		
 	}
 	
-	private static IconMap loadIconMap(String name) {
-		PropertySet icons = Configurator.getProperties(name, ICON_RESOURCE_KEY);
-		IconMap map = new IconMap();
+	private static IconMap loadIconMap(String iconMapName) {
+		PropertySet iconMapProperties = Configurator.getProperties(iconMapName, ICON_MAP_KEY);
+		IconMap iconMap = new IconMap();
 		
 		ArrayList notCached = new ArrayList();
-		for(Iterator it=icons.keys(); it.hasNext();) {
-			String iconName = (String)it.next();
+		for(Iterator it=iconMapProperties.keys(); it.hasNext();) {
+			String fakeName = (String)it.next();
+			String realName = iconMapProperties.getString(fakeName);
+			
 			// load all the cached icon resources
-			IconResource icon = getCachedResource(iconName);
-			if(icon==null) {
+			IconResource iconResource = getCachedResource(realName);
+			if(iconResource==null) {
 				// track the non-cached icons
-				notCached.add(iconName);
+				notCached.add(fakeName);
 			}
 			else {
-				map.addIcons(iconName, icon);
+				iconMap.addIcons(fakeName, iconResource);
 			}
 		}
+		// if all our resources were already cached, then we can return immediately
+		if(notCached.size()==0)
+			return iconMap;
 		
-		// load and cache all the non-cached icons
-		if(notCached.size()>0) {
-			String[] iconNames = (String[])notCached.toArray(new String[0]);
-			IconMap loadedMap = loadResources(iconNames);
-			map.addAll(loadedMap);
-			cacheResources(loadedMap);
+		// otherwise, we need to load resources and put them in the cache.
+		String[] fakeNames = (String[])notCached.toArray(new String[0]);
+		String[] realNames = iconMapProperties.getStrings(fakeNames);
+		// load the resources into memory
+		HashMap resourceMap = loadIconResources(realNames);
+		
+		// now loop through and cache
+		for(int i=0; i<fakeNames.length; i++) {
+			String realName = iconMapProperties.getString(fakeNames[i]);
+			IconResource iconResource = (IconResource)resourceMap.get(realName);
+			// cache the resource for future use
+			cacheResource(realName, iconResource);
+			// add to the immediate icon map
+			iconMap.addIcons(fakeNames[i], iconResource);
 		}
-		
-		return map;
+		return iconMap;
 	}
 	
-	private static IconMap loadResources(String[] names) {
-		PropertySet[] resourceData = Configurator.getProperties(names, ICON_RESOURCE_KEY);
+	
+	
+	private static HashMap loadIconResources(String[] iconNames) {
+		PropertySet[] iconResources = Configurator.getProperties(iconNames, ICON_RESOURCE_KEY);
+		HashMap map = new HashMap(iconResources.length);
 		
-		IconMap map = new IconMap();
-		for(int i=0; i<resourceData.length; i++) {
-			IconResource resource = createResource(resourceData[i]);
-			map.addIcons(resourceData[i].getName(), resource);
+		for(int i=0; i<iconResources.length; i++) {
+			IconResource resource = createResource(iconResources[i]);
+			map.put(iconResources[i].getName(), resource);
 		}
-		
 		return map;
 	}
 }

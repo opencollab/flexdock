@@ -71,9 +71,8 @@ public class Titlebar extends JComponent {
 			return;
 		
 		String key = getKey(action);
-		Icon icon = getIcon(action);
-		if(key==null || icon==null) {
-			throw new IllegalArgumentException("Cannot add an Action that has no Name or Icon associated with it.");
+		if(key==null) {
+			throw new IllegalArgumentException("Cannot add an Action that has no Name associated with it.");
 		}
 	
 		// don't add the same action more than once
@@ -82,7 +81,6 @@ public class Titlebar extends JComponent {
 
 		// create the button
 		Button button = createActionButton(action);
-		button.setIcon(icon);
 		// cache the button
 		actionButtons.put(key, button);
 		// add the button to the container

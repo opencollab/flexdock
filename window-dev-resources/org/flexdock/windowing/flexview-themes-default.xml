@@ -5,7 +5,7 @@
 	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
 	<plaf name="apple.laf.AquaLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
-	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="default" />
+	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="win32" />
 	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
 	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
 				handler="org.flexdock.windowing.plaf.mappings.SkinLFResolver" />
@@ -26,7 +26,28 @@
 	<prop-handler name="icon-resource" value="icon"/>
 	
 	<!-- Point the default theme to windows classic -->
-	<theme name="default" ref="win32" />
+	<theme name="default" description="Default Theme" view-ui="default">
+		<view-ui name="default">
+			<property name="titlebar-ui" value="default"/>
+		</view-ui>
+	
+		<!-- List the various titlebars that are available -->
+		<titlebar-ui name="default">
+			<property name="button-ui" value="default"/>
+			<property name="default.height" value="20" />
+			<property name="font" value="Dialog, 0, 11" handler="font"/>
+			<property name="font.color" value="#000000" handler="color"/>
+			<property name="bgcolor" value="#D4D0C8" handler="color"/>
+		</titlebar-ui>
+		
+		<!-- List the various action button types available -->
+		<button-ui name="default">
+			<property name="border.hover" value="1, #ffffff, #000000" handler="square-bevel-border" />
+			<property name="border.active.hover" value="1, #ffffff, #000000" handler="square-bevel-border" />
+			<property name="border.pressed" value="1, #0000000, #ffffff" handler="square-bevel-border" />
+		</button-ui>
+
+	</theme>
 
 	<!-- Begin Windows Classic -->
 	<theme name="win32" description="Windows Classic" view-ui="win32">
@@ -35,16 +56,14 @@
 		</view-ui>
 	
 		<!-- List the various titlebars that are available -->
-		<titlebar-ui name="win32">
-			<property name="button-ui" value="win32"/>
+		<titlebar-ui name="win32" extends="default">
+			<property name="classname" value="org.flexdock.windowing.plaf.theme.win32.Win32TitlebarUI" />
 			<property name="icon-map" value="win32" />
+			<property name="font.color.active" value="#FFFFFF" handler="color"/>
+			<property name="bgcolor" value="#C4C1BC" handler="color"/>
+			<property name="bgcolor.active" value="#254081" handler="color"/>
+			<property name="outline.color" value="#808080" handler="color"/>
 		</titlebar-ui>
-		
-		<!-- List the various action button types available -->
-		<button-ui name="win32">
-			<property name="border.hover" value="1, #FFFFFF, #808080" handler="square-bevel-border" />
-			<property name="border.pressed" value="1, #808080, #FFFFFF" handler="square-bevel-border" />
-		</button-ui>
 	
 		<!-- List the available icon maps -->	
 		<icon-map name="win32">

@@ -6,9 +6,13 @@
  */
 package org.flexdock.windowing.plaf.theme;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -31,6 +35,7 @@ import org.flexdock.windowing.plaf.icons.IconResource;
  * Preferences - Java - Code Style - Code Templates
  */
 public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
+	protected static final MouseListener TITLEBAR_NOTIFIER = new TitlebarNotifier();
 	public static final String BORDER = "border";
 	public static final String BORDER_HOVER = "border.hover";
 	public static final String BORDER_ACTIVE = "border.active";
@@ -182,6 +187,16 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		AbstractButton button = (AbstractButton)c;
 		button.setRolloverEnabled(true);
 		button.setRequestFocusEnabled(false);
+		button.setOpaque(false);
+		button.setBorder(null);
+		
+		button.addMouseListener(TITLEBAR_NOTIFIER);
+	}
+
+	public void uninstallUI(JComponent c) {
+		AbstractButton button = (AbstractButton)c;
+		button.removeMouseListener(TITLEBAR_NOTIFIER);
+		super.uninstallUI(c);
 	}
 	
     protected void installKeyboardActions(AbstractButton b){
@@ -192,7 +207,7 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
         return new ButtonListener(b);
     }
     
-    protected class ButtonListener extends BasicButtonListener {
+    protected static class ButtonListener extends BasicButtonListener {
     	protected ButtonListener(AbstractButton b) {
     		super(b);
     	}
@@ -202,7 +217,13 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		}
     }
 
-
+	protected static class TitlebarNotifier extends MouseAdapter {
+		public void mousePressed(MouseEvent e) {
+			Container titlebar = ((Component)e.getSource()).getParent();
+			if(titlebar instanceof Titlebar)
+				((Titlebar)titlebar).setActive(true);
+		}
+	}
 
 	public void setBorderActive(Border borderActive) {
 		this.borderActive = borderActive;
@@ -239,4 +260,5 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		setBorderActiveHover(creationParameters.getBorder(BORDER_ACTIVE_HOVER));
 		setBorderPressed(creationParameters.getBorder(BORDER_PRESSED));
 	}
+
 }

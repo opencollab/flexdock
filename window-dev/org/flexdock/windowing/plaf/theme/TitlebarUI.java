@@ -11,11 +11,13 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
+import org.flexdock.windowing.Button;
 import org.flexdock.windowing.Titlebar;
 import org.flexdock.windowing.plaf.FlexViewComponentUI;
 import org.flexdock.windowing.plaf.icons.IconMap;
@@ -30,12 +32,14 @@ import org.flexdock.windowing.plaf.icons.IconResourceFactory;
  */
 public class TitlebarUI extends FlexViewComponentUI {
 	public static final String DEFAULT_HEIGHT = "default.height";
+	public static final String FONT = "font";
 	public static final String FONT_COLOR = "font.color";
 	public static final String FONT_COLOR_ACTIVE = "font.color.active";
 	public static final String BACKGROUND_COLOR = "bgcolor";
 	public static final String BACKGROUND_COLOR_ACTIVE = "bgcolor.active";
 	public static final int MINIMUM_HEIGHT = 12;
 	
+	protected Font font;
 	protected Color activeFont;
 	protected Color inactiveFont;
 	protected Color activeBackground;
@@ -46,6 +50,12 @@ public class TitlebarUI extends FlexViewComponentUI {
 	public void installUI(JComponent c) {
 		// TODO Auto-generated method stub
 		super.installUI(c);
+		Dimension d = c.getPreferredSize();
+		d.height = getDefaultHeight();
+		c.setPreferredSize(d);
+		
+		if(font!=null)
+			c.setFont(font);
 	}
 
 	public void uninstallUI(JComponent c) {
@@ -54,8 +64,8 @@ public class TitlebarUI extends FlexViewComponentUI {
 	}
 
 	
-	public void paint(Graphics g, Component c) {
-		Titlebar titlebar = (Titlebar)c;
+	public void paint(Graphics g, JComponent jc) {
+		Titlebar titlebar = (Titlebar)jc;
 		paintBackground(g, titlebar);
 		paintIcon(g, titlebar);
 		paintTitle(g, titlebar);
@@ -66,6 +76,7 @@ public class TitlebarUI extends FlexViewComponentUI {
 		int h = titlebar.getHeight();
 
 		Color c = getBackgroundColor(titlebar.isActive());
+	
 		g.setColor(c);
 		g.fillRect(0, 0, w, h);
 	}
@@ -75,10 +86,9 @@ public class TitlebarUI extends FlexViewComponentUI {
 			return;
 		
 		Font font = titlebar.getFont();
-		Icon icon = titlebar.getIcon();
+		Rectangle iconRect = getIconRect(titlebar);
 		
-		int xMargin = getIconMargin(icon);
-		int x = icon==null? xMargin: icon.getIconWidth() + (2*xMargin);
+		int x = iconRect.x + iconRect.width + getRightIconMargin();
 		int y = titlebar.getHeight()/2 + font.getSize()/2 - 1;
 		
 		Color c = getFontColor(titlebar.isActive());
@@ -91,35 +101,63 @@ public class TitlebarUI extends FlexViewComponentUI {
 			return;
 		
 		Icon icon = titlebar.getIcon();
-		int x = 2;
-		int y = titlebar.getHeight()/2 - icon.getIconHeight()/2;
-		icon.paintIcon(titlebar, g, x, y);
+		Rectangle r = getIconRect(titlebar);
+		icon.paintIcon(titlebar, g, r.x, r.y);
+	}
+	
+	protected Rectangle getIconRect(Titlebar titlebar) {
+		Icon icon = titlebar.getIcon();
+		Rectangle r = new Rectangle(0,0, 0, 0);
+		if(icon==null)
+			return r;
+		
+		r.x = getLeftIconMargin();
+		r.width = icon.getIconWidth();
+		r.height = icon.getIconHeight();
+		r.y = titlebar.getHeight()/2 - r.width/2;
+		return r;
+	}
+	
+	protected int getLeftIconMargin() {
+		return 2;
+	}
+	
+	protected int getRightIconMargin() {
+		return 2;
 	}
 	
 	public void layoutButtons(Titlebar titlebar) {
-
+		int h = titlebar.getHeight();
+		int x = titlebar.getWidth()-h;
+		
+		Component[] c = titlebar.getComponents();
+		for(int i=0; i<c.length; i++) {
+			if(!(c[i] instanceof Button))
+				continue;
+			
+			Button b = (Button)c[i];
+			b.setBounds(x, 0, h, h);
+			x -= h;
+		}
 	}
 	
 	public void configureAction(Action action) {
 		if(action==null)
 			return;
 		
-		String name = (String)action.getValue(Action.NAME);
-		IconMap iconMap = IconResourceFactory.getIconMap(name);
-		if(iconMap!=null)
-			action.putValue(ICON_RESOURCE, iconMap);
-	}
-	
-	protected int getIconMargin(Icon icon) {
-		return 3;
+		IconResource icons = getIcons(action);
+		if(icons!=null)
+			action.putValue(ICON_RESOURCE, icons);
 	}
 
 	protected Color getFontColor(boolean active) {
-		return active? activeFont: inactiveFont;
+		Color c = active? activeFont: inactiveFont;
+		return c==null? inactiveFont: c;
 	}
 
 	protected Color getBackgroundColor(boolean active) {
-		return active? activeBackground: inactiveBackground;
+		Color color = active? activeBackground: inactiveBackground;
+		return color==null? inactiveBackground: color;
 	}
 
 	public int getDefaultHeight() {
@@ -184,7 +222,13 @@ public class TitlebarUI extends FlexViewComponentUI {
 		this.inactiveFont = inactiveFont;
 	}
 
+	public Font getFont() {
+		return font;
+	}
 
+	public void setFont(Font font) {
+		this.font = font;
+	}
 
 	public IconMap getDefaultIcons() {
 		return defaultIcons;
@@ -192,6 +236,11 @@ public class TitlebarUI extends FlexViewComponentUI {
 
 	public void setDefaultIcons(IconMap defaultIcons) {
 		this.defaultIcons = defaultIcons;
+	}
+	
+	public void setDefaultIcons(String iconMapName) {
+		IconMap map = IconResourceFactory.getIconMap(iconMapName);
+		setDefaultIcons(map);
 	}
 
 	public IconResource getIcons(Action action) {
@@ -204,14 +253,18 @@ public class TitlebarUI extends FlexViewComponentUI {
 	}
 
 	public void initializeCreationParameters() {
-		setDefaultHeight(creationParameters.getInt(DEFAULT_HEIGHT));
 		setActiveBackground(creationParameters.getColor(BACKGROUND_COLOR_ACTIVE));
 		setActiveFont(creationParameters.getColor(FONT_COLOR_ACTIVE));
 		setInactiveBackground(creationParameters.getColor(BACKGROUND_COLOR));
 		setInactiveFont(creationParameters.getColor(FONT_COLOR));
+		setDefaultHeight(creationParameters.getInt(DEFAULT_HEIGHT));
+		setFont(creationParameters.getFont(FONT));
+		setDefaultIcons(creationParameters.getString(IconResourceFactory.ICON_MAP_KEY));
 	}
 	
 	public String getPreferredButtonUI() {
 		return creationParameters.getString(UIFactory.BUTTON_KEY);
 	}
+	
+
 }

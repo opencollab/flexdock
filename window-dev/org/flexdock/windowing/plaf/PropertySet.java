@@ -7,6 +7,7 @@
 package org.flexdock.windowing.plaf;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,6 +55,11 @@ public class PropertySet {
 		return property instanceof Color? (Color)property: null;
 	}
 	
+	public Font getFont(String key) {
+		Object property = getProperty(key);
+		return property instanceof Font? (Font)property: null;
+	}
+	
 	public Image getImage(String key) {
 		Object property = getProperty(key);
 		return property instanceof Image? (Image)property: null;
@@ -72,6 +78,16 @@ public class PropertySet {
 	public Border getBorder(String key) {
 		Object property = getProperty(key);
 		return property instanceof Border? (Border)property: null;		
+	}
+	
+	public String[] getStrings(String[] keys) {
+		if(keys==null)
+			return null;
+		
+		String[] values = new String[keys.length];
+		for(int i=0; i<values.length; i++)
+			values[i] = getString(keys[i]);
+		return values;
 	}
 	
 	public int getInt(String key) {
@@ -169,6 +185,10 @@ public class PropertySet {
 			return short.class;
 		
 		return Class.forName(type);
+	}
+	
+	public String toString() {
+		return "PropertySet[name=\"" + name + "\"; hashmap=" + properties + "]";
 	}
 	
 	private static class NumericStringSort implements Comparator {
