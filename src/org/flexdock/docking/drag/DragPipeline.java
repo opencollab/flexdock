@@ -2,11 +2,14 @@ package org.flexdock.docking.drag;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.flexdock.docking.drag.outline.AbstractRubberBand;
+import org.flexdock.docking.drag.outline.RubberBandFactory;
 import org.flexdock.util.RootWindow;
 
 public class DragPipeline {
@@ -14,12 +17,16 @@ public class DragPipeline {
 	private RootWindow[] windows;
 	private HashMap rootWindows;
 	private DragGlasspane currentGlasspane;
+	private DragGlasspane newGlassPane;
 	
 	private boolean open;
 	private DragToken dragToken;
+	private AbstractRubberBand rubberBand;
 	
 	public DragPipeline() {
 		paneMonitor = new GlassPaneMonitor();
+		rubberBand = RubberBandFactory.getRubberBand();
+		
 	}
 	
 	public boolean isOpen() {
@@ -86,6 +93,7 @@ public class DragPipeline {
 		if(!open)
 			return;
 		
+		rubberBand.clear();
 		for(int i=0; i<windows.length; i++) {
 			Component cmp = windows[i].getGlassPane();
 			if(cmp instanceof DragGlasspane) {
@@ -128,16 +136,32 @@ public class DragPipeline {
 		dragToken.updateMouse(me);
 		me.consume();
 		
-		if(currentGlasspane!=null)
-			currentGlasspane.processDragEvent(dragToken);
+		
+		if(currentGlasspane!=newGlassPane) {
+			// if we're switching out to use an null glasspane, 
+			// we want to clear out the current glasspane and 
+			// show the global rubber band
+			if(newGlassPane==null) {
+				currentGlasspane.clear();
+			}
+			else
+				rubberBand.clear();
+			currentGlasspane = newGlassPane;
+		}
+		
+		if(currentGlasspane==null)
+			drawRubberBand();
 		else
-			System.out.println(currentGlasspane);
+			currentGlasspane.processDragEvent(dragToken);
 	}
 
-	private synchronized void setCurrentGlassPane(DragGlasspane gp) {
-		if(currentGlasspane!=null)
-			currentGlasspane.clear();
-		currentGlasspane = gp;
+	private void setCurrentGlassPane(DragGlasspane gp) {
+		newGlassPane = gp;
+	}
+
+	private void drawRubberBand() {
+		Rectangle screenRect = dragToken.getDragRect(true);
+		rubberBand.paint(screenRect);
 	}
 	
 	
