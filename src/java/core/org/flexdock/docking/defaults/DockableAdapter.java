@@ -121,6 +121,10 @@ public class DockableAdapter implements Dockable {
 	public void dropStarted(DockingEvent evt) {
 	}
 	
+	public void undockingComplete(DockingEvent evt) {
+		
+	}
+	
 
 	public Object getClientProperty(Object key) {
 		return getClientProperties().get(key);
