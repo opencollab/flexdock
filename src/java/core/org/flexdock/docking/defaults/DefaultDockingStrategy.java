@@ -58,7 +58,8 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			return false;
 		
 		Dockable docked = DockingManager.getRegisteredDockable(port.getDockedComponent());
-		return docked==null? true: docked.isTerritorial(dockable);
+		return docked==null? true: !docked.isTerritorial(dockable, region);
+
 	}
 	
 
