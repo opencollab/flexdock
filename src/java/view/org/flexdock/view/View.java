@@ -27,7 +27,8 @@ import org.flexdock.docking.defaults.DefaultRegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.view.frame.FloatingViewport;
+import org.flexdock.view.floating.FloatingStrategy;
+import org.flexdock.view.floating.FloatingViewport;
 import org.flexdock.view.plaf.PlafManager;
 import org.flexdock.view.plaf.theme.ViewUI;
 import org.flexdock.view.viewport.Viewport;
@@ -47,6 +48,10 @@ public class View extends JComponent implements Dockable {
 	protected boolean territorial;
 	protected ArrayList dockingListeners;
 	protected ScaledInsets siblingInsets;
+	
+	static {
+		DockingManager.setDockingStrategy(View.class, new FloatingStrategy());
+	}
 	
 	public View(String name) {
 		this(name, null);
