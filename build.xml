@@ -4,7 +4,7 @@
    <target name="init">
       <property name="project" value="${ant.project.name}"/>
       <property name="output" value="output" />
-      <property name="src" value="source" />
+      <property name="src" value="src" />
       <property name="resourceIn" value="${src}/resources" />
       <property name="tmp" value="${output}/tmp" /> 
       <property name="doc" value="${output}/docs" />
