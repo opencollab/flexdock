@@ -47,6 +47,9 @@ public class View extends JComponent implements Dockable {
 	protected boolean territorial;
 	protected ArrayList dockingListeners;
 	protected ScaledInsets siblingInsets;
+	protected boolean active;
+	// TODO: Remove activeStateLocked flag.  This needs to be controlled by our forthcoming property manager.
+	protected boolean activeStateLocked;
 	
 	static {
 		DockingManager.setDockingStrategy(View.class, new FloatingStrategy());
@@ -133,12 +136,17 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	private void removeImpl(Component c) {
+		if(c instanceof Titlebar)
+			((Titlebar)c).setView(null);
 		super.remove(c);
 	}
 	
 	private void addImpl(Component c) {
+		if(c instanceof Titlebar)
+			((Titlebar)c).setView(this);
 		super.add(c);
 	}
+
 
 	public void setTitlebar(Titlebar titlebar) {
 		if(titlebar!=null) {
@@ -330,12 +338,22 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public void setActive(boolean b) {
-		if(titlepane!=null)
-			titlepane.setActive(b);
+		if(!isActiveStateLocked() && b!=active) {
+			active = b;
+			repaint();
+		}
 	}
 	
 	public boolean isActive() {
-		return titlepane==null? false: titlepane.isActive();
+		return active;
+	}
+	
+	public void setActiveStateLocked(boolean b) {
+		activeStateLocked = b;
+	}
+	
+	public boolean isActiveStateLocked() {
+		return activeStateLocked;
 	}
 
 

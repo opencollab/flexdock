@@ -24,7 +24,7 @@ public class Titlebar extends JComponent {
 	private List actionList;
 	private HashMap actionButtons;
 	private Button[] buttonList;
-	private boolean active;
+	private View parentView;
 	
 	public Titlebar() {
 		this(null, null);
@@ -185,15 +185,17 @@ public class Titlebar extends JComponent {
 	}
 	
 	public boolean isActive() {
-		return active;
+		return parentView==null? false: parentView.isActive();
 	}
 	
-	public void setActive(boolean b) {
-		if(b!=active) {
-			active = b;
-			repaint();
-		}
+	void setView(View view) {
+		setParentView(view);
 	}
+	
+	protected void setParentView(View view) {
+		parentView = view;
+	}
+	
 	
 	public Button createActionButton(Action action) {
 		Button button = new Button(action);
