@@ -47,6 +47,9 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		DockingPort newPort = results.dropTarget;
 		int evtType = results.success? DockingEvent.DOCKING_COMPLETE: DockingEvent.DOCKING_CANCELED;
 		DockingEvent evt = new DockingEvent(dockable, oldPort, newPort, evtType);
+		// populate DockingEvent status info 
+		evt.setRegion(region);
+		evt.setOverWindow(token==null? true: token.isOverWindow());
 
 		// notify the old docking port
 		EventDispatcher.notifyDockingMonitor(oldPort, evt);
