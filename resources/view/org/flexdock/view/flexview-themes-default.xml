@@ -5,7 +5,7 @@
 	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
 	<plaf name="apple.laf.AquaLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
-	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="eclipse2" />
+	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="win32" />
 	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
 	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
 				handler="org.flexdock.view.plaf.mappings.SkinLFResolver" />
