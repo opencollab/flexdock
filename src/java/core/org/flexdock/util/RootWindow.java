@@ -96,9 +96,9 @@ public class RootWindow {
 	 * 
 	 * @param c the <code>Component</code> we wish to check 
 	 */		
-	protected static boolean isValidRootContainer(Component c) {
-		return c!=null && c instanceof JFrame || c instanceof JApplet || 
-					c instanceof JWindow || c instanceof JDialog;
+	public static boolean isValidRootContainer(Component c) {
+		return c!=null && (c instanceof JFrame || c instanceof JApplet || 
+					c instanceof JWindow || c instanceof JDialog);
 	}
 
 
@@ -362,5 +362,24 @@ public class RootWindow {
 			((JWindow)root).pack();
 		else if(root instanceof JDialog)
 			((JDialog)root).pack();
+	}
+	
+	public void toFront() {
+		if(root instanceof JFrame)
+			((JFrame)root).toFront();
+		else if(root instanceof JWindow)
+			((JWindow)root).toFront();
+		else if(root instanceof JDialog)
+			((JDialog)root).toFront();
+	}
+	
+	public boolean isActive() {
+		if(root instanceof JFrame)
+			return ((JFrame)root).isActive();
+		else if(root instanceof JWindow)
+			return ((JWindow)root).isActive();
+		else if(root instanceof JDialog)
+			return ((JDialog)root).isActive();
+		return false;
 	}
 }
