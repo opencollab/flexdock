@@ -18,7 +18,7 @@ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFT
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking;
 
-import java.awt.Image;
+import java.awt.Cursor;
 
 /**
  * This interface provides a means of producing various mouse Images during docking operations 
@@ -32,36 +32,36 @@ public interface CursorProvider {
 	 * Returns a Image for the center docking region
 	 * @return a Image instance
 	 */
-	public Image getCenterImage();
+	public Cursor getCenterCursor();
 	
 	/**
-	 * Returns a Image indicating that docking is now allowed at the current mouse location
-	 * @return a Image instance
+	 * Returns a Cursor indicating that docking is now allowed at the current mouse location
+	 * @return a Cursor instance
 	 */
-	public Image getDisallowedImage();
+	public Cursor getDisallowedCursor();
 	
 	/**
-	 * Returns a Image for the eastern docking region
-	 * @return a Image instance
+	 * Returns a Cursor for the eastern docking region
+	 * @return a Cursor instance
 	 */
-	public Image getEastImage();
+	public Cursor getEastCursor();
 
 	
 	/**
-	 * Returns a Image for the northern docking region
-	 * @return a Image instance
+	 * Returns a Cursor for the northern docking region
+	 * @return a Cursor instance
 	 */
-	public Image getNorthImage();
+	public Cursor getNorthCursor();
 	
 	/**
-	 * Returns a Image for the southern docking region
-	 * @return a Image instance
+	 * Returns a Cursor for the southern docking region
+	 * @return a Cursor instance
 	 */
-	public Image getSouthImage();
+	public Cursor getSouthCursor();
 	
 	/**
-	 * Returns a Image for the western docking region
-	 * @return a Image instance
+	 * Returns a Cursor for the western docking region
+	 * @return a Cursor instance
 	 */
-	public Image getWestImage();
+	public Cursor getWestCursor();
 }

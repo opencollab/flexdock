@@ -3,9 +3,10 @@ package org.flexdock.demos;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -124,39 +125,39 @@ public class CursorDemo extends JPanel {
 	}
 
 	private static class CursorDelegate implements CursorProvider {
-		private static final Image NORTH_IMG = createImg("tileHorizontal16.gif");
-		private static final Image EAST_IMG = createImg("tileVertical16.gif");
-		private static final Image CENTER_IMG = createImg("cascadeWindows16.gif");
-		private static final Image BLOCKED_IMG = createImg("closeAllWindows16.gif");
+		private static final Cursor NORTH_CURSOR = createCursor("tileHorizontal16.gif");
+		private static final Cursor EAST_CURSOR = createCursor("tileVertical16.gif");
+		private static final Cursor CENTER_CURSOR = createCursor("cascadeWindows16.gif");
+		private static final Cursor BLOCKED_CURSOR = createCursor("closeAllWindows16.gif");
 		
-		private static Image createImg(String imgName) {
-			return ResourceManager.createImage("resources/images/demo/" + imgName);
+		private static Cursor createCursor(String imgName) {
+			return ResourceManager.createCursor("resources/images/demo/" + imgName, new Point(), null);
 		}
 		
-		public Image getCenterImage() {
-			return CENTER_IMG;
+		public Cursor getCenterCursor() {
+			return CENTER_CURSOR;
 		}
 
-		public Image getDisallowedImage() {
-			return BLOCKED_IMG;
+		public Cursor getDisallowedCursor() {
+			return BLOCKED_CURSOR;
 		}
 
-		public Image getEastImage() {
-			return EAST_IMG;
+		public Cursor getEastCursor() {
+			return EAST_CURSOR;
 		}
 
-		public Image getNorthImage() {
-			return NORTH_IMG;
+		public Cursor getNorthCursor() {
+			return NORTH_CURSOR;
 		}
 
-		public Image getSouthImage() {
+		public Cursor getSouthCursor() {
 			// same image as north
-			return NORTH_IMG;
+			return NORTH_CURSOR;
 		}
 
-		public Image getWestImage() {
+		public Cursor getWestCursor() {
 			// same image as east
-			return EAST_IMG;
+			return EAST_CURSOR;
 		}
 	}
 }
