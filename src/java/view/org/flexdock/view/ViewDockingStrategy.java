@@ -110,7 +110,7 @@ public class ViewDockingStrategy extends DefaultDockingStrategy {
 			return splitter.isElderTopLeft()? 1f-prefSize: prefSize;
 		}
 
-		return super.getInitialDividerLocation(port, splitPane, elder);
+		return super.getDividerProportion(port, splitPane, elder);
 	}
 	
 	
