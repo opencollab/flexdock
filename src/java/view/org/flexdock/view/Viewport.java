@@ -1,7 +1,7 @@
 /*
  * Created on Mar 4, 2005
  */
-package org.flexdock.view.viewport;
+package org.flexdock.view;
 
 import java.awt.Component;
 import java.util.HashSet;
@@ -17,31 +17,22 @@ import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.docking.defaults.SubComponentProvider;
-import org.flexdock.view.View;
+import org.flexdock.docking.event.DockingEvent;
+import org.flexdock.view.tracking.ViewListener;
+import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * @author Christopher Butler
  */
 public class Viewport extends DefaultDockingPort {
 	private SubComponentProvider defaultSubDocker;
-	protected ViewportTracker tracker;
-	protected boolean acceptsFocus;
 	protected HashSet blockedRegions;
 	
 	public Viewport() {
-		tracker = ViewportTracker.getInstance();
 		blockedRegions = new HashSet(5);
-		setAcceptsFocus(true);
 		setBorderManager(new StandardBorderManager());
 	}
 
-	public boolean isAcceptsFocus() {
-		return isShowing() && acceptsFocus;
-	}
-
-	public void setAcceptsFocus(boolean acceptsFocus) {
-		this.acceptsFocus = acceptsFocus;
-	}
 	
 	public void setRegionBlocked(String region, boolean b) {
 		if(isValidDockingRegion(region)) {
@@ -78,8 +69,8 @@ public class Viewport extends DefaultDockingPort {
 		return !dockable.isTerritorial(null);
 	}
 	
-	public void dock(Dockable dockable) {
-		dock(dockable, DockingPort.CENTER_REGION);
+	public boolean dock(Dockable dockable) {
+		return dock(dockable, DockingPort.CENTER_REGION);
 	}
 	
 	protected SubComponentProvider getDefaultSubdocker() {
@@ -109,13 +100,7 @@ public class Viewport extends DefaultDockingPort {
 		}
 		return set;
 	}
-	
-	public void requestActivation(View view) {
-		Component c = getDockedComponent();
-		View targetView = c instanceof JTabbedPane? null: view;
-		tracker.activate(this, targetView);
-	}
-	
+
 	protected class SubDocker extends DefaultDockingPort.DefaultComponentProvider implements Cloneable { 
 
 		public DockingPort createChildPort() {
@@ -145,7 +130,7 @@ public class Viewport extends DefaultDockingPort {
 
 		public JTabbedPane createTabbedPane() {
 			JTabbedPane pane = super.createTabbedPane();
-			pane.addMouseListener(tracker);
+			pane.addChangeListener(ViewListener.getInstance());
 			return pane;
 		}
 	}
@@ -194,4 +179,12 @@ public class Viewport extends DefaultDockingPort {
 	}
 
 
+
+	public void dockingComplete(DockingEvent evt) {
+		Object src = evt.getSource();
+		if(!(src instanceof View) || !isShowing() || evt.getNewDockingPort()!=this)
+			return;
+
+		ViewTracker.requestViewActivation((View)src);
+	}
 }
