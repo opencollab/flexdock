@@ -48,4 +48,25 @@ public interface DockingListener extends EventListener {
 	 *            source Dockable, the old DockingPort and the new DockingPort
 	 */
 	public void dropStarted(DockingEvent evt);
+	
+	public void undockingComplete(DockingEvent evt);
+	
+	
+	public static class DockingAdapter implements DockingListener {
+
+		public void dockingCanceled(DockingEvent evt) {
+		}
+
+		public void dockingComplete(DockingEvent evt) {
+		}
+
+		public void dragStarted(DockingEvent evt) {
+		}
+
+		public void dropStarted(DockingEvent evt) {
+		}
+
+		public void undockingComplete(DockingEvent evt) {
+		}
+	}
 }
