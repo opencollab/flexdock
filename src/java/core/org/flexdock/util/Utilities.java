@@ -66,14 +66,23 @@ public class Utilities {
 		return createInstance(className, null);
 	}
 	
+	public static Object createInstance(String className, boolean failSilent) {
+		return createInstance(className, null, failSilent);
+	}
+	
 	public static Object createInstance(String className, Class superType) {
+		return createInstance(className, superType, false);
+	}
+	
+	public static Object createInstance(String className, Class superType, boolean failSilent) {
 		try {
 			Class c = Class.forName(className);
 			if(superType!=null && !superType.isAssignableFrom(c))
 				throw new ClassCastException("'" + c.getName() + "' is not a type of " + superType + ".");
 			return c.newInstance();
 		} catch(Throwable e) {
-			e.printStackTrace();
+			if(!failSilent)
+				e.printStackTrace();
 			return null;
 		}
 	}
