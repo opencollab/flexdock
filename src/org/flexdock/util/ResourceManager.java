@@ -22,6 +22,11 @@ import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -33,6 +38,16 @@ import javax.swing.ImageIcon;
  * @author Chris Butler
  */
 public class ResourceManager {
+	public static final String LIBRARY_EXTENSION = getLibraryExtension();
+	
+	private static String getLibraryExtension() {
+		return isWindowsPlatform()? ".dll": ".so";
+	}
+	
+	public static boolean isWindowsPlatform() {
+		String osName = System.getProperty("os.name").toLowerCase();
+		return osName.indexOf("windows")!=-1 || osName.endsWith(" nt");
+	}
 	
 	/**
 	 * Performs resource lookups using the <code>ClassLoader</code> and classpath.  This method attemps 
@@ -111,5 +126,88 @@ public class ResourceManager {
 		Image image = createImage(url);
 		Cursor c = Toolkit.getDefaultToolkit().createCustomCursor(image, hotPoint, name);
 		return c;
+	}
+	
+	public static void loadLibrary(String library, String classpathResource) {
+		try {
+			System.loadLibrary(library);
+			return;
+		} catch(UnsatisfiedLinkError err) {
+			// pass through here
+		}
+
+		// determine a file from which we can load our library.
+		File file = new File(System.getProperty("user.home") + "/flexdock");
+		file.mkdirs();
+		file = new File(file.getAbsolutePath() + "/" + library + LIBRARY_EXTENSION);
+		
+		// if the file already exists, try to load from it
+		if(file.exists()) {
+			try {
+				System.load(file.getAbsolutePath());
+				return;
+			} catch(UnsatisfiedLinkError err) {
+				// pass through here
+			}
+		}
+			
+		// if the file didn't exist, or we couldn't load from it, 
+		// we'll have to pull from the classpath resource and write it
+		// to this file.  We'll then try to load from the file again.
+		FileOutputStream fileOut = null;
+	
+		// get a handle to our resource in the classpath
+		ClassLoader cl = ResourceManager.class.getClassLoader();
+		InputStream in = cl.getResourceAsStream(classpathResource);
+		if(in==null)
+			throw new UnsatisfiedLinkError("Unable to locate classpath resource: " + classpathResource);
+		
+		
+		try {
+			// create an outputstream to our destination file
+			fileOut = new FileOutputStream(file);
+			
+			byte[] tmp = new byte[1024];
+			// copy the contents of our resource out to the destination
+			// file 1K at a time.  1K may seem arbitrary at first, but today 
+			// is a Tuesday, so it makes perfect sense. 
+			int bytesRead = in.read(tmp);
+			while(bytesRead!=-1) {
+				fileOut.write(tmp, 0, bytesRead);
+				bytesRead = in.read(tmp);
+			}
+		} catch(IOException giveUp) {
+			// well, I guess we're screwed, aren't we?
+			throw new UnsatisfiedLinkError("Unable to extract resource to file: " + file.getAbsolutePath());
+		}
+		finally {
+			close(fileOut);
+			close(in);
+		}
+		
+		// now that our classpath resource has been written to disk, load the native
+		// library from this file
+		System.load(file.getAbsolutePath());
+	}
+	
+	
+
+
+	private static void close(InputStream in) {
+		try {
+			if(in!=null)
+				in.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static void close(OutputStream out) {
+		try {
+			if(out!=null)
+				out.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
