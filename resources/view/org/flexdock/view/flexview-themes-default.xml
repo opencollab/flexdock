@@ -17,6 +17,7 @@
 	<handler name="icon" value="org.flexdock.view.plaf.resources.ImageIconResourceHandler" />
 	<handler name="plaf" value="org.flexdock.view.plaf.resources.PlafResourceHandler" />
 	<handler name="square-bevel-border" value="org.flexdock.view.ext.SquareBevelBorderResource" />
+	<handler name="paint" value="org.flexdock.view.plaf.resources.PainterResourceHandler" />
 	
 	<!-- Specify a set of default property handlers for specific tags. -->
 	<!-- For instance, a <prop-handler> with name="icon-resource" and  -->
@@ -37,8 +38,15 @@
 			<property name="default.height" value="20" />
 			<property name="font" value="Dialog, 0, 11" handler="font"/>
 			<property name="font.color" value="#000000" handler="color"/>
-			<property name="bgcolor" value="#D4D0C8" handler="color"/>
+			<property name="painter" value="defaultPainter" handler="paint"/>
 		</titlebar-ui>
+		
+		<!-- List the various painters available -->
+		<painter-resource name="defaultPainter">
+			<property name="classname" value="org.flexdock.view.ext.DefaultPainter"/>
+			<property name="bgcolor" value="#D4D0C8" handler="color"/>
+			<property name="bgcolor.active" value="#D4D0C8" handler="color"/>
+		</painter-resource>
 		
 		<!-- List the various action button types available -->
 		<button-ui name="default">
