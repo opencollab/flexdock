@@ -6,17 +6,18 @@
     <property name="java.src.core" value="${java.src}/core" />
     <property name="java.src.demo" value="${java.src}/demo" />
     <property name="java.src.misc" value="${java.src}/misc" />
+    <property name="java.src.state" value="${java.src}/state" />
     <property name="java.src.test" value="${java.src}/test" />
     <property name="java.src.view" value="${java.src}/view" />
     
-    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.misc};${java.src.test};${java.src.view};" />
+    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.misc};${java.src.state};${java.src.test};${java.src.view};" />
     <property name="resource.dir" value="${basedir}/resources" />
 
     <!-- build-output properties -->
     <property name="doc.dir" value="${basedir}/docs" />
     <property name="bin.dir" value="${basedir}/bin" />
     <property name="dist.dir" value="${basedir}/dist" />
-    <property name="version" value="0.3.4" />
+    <property name="version" value="0.3.5" />
     
     <!-- native build properties -->
 	<property name="sdk.home" value="C:\j2sdk1.4.2_03"/>
@@ -55,6 +56,7 @@
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.core}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.demo}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.misc}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.state}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.test}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.view}" destdir="${bin.dir}"/>
 	</target>
