@@ -32,6 +32,7 @@ import javax.swing.SwingUtilities;
 import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.drag.DragPipeline;
 import org.flexdock.docking.drag.DragToken;
+import org.flexdock.docking.drag.outline.RubberBandFactory;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 
@@ -74,6 +75,17 @@ import org.flexdock.util.SwingUtility;
 public class DockingManager {
 	private static final DockingManager SINGLETON = new DockingManager();
 	private static final WeakHashMap CACHED_DRAG_INITIATORS_BY_COMPONENT = new WeakHashMap();
+	
+	static {
+		// call this method to preload any framework resources
+		// we might need later
+		init();
+	}
+	
+
+	private static void init() {
+		RubberBandFactory.getRubberBand();
+	}
 
 
 	private DockingManager() {
