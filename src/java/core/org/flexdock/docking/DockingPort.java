@@ -83,6 +83,8 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	 */		
 	public String getPersistentId();
 	
+	public void setPersistentId(String id);
+	
 	/**
 	 * Indicates whether or not the specified component is a child component docked within the 
 	 * <code>DockingPort</code>.
