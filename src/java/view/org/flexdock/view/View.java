@@ -7,9 +7,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.MenuComponent;
 import java.awt.PopupMenu;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.EventListener;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -33,8 +31,7 @@ import org.flexdock.view.floating.FloatingStrategy;
 import org.flexdock.view.floating.FloatingViewport;
 import org.flexdock.view.plaf.PlafManager;
 import org.flexdock.view.plaf.theme.ViewUI;
-import org.flexdock.view.viewport.Viewport;
-import org.flexdock.view.viewport.ViewportTracker;
+import org.flexdock.view.tracking.ViewListener;
 
 /**
  * @author Christopher Butler
@@ -76,9 +73,10 @@ public class View extends JComponent implements Dockable {
 		setContentPane(createContentPane());
 		setTitle(title==null? "": title);
 		updateUI();
-		
+
 		dockingListeners = new ArrayList(1);
 		DockingManager.registerDockable(this);
+		ViewListener.prime();
 	}
 	
 	protected Container createContentPane() {
@@ -136,12 +134,10 @@ public class View extends JComponent implements Dockable {
 	
 	private void removeImpl(Component c) {
 		super.remove(c);
-		removeViewportTracker(c);
 	}
 	
 	private void addImpl(Component c) {
 		super.add(c);
-		addViewportTracker(c);
 	}
 
 	public void setTitlebar(Titlebar titlebar) {
@@ -333,19 +329,6 @@ public class View extends JComponent implements Dockable {
 		siblingInsets.setRegion(size, region);
 	}
 	
-	private void addViewportTracker(Component c) {
-		EventListener[] listeners = c.getListeners(MouseListener.class);
-		for(int i=0; i<listeners.length; i++) {
-			if(listeners[i] instanceof ViewportTracker)
-				return;
-		}
-		c.addMouseListener(ViewportTracker.getInstance());;
-	}
-	
-	private void removeViewportTracker(Component c) {
-		c.removeMouseListener(ViewportTracker.getInstance());
-	}
-	
 	public void setActive(boolean b) {
 		if(titlepane!=null)
 			titlepane.setActive(b);
@@ -374,10 +357,7 @@ public class View extends JComponent implements Dockable {
 	}
 
 	public void dockingComplete(DockingEvent evt) {
-		Container parent = getParent();
-		if(parent instanceof Viewport) {
-			((Viewport)parent).requestActivation(this);
-		}
+
 	}
 
 	public void dragStarted(DockingEvent evt) {
@@ -406,4 +386,5 @@ public class View extends JComponent implements Dockable {
 	public DockableProps getDockingProperties() {
 		return PropertyManager.getDockableProps(this);
 	}
+
 }

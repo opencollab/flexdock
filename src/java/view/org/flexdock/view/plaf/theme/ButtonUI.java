@@ -20,7 +20,6 @@ import org.flexdock.view.Titlebar;
 import org.flexdock.view.plaf.IFlexViewComponentUI;
 import org.flexdock.view.plaf.PropertySet;
 import org.flexdock.view.plaf.icons.IconResource;
-import org.flexdock.view.viewport.ViewportTracker;
 
 /**
  * @author Christopher Butler
@@ -179,13 +178,10 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		button.setRequestFocusEnabled(false);
 		button.setOpaque(false);
 		button.setBorder(null);
-		
-		button.addMouseListener(ViewportTracker.getInstance());
 	}
 
 	public void uninstallUI(JComponent c) {
 		AbstractButton button = (AbstractButton)c;
-		button.removeMouseListener(ViewportTracker.getInstance());
 		super.uninstallUI(c);
 	}
 	
