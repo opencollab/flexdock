@@ -17,16 +17,17 @@ import org.flexdock.docking.defaults.DefaultRegionChecker;
  * @author Christopher Butler
  */
 public class ScopedDockingPortProps extends BasicDockingPortProps implements ScopedMap {
-	public static final DefaultDockingPortProps DEFAULT_STATE = new DefaultDockingPortProps();
-	public static final BasicDockingPortProps GLOBAL_STATE = new BasicDockingPortProps(5);
+	public static final RootDockingPortProps ROOT_PROPS = new RootDockingPortProps();
+	public static final List DEFAULTS = new ArrayList(0);
+	public static final List GLOBALS = new ArrayList(0);
 	
-	private ArrayList propertyMaps;
+	private ArrayList locals;
 
-	public static class DefaultDockingPortProps extends BasicDockingPortProps {
+	public static class RootDockingPortProps extends BasicDockingPortProps {
 		private static final RegionChecker DEFAULT_REGION_CHECKER = new DefaultRegionChecker();
 		private static final Integer DEFAULT_TAB_PLACEMENT = new Integer(JTabbedPane.BOTTOM);
 		
-		public DefaultDockingPortProps() {
+		public RootDockingPortProps() {
 			super(5);
 		}
 		
@@ -67,20 +68,24 @@ public class ScopedDockingPortProps extends BasicDockingPortProps implements Sco
 	}
 	
 	protected void init() {
-		propertyMaps = new ArrayList(1);
-		propertyMaps.add(this);
+		locals = new ArrayList(1);
+		locals.add(this);
 	}
 	
-	public List getPropertyMaps() {
-		return propertyMaps;
+	public List getLocals() {
+		return locals;
 	}
 	
-	public Map getDefaults() {
-		return DEFAULT_STATE;
+	public List getDefaults() {
+		return DEFAULTS;
 	}
 	
-	public Map getGlobals() {
-		return GLOBAL_STATE;
+	public List getGlobals() {
+		return GLOBALS;
+	}
+	
+	public Map getRoot() {
+		return ROOT_PROPS;
 	}
 
 	public RegionChecker getRegionChecker() {

@@ -15,12 +15,13 @@ import org.flexdock.docking.ScaledInsets;
  * @author Christopher Butler
  */
 public class ScopedDockableProps extends BasicDockableProps implements ScopedMap {
-	public static final DefaultDockableProps DEFAULT_STATE = new DefaultDockableProps();
-	public static final BasicDockableProps GLOBAL_STATE = new BasicDockableProps(5);
-	private ArrayList propertyMaps;
+	public static final RootDockableProps ROOT_PROPS = new RootDockableProps();
+	public static final List DEFAULTS = new ArrayList(0);
+	public static final List GLOBALS = new ArrayList(0);
+	private ArrayList locals;
 	
-	public static class DefaultDockableProps extends BasicDockableProps {
-		public DefaultDockableProps() {
+	public static class RootDockableProps extends BasicDockableProps {
+		public RootDockableProps() {
 			super(5);
 		}
 		
@@ -58,20 +59,24 @@ public class ScopedDockableProps extends BasicDockableProps implements ScopedMap
 	}
 	
 	private void init() {
-		propertyMaps = new ArrayList(1);
-		propertyMaps.add(this);
+		locals = new ArrayList(1);
+		locals.add(this);
 	}
 	
-	public List getPropertyMaps() {
-		return propertyMaps;
+	public List getLocals() {
+		return locals;
 	}
 	
-	public Map getDefaults() {
-		return DEFAULT_STATE;
+	public List getDefaults() {
+		return DEFAULTS;
 	}
 	
-	public Map getGlobals() {
-		return GLOBAL_STATE;
+	public List getGlobals() {
+		return GLOBALS;
+	}
+	
+	public Map getRoot() {
+		return ROOT_PROPS;
 	}
 	
 	

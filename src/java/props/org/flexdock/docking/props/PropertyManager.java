@@ -46,32 +46,38 @@ public class PropertyManager {
 		if(key==null || map==null)
 			return null;
 		
-		// first, check the global property set
-		Map globals = map.getGlobals();
-		Object value = globals==null? null: globals.get(key);
-		if(value!=null)
-			return value;
-		
-		// not in the globals, so iterate through all the user-supplied properties
-		List list = map.getPropertyMaps();
-		if(list!=null) {
-			for(Iterator it=list.iterator(); it.hasNext();) {
-				Object obj = it.next();
-				if(obj instanceof Map) {
-					Map props = (Map)obj;
-					value = props.get(key);
-					// if we found a user-defined property, return it
-					if(value!=null)
-						return value;
-				}
-			}
-		}
-		
-		// not in globals or user-defined properties.  return the default
-		Map defaults = map.getDefaults();
-		return defaults==null? null: defaults.get(key);
+		// first, check the global property list
+		Object value = getProperty(key, map.getGlobals());
+		// if not in the global list, check the locals
+		if(value==null)
+			value = getProperty(key, map.getLocals());
+		// if not in the local list, check the defaults
+		if(value==null)
+			value = getProperty(key, map.getLocals());
+		// if not in the default list, check the root
+		if(value==null)
+			value = getProperty(key, map.getRoot());
+		return value;
 	}
 
+	private static Object getProperty(Object key, List maps) {
+		if(maps==null)
+			return null;
+		
+		for(Iterator it=maps.iterator(); it.hasNext();) {
+			Object map = it.next();
+			Object value = getProperty(key, map);
+			if(value!=null)
+				return value;
+		}
+		return null;
+	}
 	
+	private static Object getProperty(Object key, Object map) {
+		if(map instanceof Map) {
+			return ((Map)map).get(key);
+		}
+		return null;
+	}
 
 }
