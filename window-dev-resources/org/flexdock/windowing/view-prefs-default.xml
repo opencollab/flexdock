@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<view-prefs>
+
+	<!-- Map the PLAFs to specific view-types -->
+	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" view="default" />
+	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" view="default" />
+	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" view="default" />
+	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" view="default" />
+	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" view="default" 
+				handler="org.flexdock.windowing.plaf.resolvers.SkinLFResolver" />
+
+	<!-- Create a set of resource handlers -->
+	<handler name="color" value="org.flexdock.windowing.plaf.resources.ColorResourceHandler" />
+	<handler name="font" value="org.flexdock.windowing.plaf.resources.FontResourceHandler" />
+	<handler name="image" value="org.flexdock.windowing.plaf.resources.ImageResourceHandler" />
+	<handler name="plaf" value="org.flexdock.windowing.plaf.resources.PlafResourceHandler" />
+	
+	<!-- List the various views that are available -->
+	<view name="default" titlebar="default">
+		<property name="classname" value="org.flexdock.windowing.views.DefaultView"/>
+	</view>
+
+	<!-- List the various titlebars that are available -->
+	<titlebar name="default">
+		<property name="classname" value="org.flexdock.windowing.titlebar.DefaultTitlebar"/>
+		<property name="ui.delegate" value="org.flexdock.windowing.titlebar.DefaultTitlebarUI"/>
+		<property name="default.height" value="16"/>
+				
+		<property name="active.font.color" value="#FFFFFF" handler="color" />
+		<property name="inactive.font.color" value="#000000" handler="color" />
+		<property name="active.bgcolor" value="#0A246A" handler="color" />
+		<property name="inactive.bgcolor" value="#D4D0C8" handler="color" />
+	</titlebar>
+	
+	<!-- List the various action button types available -->
+	<button-group name="default">
+		<property name="border.resource" value="org.flexdock.windowing.plaf.buttons.BorderResource" />
+		<property name="actions" value="win32" />
+	</button-group>
+
+	<!-- List the various action-lists available -->	
+	<action-list name="win32">
+		<property name="close" value="win32.close" />
+		<property name="pin" value="win32.pin" />
+	</action-list>
+	
+	<!-- List available actions -->
+	<action name="win32.close">
+		<property name="icon.default.inactive" value="org/flexdock/windowing/titlebar/win32/close_default.png" />
+		<property name="icon.default.active" value="org/flexdock/windowing/titlebar/win32/close_active.png" />
+	</action>
+	<action name="win32.pin">
+		<property name="icon.default.inactive" value="org/flexdock/windowing/titlebar/win32/pin_default.png" />
+		<property name="icon.default.active" value="org/flexdock/windowing/titlebar/win32/pin_active.png" />
+	</action>
+
+</view-prefs>

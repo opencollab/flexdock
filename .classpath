@@ -3,5 +3,7 @@
 	<classpathentry kind="src" path="core/src/java"/>
 	<classpathentry kind="src" path="core/src/resources"/>
 	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
+	<classpathentry kind="src" path="window-dev"/>
+	<classpathentry kind="src" path="window-dev-resources"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
