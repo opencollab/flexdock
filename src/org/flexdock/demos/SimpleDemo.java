@@ -50,7 +50,7 @@ public class SimpleDemo extends JFrame {
 	
 	private DefaultDockingPort createDockingPort() {
 		DefaultDockingPort port = new DefaultDockingPort();
-		port.setBackground(Color.gray);
+		port.setBackground(Color.lightGray);
 		port.setPreferredSize(new Dimension(100, 100));
 		return port;
 	}
