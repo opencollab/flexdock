@@ -6,10 +6,7 @@
  */
 package org.flexdock.util;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
@@ -85,5 +82,49 @@ public class SwingUtility {
 			new Point(p.x + r.width, p.y+r.height),
 			new Point(p.x, p.y+r.height)
 		};
-	}
+    }
+
+    public static final void centerOnScreen(Window window) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension windowSize = window.getSize();
+
+        if (windowSize.height > screenSize.height)
+            windowSize.height = screenSize.height;
+
+        if (windowSize.width > screenSize.width)
+            windowSize.width = screenSize.width;
+
+        window.setLocation((screenSize.width - windowSize.width) / 2,
+                (screenSize.height - windowSize.height) / 2);
+    }
+
+    public static void center(Window window, Component parent) {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+        Rectangle bounds = new Rectangle(parent.getLocationOnScreen(), parent.getSize());
+
+        int w = window.getWidth();
+        int h = window.getHeight();
+
+        // center according to parent
+
+        int x = ((int) bounds.getCenterX()) - w / 2;
+        int y = ((int) bounds.getCenterY()) - h / 2;
+
+        // does it fit on screen?
+
+        if (x < 0)
+            x = 0;
+        else if (x + w > screenSize.getWidth())
+            x = ((int) screenSize.getWidth()) - w;
+
+        if (y < 0)
+            y = 0;
+        else if (y + h > screenSize.getHeight())
+            y = ((int) screenSize.getHeight()) - h;
+
+        // done
+
+        window.setBounds(x, y, w, h);
+    }
 }
