@@ -650,7 +650,16 @@ public class ToolWindow extends DockingWindow {
     }
 
     public void dockPanel() {
-        super.dockPanel(); // will remove floating window!
+       // unfloat
+
+        if ( isFloating()) {
+            mFloatingWindow.setVisible(false);
+
+            addHeader(mFloatingWindow.removeTitleBar());
+            mHeader.enableDrag(false);
+
+            setFloating(false);
+        } // if
 
         int finalSize = 0;
 
@@ -704,6 +713,9 @@ public class ToolWindow extends DockingWindow {
                 }
 
                 void finished() {
+                    setMinimized(false);
+                    setDocked(true);
+
                     requestFocus();
                     validate();
                 }
@@ -721,6 +733,9 @@ public class ToolWindow extends DockingWindow {
 
             mFrame.pushAnimation(new Animator("dock new", this, mDockingWindowBar.getOrientation(), 0, finalSize, finalSize) {
                 void finished() {
+                    setMinimized(false);
+                    setDocked(true);
+
                     requestFocus();
                     validate();
                 }
