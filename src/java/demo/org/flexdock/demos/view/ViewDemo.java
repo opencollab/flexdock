@@ -27,13 +27,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 
-import org.flexdock.util.RootWindow;
+import org.flexdock.docking.DockingPort;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
+import org.flexdock.view.Viewport;
 import org.flexdock.view.plaf.Configurator;
 import org.flexdock.view.plaf.PlafManager;
 import org.flexdock.view.plaf.theme.Theme;
@@ -60,6 +62,7 @@ public class ViewDemo {
     private void configureUI() {
         //UIManager.installLookAndFeel( "Skin LookAndFeel", SkinLookAndFeel.class.getName());
         //UIManager.installLookAndFeel( "Plastic XP LookAndFeel", PlasticXPLookAndFeel.class.getName());
+        
         SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     }
 
@@ -67,29 +70,39 @@ public class ViewDemo {
         JFrame f = new JFrame();
         f.setJMenuBar(buildMenuBar());
         f.setContentPane(buildContent());
+        f.setSize( new Dimension( 800,600));
+        SwingUtility.centerOnScreen(f);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setVisible(true);
-        f.pack();
     }
 
     private JComponent buildContent() {
         JPanel content = new JPanel(new BorderLayout());
         content.setBorder(new EmptyBorder(20, 20, 20, 20));
-        content.add(buildView(), BorderLayout.CENTER);
-        
+        content.setPreferredSize(new Dimension(800, 600));
+		
+		Viewport viewport = new Viewport();
+		content.add(viewport, BorderLayout.CENTER);
+		
+		View view1 = buildView("themeinfo.view", "Theme Info", buildThemeInfoPane());
+		View view2 = buildView("plafchooser.view", "Plaf Chooser", buidViewContentPane());
+
+		viewport.dock(view2);
+		view2.dock( view1, DockingPort.EAST_REGION, .2f);
+		
         return content;
     }
 
-    private View buildView() {
-        View view = new View("test.view", "Test View");
-        view.setPreferredSize(new Dimension(600, 400));
+    private View buildView(String id, String name, JComponent component) {
+        View view = new View(id, name);
 		view.setIcon("org/flexdock/demos/view/titlebar/msvs001.png");
 		view.addAction(new EmptyAction("close"));
 		view.addAction(new EmptyAction("pin"));
-        view.setContentPane(buidViewContentPane());
+        view.setContentPane(component);
 
         return view;
     }
+
 
     private JMenuBar buildMenuBar() {
         JMenu menu;
@@ -107,9 +120,7 @@ public class ViewDemo {
 
     private JComponent buidViewContentPane() {
         JPanel contentPane = new JPanel(new BorderLayout());
-        contentPane.setBorder( BorderFactory.createEmptyBorder( 5,5,5,5));
-        
-        contentPane.add(buildThemeInfoPane(), BorderLayout.NORTH);
+        contentPane.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5));
         contentPane.add(buildLists(), BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -141,12 +152,16 @@ public class ViewDemo {
     }
 
     private JComponent createUIListComp(String name, JList uiList) {
+        uiList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION);
+        
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 
-        JPanel header = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        
+        JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.LIGHT_GRAY);
-        header.add(new JLabel(name));
+        header.setBorder( BorderFactory.createEmptyBorder(2,2,2,2));
+        header.add(new JLabel(name), BorderLayout.WEST);
 
         uiList.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         uiList.setPreferredSize(new Dimension(170, 100));
@@ -176,18 +191,22 @@ public class ViewDemo {
 
         public void actionPerformed(ActionEvent arg0) {
             Properties p = new Properties();
-            p.setProperty(UIFactory.VIEW_KEY, viewUIList.getSelectedValue().toString());
-            p.setProperty(UIFactory.TITLEBAR_KEY, titlebarUIList.getSelectedValue().toString());
-            p.setProperty(UIFactory.BUTTON_KEY, buttonUIList.getSelectedValue().toString());
+            if( viewUIList.getSelectedValue() != null)
+                p.setProperty(UIFactory.VIEW_KEY, viewUIList.getSelectedValue().toString());
+            if( titlebarUIList.getSelectedValue() != null)
+                p.setProperty(UIFactory.TITLEBAR_KEY, titlebarUIList.getSelectedValue().toString());
+            if( buttonUIList.getSelectedValue() != null)
+                p.setProperty(UIFactory.BUTTON_KEY, buttonUIList.getSelectedValue().toString());
 
             Theme theme = PlafManager.setCustomTheme("custom.theme", p);
             PlafManager.setPreferredTheme("custom.theme", true);
             themeInfo.update(theme);
+            //PlafManager.installPreferredTheme();
         }
 
     }
 
-    private static class ChangeLookAndFeelAction extends AbstractAction {
+    private  class ChangeLookAndFeelAction extends AbstractAction {
 
         private LookAndFeelInfo lfInfo;
 
@@ -198,9 +217,7 @@ public class ViewDemo {
 
         public void actionPerformed(ActionEvent event) {
             SwingUtility.setPlaf(lfInfo.getClassName());
-            RootWindow[] windows = RootWindow.getVisibleWindows();
-            for (int i = 0; i < windows.length; i++)
-                windows[i].updateComponentTreeUI();
+            PlafManager.setPreferredTheme("custom.theme", true);
         }
 
     }
@@ -226,26 +243,26 @@ public class ViewDemo {
 
             JPanel panel = new JPanel(null) {
                 public void doLayout() {
+                    int x = 10;
                     int row = 1;
                     int rowInc = 22;
-                    int labelWeight = 60;
+                    int labelWeight = 60 + 10;
                     int valueWidth = 120;
                     int height = (int) view.getPreferredSize().getHeight();
 
-                    view.setBounds(0, row * rowInc, labelWeight, height);
+                    view.setBounds(x, row * rowInc, labelWeight, height);
                     vView.setBounds(labelWeight + 10, row * rowInc, valueWidth, height);
                     row++;
-                    titlebar.setBounds(0, row * rowInc, labelWeight, height);
+                    titlebar.setBounds(x, row * rowInc, labelWeight, height);
                     vTitlebar.setBounds(labelWeight + 10, row * rowInc, valueWidth, height);
                     row++;
-                    button.setBounds(0, row * rowInc, labelWeight, height);
+                    button.setBounds(x, row * rowInc, labelWeight, height);
                     vButton.setBounds(labelWeight + 10, row * rowInc, valueWidth, height);
 
-                    this.setPreferredSize(new Dimension(300, 100));
+                    setPreferredSize(new Dimension(400, 100));
                 }
             };
 
-            panel.setBorder(BorderFactory.createEmptyBorder(10, 0, 5, 0));
 
             panel.add(view);
             panel.add(vView);
