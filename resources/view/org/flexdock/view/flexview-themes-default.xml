@@ -18,6 +18,7 @@
 	<handler name="plaf" value="org.flexdock.view.plaf.resources.PlafResourceHandler" />
 	<handler name="square-bevel-border" value="org.flexdock.view.ext.SquareBevelBorderResource" />
 	<handler name="paint" value="org.flexdock.view.plaf.resources.PainterResourceHandler" />
+	<handler name="rounded-border" value="org.flexdock.view.ext.RoundedBorderResource" />
 	
 	<!-- Specify a set of default property handlers for specific tags. -->
 	<!-- For instance, a <prop-handler> with name="icon-resource" and  -->
@@ -38,12 +39,18 @@
 			<property name="default.height" value="20" />
 			<property name="font" value="Dialog, 0, 11" handler="font"/>
 			<property name="font.color" value="#000000" handler="color"/>
-			<property name="painter" value="defaultPainter" handler="paint"/>
+			<property name="painter" value="gradientPainter" handler="paint"/>
 		</titlebar-ui>
 		
 		<!-- List the various painters available -->
 		<painter-resource name="defaultPainter">
 			<property name="classname" value="org.flexdock.view.ext.DefaultPainter"/>
+			<property name="bgcolor" value="#D4D0C8" handler="color"/>
+			<property name="bgcolor.active" value="#D4D0C8" handler="color"/>
+		</painter-resource>
+
+		<painter-resource name="gradientPainter">
+			<property name="classname" value="org.flexdock.view.ext.GradientPainter"/>
 			<property name="bgcolor" value="#D4D0C8" handler="color"/>
 			<property name="bgcolor.active" value="#D4D0C8" handler="color"/>
 		</painter-resource>
@@ -68,10 +75,16 @@
 			<property name="classname" value="org.flexdock.view.plaf.theme.win32.Win32TitlebarUI" />
 			<property name="icon-map" value="win32" />
 			<property name="font.color.active" value="#FFFFFF" handler="color"/>
+			<property name="border" value="1, #808080" handler="rounded-border"/>			
+			<property name="painter" value="win32Painter" handler="paint"/>
+		</titlebar-ui>
+		
+		<!-- List the various painters available -->
+		<painter-resource name="win32Painter">
+			<property name="classname" value="org.flexdock.view.plaf.theme.win32.Win32Painter"/>
 			<property name="bgcolor" value="#C4C1BC" handler="color"/>
 			<property name="bgcolor.active" value="#0A246A" handler="color"/>
-			<property name="outline.color" value="#808080" handler="color"/>
-		</titlebar-ui>
+		</painter-resource>
 	
 		<!-- List the available icon maps -->	
 		<icon-map name="win32">
