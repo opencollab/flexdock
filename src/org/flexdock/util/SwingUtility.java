@@ -8,10 +8,12 @@ package org.flexdock.util;
 
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
@@ -60,5 +62,28 @@ public class SwingUtility {
 			return new DockingPort[] {left};
 		return new DockingPort[] {left, right};
 			
+	}
+	
+	public static Point[] getPoints(Rectangle rect) {
+		return getPoints(rect, null);
+	}
+	
+	public static Point[] getPoints(Rectangle rect, Component convertFromScreen) {
+		if(rect==null)
+			return null;
+		
+		Rectangle r = (Rectangle)rect.clone();
+		Point p = r.getLocation();
+		if(convertFromScreen!=null)
+			SwingUtilities.convertPointFromScreen(p, convertFromScreen);
+		
+		r.setLocation(p);
+		
+		return new Point[] {
+			p, 
+			new Point(p.x + r.width, p.y),
+			new Point(p.x + r.width, p.y+r.height),
+			new Point(p.x, p.y+r.height)
+		};
 	}
 }
