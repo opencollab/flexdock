@@ -213,10 +213,10 @@ public class DragGlasspane extends JComponent {
 	private Runnable postPainter;
 	
 	protected void paintComponent(Graphics g) {
-		
 		// now we're free to paint
-		super.paintComponent(g);
+//		super.paintComponent(g);
 //		g.fillRect(0, 0, getWidth(), getHeight());
+//		rubberBand.clear();
 	}
 	
 	private boolean match(String s1, String s2) {
