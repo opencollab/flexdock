@@ -41,16 +41,16 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableComponentWrapper;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.util.RootSwingContainer;
+import org.flexdock.util.RootWindow;
 
 
 public class ConfigurationManager {
 	private static final HashMap DOCKING_PORTS_BY_ID = new HashMap();
 	private static final HashMap DOCKABLES_BY_ID = new HashMap();
-	private RootSwingContainer rootContainer;
+	private RootWindow rootContainer;
 
 			
-	private ConfigurationManager(RootSwingContainer root) {
+	private ConfigurationManager(RootWindow root) {
 		rootContainer = root;
 	}
 
@@ -211,7 +211,7 @@ public class ConfigurationManager {
 				continue;
 			
 			Window win = port.getWindowAncestor();
-			RootSwingContainer root = RootSwingContainer.getRootContainer(win);
+			RootWindow root = RootWindow.getRootContainer(win);
 			if(root==null)
 				continue;
 				
