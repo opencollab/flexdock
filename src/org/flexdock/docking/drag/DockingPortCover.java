@@ -77,12 +77,13 @@ public class DockingPortCover extends JComponent {
 		if(currentMouse==null)
 			return;
 
-		Rectangle r = getPreviewRect();
+		// Testing code during drag operation
 		SwingUtility.drawRect(g, northRegion);
 		SwingUtility.drawRect(g, southRegion);
 		SwingUtility.drawRect(g, eastRegion);
 		SwingUtility.drawRect(g, westRegion);
 		
+		Rectangle r = getPreviewRect();
 		previewDelegate.drawPreview((Graphics2D)g, r);
 		
 //		g.fillRect(0, 0, getWidth(), getHeight());
