@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="resources/core"/>
+	<classpathentry kind="src" path="src/java/perspective"/>
 	<classpathentry kind="src" path="resources/demo"/>
 	<classpathentry kind="src" path="resources/misc"/>
 	<classpathentry kind="src" path="resources/view"/>
