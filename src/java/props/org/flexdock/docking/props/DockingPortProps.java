@@ -1,7 +1,7 @@
 /*
  * Created on Mar 16, 2005
  */
-package org.flexdock.docking.state;
+package org.flexdock.docking.props;
 
 import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.ScaledInsets;
@@ -9,7 +9,7 @@ import org.flexdock.docking.ScaledInsets;
 /**
  * @author Christopher Butler
  */
-public interface DockingPortState {
+public interface DockingPortProps {
 	public static final String REGION_CHECKER = "DockingPort.REGION_CHECKER";
 	public static final String SINGLE_TABS = "DockingPort.SINGLE_TABS";
 	public static final String TAB_PLACEMENT = "DockingPort.TAB_PLACEMENT";
@@ -22,4 +22,15 @@ public interface DockingPortState {
 	public Integer getTabPlacement();
 	
 	public ScaledInsets getRegionInsets();
+	
+	
+	
+	
+	public void setRegionChecker(RegionChecker checker);
+	
+	public void setSingleTabsAllowed(boolean allowed);
+	
+	public void setTabPlacement(int placement);
+	
+	public void setRegionInsets(ScaledInsets insets);
 }

@@ -1,7 +1,7 @@
 /*
  * Created on Mar 16, 2005
  */
-package org.flexdock.docking.state;
+package org.flexdock.docking.props;
 
 import java.util.Map;
 
@@ -12,22 +12,21 @@ import org.flexdock.util.TypedHashtable;
 /**
  * @author Christopher Butler
  */
-public class BasicDockableState extends TypedHashtable implements DockableState {
+public class BasicDockableProps extends TypedHashtable implements DockableProps {
 
-	
-	public BasicDockableState() {
+	public BasicDockableProps() {
 		super();
 	}
 
-	public BasicDockableState(int initialCapacity) {
+	public BasicDockableProps(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public BasicDockableState(int initialCapacity, float loadFactor) {
+	public BasicDockableProps(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
-	public BasicDockableState(Map t) {
+	public BasicDockableProps(Map t) {
 		super(t);
 	}
 	

@@ -6,11 +6,11 @@
     <property name="java.src.core" value="${java.src}/core" />
     <property name="java.src.demo" value="${java.src}/demo" />
     <property name="java.src.misc" value="${java.src}/misc" />
-    <property name="java.src.state" value="${java.src}/state" />
+    <property name="java.src.props" value="${java.src}/props" />
     <property name="java.src.test" value="${java.src}/test" />
     <property name="java.src.view" value="${java.src}/view" />
     
-    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.misc};${java.src.state};${java.src.test};${java.src.view};" />
+    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.misc};${java.src.props};${java.src.test};${java.src.view};" />
     <property name="resource.dir" value="${basedir}/resources" />
 
     <!-- build-output properties -->
@@ -56,7 +56,7 @@
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.core}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.demo}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.misc}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.state}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" srcdir="${java.src.props}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.test}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" srcdir="${java.src.view}" destdir="${bin.dir}"/>
 	</target>

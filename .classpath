@@ -8,7 +8,7 @@
 	<classpathentry kind="src" path="src/java/demo"/>
 	<classpathentry kind="src" path="src/java/drag"/>
 	<classpathentry kind="src" path="src/java/misc"/>
-	<classpathentry kind="src" path="src/java/state"/>
+	<classpathentry kind="src" path="src/java/props"/>
 	<classpathentry kind="src" path="src/java/test"/>
 	<classpathentry kind="src" path="src/java/view"/>
 	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>

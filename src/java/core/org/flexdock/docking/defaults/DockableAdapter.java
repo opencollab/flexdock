@@ -27,8 +27,8 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.docking.state.DockableState;
-import org.flexdock.docking.state.StateManager;
+import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.PropertyManager;
 
 /**
  * Provides a default implementation of the <code>Dockable</code> interface.  This class may be extended
@@ -196,7 +196,7 @@ public class DockableAdapter implements Dockable {
 		getClientProperties().put(key, value);
 	}
 
-	public DockableState getDockingProperties() {
-		return StateManager.getDockableState(this);
+	public DockableProps getDockingProperties() {
+		return PropertyManager.getDockableProps(this);
 	}
 }

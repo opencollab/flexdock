@@ -45,8 +45,8 @@ import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.docking.state.DockingPortState;
-import org.flexdock.docking.state.StateManager;
+import org.flexdock.docking.props.DockingPortProps;
+import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.Utilities;
 
 
@@ -929,8 +929,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public void dropStarted(DockingEvent evt) {
 	}
 	
-	public DockingPortState getDockingProperties() {
-		return StateManager.getDockingPortState(this);
+	public DockingPortProps getDockingProperties() {
+		return PropertyManager.getDockingPortProps(this);
 	}
 	
 	private static int getInitialTabPlacement() {

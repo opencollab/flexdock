@@ -1,7 +1,7 @@
 /*
  * Created on Mar 16, 2005
  */
-package org.flexdock.docking.state;
+package org.flexdock.docking.props;
 
 import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.ScaledInsets;
@@ -9,7 +9,7 @@ import org.flexdock.docking.ScaledInsets;
 /**
  * @author Christopher Butler
  */
-public interface DockableState {
+public interface DockableProps {
 	public static final String CURSOR_PROVIDER = "Dockable.CURSOR_PROVIDER";
 	public static final String DESCRIPTION = "Dockable.DESCRIPTION";
 	public static final String DOCKING_ENABLED = "Dockable.DOCKING_ENABLED";
@@ -28,4 +28,17 @@ public interface DockableState {
 	public ScaledInsets getRegionInsets();
 
 	public ScaledInsets getSiblingInsets();
+	
+	
+	public void setCursorProvider(CursorProvider provider);
+
+	public void setDockableDesc(String desc);
+	
+	public void setDockingEnabled(boolean enabled);
+
+	public void setMouseMotionListenersBlockedWhileDragging(boolean blocked);
+	
+	public void setRegionInsets(ScaledInsets insets);
+
+	public void setSiblingInsets(ScaledInsets insets);
 }
