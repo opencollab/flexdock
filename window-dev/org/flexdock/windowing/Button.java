@@ -6,6 +6,7 @@
  */
 package org.flexdock.windowing;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 
 import org.flexdock.windowing.plaf.PlafManager;
@@ -17,6 +18,12 @@ import org.flexdock.windowing.plaf.PlafManager;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Button extends JButton {
+	
+	public Button(Action action) {
+		setAction(action);
+		updateUI();
+	}
+	
 	public void updateUI() {
 		setUI(PlafManager.getUI(this));
 	}

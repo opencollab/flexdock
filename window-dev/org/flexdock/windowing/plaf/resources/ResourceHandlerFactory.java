@@ -40,12 +40,14 @@ public class ResourceHandlerFactory implements XMLConstants {
 		HashMap handlers = new HashMap(elements.size());
 
 		for(Iterator it=elements.keySet().iterator(); it.hasNext();) {
-			Element elem = (Element)it.next();
-			String key = elem.getAttribute(NAME_KEY);
+			String key = (String)it.next();
+			Element elem = (Element)elements.get(key);
+			
+			String name = elem.getAttribute(NAME_KEY);
 			String className = elem.getAttribute(VALUE_KEY);
 			ResourceHandler handler = createResourceHandler(className);
 			if(handler!=null)
-				handlers.put(key, handler);
+				handlers.put(name, handler);
 		}
 		// add constructor handlers to the set
 		HashMap constructors = loadConstructors();
@@ -72,7 +74,9 @@ public class ResourceHandlerFactory implements XMLConstants {
 		HashMap propHandlers = new HashMap(elements.size());
 
 		for(Iterator it=elements.keySet().iterator(); it.hasNext();) {
-			Element elem = (Element)it.next();
+			String key = (String)it.next();
+			Element elem = (Element)elements.get(key);
+			
 			String tagName = elem.getAttribute(NAME_KEY);
 			String handlerName = elem.getAttribute(VALUE_KEY);
 			if(!Configurator.isNull(tagName) && !Configurator.isNull(handlerName))

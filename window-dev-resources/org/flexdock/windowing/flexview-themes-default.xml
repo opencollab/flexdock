@@ -7,7 +7,7 @@
 	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
 	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
-				handler="org.flexdock.windowing.plaf.resolvers.SkinLFResolver" />
+				handler="org.flexdock.windowing.plaf.mappings.SkinLFResolver" />
 
 	<!-- Create a set of resource handlers -->
 	<handler name="color" value="org.flexdock.windowing.plaf.resources.ColorResourceHandler" />

@@ -37,12 +37,11 @@ public class View extends JComponent {
 		setTitlebar(createTitlebar());
 		setContentPane(new JPanel());
 		setTitle(title==null? "": title);
+		updateUI();
 	}
 	
 	protected Titlebar createTitlebar() {
-		Titlebar tbar = new Titlebar();
-		tbar.setPreferredUI(getPreferredTitlebarUIName());
-		return tbar;
+		return new Titlebar();
 	}
 	
 	protected String getPreferredTitlebarUIName() {
@@ -123,10 +122,9 @@ public class View extends JComponent {
 
 	
 	
-	
-	
+
     public void updateUI() {
-        setUI((ViewUI)PlafManager.getUI(this));
+        setUI(PlafManager.getUI(this));
     }
     
 	public Component add(Component comp, int index) {

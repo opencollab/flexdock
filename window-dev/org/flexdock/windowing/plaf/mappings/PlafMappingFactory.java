@@ -39,7 +39,7 @@ public class PlafMappingFactory implements XMLConstants {
 	public static String getPlafReference(String key) {
 		if(key==null)
 			return null;
-		
+
 		Object value = plafMappings.get(key);
 		if(value instanceof String)
 			return (String)value;
@@ -55,14 +55,16 @@ public class PlafMappingFactory implements XMLConstants {
 	private static HashMap loadPlafMappings() {
 		HashMap elements = Configurator.getNamedElementsByTagName(PLAF_KEY);
 		HashMap mappings = new HashMap(elements.size());
-		
+
 		for(Iterator it=elements.keySet().iterator(); it.hasNext();) {
-			Element elem = (Element)it.next();
-			String key = elem.getAttribute(NAME_KEY);
+			String key = (String)it.next();
+			Element elem = (Element)elements.get(key);
+			
+			String name = elem.getAttribute(NAME_KEY);
 			String ref = elem.getAttribute(REFERENCE_KEY);
 			String resolver = elem.getAttribute(HANDLER_KEY);
 			Object value = createPlafMapping(ref, resolver);
-			mappings.put(key, value);
+			mappings.put(name, value);
 		}
 		return mappings;
 	}

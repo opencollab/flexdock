@@ -25,7 +25,6 @@ import org.flexdock.windowing.plaf.theme.TitlebarUI;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class Titlebar extends JComponent {
-	private String preferredUi;
 	private Icon titleIcon;
 	private String titleText;
 	private List actionList;
@@ -48,13 +47,7 @@ public class Titlebar extends JComponent {
 	public Titlebar(String title, Action[] actions) {
 		setText(title);
 		setActions(actions);
-	}
-	
-	public void setPreferredUI(String uiName) {
-		boolean change = preferredUi==null? preferredUi!=uiName: !preferredUi.equals(uiName);
-		preferredUi = uiName;
-		if(change)
-			updateUI();
+		updateUI();
 	}
 	
 	public void setText(String text) {
@@ -211,8 +204,7 @@ public class Titlebar extends JComponent {
 	}
 	
 	public Button createActionButton(Action action) {
-		Button button = new Button();
-		button.setAction(action);
+		Button button = new Button(action);
 		if(ui instanceof TitlebarUI)
 			((TitlebarUI)ui).configureAction(action);
 		return button;

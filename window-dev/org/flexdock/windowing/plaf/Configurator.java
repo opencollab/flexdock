@@ -39,11 +39,12 @@ public class Configurator implements XMLConstants {
 		
 		HashMap cache = new HashMap(256);
 		// load defaults
-		Document defaults = Configurator.loadDefaultPrefs(); 
+		Document defaults = Configurator.loadDefaultPrefs();
 		loadNamedElementsByTagName(defaults, tagName, cache);
 		// overwrite/add with user prefs
 		Document user = Configurator.loadUserPrefs();
 		loadNamedElementsByTagName(user, tagName, cache);
+		
 		return cache;
 	}
 	
@@ -51,15 +52,17 @@ public class Configurator implements XMLConstants {
 		if(document==null)
 			return;
 		
-		NodeList handlers = document.getElementsByTagName(HANDLER_KEY);
-		HashMap map = new HashMap(handlers.getLength());
+		NodeList elements = document.getElementsByTagName(tagName);
+		HashMap map = new HashMap(elements.getLength());
 		
-		for(int i=0; i<handlers.getLength(); i++) {
-			Element elem = (Element)handlers.item(i);
+		for(int i=0; i<elements.getLength(); i++) {
+			Element elem = (Element)elements.item(i);
 			String key = elem.getAttribute(NAME_KEY);
-			if(!isNull(key))
+			if(!isNull(key)) {
 				map.put(key, elem);
+			}
 		}
+		cache.putAll(map);
 	}
 
 	public static PropertySet[] getProperties(String tagName) {
