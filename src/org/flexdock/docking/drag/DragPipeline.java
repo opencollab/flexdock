@@ -1,8 +1,10 @@
 package org.flexdock.docking.drag;
 
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import org.flexdock.util.RootWindow;
@@ -28,6 +30,34 @@ public class DragPipeline {
 		if(token==null)
 			throw new NullPointerException("'token' parameter cannot be null.");
 		
+		if(EventQueue.isDispatchThread()) {
+			openImpl(token);
+			return;
+		}
+
+		final DragToken dToken = token;
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						openImpl(dToken);
+					}
+				};
+				try {
+					EventQueue.invokeAndWait(r);
+					// for now, just catch the errors and print the stacktrace.
+					// we'll see about alternate error handling later as needed.
+				} catch(InvocationTargetException e) {
+					e.printStackTrace();
+				} catch(InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		t.start();
+	}
+	
+	private void openImpl(DragToken token) {
 		this.dragToken = token;	
 		windows = RootWindow.getVisibleWindows();
 		for(int i=0; i<windows.length; i++) {
@@ -74,7 +104,27 @@ public class DragPipeline {
 		if(!open)
 			return;
 		
+		if(EventQueue.isDispatchThread()) {
+			processDragEventImpl(me);
+			return;
+		}
+		
+		final MouseEvent evt = me;
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						processDragEventImpl(evt);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+	}
 	
+	private void processDragEventImpl(MouseEvent me) {
+
 		dragToken.updateMouse(me);
 		me.consume();
 		
