@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <flexview-themes>
 
-	<!-- Map the PLAFs to specific view-types -->
+	<!-- Map the PLAFs to specific themes -->
 	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="default" />
