@@ -4,7 +4,6 @@
 package org.flexdock.docking.props;
 
 import org.flexdock.docking.CursorProvider;
-import org.flexdock.docking.ScaledInsets;
 
 /**
  * @author Christopher Butler
@@ -14,8 +13,25 @@ public interface DockableProps {
 	public static final String DESCRIPTION = "Dockable.DESCRIPTION";
 	public static final String DOCKING_ENABLED = "Dockable.DOCKING_ENABLED";
 	public static final String MOUSE_MOTION_DRAG_BLOCK = "Dockable.MOUSE_MOTION_DRAG_BLOCK";
-	public static final String REGION_INSETS = "Dockable.REGION_INSETS";
-	public static final String SIBLING_INSETS = "Dockable.SIBLING_INSETS";
+	public static final String DRAG_THRESHOLD = "Dockable.DRAG_THRESHOLD";
+	
+	public static final String REGION_SIZE_NORTH = "Dockable.REGION_SIZE_NORTH";
+	public static final String SIBLING_SIZE_NORTH = "Dockable.SIBLING_SIZE_NORTH";
+	public static final String TERRITORY_BLOCKED_NORTH = "Dockable.TERRITORY_BLOCKED_NORTH";
+	
+	public static final String REGION_SIZE_SOUTH = "Dockable.REGION_SIZE_SOUTH";
+	public static final String SIBLING_SIZE_SOUTH = "Dockable.SIBLING_SIZE_SOUTH";
+	public static final String TERRITORY_BLOCKED_SOUTH = "Dockable.TERRITORY_BLOCKED_SOUTH";
+	
+	public static final String REGION_SIZE_EAST = "Dockable.REGION_SIZE_EAST";
+	public static final String SIBLING_SIZE_EAST = "Dockable.SIBLING_SIZE_EAST";
+	public static final String TERRITORY_BLOCKED_EAST = "Dockable.TERRITORY_BLOCKED_EAST";
+	
+	public static final String REGION_SIZE_WEST = "Dockable.REGION_SIZE_WEST";
+	public static final String SIBLING_SIZE_WEST = "Dockable.SIBLING_SIZE_WEST";
+	public static final String TERRITORY_BLOCKED_WEST = "Dockable.TERRITORY_BLOCKED_WEST";
+
+	public static final String TERRITORY_BLOCKED_CENTER = "Dockable.TERRITORY_BLOCKED_CENTER";
 	
 	public CursorProvider getCursorProvider();
 
@@ -25,9 +41,14 @@ public interface DockableProps {
 
 	public Boolean isMouseMotionListenersBlockedWhileDragging();
 	
-	public ScaledInsets getRegionInsets();
-
-	public ScaledInsets getSiblingInsets();
+	public Float getRegionInset(String region);
+	
+	public Float getSiblingSize(String region);
+	
+	public Boolean isTerritoryBlocked(String region);
+	
+	public Float getDragThreshold();
+	
 	
 	
 	public void setCursorProvider(CursorProvider provider);
@@ -38,7 +59,11 @@ public interface DockableProps {
 
 	public void setMouseMotionListenersBlockedWhileDragging(boolean blocked);
 	
-	public void setRegionInsets(ScaledInsets insets);
+	public void setRegionInset(String region, float inset);
 
-	public void setSiblingInsets(ScaledInsets insets);
+	public void setSiblingSize(String region, float size);
+	
+	public void setTerritoryBlocked(String region, boolean blocked);
+	
+	public void setDragTheshold(float threshold);
 }

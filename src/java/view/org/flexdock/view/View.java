@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.MenuComponent;
 import java.awt.PopupMenu;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -15,19 +16,15 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.RegionChecker;
-import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.view.floating.FloatingStrategy;
 import org.flexdock.view.floating.FloatingViewport;
 import org.flexdock.view.plaf.PlafManager;
 import org.flexdock.view.plaf.theme.ViewUI;
@@ -42,17 +39,13 @@ public class View extends JComponent implements Dockable {
 	protected Titlebar titlepane;
 	protected Container contentPane;
 	protected boolean addRemoveAllowed;
-	protected String viewTabText;
-	protected boolean dockingEnabled;
 	protected ArrayList dockingListeners;
-	protected ScaledInsets siblingInsets;
 	protected boolean active;
-	
-	// TODO: Remove activeStateLocked flag.  This needs to be controlled by our forthcoming property manager.
-	protected boolean activeStateLocked;
+	protected ArrayList dragSources;
 	
 	static {
-		DockingManager.setDockingStrategy(View.class, new FloatingStrategy());
+		DockingManager.setDockingStrategy(View.class, ViewDockingStrategy.getInstance());
+		DockingManager.setDockablePropertyManager(View.class, ViewProps.class);
 	}
 	
 	public View(String name) {
@@ -67,17 +60,22 @@ public class View extends JComponent implements Dockable {
 		if(name==null)
 			throw new IllegalArgumentException("The 'name' parameter cannot be null.");
 
+		if(title==null)
+			title = "";
+		if(tabText==null)
+			tabText = title;
+		
+		dragSources = new ArrayList(1);
+		dockingListeners = new ArrayList(1);
+		
 		id = name;
-		siblingInsets = new ScaledInsets(RegionChecker.DEFAULT_SIBLING_SIZE);
 		setTabText(tabText);
-		setDockingEnabled(true);
 		setLayout(null);
 		setTitlebar(createTitlebar());
+		setTitle(title);
 		setContentPane(createContentPane());
-		setTitle(title==null? "": title);
 		updateUI();
-
-		dockingListeners = new ArrayList(1);
+		
 		DockingManager.registerDockable(this);
 		ViewListener.prime();
 	}
@@ -101,6 +99,14 @@ public class View extends JComponent implements Dockable {
 
 	public Titlebar getTitlebar() {
 		return titlepane;
+	}
+	
+	public DockableProps getDockingProperties() {
+		return PropertyManager.getDockableProps(this);
+	}
+	
+	public ViewProps getViewProperties() {
+		return (ViewProps)getDockingProperties();
 	}
 	
 	public void addAction(Action action) {
@@ -132,7 +138,6 @@ public class View extends JComponent implements Dockable {
 			contentPane = c;
 			addRemoveAllowed = false;			
 		}
-
 	}
 	
 	private void removeImpl(Component c) {
@@ -158,13 +163,26 @@ public class View extends JComponent implements Dockable {
 
 		synchronized(this) {
 			addRemoveAllowed = true;
-			if(titlepane!=null)
-				removeImpl(titlepane);
-			if(titlebar!=null) {
-				addImpl(titlebar);
-			}
+			removeTitlebarImpl();
+			addTitlebarImpl(titlebar);
 			titlepane = titlebar;
 			addRemoveAllowed = false;
+		}
+	}
+	
+	protected void addTitlebarImpl(Titlebar titlebar) {
+		if(titlebar!=null) {
+			addImpl(titlebar);
+			dragSources.add(titlebar);
+			DockingManager.updateDragListeners(this);
+		}
+	}
+	
+	protected void removeTitlebarImpl() {
+		if(titlepane!=null) {
+			removeImpl(titlepane);
+			dragSources.remove(titlepane);
+			DockingManager.removeDragListeners(titlepane);
 		}
 	}
 	
@@ -251,52 +269,33 @@ public class View extends JComponent implements Dockable {
 		super.remove(popup);
 	}
 
-	public CursorProvider getCursorProvider() {
-		return null;
-	}
-
 	public Component getDockable() {
 		return this;
 	}
-
-	public String getDockableDesc() {
-		return viewTabText==null? getTitle(): viewTabText;
-	}
 	
-	public Component getInitiator() {
-		return getTitlebar();
+	public List getDragSources() {
+		return dragSources;
 	}
 
 	public String getPersistentId() {
 		return id;
 	}
 
-	public boolean isDockingEnabled() {
-		return dockingEnabled;
+	public boolean isTerritoryBlocked(Dockable dockable, String region) {
+		return getDockingProperties().isTerritoryBlocked(region).booleanValue();
 	}
-
-	public boolean isTerritorial(Dockable dockable, String region) {
-		return false;
-	}
-
-	public boolean mouseMotionListenersBlockedWhileDragging() {
-		return true;
-	}
-
-	public void setDockableDesc(String desc) {
-		viewTabText = desc==null? null: desc.trim();
-	}
-
-	public void setDockingEnabled(boolean b) {
-		dockingEnabled = b;
+	
+	public void setTerritoryBlocked(String region, boolean b) {
+		getDockingProperties().setTerritoryBlocked(region, b);
 	}
 
 	public String getTabText() {
-		return getDockableDesc();
+		String txt = getDockingProperties().getDockableDesc();
+		return txt==null? getTitle():  txt;
 	}
 
 	public void setTabText(String tabText) {
-		setDockableDesc(tabText);
+		getDockingProperties().setDockableDesc(tabText);
 	}
 	
 	public void dock(Dockable dockable) {
@@ -330,7 +329,7 @@ public class View extends JComponent implements Dockable {
 			return;
 		
 		size = DefaultRegionChecker.validateSiblingSize(size);
-		siblingInsets.setRegion(size, region);
+		getDockingProperties().setSiblingSize(region, size);
 	}
 	
 	public void setActive(boolean b) {
@@ -345,11 +344,11 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public void setActiveStateLocked(boolean b) {
-		activeStateLocked = b;
+		getViewProperties().setActiveStateLocked(b);
 	}
 	
 	public boolean isActiveStateLocked() {
-		return activeStateLocked;
+		return getViewProperties().isActiveStateLocked().booleanValue();
 	}
 
 
@@ -388,17 +387,7 @@ public class View extends JComponent implements Dockable {
 				evt.consume();
 		}
 	}
-	
-	public ScaledInsets getRegionInsets() {
-		return null;
-	}
 
-	public ScaledInsets getSiblingInsets() {
-		return siblingInsets;
-	}
 
-	public DockableProps getDockingProperties() {
-		return PropertyManager.getDockableProps(this);
-	}
 
 }

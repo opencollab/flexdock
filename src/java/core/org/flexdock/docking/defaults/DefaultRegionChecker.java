@@ -12,7 +12,6 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.docking.ScaledInsets;
 
 /**
  * @author Christopher Butler
@@ -150,8 +149,8 @@ public class DefaultRegionChecker implements RegionChecker {
 
 	}
 	
-	protected static float getDockingInset(ScaledInsets insets, String region, float defaultVal, float max, float min) {
-		float f = insets==null? -1: insets.getRegion(region);
+	protected static float getDockingInset(Float value, float defaultVal, float max, float min) {
+		float f = value==null? -1: value.floatValue();
 		if(f==-1)
 			f = defaultVal;
 		return checkBounds(f, max, min);
@@ -171,13 +170,13 @@ public class DefaultRegionChecker implements RegionChecker {
 	}
 	
 	public static float getRegionPreference(Dockable d, String region) {
-		ScaledInsets insets = d==null? null: d.getRegionInsets();
-		return getDockingInset(insets, region, DEFAULT_REGION_SIZE, MAX_REGION_SIZE, MIN_REGION_SIZE);
+		Float inset = d==null? null: d.getDockingProperties().getRegionInset(region);
+		return getDockingInset(inset, DEFAULT_REGION_SIZE, MAX_REGION_SIZE, MIN_REGION_SIZE);
 	}
 	
 	public static float getSiblingPreference(Dockable d, String region) {
-		ScaledInsets insets = d==null? null: d.getSiblingInsets();
-		return getDockingInset(insets, region, DEFAULT_SIBLING_SIZE, MAX_SIBILNG_SIZE, MIN_SIBILNG_SIZE);
+		Float size = d==null? null: d.getDockingProperties().getSiblingSize(region);
+		return getDockingInset(size, DEFAULT_SIBLING_SIZE, MAX_SIBILNG_SIZE, MIN_SIBILNG_SIZE);
 	}
 	
 }

@@ -28,12 +28,11 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 	protected boolean titlebarDrag;
 	
 	public FloatingViewport(ViewFrame frame) {
-		setSingleTabsAllowed(true);
+		getDockingProperties().setSingleTabsAllowed(true);
 		setTabsAsDragSource(true);
 		this.frame = frame;
 	}
 	
-
 	public String getRegion(Point p) {
 		// only allow docking in CENTER
 		return CENTER_REGION;
@@ -91,7 +90,7 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 		Dockable dockable = (Dockable)evt.getSource();
 		if(dockable instanceof View) {
 			View view = (View)dockable;
-			titlebarDrag = dragSrc==view.getTitlebar() && !evt.isRedispatched();
+			titlebarDrag = dragSrc==view.getTitlebar();
 			if(titlebarDrag) {
 				evt.consume();	
 			}

@@ -42,10 +42,6 @@ public class CompoundDemo extends JPanel {
 		titlebar.setBounds(in.left, in.top, getWidth()-in.left-in.right, 25);
 	}
 	
-	private CompoundDemo getThis() {
-		return this;
-	}
-	
 	
 	private Dockable getDockable() {
 		return dockableImpl;
@@ -53,10 +49,7 @@ public class CompoundDemo extends JPanel {
 	
 	private class DockableImpl extends DockableAdapter {
 		public Component getDockable() {
-			return getThis();
-		}
-		public String getDockableDesc() {
-			return titlebar.getText().trim();
+			return CompoundDemo.this;
 		}
 
 		public Component getInitiator() {

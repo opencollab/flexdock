@@ -35,24 +35,14 @@ public class DockablePanel extends JPanel {
 	Dockable getDockable() {
 		return dockableImpl;
 	}
-	
-	private DockablePanel getThis() {
-		// used to return a reference to 'this' by inner classes.
-		return this;
-	}
 
 	private class DockableImpl extends DockableAdapter {
 		public Component getDockable() {
-			return getThis();
+			return DockablePanel.this;
 		}
-		public String getDockableDesc() {
-			return title;
-		}
+
 		public Component getInitiator() {
 			return dragInit;
-		}
-		public void setDockableDesc(String desc) {
-			setTitle(desc);
 		}
 	}
 }

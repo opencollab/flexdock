@@ -29,19 +29,7 @@ public class DockableImpl extends DockableAdapter {
 		return panel;
 	}
 
-	public String getDockableDesc() {
-		String desc = panel.getTitle();
-		if(desc==null || desc.length()==0)
-			return "null";
-		return desc;
-	}
-
 	public Component getInitiator() {
 		return dragInitiator;
-	}
-
-	public void setDockableDesc(String desc) {
-		desc = desc==null? "": desc.trim();
-		panel.setTitle(desc);
 	}
 }

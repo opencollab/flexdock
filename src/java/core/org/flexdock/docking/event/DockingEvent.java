@@ -4,8 +4,6 @@
 package org.flexdock.docking.event;
 
 import java.awt.AWTEvent;
-import java.awt.Component;
-import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import org.flexdock.docking.Dockable;
@@ -105,18 +103,6 @@ public class DockingEvent extends EventObject {
 	
 	public Object getTriggerSource() {
 		return trigger==null? null: trigger.getSource();
-	}
-	
-	public boolean isRedispatched() {
-		Component triggerSrc = (Component)getTriggerSource();
-		if(!(trigger instanceof MouseEvent) || triggerSrc==null)
-			return false;
-		
-		// if the AWTEvent trigger was redispatched from a different component to
-		// our drag initiator, then the event location will be outside the bounds
-		// of the drag initiator
-		MouseEvent evt = (MouseEvent)trigger;
-		return !triggerSrc.getBounds().contains(evt.getPoint());
 	}
 
 	public String getRegion() {

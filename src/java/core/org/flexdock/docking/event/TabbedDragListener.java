@@ -1,0 +1,67 @@
+/*
+ * Created on Apr 2, 2005
+ */
+package org.flexdock.docking.event;
+
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+
+import javax.swing.JTabbedPane;
+
+import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.drag.DragManager;
+
+/**
+ * @author Christopher Butler
+ */
+public class TabbedDragListener extends MouseAdapter implements MouseMotionListener {
+//	private Dockable dockable;
+	private DragManager dragListener;
+	
+	public void mouseMoved(MouseEvent me) {
+		// does nothing
+	}
+	
+	public void mouseDragged(MouseEvent me) {
+		if(dragListener!=null)
+			dragListener.mouseDragged(me);
+	}
+	
+	public void mouseReleased(MouseEvent me) {
+		if(dragListener!=null)
+			dragListener.mouseReleased(me);
+		dragListener = null;
+	}
+	
+	public void mousePressed(MouseEvent me) {
+		if(!(me.getSource() instanceof JTabbedPane)) {
+			dragListener = null;
+			return;
+		}
+		
+		JTabbedPane pane = (JTabbedPane)me.getSource();
+		Point p = me.getPoint();
+		int tabIndex = pane.indexAtLocation(p.x, p.y);
+		if(tabIndex==-1) {
+			dragListener = null;
+			return;
+		}
+
+		Dockable dockable = DockingManager.getRegisteredDockable(pane.getComponentAt(tabIndex));
+		dragListener = DockingManager.getDragListener(dockable);
+		if(dragListener!=null)
+			dragListener.mousePressed(me);
+	}
+	
+	private void redispatchToDockable(MouseEvent me) {
+//		if(!tabsAsDragSource || dockable==null)
+//			return;
+			
+//		Component dragSrc = dockable.getInitiator();
+//		MouseEvent evt = SwingUtilities.convertMouseEvent((Component)me.getSource(), me, dragSrc);
+//		dragSrc.dispatchEvent(evt);
+	}
+}

@@ -24,9 +24,6 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.WeakHashMap;
@@ -40,14 +37,14 @@ import javax.swing.SwingUtilities;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
-import org.flexdock.util.Utilities;
 
 
 /**
@@ -112,19 +109,14 @@ import org.flexdock.util.Utilities;
  */
 public class DefaultDockingPort extends JPanel implements DockingPort {
 	private static final WeakHashMap COMPONENT_TITLES = new WeakHashMap();
-	private static final SubComponentProvider DEFAULT_CMP_PROVIDER = new DefaultComponentProvider();
 	
 	protected ArrayList dockingListeners;
-	private SubComponentProvider subComponentProvider;
 	private int borrowedTabIndex;
 	private int cachedSplitDividerSize;
 	private Component dockedComponent;
 	private BorderManager borderManager;
 	private String persistentId;
-	private boolean singleTabsAllowed;
-	private boolean tabbedDragSource;
-	private ScaledInsets regionInsets;
-	
+	private boolean tabsAsDragSource;
 
 	
 	/**
@@ -141,7 +133,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		setPersistentId(id);
 		dockingListeners = new ArrayList(2);
 		addDockingListener(this);
-		regionInsets = new ScaledInsets(RegionChecker.DEFAULT_REGION_SIZE);
+		
+		DockingPortProps props = getDockingProperties();
+		props.setRegionChecker(new DefaultRegionChecker());
 	}
 
 	/**
@@ -220,27 +214,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		// as well as changing regions
 		return true;
 	}
-	
 
-	public ScaledInsets getRegionInsets() {
-		return regionInsets;
-	}
-
-	public void setSingleTabsAllowed(boolean b) {
-		singleTabsAllowed = b;
-	}
-	
-	public boolean isSingleTabsAllowed() {
-		return singleTabsAllowed;
-	}
-	
-	public void setTabsAsDragSource(boolean b) {
-		tabbedDragSource = b;
-	}
-	
-	public boolean areTabsDragSource() {
-		return tabbedDragSource;
-	}
 
 	/**
 	 * Checks the current state of the <code>DockingPort</code> and, if present, issues the appropriate
@@ -271,19 +245,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			borderManager.managePortSimpleChild(this);
 	}
 
-	protected SubComponentProvider getSubdocker() {
-		return subComponentProvider==null? getDefaultSubdocker(): subComponentProvider;
-	}
-	
-	protected SubComponentProvider getDefaultSubdocker() {
-		return DEFAULT_CMP_PROVIDER;
-	}
 	
 	public String getRegion(Point p) {
 		if(p==null)
 			return UNKNOWN_REGION;
 		
-		RegionChecker regionChecker = getRegionChecker();
+		RegionChecker regionChecker = getDockingProperties().getRegionChecker();
 		Dockable d = getDockableAt(p);
 		Component regionTest = this;
 		
@@ -312,24 +279,15 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		return DockingManager.getRegisteredDockable(docked);
 	}
 	
-	public RegionChecker getRegionChecker() {
-		return new DefaultRegionChecker();
-	}
-	
 	protected DockingPort createChildPort() {
-		DockingPort port = getSubdocker().createChildPort();
-		if(port==null)
-			port = getDefaultSubdocker().createChildPort();
-		if(port instanceof DefaultDockingPort)
-			((DefaultDockingPort)port).setBorderManager(borderManager);
-		return port;
+		DockingStrategy strategy = getDockingStrategy();
+		return strategy.createDockingPort(this);
 	}
 	
 	private JSplitPane createSplitPane(String region) {
-		JSplitPane pane = getSubdocker().createSplitPane(region);
-		if(pane==null)
-			pane = getDefaultSubdocker().createSplitPane(region);
-			
+		DockingStrategy strategy = getDockingStrategy();
+		JSplitPane pane = strategy.createSplitPane(this, region);
+
 		int orient = JSplitPane.HORIZONTAL_SPLIT;
 		if(NORTH_REGION.equals(region) || SOUTH_REGION.equals(region))
 			orient = JSplitPane.VERTICAL_SPLIT;
@@ -339,31 +297,20 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		return pane;
 	}
 	
-	private JTabbedPane createTabbedPane() {
-		JTabbedPane pane = getSubdocker().createTabbedPane();
-		if(pane==null)
-			pane = getDefaultSubdocker().createTabbedPane();
+	protected JTabbedPane createTabbedPane() {
+		JTabbedPane pane = new JTabbedPane();		
+		pane.setTabPlacement(getInitTabPlacement());
 
-		TabListener tl = new TabListener();
-		pane.addMouseListener(tl);
-		pane.addMouseMotionListener(tl);
+		TabbedDragListener tdl = new TabbedDragListener();
+		pane.addMouseListener(tdl);
+		pane.addMouseMotionListener(tdl);
 		return pane;
 	}
 	
-	private int tabPlacement;
-	
-	private JTabbedPane createTabbedPane2() {
-		JTabbedPane pane = getSubdocker().createTabbedPane();
-		if (pane==null) {
-			pane = getDefaultSubdocker().createTabbedPane();
-		}
-		pane.setTabPlacement(tabPlacement);
-		return pane==null? getDefaultSubdocker().createTabbedPane(): pane;
+	protected DockingStrategy getDockingStrategy() {
+		return DockingManager.getDockingStrategy(this);
 	}
-	
-	public int getTabPlacement() {
-		return getInitialTabPlacement();
-	}
+
 	
 	/**
 	 * Dispatches to <code>removeAll()</code>.
@@ -386,7 +333,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public boolean dock(Dockable dockable, String region) {
 		if(dockable==null)
 			return false;
-		return dock(dockable.getDockable(), dockable.getDockableDesc(), region);
+		
+		String tabText = dockable.getDockingProperties().getDockableDesc();
+		return dock(dockable.getDockable(), tabText, region);
 	}
 
 	/**
@@ -426,7 +375,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		COMPONENT_TITLES.put(comp, desc);
 		
 
-		if(!singleTabsAllowed && docked==null) {
+		if(!isSingleTabAllowed() && docked==null) {
 			setComponent(comp);
 			evaluateDockingBorderStatus();
 			return true;
@@ -449,22 +398,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	}
 	
 	protected void resolveSplitDividerLocation(Component controller) {
-		Component cmp = getDockedComponent();
-		if(!(cmp instanceof JSplitPane))
+		Component c = getDockedComponent();
+		if(!(c instanceof JSplitPane))
 			return;
 		
-		JSplitPane split = (JSplitPane)cmp;	
-		Insets in = getInsets();
-		boolean vert = split.getOrientation()==JSplitPane.VERTICAL_SPLIT;
-		
-		// get the dimensions of the DefaultDockingPort, minus the insets and multiply by 
-		// the divider proportion provided by the assigned <code>SubComponentProvider</code>. 
-		int dim = vert? (getHeight()-in.top-in.bottom): (getWidth()-in.left-in.right);
-		double proportion = getSubdocker().getInitialDividerLocation(split, controller);
-		if(proportion<0 || proportion>1)
-			proportion = 0.5d;
-		
-		int loc = (int)(dim*proportion);
+		JSplitPane split = (JSplitPane)c;
+		DockingStrategy strategy = DockingManager.getDockingStrategy(this);
+		int loc = strategy.getInitialDividerLocation(this, split, controller);
 		split.setDividerLocation(loc);
 	}
 	
@@ -598,6 +538,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			
 		COMPONENT_TITLES.put(comp, title);
 		return title;
+	}
+
+	
+	protected boolean isSingleTabAllowed() {
+		return getDockingProperties().isSingleTabsAllowed().booleanValue();
 	}
 
 	
@@ -740,7 +685,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			Component left = wrapper.getLeftComponent();
 			Component right = wrapper.getRightComponent();
 			
-			// first, check to make sure we do, in fact, have 2 components.  if so, then we don't ahve 
+			// first, check to make sure we do in fact have 2 components.  if so, then we don't have 
 			// to go any further.
 			if(left!=null && right!=null)
 				return;
@@ -756,6 +701,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			// as a direct child to ourselves.
 			Component comp = left==null? right: left;
 			wrapper.remove(comp);
+			
+			// do some cleanup on the wrapper before removing it
+			if(wrapper instanceof DockingSplitPane)
+				((DockingSplitPane)wrapper).cleanup();
 			super.remove(wrapper);
 			
 			if(comp instanceof DefaultDockingPort) 
@@ -775,7 +724,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		int componentCount = tabs.getComponentCount();
 		// we don't have to do anything special here if there is more than the
 		// minimum number of allowable tabs
-		int minTabs = singleTabsAllowed? 0: 1;
+		int minTabs = isSingleTabAllowed()? 0: 1;
 		if(componentCount>minTabs) {
 			return;
 		}
@@ -837,18 +786,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	}
 
 	/**
-	 * Allows customization of docking behavior by allowing developers to plug in a customized
-	 * <code>SubComponentProvider</code> instance.  If <code>provider</code> is null, then the 
-	 * <code>DefaultDockingPort</code> will display default behavior during docking operations.
-	 * 
-	 * @param provider the supplied <code>SubComponentProvider</code> that will manage behaviors
-	 * during docking operations.
-	 */
-	public void setComponentProvider(SubComponentProvider provider) {
-		subComponentProvider = provider;
-	}
-
-	/**
 	 * Allows customization of border managment following docking and undocking operations.  Any call to 
 	 * <code>dock()</code> or a call to <code>reevaluateComponentTree()</code> resulting in a change of 
 	 * internal component configuration will end with a check against the assigned <code>BorderManager</code>.
@@ -859,6 +796,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	 */	
 	public void setBorderManager(BorderManager mgr) {
 		borderManager = mgr;
+	}
+	
+	public BorderManager getBorderManager() {
+		return borderManager;
 	}
 	
 	private Component setComponent(Component c) {
@@ -932,97 +873,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	public DockingPortProps getDockingProperties() {
 		return PropertyManager.getDockingPortProps(this);
 	}
-	
-	private static int getInitialTabPlacement() {
-		String position = System.getProperty(INITIAL_TAB_POSITION);
-		int pos = Utilities.getInt(position, JTabbedPane.BOTTOM);
-		return pos<JTabbedPane.TOP || pos>JTabbedPane.RIGHT? JTabbedPane.BOTTOM: pos;
-	}
-	/**
-	 * Default implementation of the SubComponentProvider interface.
-	 */
-	protected static class DefaultComponentProvider implements SubComponentProvider {
-	
-		/**
-		 * @see org.flexdock.docking.SubComponentProvider#createChildPort()
-		 */
-		public DockingPort createChildPort() {
-			return new DefaultDockingPort() {
-				public String toString() {
-					return "Child Port";
-				}
-			};
-		}
-	
-		/**
-		 * @see org.flexdock.docking.SubComponentProvider#createSplitPane()
-		 */
-		public JSplitPane createSplitPane(String region) {
-			return new JSplitPane();
-		}
-	
-		/**
-		 * @see org.flexdock.docking.SubComponentProvider#createTabbedPane()
-		 */
-		public JTabbedPane createTabbedPane() {
-			JTabbedPane pane = new JTabbedPane();
-			pane.setTabPlacement(getInitialTabPlacement());
-			return pane;
-		}
-		
-		/**
-		 * @see org.flexdock.docking.defaults.SubComponentProvider#getInitialDividerLocation()
-		 */
-		public double getInitialDividerLocation(JSplitPane splitPane, Component controller) {
-			return 0.5d;
-		}
+
+	public void setTabsAsDragSource(boolean b) {
+		tabsAsDragSource = b;
 	}
 	
-	private class TabListener extends MouseAdapter implements MouseMotionListener {
-		private Dockable dockable;
-		
-		public void mouseMoved(MouseEvent me) {
-			// does nothing
-		}
-		
-		public void mouseDragged(MouseEvent me) {
-			redispatchToDockable(me);
-		}
-		
-		public void mouseReleased(MouseEvent me) {
-			redispatchToDockable(me);
-			dockable = null;
-		}
-		
-		public void mousePressed(MouseEvent me) {
-			if(!(me.getSource() instanceof JTabbedPane)) {
-				dockable = null;
-				return;
-			}
-			
-			JTabbedPane pane = (JTabbedPane)me.getSource();
-			Point p = me.getPoint();
-			int tabIndex = pane.indexAtLocation(p.x, p.y);
-			if(tabIndex==-1) {
-				dockable = null;
-				return;
-			}
-
-			dockable = DockingManager.getRegisteredDockable(pane.getComponentAt(tabIndex));
-			redispatchToDockable(me);
-		}
-		
-		private void redispatchToDockable(MouseEvent me) {
-			if(!tabbedDragSource || dockable==null)
-				return;
-				
-			Component dragSrc = dockable.getInitiator();
-			MouseEvent evt = SwingUtilities.convertMouseEvent((Component)me.getSource(), me, dragSrc);
-			dragSrc.dispatchEvent(evt);
-		}
+	public boolean isTabsAsDragSource() {
+		return tabsAsDragSource;
 	}
-
-
-
+	
+	protected int getInitTabPlacement() {
+		return getDockingProperties().getTabPlacement().intValue();
+	}
 
 }

@@ -21,10 +21,9 @@ package org.flexdock.docking.defaults;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
-import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.Dockable;
-import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
@@ -56,12 +55,9 @@ import org.flexdock.docking.props.PropertyManager;
  */
 public class DockableComponentWrapper implements Dockable {
 	private Component dragSrc;
-	private String description;
-	private boolean dockingEnabled;
-	private boolean dockedLayoutResizable;
 	private String persistentId;
-	private boolean territorial;
 	private ArrayList dockingListeners;
+	private ArrayList dragListeners;
 	private Hashtable clientProperties;
 
 	/**
@@ -75,11 +71,11 @@ public class DockableComponentWrapper implements Dockable {
 	 * @param desc the docking description
 	 * @param resizable the resizing policy
 	 */
-	public static DockableComponentWrapper create(Component src, String id, String desc, boolean resizable) {
+	public static DockableComponentWrapper create(Component src, String id, String desc) {
 		if(src==null || id==null)
 			return null;
 			
-		return new DockableComponentWrapper(src, id, desc, resizable);
+		return new DockableComponentWrapper(src, id, desc);
 	}
 
 	/**
@@ -88,13 +84,14 @@ public class DockableComponentWrapper implements Dockable {
 	 * @param desc
 	 * @param resizable
 	 */
-	private DockableComponentWrapper(Component src, String id, String desc, boolean resizable) {
+	private DockableComponentWrapper(Component src, String id, String desc) {
 		dragSrc = src;
-		setDockableDesc(desc);
-		dockingEnabled = true;
-		dockedLayoutResizable = resizable;
+		getDockingProperties().setDockableDesc(desc);
 		persistentId = id;
+		
 		dockingListeners = new ArrayList(0);
+		dragListeners = new ArrayList(1);
+		dragListeners.add(getDockable());
 	}
 	
 	private Hashtable getClientProperties() {
@@ -111,13 +108,6 @@ public class DockableComponentWrapper implements Dockable {
 	}
 
 	/**
-	 * @see org.flexdock.docking.Dockable#getDockableDesc()
-	 */
-	public String getDockableDesc() {
-		return description;
-	}
-
-	/**
 	 * @see org.flexdock.docking.Dockable#dockingCanceled()
 	 */
 	public void dockingCanceled() {
@@ -130,48 +120,10 @@ public class DockableComponentWrapper implements Dockable {
 	}
 
 	/**
-	 * @see org.flexdock.docking.Dockable#getCursorProvider()
-	 */
-	public CursorProvider getCursorProvider() {
-		return null;
-	}
-	
-	/**
-	 * @see org.flexdock.docking.Dockable#isDockingEnabled()
-	 */
-	public boolean isDockingEnabled() {
-		return dockingEnabled;
-	}
-
-	/**
-	 * @see org.flexdock.docking.Dockable#setDockingEnabled(boolean)
-	 */
-	public void setDockingEnabled(boolean b) {
-		dockingEnabled = b;
-	}
-
-	/**
-	 * @see org.flexdock.docking.Dockable#mouseMotionListenersBlockedWhileDragging()
-	 */
-	public boolean mouseMotionListenersBlockedWhileDragging() {
-		return true;
-	}
-
-	/**
-	 * @see org.flexdock.docking.Dockable#setDockableDesc(java.lang.String)
-	 */
-	public void setDockableDesc(String desc) {
-		desc = desc==null? "null": desc.trim();
-		if(desc.length()==0)
-			desc = "null";
-		description = desc;
-	}
-
-	/**
 	 * @see org.flexdock.docking.Dockable#getInitiator()
 	 */
-	public Component getInitiator() {
-		return getDockable();
+	public List getDragSources() {
+		return dragListeners;
 	}
 	
 	/**
@@ -182,21 +134,6 @@ public class DockableComponentWrapper implements Dockable {
 	}
 	
 	
-	/**
-	 * @see org.flexdock.docking.Dockable#isTerritorial()
-	 */
-	public boolean isTerritorial(Dockable dockable, String region) {
-		return territorial;
-	}
-
-	public void setTerritorial(boolean territorial) {
-		this.territorial = territorial;
-	}
-	
-	public float getPreferredSiblingSize(String region) {
-		return 0.5f;
-	}
-
 
 	public void addDockingListener(DockingListener listener) {
 		dockingListeners.add(listener);
@@ -220,14 +157,6 @@ public class DockableComponentWrapper implements Dockable {
 	}
 	
 	public void dropStarted(DockingEvent evt) {
-	}
-
-	public ScaledInsets getRegionInsets() {
-		return null;
-	}
-
-	public ScaledInsets getSiblingInsets() {
-		return null;
 	}
 	
 	public Object getClientProperty(Object key) {

@@ -1,23 +1,35 @@
 /*
  * Created on Mar 14, 2005
  */
-package org.flexdock.view.floating;
+package org.flexdock.view;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 
+import javax.swing.JSplitPane;
+
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
+import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.docking.drag.DragToken;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.view.View;
+import org.flexdock.view.floating.ViewFrame;
 
 /**
  * @author Christopher Butler
  *
  */
-public class FloatingStrategy extends DefaultDockingStrategy {
+public class ViewDockingStrategy extends DefaultDockingStrategy {
+	
+	private static final ViewDockingStrategy SINGLETON = new ViewDockingStrategy();
+	
+	public static ViewDockingStrategy getInstance() {
+		return SINGLETON;
+	}
 	
 	protected boolean isFloatable(Dockable dockable, DragToken token) {
 		// can't float null objects
@@ -80,5 +92,29 @@ public class FloatingStrategy extends DefaultDockingStrategy {
 		frame.setVisible(true);
 		results.success = true;
 		return results;
+	}
+	
+	
+	protected double getDividerProportion(DockingPort port, JSplitPane splitPane, Component elder) {
+		if(port==null || splitPane==null || elder==null || !(splitPane instanceof DockingSplitPane))
+			return super.getDividerProportion(port, splitPane, elder);
+		
+		if(elder instanceof DockingSplitPane)
+			elder = ((DockingSplitPane)elder).getController();
+		
+		Dockable dockable = DockingManager.getRegisteredDockable(elder);
+		if(dockable!=null) {
+			DockingSplitPane splitter = (DockingSplitPane)splitPane;
+			RegionChecker rc = port.getDockingProperties().getRegionChecker();
+			float prefSize = rc.getSiblingSize(dockable.getDockable(), splitter.getRegion());
+			return splitter.isElderTopLeft()? 1f-prefSize: prefSize;
+		}
+
+		return super.getInitialDividerLocation(port, splitPane, elder);
+	}
+	
+	
+	protected DockingPort createDockingPortImpl(DockingPort base) {
+		return new Viewport();
 	}
 }

@@ -96,7 +96,7 @@ public class DemoBorderManager implements BorderManager {
 			cmp = ((DefaultDockingPort) cmp).getDockedComponent();
 
 		if (cmp instanceof DockablePanel) {
-			String title = ((DockablePanel) cmp).getDockable().getDockableDesc();
+			String title = ((DockablePanel) cmp).getDockable().getDockingProperties().getDockableDesc();
 			return new TitledBorder(title);
 		}
 		return dummyBorder;

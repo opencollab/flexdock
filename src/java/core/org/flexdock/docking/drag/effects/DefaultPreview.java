@@ -44,7 +44,7 @@ public abstract class DefaultPreview implements DragPreview {
 	}
 
 	protected Polygon createPolyRect(DockingPort port, Component dockable, String region) {
-		RegionChecker regionChecker = port.getRegionChecker();
+		RegionChecker regionChecker = port.getDockingProperties().getRegionChecker();
 		if(regionChecker==null)
 			regionChecker = new DefaultRegionChecker();
 
@@ -74,12 +74,12 @@ public abstract class DefaultPreview implements DragPreview {
 		
 		// if no existing component and no singleTabs allowed, 
 		// return the entire pane bounds
-		if(c==null && !port.isSingleTabsAllowed()) {
+		if(c==null && port.getDockingProperties().isSingleTabsAllowed()==Boolean.FALSE) {
 			return createPolyRect(tabPaneRect);
 		}
 		
 		Rectangle tabRect = new Rectangle(0, 0, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
-		boolean tabsOnTop = port.getTabPlacement()==JTabbedPane.TOP;
+		boolean tabsOnTop = port.getDockingProperties().getTabPlacement().intValue()==JTabbedPane.TOP;
 		// if 'c' is a JTabbedPane, then there is already a tab out there and 
 		// we can model our bounds off of it.
 		if(c instanceof JTabbedPane) {

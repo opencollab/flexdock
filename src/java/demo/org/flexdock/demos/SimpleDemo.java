@@ -41,7 +41,7 @@ public class SimpleDemo extends JFrame {
 		// create and register the Dockable panel
 		JPanel p = new JPanel();
 		p.setBackground(color);
-		DockingManager.registerDockable(p, desc, true);
+		DockingManager.registerDockable(p, desc);
 		 
 		// dock the panel and return the DockingPort
 		port.dock(p, desc, DockingPort.CENTER_REGION);

@@ -6,9 +6,11 @@ package org.flexdock.docking.props;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
@@ -16,14 +18,40 @@ import org.flexdock.docking.DockingPort;
 public class PropertyManager {
 	public static final String DOCKABLE_PROPERTIES_KEY = DockableProps.class.getName();
 	public static final String DOCKINGPORT_PROPERTIES_KEY = DockingPortProps.class.getName();
+	private static final WeakHashMap DOCKABLE_PROP_TYPES = new WeakHashMap();
+	
+	
+	public static DockingPortProps getDockingPortRoot() {
+		return ScopedDockingPortProps.ROOT_PROPS;
+	}
+	
+	public static DockableProps getDockableRoot() {
+		return ScopedDockableProps.ROOT_PROPS;
+	}
+	
+	
+	public static void setDockablePropertyType(Class dockable, Class propType) {
+		if(dockable==null || propType==null)
+			return;
+		
+		if(!Dockable.class.isAssignableFrom(dockable) || !DockableProps.class.isAssignableFrom(propType))
+			return;
 
+		synchronized(DOCKABLE_PROP_TYPES) {
+			DOCKABLE_PROP_TYPES.put(dockable, propType);
+		}
+	}
+	
+	
+	
+	
 	public static DockableProps getDockableProps(Dockable dockable) {
 		if(dockable==null)
 			return null;
 		
 		Object obj = dockable.getClientProperty(DOCKABLE_PROPERTIES_KEY);
 		if(!(obj instanceof DockableProps)) {
-			obj = new ScopedDockableProps(6);
+			obj = createDockableProps(dockable);
 			dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, obj);
 		}
 		return (DockableProps)obj;
@@ -78,6 +106,14 @@ public class PropertyManager {
 			return ((Map)map).get(key);
 		}
 		return null;
+	}
+	
+	private static DockableProps createDockableProps(Dockable d) {
+		Class key = d.getClass();
+		Class c = (Class)DOCKABLE_PROP_TYPES.get(key);
+		if(c==null)
+			return new ScopedDockableProps();
+		return (DockableProps)Utilities.createInstance(c.getName());
 	}
 
 }

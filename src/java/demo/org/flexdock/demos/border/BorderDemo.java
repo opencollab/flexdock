@@ -5,12 +5,8 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.defaults.ComponentProviderAdapter;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 
 public class BorderDemo extends JFrame {
@@ -46,30 +42,8 @@ public class BorderDemo extends JFrame {
 		DefaultDockingPort port = new DefaultDockingPort();
 		port.setPreferredSize(new Dimension(100, 100));
 		port.setBorderManager(new DemoBorderManager());
-		port.setComponentProvider(new ComponentProvider());
 		return port;
 	}
-
-	private class ComponentProvider extends ComponentProviderAdapter {
-		public DockingPort createChildPort() {
-			DefaultDockingPort port = new DefaultDockingPort();
-			port.setComponentProvider(this);
-			return port;
-		}
-		public JSplitPane createSplitPane() {
-			JSplitPane split = new JSplitPane();
-			split.setDividerSize(3);
-			split.setBorder(null);
-			if (split.getUI() instanceof BasicSplitPaneUI) {
-				BasicSplitPaneDivider divider = ((BasicSplitPaneUI) split.getUI()).getDivider();
-				if (divider != null && divider.getBorder()!=null)
-					divider.setBorder(null);			
-			}
-			return split;
-		}
-	}
-
-
 
 	public static void main(String[] args) {
 		JFrame f = new BorderDemo();

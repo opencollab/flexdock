@@ -21,10 +21,9 @@ package org.flexdock.docking.defaults;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
-import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.Dockable;
-import org.flexdock.docking.ScaledInsets;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
@@ -40,6 +39,7 @@ import org.flexdock.docking.props.PropertyManager;
 public class DockableAdapter implements Dockable {
 	private String persistentId;
 	private ArrayList dockingListeners;
+	private ArrayList dragListeners;
 	private Hashtable clientProperties;
 	
 	public DockableAdapter() {
@@ -49,6 +49,7 @@ public class DockableAdapter implements Dockable {
 	public DockableAdapter(String id) {
 		persistentId = id;
 		dockingListeners = new ArrayList(2);
+		dragListeners = new ArrayList();
 	}
 	
 	private Hashtable getClientProperties() {
@@ -73,14 +74,6 @@ public class DockableAdapter implements Dockable {
 
 	/**
 	 * Returns null.
-	 * @see org.flexdock.docking.Dockable#getCursorProvider()
-	 */
-	public CursorProvider getCursorProvider() {
-		return null;
-	}
-
-	/**
-	 * Returns null.
 	 * @see org.flexdock.docking.Dockable#getDockable()
 	 */
 	public Component getDockable() {
@@ -89,18 +82,10 @@ public class DockableAdapter implements Dockable {
 
 	/**
 	 * Returns null.
-	 * @see org.flexdock.docking.Dockable#getDockableDesc()
-	 */
-	public String getDockableDesc() {
-		return null;
-	}
-
-	/**
-	 * Returns null.
 	 * @see org.flexdock.docking.Dockable#getInitiator()
 	 */
-	public Component getInitiator() {
-		return null;
+	public List getDragSources() {
+		return dragListeners;
 	}
 
 	/**
@@ -109,48 +94,6 @@ public class DockableAdapter implements Dockable {
 	 */
 	public String getPersistentId() {
 		return persistentId;
-	}
-	
-	/**
-	 * Returns true.
-	 * @see org.flexdock.docking.Dockable#isDockingEnabled()
-	 */
-	public boolean isDockingEnabled() {
-		return true;
-	}
-
-	/**
-	 * Returns true.
-	 * @see org.flexdock.docking.Dockable#mouseMotionListenersBlockedWhileDragging()
-	 */
-	public boolean mouseMotionListenersBlockedWhileDragging() {
-		return true;
-	}
-
-	/**
-	 * Does nothing.
-	 * @see org.flexdock.docking.Dockable#setDockableDesc(java.lang.String)
-	 */
-	public void setDockableDesc(String desc) {
-	}
-
-	/**
-	 * Does nothing.
-	 * @see org.flexdock.docking.Dockable#setDockingEnabled(boolean)
-	 */
-	public void setDockingEnabled(boolean b) {
-	}
-	
-	/**
-	 * Returns false.
-	 * @see org.flexdock.docking.Dockable#isTerritorial()
-	 */
-	public boolean isTerritorial(Dockable dockable, String region) {
-		return false;
-	}
-	
-	public float getPreferredSiblingSize(String region) {
-		return 0.5f;
 	}
 
 	public void addDockingListener(DockingListener listener) {
@@ -178,15 +121,6 @@ public class DockableAdapter implements Dockable {
 	public void dropStarted(DockingEvent evt) {
 	}
 	
-
-	public ScaledInsets getRegionInsets() {
-		return null;
-	}
-
-	public ScaledInsets getSiblingInsets() {
-		return null;
-	}
-
 
 	public Object getClientProperty(Object key) {
 		return getClientProperties().get(key);

@@ -5,12 +5,18 @@ package org.flexdock.docking.defaults;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Insets;
 import java.awt.Point;
+
+import javax.swing.JSplitPane;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
+import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.drag.DragToken;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.EventDispatcher;
@@ -58,8 +64,9 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			return false;
 		
 		Dockable docked = DockingManager.getRegisteredDockable(port.getDockedComponent());
-		return docked==null? true: !docked.isTerritorial(dockable, region);
-
+		if(docked==null)
+			return true;
+		return !docked.getDockingProperties().isTerritoryBlocked(region).booleanValue();
 	}
 	
 
@@ -99,7 +106,8 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			target = results.dropTarget;
 		}
 
-		results.success = target.dock(dockableCmp, dockable.getDockableDesc(), region);
+		String tabText = dockable.getDockingProperties().getDockableDesc();
+		results.success = target.dock(dockableCmp, tabText, region);
 		SwingUtility.revalidateComponent((Component) target);
 		return results;
 	}
@@ -138,5 +146,99 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		}
 		public DockingPort dropTarget;
 		public boolean success;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public DockingPort createDockingPort(DockingPort base) {
+		DockingPort port = createDockingPortImpl(base);
+		
+		if(port instanceof DefaultDockingPort && base instanceof DefaultDockingPort) {
+			DefaultDockingPort newPort = (DefaultDockingPort)port;
+			DefaultDockingPort ddp = (DefaultDockingPort)base;
+			newPort.setBorderManager(ddp.getBorderManager());
+			newPort.setTabsAsDragSource(ddp.isTabsAsDragSource());
+		}
+		return port;
+	}
+	
+	protected DockingPort createDockingPortImpl(DockingPort base) {
+		return new DefaultDockingPort();
+	}
+	
+	
+	public JSplitPane createSplitPane(DockingPort base, String region) {
+		JSplitPane split = createSplitPaneImpl(base, region);
+		
+		// determine the orientation
+		int orientation = JSplitPane.HORIZONTAL_SPLIT;
+		if(DockingPort.NORTH_REGION.equals(region) || DockingPort.SOUTH_REGION.equals(region))
+			orientation = JSplitPane.VERTICAL_SPLIT;
+		split.setOrientation(orientation);
+		
+		// remove the border from the split pane
+		split.setBorder(null);
+         
+		// set the divider size for a more reasonable, less bulky look 
+		split.setDividerSize(3);
+
+		// check the UI.  If we can't work with the UI any further, then
+		// exit here.
+		if (!(split.getUI() instanceof BasicSplitPaneUI))
+		   return split;
+
+		//  grab the divider from the UI and remove the border from it
+		BasicSplitPaneDivider divider =
+					   ((BasicSplitPaneUI) split.getUI()).getDivider();
+		if (divider != null)
+		   divider.setBorder(null);
+
+		return split;
+	}
+	
+	protected JSplitPane createSplitPaneImpl(DockingPort base, String region) {
+		return new DockingSplitPane(base, region);
+	}
+	
+
+	
+	public int getInitialDividerLocation(DockingPort port, JSplitPane splitPane, Component elder) {
+		if(port==null || splitPane==null || elder==null)
+			return 0;
+		
+		Component cmp = port.getDockedComponent();
+		if(!(cmp instanceof JSplitPane))
+			return 0;
+		
+		Container dockingPort = (Container)port;
+		JSplitPane split = (JSplitPane)cmp;
+		
+		Insets in = dockingPort.getInsets();
+		boolean vert = split.getOrientation()==JSplitPane.VERTICAL_SPLIT;
+		
+		// get the dimensions of the DockingPort, minus the insets and multiply by 
+		// the divider proportion. 
+		int dim = vert? (dockingPort.getHeight()-in.top-in.bottom): (dockingPort.getWidth()-in.left-in.right);
+		double proportion = getDividerProportion(port, split, elder);
+		if(proportion<0 || proportion>1)
+			proportion = 0.5d;
+		
+		return (int)(dim*proportion);
+	}
+	
+	protected double getDividerProportion(DockingPort port, JSplitPane splitPane, Component elder) {
+		return RegionChecker.DEFAULT_SIBLING_SIZE;
 	}
 }

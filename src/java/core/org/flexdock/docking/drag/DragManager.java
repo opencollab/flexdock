@@ -24,9 +24,6 @@ import org.flexdock.util.DockingUtility;
  *
  */
 public class DragManager extends MouseAdapter implements MouseMotionListener {
-	// TODO: provide a means of allowing developers to modify the drag-threshold. 
-	public static final float DRAG_THRESHOLD = 4f;
-	
 	private Dockable dockable;
 	private DragPipeline pipeline;
 	private boolean enabled;
@@ -42,7 +39,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	}
 	
 	public void mousePressed(MouseEvent e) {
-		if(dockable==null || !dockable.isDockingEnabled()) 
+		if(dockable==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE) 
 			enabled = false;
 		else
 			enabled = !isDragCanceled(dockable, e);
@@ -67,7 +64,8 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	
 	private boolean passedDragThreshold(MouseEvent evt) {
 		double distance = dragOrigin.distance(evt.getPoint());
-		return distance > DRAG_THRESHOLD;
+		float threshold = dockable.getDockingProperties().getDragThreshold().floatValue();
+		return distance > threshold;
 	}
 	
 	private void openPipeline(MouseEvent evt) {
@@ -86,7 +84,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if(pipeline==null || !dockable.isDockingEnabled())
+		if(pipeline==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE)
 			return;
 
 		finishDrag(dockable, pipeline.getDragToken(), e);				

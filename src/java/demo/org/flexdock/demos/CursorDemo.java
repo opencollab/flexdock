@@ -47,14 +47,6 @@ public class CursorDemo extends JPanel {
 		Insets in = getInsets();
 		titlebar.setBounds(in.left, in.top, getWidth() - in.left - in.right, 25);
 	}
-
-	private CursorDemo getThis() {
-		return this;
-	}
-	
-	private void setCursorProvider(CursorProvider prov) {
-		cursorProvider = prov;
-	}
 	
 	private Dockable getDockable() {
 		return dockableImpl;
@@ -63,15 +55,10 @@ public class CursorDemo extends JPanel {
 	
 	
 	private class DockableImpl extends DockableAdapter {
-		public CursorProvider getCursorProvider() {
-			return cursorProvider;
-		}
 		public Component getDockable() {
-			return getThis();
+			return CursorDemo.this;
 		}
-		public String getDockableDesc() {
-			return titlebar.getText().trim();
-		}
+
 		public Component getInitiator() {
 			// the titlebar will the the 'hot' component that initiates dragging
 			return titlebar;
@@ -102,8 +89,8 @@ public class CursorDemo extends JPanel {
 		CursorDemo cd = new CursorDemo(desc);
 		DockingManager.registerDockable(cd.getDockable());
 		// use a custom cursor provider for the north panel
-		if("North".equals(desc))
-			cd.setCursorProvider(new CursorDelegate());
+//		if("North".equals(desc))
+//			cd.setCursorProvider(new CursorDelegate());
 
 		// dock the panel and return the DockingPort
 		port.dock(cd.getDockable(), DockingPort.CENTER_REGION);

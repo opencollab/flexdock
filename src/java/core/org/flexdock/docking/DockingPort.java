@@ -97,15 +97,6 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	
 	public String getRegion(Point p);
 	
-	public RegionChecker getRegionChecker();
-	
-	public boolean isSingleTabsAllowed();
-	
-	public int getTabPlacement();
-	
-	public ScaledInsets getRegionInsets();
-	
-	
 	public Object getClientProperty(Object key);
 	
 	public void putClientProperty(Object key, Object value);

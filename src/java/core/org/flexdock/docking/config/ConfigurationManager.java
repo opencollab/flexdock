@@ -249,8 +249,8 @@ public class ConfigurationManager {
 		DockedItem leftChild = leftConfig.getChild();
 		DockedItem rightChild = rightConfig.getChild();
 		
-		Dockable splitDummyLeft = DockableComponentWrapper.create(new JLabel("left"), "splitDummyLeft", "splitDummyLeft", true);
-		Dockable splitDummyRight = DockableComponentWrapper.create(new JLabel("right"), "splitDummyRight", "splitDummyRight", true);
+		Dockable splitDummyLeft = DockableComponentWrapper.create(new JLabel("left"), "splitDummyLeft", "splitDummyLeft");
+		Dockable splitDummyRight = DockableComponentWrapper.create(new JLabel("right"), "splitDummyRight", "splitDummyRight");
 		
 		dock(port, splitDummyLeft, DockingPort.CENTER_REGION);
 		dock(port, splitDummyRight, region);
@@ -317,7 +317,7 @@ public class ConfigurationManager {
 			revalidateComponent(rootContainer.getContentPane());
 		}
 
-		String desc = dockableImpl.getDockableDesc();
+		String desc = dockableImpl.getDockingProperties().getDockableDesc();
 
 		target.dock(dragSrc, desc, region);
 		revalidateComponent((Component) target);

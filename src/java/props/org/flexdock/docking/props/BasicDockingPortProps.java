@@ -5,8 +5,8 @@ package org.flexdock.docking.props;
 
 import java.util.Map;
 
+import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.docking.ScaledInsets;
 import org.flexdock.util.TypedHashtable;
 
 /**
@@ -14,6 +14,17 @@ import org.flexdock.util.TypedHashtable;
  */
 public class BasicDockingPortProps extends TypedHashtable implements DockingPortProps {
 
+	public static String getRegionInsetKey(String region) {
+		if(DockingPort.NORTH_REGION.equals(region))
+			return REGION_SIZE_NORTH;
+		if(DockingPort.SOUTH_REGION.equals(region))
+			return REGION_SIZE_SOUTH;
+		if(DockingPort.EAST_REGION.equals(region))
+			return REGION_SIZE_EAST;
+		if(DockingPort.WEST_REGION.equals(region))
+			return REGION_SIZE_WEST;
+		return null;
+	}
 	
 	public BasicDockingPortProps() {
 		super();
@@ -49,10 +60,10 @@ public class BasicDockingPortProps extends TypedHashtable implements DockingPort
 		return getInt(TAB_PLACEMENT);
 	}
 	
-	public ScaledInsets getRegionInsets() {
-		return (ScaledInsets)get(REGION_INSETS);
+	public Float getRegionInset(String region) {
+		String key = getRegionInsetKey(region);
+		return key==null? null: (Float)get(key);
 	}
-	
 	
 	
 	public void setRegionChecker(RegionChecker checker) {
@@ -67,7 +78,10 @@ public class BasicDockingPortProps extends TypedHashtable implements DockingPort
 		put(TAB_PLACEMENT, placement);
 	}
 	
-	public void setRegionInsets(ScaledInsets insets) {
-		put(REGION_INSETS, insets);
+	public void setRegionInset(String region, float inset) {
+		String key = getRegionInsetKey(region);
+		if(key!=null) {
+			put(key, new Float(inset));			
+		}
 	}
 }

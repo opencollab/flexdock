@@ -11,7 +11,6 @@ public class ElegantDockingPort extends DefaultDockingPort {
 	
 	public ElegantDockingPort(String id) {
 		super(id);
-		setComponentProvider(new ChildComponentDelegate());
 		setBorderManager(new StandardBorderManager(new ShadowBorder()));
 	}
 	

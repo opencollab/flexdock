@@ -1,0 +1,58 @@
+/*
+ * Created on Mar 22, 2005
+ */
+package org.flexdock.docking.props;
+
+import java.util.HashSet;
+
+import org.flexdock.docking.RegionChecker;
+
+/**
+ * @author Christopher Butler
+ */
+public class RootDockableProps extends BasicDockableProps {
+	private static final Float DEFAULT_REGION_INSETS = new Float(RegionChecker.DEFAULT_REGION_SIZE);
+	private static final Float DEFAULT_SIBLING_INSETS = new Float(RegionChecker.DEFAULT_SIBLING_SIZE);
+	public static final Float DEFAULT_DRAG_THRESHOLD = new Float(4);
+
+	private HashSet constraints;
+	
+	public RootDockableProps() {
+		super(5);
+		constraints = new HashSet(5);
+
+		constrain(DESCRIPTION, "null");
+		constrain(DOCKING_ENABLED, Boolean.TRUE);
+		constrain(MOUSE_MOTION_DRAG_BLOCK, Boolean.TRUE);
+		
+		constrain(REGION_SIZE_NORTH, DEFAULT_REGION_INSETS);
+		constrain(REGION_SIZE_SOUTH, DEFAULT_REGION_INSETS);
+		constrain(REGION_SIZE_EAST, DEFAULT_REGION_INSETS);
+		constrain(REGION_SIZE_WEST, DEFAULT_REGION_INSETS);
+		
+		constrain(SIBLING_SIZE_NORTH, DEFAULT_SIBLING_INSETS);
+		constrain(SIBLING_SIZE_SOUTH, DEFAULT_SIBLING_INSETS);
+		constrain(SIBLING_SIZE_EAST, DEFAULT_SIBLING_INSETS);
+		constrain(SIBLING_SIZE_WEST, DEFAULT_SIBLING_INSETS);
+		
+		constrain(TERRITORY_BLOCKED_NORTH, Boolean.FALSE);
+		constrain(TERRITORY_BLOCKED_SOUTH, Boolean.FALSE);
+		constrain(TERRITORY_BLOCKED_EAST, Boolean.FALSE);
+		constrain(TERRITORY_BLOCKED_WEST, Boolean.FALSE);
+		constrain(TERRITORY_BLOCKED_CENTER, Boolean.FALSE);
+		
+		constrain(DRAG_THRESHOLD, DEFAULT_DRAG_THRESHOLD);
+	}
+	
+	public void constrain(Object key, Object value) {
+		if(key!=null && value!=null) {
+			put(key, value);
+			constraints.add(key);			
+		}
+	}
+
+
+	public synchronized Object remove(Object key) {
+		return constraints.contains(key)? null: super.remove(key);
+	}
+}

@@ -19,9 +19,11 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking;
 
 import java.awt.Component;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.WeakHashMap;
 
 import org.flexdock.docking.config.ConfigurationManager;
@@ -29,6 +31,7 @@ import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
 import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
 
 
@@ -69,7 +72,7 @@ import org.flexdock.docking.props.PropertyManager;
  */
 public class DockingManager {
 	private static final DockingManager SINGLETON = new DockingManager();
-	private static final WeakHashMap CACHED_DRAG_INITIATORS_BY_COMPONENT = new WeakHashMap();
+	private static final WeakHashMap DOCKABLES_BY_COMPONENT = new WeakHashMap();
 	private static final HashMap DOCKING_STRATEGIES = new HashMap();
 	protected static final DockingStrategy DEFAULT_STRATEGY = new DefaultDockingStrategy();
 	private static Object persistentIdLock = new Object();
@@ -98,6 +101,14 @@ public class DockingManager {
 	}
 
 	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Undocks the specified <code>Dockable</code> instance from its containing <code>DockingPort</code>.  This 
 	 * method locates the containing <code>DockingPort</code> for the specified <code>Dockable</code>.  If no 
@@ -121,6 +132,16 @@ public class DockingManager {
 			mgr.defaultDocker.dock(dockable, port,  region);
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public static boolean isValidDockingRegion(String region) {
 		return DockingPort.CENTER_REGION.equals(region) || DockingPort.NORTH_REGION.equals(region) || 
@@ -129,6 +150,14 @@ public class DockingManager {
 	}
 
 
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Creates a Dockable for the specified component and dispatches to 
 	 * <code>registerDockable(Dockable init)</code>. If evtSrc is null, no exception is 
@@ -138,11 +167,11 @@ public class DockingManager {
 	 * @param desc     the description of the docking source.  Used as the tab-title of docked in a tabbed pane
 	 * @param allowResize  specifies whether or not a resultant split-view docking would be fixed or resizable  
 	 */
-	public static Dockable registerDockable(Component evtSrc, String desc, boolean allowResize) {
+	public static Dockable registerDockable(Component evtSrc, String desc) {
 		if (evtSrc == null)
 			return null;
 
-		Dockable dockable = getDockableForComponent(evtSrc, desc, allowResize);
+		Dockable dockable = getDockableForComponent(evtSrc, desc);
 		return registerDockable(dockable);
 	}
 
@@ -158,16 +187,11 @@ public class DockingManager {
 	 * @param init the Dockable that is being initialized.
 	 */
 	public static Dockable registerDockable(Dockable dockable) {
-		if (dockable == null || dockable.getDockable() == null || dockable.getInitiator()==null)
+		if (dockable == null || dockable.getDockable() == null || dockable.getDragSources()==null)
 			return null;
 
-		DragManager dragListener = getDragListener(dockable);
-		if (dragListener == null) {
-			dragListener = new DragManager(dockable);
-			dockable.getInitiator().addMouseMotionListener(dragListener);
-			dockable.getInitiator().addMouseListener(dragListener);
-		}
-		CACHED_DRAG_INITIATORS_BY_COMPONENT.put(dockable.getDockable(), dockable);
+
+		DOCKABLES_BY_COMPONENT.put(dockable.getDockable(), dockable);
 		
 		// add the dockable as its own listener
 		dockable.addDockingListener(dockable);
@@ -182,31 +206,45 @@ public class DockingManager {
 		// return the dockable
 		return dockable;
 	}
-
+	
 	public static Dockable getRegisteredDockable(Component comp) {
-		return comp==null? null: (Dockable)CACHED_DRAG_INITIATORS_BY_COMPONENT.get(comp);
+		return comp==null? null: (Dockable)DOCKABLES_BY_COMPONENT.get(comp);
 	}
 
 	private static Dockable getDragInitiator(Component c) {
-		return getDockableForComponent(c, null, false);
+		return getDockableForComponent(c, null);
 	}
 
-	private static Dockable getDockableForComponent(Component c, String desc, boolean allowResize) {
+	private static Dockable getDockableForComponent(Component c, String desc) {
 		if (c == null)
 			return null;
 
-		Dockable initiator = getRegisteredDockable(c);
-		if (initiator == null) {
+		Dockable dockable = getRegisteredDockable(c);
+		if (dockable == null) {
 			String persistentId = generatePersistentId(c);
-			initiator = DockableComponentWrapper.create(c, persistentId, desc, allowResize);
-			CACHED_DRAG_INITIATORS_BY_COMPONENT.put(c, initiator);
+			dockable = DockableComponentWrapper.create(c, persistentId, desc);
+			DOCKABLES_BY_COMPONENT.put(c, dockable);
 		}
-		return initiator;
+		return dockable;
 	}
 
-	private static DragManager getDragListener(Dockable dockable) {
-		EventListener[] listeners = dockable.getInitiator().getListeners(MouseMotionListener.class);
-
+	public static DragManager getDragListener(Dockable dockable) {
+		if(dockable==null || dockable.getDragSources()==null)
+			return null;
+		
+		for(Iterator it=dockable.getDragSources().iterator(); it.hasNext();) {
+			Object obj = it.next();
+			if(obj instanceof Component) {
+				DragManager listener = getDragListener((Component)obj);
+				if(listener!=null)
+					return listener;
+			}
+		}
+		return null;
+	}
+	
+	private static DragManager getDragListener(Component c) {
+		EventListener[] listeners = c.getMouseMotionListeners();
 		for (int i = 0; i < listeners.length; i++) {
 			if (listeners[i] instanceof DragManager)
 				return (DragManager) listeners[i];
@@ -214,31 +252,100 @@ public class DockingManager {
 		return null;
 	}
 
-	/**
-	 * Sets the docking description for the specified component.  Te docking description is used as the
-	 * tab-title when docking within a tabbed pane.  A Dockable is looked up from an internal cache using
-	 * the specified component as a key.  If not found, a dockabe is created an cached by the same key.
-	 * The Dockable's description is set to <code>desc</code>.   
-	 *
-	 * @param c the Component that is the drag-source for a given Dockable instance
-	 * @param desc the dockable description for the specified component
-	 */
-	public static void setDockingDescription(Component c, String desc) {
-		Dockable init = getDragInitiator(c);
-		setDockingDescription(init, desc);
-	}
 
-	/**
-	 * Sets the docking description for the Dockable instance.  The docking description is used as the
-	 * tab-title when docking within a tabbed pane. 
-	 *
-	 * @param dockable the Dockable instance we're describing
-	 * @param desc the description of the Dockable instance.  used as a tab-title.
-	 */
-	public static void setDockingDescription(Dockable dockable, String desc) {
-		if (dockable != null)
-			dockable.setDockableDesc(desc);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static void updateDragListeners(Dockable dockable) {
+		DragManager dragListener = getDragListener(dockable);
+		if (dragListener == null) {
+			dragListener = new DragManager(dockable);
+		}
+		
+		for(Iterator it=dockable.getDragSources().iterator(); it.hasNext();) {
+			Object obj = it.next();
+			if(obj instanceof Component) {
+				updateDragListeners((Component)obj, dragListener);				
+			}
+		}
 	}
+	
+	private static void updateDragListeners(Component dragSrc, DragManager listener) {
+		MouseMotionListener motionListener = null;
+		EventListener[] listeners = dragSrc.getMouseMotionListeners();
+		for(int i=0; i<listeners.length; i++) {
+			if(listeners[i] instanceof DragManager) {
+				motionListener = (MouseMotionListener)listeners[i];
+				break;
+			}
+		}
+		if(motionListener!=listener) {
+			if(motionListener!=null)
+				dragSrc.removeMouseMotionListener(motionListener);
+			dragSrc.addMouseMotionListener(listener);
+		}
+		
+		MouseListener mouseListener = null;
+		listeners = dragSrc.getMouseListeners();
+		for(int i=0; i<listeners.length; i++) {
+			if(listeners[i] instanceof DragManager) {
+				mouseListener = (MouseListener)listeners[i];
+				break;
+			}
+		}
+		if(mouseListener!=listener) {
+			if(mouseListener!=null)
+				dragSrc.removeMouseListener(mouseListener);
+			dragSrc.addMouseListener(listener);
+		}
+	}
+	
+	public static void removeDragListeners(Component c) {
+		if(c==null)
+			return;
+		
+		MouseMotionListener motionListener = null;
+		EventListener[] listeners = c.getMouseMotionListeners();
+		for(int i=0; i<listeners.length; i++) {
+			if(listeners[i] instanceof DragManager) {
+				motionListener = (MouseMotionListener)listeners[i];
+				break;
+			}
+		}
+		if(motionListener!=null) {
+			c.removeMouseMotionListener(motionListener);
+		}
+		
+		MouseListener mouseListener = null;
+		listeners = c.getMouseListeners();
+		for(int i=0; i<listeners.length; i++) {
+			if(listeners[i] instanceof DragManager) {
+				mouseListener = (MouseListener)listeners[i];
+				break;
+			}
+		}
+		if(mouseListener!=null) {
+			c.removeMouseListener(mouseListener);
+		}
+	}
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	private static String generatePersistentId(Object obj) {
 		return generatePersistentId(obj, null);
@@ -259,6 +366,10 @@ public class DockingManager {
 		}
 	}
 	
+	public static void setDockablePropertyManager(Class dockable, Class propType) {
+		PropertyManager.setDockablePropertyType(dockable, propType);
+	}
+	
 	public static void setDockingStrategy(Class c, DockingStrategy strategy) {
 		if(c==null)
 			return;
@@ -271,21 +382,40 @@ public class DockingManager {
 		}
 	}
 	
-	public static DockingStrategy getDockingStrategy(Dockable dockable) {
-		if(dockable==null)
-			return null;
+	public static DockingStrategy getDockingStrategy(Object obj) {
+		Class key = obj==null? null: obj.getClass();
+		return getDockingStrategy(key);
+	}
+	
+	public static DockingStrategy getDockingStrategy(Class classKey) {
+		if(classKey==null)
+			return DEFAULT_STRATEGY;
 		
 		DockingStrategy strategy = null;
 		
 		synchronized(DOCKING_STRATEGIES) {
-			for(Class c=dockable.getClass();c!=null && strategy==null; c=c.getSuperclass()) {
+			for(Class c=classKey; c!=null && strategy==null; c=c.getSuperclass()) {
 				strategy = (DockingStrategy)DOCKING_STRATEGIES.get(c);
 			}
 		}
-	 
+		
 		if(strategy==null)
 			strategy = DEFAULT_STRATEGY;
 		return strategy;
+	}
+	
+	
+	
+	
+	
+	
+	
+	public static DockingPortProps getDockingPortRoot() {
+		return PropertyManager.getDockingPortRoot();
+	}
+	
+	public static DockableProps getDockableRoot() {
+		return PropertyManager.getDockableRoot();
 	}
 
 }

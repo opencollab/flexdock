@@ -19,6 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking;
 
 import java.awt.Component;
+import java.util.List;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
@@ -34,30 +35,16 @@ import org.flexdock.docking.props.DockableProps;
  */
 public interface Dockable extends DockingListener, DockingMonitor {
 	/**
-	 * Returns the <code>CursorProvider</code> instance associated with drag operations on this 
-	 * <code>Dockable</code>
-	 * 
-	 * @return a <code>CursorProvider</code> instance.
-	 */
-	public CursorProvider getCursorProvider();
-
-	/**
 	 * Returns the Component that is to be dragged and docked.  This may or may not be the same as the 
 	 * Component returned by <code>getInitiator()</code>.
 	 */
 	public Component getDockable();
 	
 	/**
-	 * Returns the docking description that will be used in conjunction with the current docking component.
-	 * Docking description is used as the tab-title when docking into a tabbed pane. 
-	 */	
-	public String getDockableDesc();
-
-	/**
 	 * Returns the Component that is the event source of drag operations.  This may or may not be the same 
 	 * as the Component returned by <code>getDockable()</code>.
 	 */
-	public Component getInitiator();
+	public List getDragSources();
 
 	/**
 	 * Returns a <code>String</code> identifier that is unique within a JVM instance, but persistent 
@@ -69,43 +56,6 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	 * its ID can be remembered from session to session.
 	 */		
 	public String getPersistentId();
-	
-	/**
-	 *  Indicates whether or not this <code>Dockable</code> instance will respond to drag events.
-	 */
-	public boolean isDockingEnabled();
-	
-	/**
-	 * Indicates whether or not <code>MouseMotionListeners</code> that are currently 
-	 * attached to the <code>getInitiator()</code> component will be processed during drag operations. 
-	 */
-	public boolean mouseMotionListenersBlockedWhileDragging();
-	
-	/**
-	 *  Determines whether or not this <code>Dockable</code> instance will respond to drag events.
-	 */
-	public void setDockingEnabled(boolean b);
-	
-	/**
-	 * Sets the docking description that will be used in conjunction with the current docking component.
-	 * Docking description is used as the tab-title when docking into a tabbed pane. 
-	 */	
-	public void setDockableDesc(String desc);
-
-	/**
-	 * Indicates whether or not this <code>Dockable</code> instance prefers not to share a 
-	 * <code>CardLayout</code> with other <code>Dockables</code>.  Most <code>Dockables</code>
-	 * will return <code>false</code> when this method is invoked unless they have a specific 
-	 * reason not to want to share territory with other <code>Dockables</code>.  The value 
-	 * returned by this method is a only suggestion to the <code>DockingManager</code> and 
-	 * target <code>DockingPort</code> on how to handle multi-Dockable layouts and implies no
-	 * guarantee as to whether the return value will be honored.
-	 */
-	public boolean isTerritorial(Dockable dockable, String region);
-	
-	public ScaledInsets getSiblingInsets();
-	
-	public ScaledInsets getRegionInsets();
 	
 	public Object getClientProperty(Object key);
 	

@@ -24,7 +24,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
@@ -233,12 +232,8 @@ public class ViewportDemo extends JFrame {
 		page.add(tabPane, BorderLayout.CENTER);
 		page.setBorder(new LineBorder(Color.GRAY, 1));
 		
-		View view = new View(id, null, null) {
-			public boolean isTerritorial(Dockable dockable, String region) {
-				return DockingPort.CENTER_REGION.equals(region);
-			}
-		};
-
+		View view = new View(id, null, null);
+		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
 		view.setTitlebar(null);
 		view.setContentPane(page);
 		return view;

@@ -15,7 +15,6 @@ import javax.swing.border.LineBorder;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.defaults.ComponentProviderAdapter;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.DockableAdapter;
 
@@ -44,10 +43,6 @@ public class TabbedPaneDemo extends JPanel {
 		Insets in = getInsets();
 		titlebar.setBounds(in.left, in.top, getWidth() - in.left - in.right, 25);
 	}
-
-	private TabbedPaneDemo getThis() {
-		return this;
-	}
 	
 	private Dockable getDockable() {
 		return dockableImpl;
@@ -55,11 +50,7 @@ public class TabbedPaneDemo extends JPanel {
 
 	private class DockableImpl extends DockableAdapter {
 		public Component getDockable() {
-			return getThis();
-		}
-		
-		public String getDockableDesc() {
-			return titlebar.getText().trim();
+			return TabbedPaneDemo.this;
 		}
 
 		public Component getInitiator() {
@@ -110,7 +101,7 @@ public class TabbedPaneDemo extends JPanel {
 		DefaultDockingPort port = new DefaultDockingPort();
 		port.setBackground(Color.gray);
 		port.setPreferredSize(new Dimension(200, 100));
-		port.setComponentProvider(new ComponentProvider(getTabPosition(desc)));
+		port.getDockingProperties().setTabPlacement(getTabPosition(desc));
 		return port;
 	}
 
@@ -122,17 +113,6 @@ public class TabbedPaneDemo extends JPanel {
 		f.setVisible(true);
 	}
 
-	private static class ComponentProvider extends ComponentProviderAdapter {
-		int tabPosition;
-
-		private ComponentProvider(int tabs) {
-			tabPosition = tabs;
-		}
-
-		public JTabbedPane createTabbedPane() {
-			return new JTabbedPane(tabPosition);
-		}
-	}
 	
 
 }
