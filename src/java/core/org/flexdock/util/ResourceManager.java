@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.xml.parsers.DocumentBuilder;
@@ -260,6 +261,27 @@ public class ResourceManager {
 			close(inStream);
 		}
 		return null;
+	}
+	
+	public static Properties getProperties(String uri) {
+		URL url = getResource(uri);
+		return getProperties(url);
+	}
+	
+	public static Properties getProperties(URL url) {
+		InputStream in = null;
+		try {
+			in = url.openStream();
+			Properties p = new Properties();
+			p.load(in);
+			return p;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		finally {
+			close(in);
+		}
 	}
 	
 	private static void close(InputStream in) {

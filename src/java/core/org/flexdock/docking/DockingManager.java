@@ -28,7 +28,6 @@ import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
 import org.flexdock.docking.drag.DragManager;
-import org.flexdock.docking.drag.outline.RubberBandFactory;
 
 
 /**
@@ -83,9 +82,9 @@ public class DockingManager {
 	
 
 	private static void init() {
-		RubberBandFactory.getRubberBand();
+		// prime the drag manager for use
+		DragManager.prime();
 	}
-
 
 	private DockingManager() {
 		defaultDocker = new DefaultDockingStrategy();
@@ -275,7 +274,6 @@ public class DockingManager {
 		
 		synchronized(DOCKING_STRATEGIES) {
 			for(Class c=dockable.getClass();c!=null && strategy==null; c=c.getSuperclass()) {
-				System.out.println(c);
 				strategy = (DockingStrategy)DOCKING_STRATEGIES.get(c);
 			}
 		}

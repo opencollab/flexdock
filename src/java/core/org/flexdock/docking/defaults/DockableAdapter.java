@@ -94,14 +94,6 @@ public class DockableAdapter implements Dockable {
 	}
 
 	/**
-	 * Returns true.
-	 * @see org.flexdock.docking.Dockable#isDockedLayoutResizable()
-	 */
-	public boolean isDockedLayoutResizable() {
-		return true;
-	}
-
-	/**
 	 * Returns the <code>persistentId</code> value.
 	 * @see org.flexdock.docking.Dockable#getPersistentId()
 	 */

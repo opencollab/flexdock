@@ -12,9 +12,10 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.drag.preview.DragPreview;
-import org.flexdock.docking.drag.preview.XORPreview;
+import org.flexdock.docking.drag.effects.DragPreview;
+import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.util.ComponentNest;
 import org.flexdock.util.RootWindow;
 
@@ -24,12 +25,11 @@ public class DragGlasspane extends JComponent {
 	private RootWindow rootWindow;
 	private Runnable postPainter;
 	private DragPreview previewDelegate;
+	private boolean previewInit;
 	private Polygon previewPoly;
 	
 	public DragGlasspane() {
 		setLayout(null);
-		previewDelegate = new XORPreview();
-//		previewDelegate = new AlphaPreview();
 	}
 
 	public Component getCachedGlassPane() {
@@ -90,14 +90,22 @@ public class DragGlasspane extends JComponent {
 		
 		Point mousePoint = token.getCurrentMouse((Component)port);
 		region = port==null? DockingPort.UNKNOWN_REGION: port.getRegion(mousePoint);
-
+		// set the target dockable
 		token.setTarget(port, region);
 		
-		if(previewDelegate==null)
+		// create the preview-polygon
+		createPreviewPolygon(token, port, hover,  region);
+		
+		// repaint
+		repaint();
+	}
+	
+	protected void createPreviewPolygon(DragToken token, DockingPort port, Dockable hover, String region) {
+		DragPreview preview = getPreviewDelegate(token.getDockable(), port);
+		if(preview==null)
 			previewPoly = null;
 		else
-			previewPoly = previewDelegate.createPreviewPolygon(token.getDockable(), port, hover, region, this);
-		repaint();
+			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this);		
 	}
 	
 	public void clear() {
@@ -118,6 +126,14 @@ public class DragGlasspane extends JComponent {
 		postPainter = null;
 	}
 	
+	protected DragPreview getPreviewDelegate(Component dockable, DockingPort port) {
+		if(!previewInit) {
+			Dockable d = DockingManager.getRegisteredDockable(dockable);
+			previewDelegate = EffectsFactory.getPreview(d, port);
+			previewInit = true;
+		}
+		return previewDelegate;
+	}
 	
 	
 	private void deferPostPaint() {

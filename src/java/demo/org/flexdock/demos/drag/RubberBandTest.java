@@ -16,8 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.flexdock.docking.drag.outline.AbstractRubberBand;
-import org.flexdock.docking.drag.outline.RubberBandFactory;
+import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.RubberBand;
 
 
 
@@ -25,12 +25,12 @@ import org.flexdock.docking.drag.outline.RubberBandFactory;
  * @author marius
  */
 public class RubberBandTest extends JFrame {
-	private AbstractRubberBand rubberBand;
+	private RubberBand rubberBand;
 	private Point offset;
 	
 	private RubberBandTest() {
 		super("Rubber Band Test");
-		rubberBand = RubberBandFactory.getRubberBand();
+		rubberBand = EffectsFactory.getRubberBand();
 		setContentPane(createContentPane());
 	}
 	

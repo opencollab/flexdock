@@ -265,10 +265,6 @@ public class View extends JComponent implements Dockable {
 		return id;
 	}
 
-	public boolean isDockedLayoutResizable() {
-		return true;
-	}
-
 	public boolean isDockingEnabled() {
 		return dockingEnabled;
 	}

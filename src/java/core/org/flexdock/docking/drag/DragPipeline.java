@@ -8,8 +8,8 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
-import org.flexdock.docking.drag.outline.AbstractRubberBand;
-import org.flexdock.docking.drag.outline.RubberBandFactory;
+import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
 
 public class DragPipeline {
@@ -21,12 +21,11 @@ public class DragPipeline {
 	
 	private boolean open;
 	private DragToken dragToken;
-	private AbstractRubberBand rubberBand;
+	private RubberBand rubberBand;
 	
 	public DragPipeline() {
 		paneMonitor = new GlassPaneMonitor();
-		rubberBand = RubberBandFactory.getRubberBand();
-		
+		rubberBand = EffectsFactory.getRubberBand();
 	}
 	
 	public boolean isOpen() {

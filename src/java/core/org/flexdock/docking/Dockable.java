@@ -70,13 +70,6 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	public String getPersistentId();
 	
 	/**
-	 * Indicates the resizing policy that will used when docking in a <code>DockingPort</code>.  
-	 * <code>DockingPort</code> will have the capability of splitting real-estate betweeen more than one
-	 * Component.  The resizing policy determines whether that layout can be altered in a split-pane fashion. 
-	 */
-	public boolean isDockedLayoutResizable();
-	
-	/**
 	 *  Indicates whether or not this <code>Dockable</code> instance will respond to drag events.
 	 */
 	public boolean isDockingEnabled();

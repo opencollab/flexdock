@@ -374,8 +374,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	/**
 	 * Decomposes the supplied <code>Dockable</code> into constituent fields and dispatches to 
 	 * <code>dock(Component comp, String desc, String region, boolean resizable)</code>.  Passes as 
-	 * arguments to the overloaded method the supplied <code>Dockable's getDockable()</code>, 
-	 * <code>getDockableDesc()</code>, and <code>isDockedLayoutResizable()>/code> values.  The specified
+	 * arguments to the overloaded method the supplied <code>Dockable's getDockable()</code> and
+	 * <code>getDockableDesc()</code> values.  The specified
 	 * region is also passed.  If <code>dockable</code> is null, no action is taken and the method
 	 * returns <code>false</code>.
 	 * 

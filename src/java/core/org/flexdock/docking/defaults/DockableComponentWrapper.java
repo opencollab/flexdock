@@ -148,13 +148,6 @@ public class DockableComponentWrapper implements Dockable {
 	}
 
 	/**
-	 * @see org.flexdock.docking.Dockable#isDockedLayoutResizable()
-	 */
-	public boolean isDockedLayoutResizable() {
-		return dockedLayoutResizable;
-	}
-
-	/**
 	 * @see org.flexdock.docking.Dockable#setDockableDesc(java.lang.String)
 	 */
 	public void setDockableDesc(String desc) {

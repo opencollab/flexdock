@@ -20,6 +20,10 @@ import org.flexdock.view.View;
 public class FloatingStrategy extends DefaultDockingStrategy {
 	
 	protected boolean isFloatable(Dockable dockable, DragToken token) {
+		// can't float null objects
+		if(dockable==null || dockable.getDockable()==null || token==null)
+			return false;
+		
 		// can't float on a fake drag operation 
 		if(token.isPseudoDrag() || !(dockable instanceof View))
 			return false;
@@ -32,23 +36,38 @@ public class FloatingStrategy extends DefaultDockingStrategy {
 		
 		return true;
 	}
+
+	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
+		// superclass blocks docking if the 'port' or 'region' are null.  If we've dragged outside
+		// the bounds of the parent frame, then both of these will be null.  This is expected here and
+		// we intend to float in this case.
+		if(isFloatable(dockable, token))
+			return true;
+		
+		// if not floatable, then use the default validation algorithm
+		return super.isDockingPossible(dockable, port, region, token);
+	}
 	
 	protected DockingResults dropComponent(Dockable dockable, DockingPort target, String region, DragToken token) {
 		// if we're not floatable, then proceed with the default behavior
 		if(!isFloatable(dockable, token))
 			return super.dropComponent(dockable, target, region, token);
-		
+
+		// otherwise,  setup a new ViewFrame and retarget to the CENTER region
 		DockingResults results = new DockingResults(target, false);
 		region = DockingPort.CENTER_REGION;
 		View view = (View)dockable;
 
+		// determine the bounds of the new frame
 		Point screenLoc = token.getCurrentMouse(true);
 		SwingUtility.add(screenLoc, token.getMouseOffset());
 		Dimension size = view.getSize();
 		
+		// create the frame
 		ViewFrame frame = ViewFrame.create(view);
 		frame.setBounds(screenLoc.x, screenLoc.y, size.width, size.height);
 		
+		// grab a reference to the frame's dockingPort for posterity
 		results.dropTarget = frame.getDockingPort();
 
 		// undock the current Dockable instance from it's current parent container
@@ -56,6 +75,8 @@ public class FloatingStrategy extends DefaultDockingStrategy {
 
 		// add to the floating frame
 		frame.addView(view);
+		
+		// display and return
 		frame.setVisible(true);
 		results.success = true;
 		return results;

@@ -14,6 +14,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
+import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.EventDispatcher;
 import org.flexdock.util.DockingUtility;
@@ -30,6 +31,11 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	private DragPipeline pipeline;
 	private boolean enabled;
 	private Point dragOrigin;
+	
+	public static void prime() {
+		// execute static initializer to preload resources
+		EffectsFactory.prime();
+	}
 	
 	public DragManager(Dockable dockable) {
 		this.dockable = dockable;
@@ -105,11 +111,10 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 		evt.setRegion(region);
 		evt.setOverWindow(token.isOverWindow());
 		EventDispatcher.notifyDockingMonitor(dockable, evt);
-		if(evt.isConsumed())
-			return;
-
+		
 		// attempt to complete the docking operation
-		docker.dock(dockable, targetPort, region, token);
+		if(!evt.isConsumed())
+			docker.dock(dockable, targetPort, region, token);
 	}
 	
 	

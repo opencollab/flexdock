@@ -28,11 +28,8 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	}
 
 	public void dock(Dockable dockable, DockingPort port, String region, DragToken token) {
-		if(dockable==null || dockable.getDockable()==null || port==null)
+		if(!isDockingPossible(dockable, port, region, token))
 			return;
-		
-		if(!DockingManager.isValidDockingRegion(region))
-			throw new IllegalArgumentException("'" + region + "' is not a valid docking region.");
 		
 		// cache the old parent
 		DockingPort oldPort = DockingUtility.getParentDockingPort(dockable);
@@ -51,6 +48,12 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		EventDispatcher.notifyDockingMonitor(newPort, evt);
 		// notify the dockable
 		EventDispatcher.notifyDockingMonitor(dockable, evt);
+	}
+	
+	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
+		if(dockable==null || dockable.getDockable()==null || port==null)
+			return false;
+		return DockingManager.isValidDockingRegion(region); 
 	}
 	
 
