@@ -53,7 +53,12 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
 		if(dockable==null || dockable.getDockable()==null || port==null)
 			return false;
-		return DockingManager.isValidDockingRegion(region); 
+		
+		if(!DockingManager.isValidDockingRegion(region))
+			return false;
+		
+		Dockable docked = DockingManager.getRegisteredDockable(port.getDockedComponent());
+		return docked==null? true: docked.isTerritorial(dockable);
 	}
 	
 
@@ -97,15 +102,6 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		SwingUtility.revalidateComponent((Component) target);
 		return results;
 	}
-	
-	/*
-
-	
-	private boolean dropIntoFloatingWindow(Dockable dockable, DragToken token_) {
-
-	}
-	
-	*/
 	
 	public void undock(Dockable dockable) {
 		if(dockable==null)
