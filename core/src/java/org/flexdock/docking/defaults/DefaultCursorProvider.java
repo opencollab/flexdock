@@ -8,6 +8,7 @@ package org.flexdock.docking.defaults;
 
 import java.awt.Cursor;
 import java.awt.Point;
+import java.net.URL;
 
 import org.flexdock.docking.CursorProvider;
 import org.flexdock.util.ResourceManager;
@@ -19,7 +20,6 @@ import org.flexdock.util.ResourceManager;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class DefaultCursorProvider implements CursorProvider {
-	private static final String RESOURCE_BASE = "resources/images";
 	private static final String NORTH_IMG = "upArrow.gif";
 	private static final String SOUTH_IMG = "downArrow.gif";
 	private static final String EAST_IMG = "rightArrow.gif";
@@ -49,7 +49,7 @@ public class DefaultCursorProvider implements CursorProvider {
 	}
 	
 	private static Cursor createCursor(String imgName) {
-		String url = RESOURCE_BASE + "/" + imgName;
+		URL url = DefaultCursorProvider.class.getResource(imgName);
 		return ResourceManager.createCursor(url, new Point(8, 8), null);
 	}
 	

@@ -7,6 +7,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Point;
+import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -131,7 +132,8 @@ public class CursorDemo extends JPanel {
 		private static final Cursor BLOCKED_CURSOR = createCursor("closeAllWindows16.gif");
 		
 		private static Cursor createCursor(String imgName) {
-			return ResourceManager.createCursor("resources/images/demo/" + imgName, new Point(), null);
+			URL resource = CursorDemo.class.getResource(imgName);
+			return ResourceManager.createCursor(resource, new Point(), null);
 		}
 		
 		public Cursor getCenterCursor() {
