@@ -10,7 +10,6 @@ import java.util.HashMap;
 
 import org.flexdock.docking.drag.outline.AbstractRubberBand;
 import org.flexdock.docking.drag.outline.RubberBandFactory;
-import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
 
 public class DragPipeline {
@@ -211,8 +210,8 @@ public class DragPipeline {
 
 	
 	private Runnable getPostPainter(final Rectangle rect) {
-		if(!ResourceManager.isWindowsPlatform())
-			return null;
+//		if(!ResourceManager.isWindowsPlatform())
+//			return null;
 		
 		return new Runnable() {
 			public void run() {
