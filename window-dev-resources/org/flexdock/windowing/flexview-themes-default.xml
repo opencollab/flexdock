@@ -3,6 +3,7 @@
 
 	<!-- Map the PLAFs to specific themes -->
 	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
+	<plaf name="apple.laf.AquaLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
