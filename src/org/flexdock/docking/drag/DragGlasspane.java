@@ -87,6 +87,7 @@ public class DragGlasspane extends JComponent {
 		DockingPortCover coverPanel = new DockingPortCover(port);
 		add(coverPanel);
 		coverPanel.setBounds(rect);
+		coverPanel.setVisible(true);
 		coverPanel.doLayout();
 		return coverPanel;
 	}
