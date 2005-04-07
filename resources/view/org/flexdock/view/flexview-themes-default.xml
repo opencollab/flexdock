@@ -2,7 +2,7 @@
 <flexview-themes>
 
 	<!-- Map the PLAFs to specific themes -->
-	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="default" />
+	<plaf name="javax.swing.plaf.metal.MetalLookAndFeel" ref="metal" />
 	<plaf name="apple.laf.AquaLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="win32" />
@@ -157,7 +157,8 @@
 			<property name="default.height" value="25"/>
 			<property name="border" value="" handler="raised-border"/>
 			<property name="border.active" value="" handler="raised-border"/>
-			<property name="font.color.active" value="#FFFFFF" handler="color"/>	
+			<property name="font.color.active" value="#FFFFFF" handler="color"/>
+			
 			<property name="painter" value="eclipsePainter" handler="paint"/> 
 		</titlebar-ui>
 		
@@ -182,5 +183,31 @@
 		</icon-resource>
 	</theme>
 	<!-- End Eclipse 2.0 -->
+	
+	
+	<!-- Begin Metal Look -->
+	<theme name="metal" description="Metal Look" view-ui="metal">
+		<view-ui name="metal">
+			<property name="titlebar-ui" value="metal"/>
+		</view-ui>
+	
+		<!-- List the various titlebars that are available -->
+		<titlebar-ui name="metal" extends="default">
+			<property name="classname" value="org.flexdock.view.plaf.theme.metal.MetalTitlebarUI" />
+			<property name="icon-map" value="eclipse2" />
+			<property name="icon.insets" value="0,0,0,4" handler="insets"/>
+			<property name="default.height" value="24"/>
+			<property name="border" value="" handler="raised-border"/>
+			<property name="border.active" value="" handler="raised-border"/>
+			<property name="font" value="Tahoma, 1, 12" handler="font"/>
+			<property name="font.color.active" value="#000000" handler="color"/>	
+			<property name="painter" value="metalPainter" handler="paint"/> 
+		</titlebar-ui>
+		
+		<painter-resource name="metalPainter">
+			<property name="classname" value="org.flexdock.view.plaf.theme.metal.MetalPainter"/>
+		</painter-resource>
+	</theme>
+	<!-- End Metal Look -->
 
 </flexview-themes>
