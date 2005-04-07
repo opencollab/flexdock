@@ -109,6 +109,19 @@ public class PropertySet {
 		}
 	}
 	
+	public boolean getBoolean( String key) {
+	    String string = getString(key);
+		if(string==null)
+			return false;
+		
+		try {
+			return Boolean.valueOf( string).booleanValue();
+		} catch(NumberFormatException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public Iterator keys() {
 		return properties.keySet().iterator();
 	}
