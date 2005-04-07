@@ -144,6 +144,10 @@ public class DockingManager {
 			DockingPort.WEST_REGION.equals(region); 
 	}
 
+	public static boolean isDocked(DockingPort dockingPort, Dockable dockable) {
+		return dockingPort.isParentDockingPort(dockable.getDockable());
+	}
+
 
 	
 	
