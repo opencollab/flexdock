@@ -7,9 +7,12 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -29,8 +32,7 @@ import org.flexdock.view.plaf.icons.IconResourceFactory;
  * @author Christopher Butler
  */
 public class TitlebarUI extends FlexViewComponentUI {
-    
-    
+
     public static final String DEFAULT_HEIGHT = "default.height";
     public static final String FONT = "font";
     public static final String FONT_COLOR = "font.color";
@@ -43,8 +45,8 @@ public class TitlebarUI extends FlexViewComponentUI {
     public static final String INSETS = "insets";
     private static final String BUTTON_MARGIN = "button.margin";
     public static final String ICON_INSETS = "icon.insets";
+    public static final String ANTIALIASING = "antialiasing";
     public static final int MINIMUM_HEIGHT = 12;
-    
     
     protected Font font;
     protected Color activeFont;
@@ -53,14 +55,15 @@ public class TitlebarUI extends FlexViewComponentUI {
     protected Color inactiveBackground;
     protected Border activeBorder;
     protected Border inactiveBorder;
-    protected int defaultHeight = MINIMUM_HEIGHT;
     protected IconMap defaultIcons;
     protected Painter painter;
     protected Insets insets;
     protected int buttonMargin;
     protected Insets iconInsets;
-
+    protected Object antialiasing;
+    protected int defaultHeight = MINIMUM_HEIGHT;
     
+
     public void installUI(JComponent c) {
         super.installUI(c);
         Dimension d = c.getPreferredSize();
@@ -76,7 +79,6 @@ public class TitlebarUI extends FlexViewComponentUI {
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
     }
-    
 
     public void paint(Graphics g, JComponent jc) {
         Titlebar titlebar = (Titlebar) jc;
@@ -94,27 +96,42 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     protected Rectangle getPaintRect(Titlebar titlebar) {
-        if(getInsets() == null)
+        if (getInsets() == null)
             return new Rectangle(0, 0, titlebar.getWidth(), titlebar.getHeight());
-        
+
         Insets paintInsets = getInsets();
-        return new Rectangle(paintInsets.left, paintInsets.top, (titlebar.getWidth()-paintInsets.right-paintInsets.left), (titlebar.getHeight() - paintInsets.bottom - paintInsets.top));
+        return new Rectangle(paintInsets.left, paintInsets.top,
+                (titlebar.getWidth() - paintInsets.right - paintInsets.left), (titlebar.getHeight()
+                        - paintInsets.bottom - paintInsets.top));
     }
 
     protected void paintTitle(Graphics g, Titlebar titlebar) {
         if (titlebar.getText() == null)
             return;
 
-        Font font = titlebar.getFont();
+        Graphics2D g2 = (Graphics2D) g;
+        Object oldAAValue = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
+
+        g2.setFont( getFont());
         Rectangle iconRect = getIconRect(titlebar);
-        Rectangle paintRect = getPaintRect( titlebar);
+        Rectangle paintRect = getPaintRect(titlebar);
 
         int x = getTextLocation(iconRect);
-        int y = (paintRect.height + paintRect.y) / 2 + font.getSize() / 2;
-
+        
+        //Center text vertically.
+	    FontMetrics fm = g.getFontMetrics();
+        int y = (paintRect.height + fm.getAscent() - fm.getLeading() -
+                    fm.getDescent()) / 2;
+        
         Color c = getFontColor(titlebar.isActive());
-        g.setColor(c);
-        g.drawString(titlebar.getText(), x, y);
+        g2.setColor(c);
+        g.translate(paintRect.x, paintRect.y);
+        g2.drawString(titlebar.getText(), x, y);
+        g.translate(-paintRect.x, -paintRect.y);
+        
+
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAValue);
     }
 
     protected int getTextLocation(Rectangle iconRect) {
@@ -129,11 +146,11 @@ public class TitlebarUI extends FlexViewComponentUI {
 
         Icon icon = titlebar.getIcon();
         Rectangle r = getIconRect(titlebar);
-        
-        Rectangle paintRect = getPaintRect( titlebar);
-        g.translate( paintRect.x, paintRect.y);
+
+        Rectangle paintRect = getPaintRect(titlebar);
+        g.translate(paintRect.x, paintRect.y);
         icon.paintIcon(titlebar, g, r.x, r.y);
-        g.translate( -paintRect.x, -paintRect.y);
+        g.translate(-paintRect.x, -paintRect.y);
     }
 
     protected Rectangle getIconRect(Titlebar titlebar) {
@@ -142,24 +159,23 @@ public class TitlebarUI extends FlexViewComponentUI {
         if (icon == null)
             return r;
 
-        Rectangle paintRect = getPaintRect( titlebar);
-        
+        Rectangle paintRect = getPaintRect(titlebar);
+
         r.x = getLeftIconMargin();
         r.width = icon.getIconWidth();
         r.height = icon.getIconHeight();
-        r.y = (paintRect.height) / 2 - r.width / 2;
-        //r.y += ((paintRect.height % 2 == 0) ? 0 : 1); //adjust?
+        r.y = (paintRect.height - r.height) / 2;
         return r;
     }
-    
+
     protected int getLeftIconMargin() {
-        return getIconInsets() == null ? 2 : getIconInsets().right; 
+        return getIconInsets() == null ? 2 : getIconInsets().right;
     }
 
     protected int getRightIconMargin() {
-        return getIconInsets() == null ? 2 : getIconInsets().right; 
+        return getIconInsets() == null ? 2 : getIconInsets().right;
     }
-    
+
     protected void paintBorder(Graphics g, Titlebar titlebar) {
         Border border = getBorder(titlebar);
         if (border != null) {
@@ -170,13 +186,12 @@ public class TitlebarUI extends FlexViewComponentUI {
         }
     }
 
-
     public void layoutButtons(Titlebar titlebar) {
         Rectangle rectangle = getPaintRect(titlebar);
         int margin = getButtonMargin();
-        int h = rectangle.height- 2*margin;
+        int h = rectangle.height - 2 * margin;
         int x = rectangle.width - margin - h;
-        
+
         Component[] c = titlebar.getComponents();
         for (int i = 0; i < c.length; i++) {
             if (!(c[i] instanceof Button))
@@ -196,7 +211,7 @@ public class TitlebarUI extends FlexViewComponentUI {
         if (icons != null)
             action.putValue(ICON_RESOURCE, icons);
     }
-    
+
     private void reconfigureActions(JComponent c) {
         Component[] c1 = c.getComponents();
         for (int i = 0; i < c1.length; i++) {
@@ -295,10 +310,17 @@ public class TitlebarUI extends FlexViewComponentUI {
         this.inactiveFont = inactiveFont;
     }
 
+    /**
+     * @return Returns the font.
+     */
     public Font getFont() {
         return font;
     }
 
+    /**
+     * @param font
+     *            The font to set.
+     */
     public void setFont(Font font) {
         this.font = font;
     }
@@ -354,29 +376,32 @@ public class TitlebarUI extends FlexViewComponentUI {
     public void setActiveBorder(Border activeBorder) {
         this.activeBorder = activeBorder;
     }
-    
-    
+
     /**
      * @return Returns the iconInsets.
      */
     public Insets getIconInsets() {
         return iconInsets;
     }
+
     /**
-     * @param iconInsets The iconInsets to set.
+     * @param iconInsets
+     *            The iconInsets to set.
      */
     public void setIconInsets(Insets iconInsets) {
         this.iconInsets = iconInsets;
     }
-    
+
     /**
      * @return Returns the buttonMargin.
      */
     public int getButtonMargin() {
         return buttonMargin;
     }
+
     /**
-     * @param buttonMargin The buttonMargin to set.
+     * @param buttonMargin
+     *            The buttonMargin to set.
      */
     public void setButtonMargin(int buttonMargin) {
         this.buttonMargin = buttonMargin;
@@ -396,18 +421,36 @@ public class TitlebarUI extends FlexViewComponentUI {
     public void setPainter(Painter painter) {
         this.painter = painter;
     }
-    
+
     /**
      * @return Returns the insets.
      */
     public Insets getInsets() {
         return insets;
     }
+
     /**
-     * @param insets The insets to set.
+     * @param insets
+     *            The insets to set.
      */
     public void setInsets(Insets insets) {
         this.insets = insets;
+    }
+
+    /**
+     * @return Returns the antialiasing.
+     */
+    public boolean isAntialiasing() {
+        return antialiasing == RenderingHints.VALUE_ANTIALIAS_ON;
+    }
+
+    /**
+     * @param antialiasing
+     *            The antialiasing to set.
+     */
+    public void setAntialiasing(boolean antialias) {
+        antialiasing = antialias ? RenderingHints.VALUE_ANTIALIAS_ON : 
+            						RenderingHints.VALUE_ANTIALIAS_OFF;
     }
 
     public void initializeCreationParameters() {
@@ -422,16 +465,14 @@ public class TitlebarUI extends FlexViewComponentUI {
 
         setDefaultIcons(creationParameters.getString(IconResourceFactory.ICON_MAP_KEY));
         setPainter((Painter) creationParameters.getProperty(PAINTER));
-        setIconInsets((Insets)creationParameters.getProperty(ICON_INSETS));
+        setIconInsets((Insets) creationParameters.getProperty(ICON_INSETS));
         setButtonMargin(creationParameters.getInt(BUTTON_MARGIN));
         setPainter((Painter) creationParameters.getProperty(PAINTER));
         setInsets((Insets) creationParameters.getProperty(INSETS));
+        setAntialiasing(creationParameters.getBoolean( ANTIALIASING));
     }
-
 
     public String getPreferredButtonUI() {
         return creationParameters.getString(UIFactory.BUTTON_KEY);
     }
-
-
 }
