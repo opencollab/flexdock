@@ -33,6 +33,7 @@ import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.ClassMapping;
+import org.flexdock.util.DockingUtility;
 import org.flexdock.util.SwingUtility;
 
 
@@ -146,6 +147,14 @@ public class DockingManager {
 
 	public static boolean isDocked(DockingPort dockingPort, Dockable dockable) {
 		return dockingPort.isParentDockingPort(dockable.getDockable());
+	}
+	
+	public static DockingPort getDockingPort(Dockable dockable) {
+		return DockingUtility.getParentDockingPort(dockable);
+	}
+	
+	public static DockingPort getDockingPort(Component dockable) {
+		return DockingUtility.getParentDockingPort(dockable);
 	}
 
 
