@@ -191,9 +191,15 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public void setTitle(String title) {
+		setTitle(title, false);
+	}
+	
+	public void setTitle(String title, boolean alsoTabText) {
 		Titlebar tbar = getTitlebar();
 		if(tbar!=null)
 			tbar.setText(title);
+		if(alsoTabText)
+			setTabText(title);
 	}
 
 	public String getTitle() {
