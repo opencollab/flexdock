@@ -24,6 +24,8 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
@@ -136,5 +138,9 @@ public class DockableAdapter implements Dockable {
 
 	public DockableProps getDockingProperties() {
 		return PropertyManager.getDockableProps(this);
+	}
+	
+	public DockingPort getDockingPort() {
+		return DockingManager.getDockingPort(this);
 	}
 }

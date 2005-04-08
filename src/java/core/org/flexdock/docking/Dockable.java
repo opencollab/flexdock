@@ -63,4 +63,10 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	public void putClientProperty(Object key, Object value);
 	
 	public DockableProps getDockingProperties();
+	
+	/**
+	 * Returns the DockingPort within which this Dockable is currently docked.  If not currently docked, 
+	 * this method will return null.
+	 */
+	public DockingPort getDockingPort();
 }
