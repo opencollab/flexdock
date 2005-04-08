@@ -3,18 +3,12 @@
  */
 package org.flexdock.view;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import javax.swing.JSplitPane;
-
 import org.flexdock.docking.Dockable;
-import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
-import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.docking.drag.DragToken;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.floating.ViewFrame;
@@ -93,26 +87,6 @@ public class ViewDockingStrategy extends DefaultDockingStrategy {
 		results.success = true;
 		return results;
 	}
-	
-	
-	protected double getDividerProportion(DockingPort port, JSplitPane splitPane, Component elder) {
-		if(port==null || splitPane==null || elder==null || !(splitPane instanceof DockingSplitPane))
-			return super.getDividerProportion(port, splitPane, elder);
-		
-		if(elder instanceof DockingSplitPane)
-			elder = ((DockingSplitPane)elder).getController();
-		
-		Dockable dockable = DockingManager.getRegisteredDockable(elder);
-		if(dockable!=null) {
-			DockingSplitPane splitter = (DockingSplitPane)splitPane;
-			RegionChecker rc = port.getDockingProperties().getRegionChecker();
-			float prefSize = rc.getSiblingSize(dockable.getDockable(), splitter.getRegion());
-			return splitter.isElderTopLeft()? 1f-prefSize: prefSize;
-		}
-
-		return super.getDividerProportion(port, splitPane, elder);
-	}
-	
 	
 	protected DockingPort createDockingPortImpl(DockingPort base) {
 		return new Viewport();
