@@ -14,7 +14,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -309,7 +308,12 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public DockingPort getDockingPort() {
-		return (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, this);
+		return DockingManager.getDockingPort((Dockable)this);
+	}
+	
+	public Viewport getViewport() {
+		DockingPort port = getDockingPort();
+		return port instanceof Viewport? (Viewport)port: null;
 	}
 	
 	public boolean dock(Dockable dockable, String relativeRegion) {
