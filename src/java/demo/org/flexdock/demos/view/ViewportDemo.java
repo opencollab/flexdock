@@ -63,10 +63,12 @@ public class ViewportDemo extends JFrame {
 		View view1 = createView("solution.explorer", "Solution Explorer");
 		View view2 = createView("task.list", "Task List");
 		View view3 = createView("class.view", "Class View");
+		View view4 = createView("message.log", "Message Log");
 
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);
 		startPage.dock(view2, DockingPort.SOUTH_REGION, .3f);
+		startPage.dock(view4, DockingPort.EAST_REGION, .3f);
 		view1.dock(view3, DockingPort.SOUTH_REGION, .3f);
 		
 		return p;
