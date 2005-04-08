@@ -164,6 +164,7 @@
 		
 		<painter-resource name="eclipsePainter">
 			<property name="classname" value="org.flexdock.view.plaf.theme.eclipse2.EclipseGradientPainter"/>
+			<property name="bgcolor.active" value="#0054E3" handler="color"/>
 		</painter-resource>
 	
 		<!-- List the available icon maps -->	
