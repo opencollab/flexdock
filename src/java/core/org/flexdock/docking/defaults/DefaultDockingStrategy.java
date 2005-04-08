@@ -28,7 +28,8 @@ import org.flexdock.util.SwingUtility;
  * @author Christopher Butler
  */
 public class DefaultDockingStrategy implements DockingStrategy {
-
+	public static final String PREFERRED_PROPORTION = "DefaultDockingStrategy.PREFERRED_PROPORTION";
+	
 	public boolean dock(Dockable dockable, DockingPort port, String region) {
 		return dock(dockable, port, region, null);
 	}
@@ -257,7 +258,36 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		return (int)(dim*proportion);
 	}
 	
-	protected double getDividerProportion(DockingPort port, JSplitPane splitPane, Component elder) {
+	public double getDividerProportion(DockingPort port, JSplitPane splitPane, Component elder) {
+		if(port==null || splitPane==null || elder==null || !(splitPane instanceof DockingSplitPane))
+			return RegionChecker.DEFAULT_SIBLING_SIZE;
+
+		Float prefProp = getPreferredProportion(splitPane, elder);
+		if(prefProp!=null)
+			return prefProp.doubleValue();
+		
+		if(elder instanceof DockingSplitPane) {
+			elder = ((DockingSplitPane)elder).getController();
+		}
+		
+		Dockable dockable = DockingManager.getRegisteredDockable(elder);
+		if(dockable!=null) {
+			DockingSplitPane splitter = (DockingSplitPane)splitPane;
+			RegionChecker rc = port.getDockingProperties().getRegionChecker();
+			float prefSize = rc.getSiblingSize(dockable.getDockable(), splitter.getRegion());
+			return splitter.isElderTopLeft()? 1f-prefSize: prefSize;
+		}
+
 		return RegionChecker.DEFAULT_SIBLING_SIZE;
+	}
+	
+	protected Float getPreferredProportion(JSplitPane splitPane, Component controller) {
+		// 'controller' is inside a dockingPort.  re-reference to the parent dockingPort.
+		Container controllerPort = controller.getParent();
+		return getPreferredProportion(controllerPort);
+	}
+	
+	public static Float getPreferredProportion(Component c) {
+		return c==null? null: (Float)SwingUtility.getClientProperty(c, PREFERRED_PROPORTION);
 	}
 }
