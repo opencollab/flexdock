@@ -24,4 +24,6 @@ public interface DockingStrategy {
 	public JSplitPane createSplitPane(DockingPort base, String region);
 	
 	public int getInitialDividerLocation(DockingPort port, JSplitPane splitPane, Component controller);
+	
+	public double getDividerProportion(DockingPort port, JSplitPane splitPane, Component priority);
 }
