@@ -109,7 +109,7 @@ public class EffectsFactory {
 		return preview;
 	}
 	
-	public void setPreview(DragPreview preview) {
+	public static void setPreview(DragPreview preview) {
 		synchronized(LOCK) {
 			CUSTOM_PREVIEW = preview;	
 		}		
