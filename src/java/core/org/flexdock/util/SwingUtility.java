@@ -303,5 +303,18 @@ public class SwingUtility {
 			((JComponent)c).putClientProperty(key, value);
 		}
 	}
+	
+	public static Object getClientProperty(Component c, Object key) {
+		if(c instanceof JComponent) {
+			return ((JComponent)c).getClientProperty(key);
+		}
+		return null;
+	}
+	
+	public static void removeClientProperty(Component c, Object key) {
+		if(c instanceof JComponent) {
+			((JComponent)c).putClientProperty(key, null);
+		}
+	}
 
 }
