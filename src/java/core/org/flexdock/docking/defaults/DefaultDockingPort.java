@@ -45,6 +45,7 @@ import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.util.SwingUtility;
 
 
 /**
@@ -471,7 +472,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 
 		// now set the wrapper panel as the currently docked component
 		setComponent(newDockedContent);
-
+		// if we're currently showing, then we can exit now
+		if(isShowing())
+			return true;
+		
+		// otherwise, we have unrealized components whose sizes cannot be determined until
+		// after we're visible.  cache the desired size values now for use later during rendering.
+		DockingStrategy strategy = getDockingStrategy();
+		
+		double proportion = strategy.getDividerProportion(this, newDockedContent, docked);
+		SwingUtility.putClientProperty((Component)oldContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(proportion));
+		SwingUtility.putClientProperty((Component)newContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(1f-proportion));
+		
 		return true;
 	}
 
@@ -703,8 +715,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			wrapper.remove(comp);
 			
 			// do some cleanup on the wrapper before removing it
-			if(wrapper instanceof DockingSplitPane)
+			if(wrapper instanceof DockingSplitPane) {
 				((DockingSplitPane)wrapper).cleanup();
+			}
 			super.remove(wrapper);
 			
 			if(comp instanceof DefaultDockingPort) 
