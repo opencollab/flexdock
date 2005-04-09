@@ -26,6 +26,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
@@ -131,6 +133,13 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
+			
+			if (DockingManager.isDocked((Dockable) m_commonView)) {
+				m_commonView.setActive(true);
+				SwingUtility.focus(m_commonView);
+				return;
+			}
+			
 			ViewDockingInfo dockingInfo = m_commonView.getMainViewDockingInfo();
 			ViewDockingInfo[] accessoryDockingInfos = m_commonView.getAccessoryDockingInfos();
 
