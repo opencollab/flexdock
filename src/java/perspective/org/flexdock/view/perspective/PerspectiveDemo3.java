@@ -168,7 +168,7 @@ public class PerspectiveDemo3 extends JFrame {
 		perspective.setTerritoralView(centerView);
 		
 		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
-		perspective.dock("solution.explorer", "task.list", DockingPort.CENTER_REGION, -1.0f);
+		perspective.dock("solution.explorer", "task.list");
 		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
 		
 		return perspective;
@@ -185,8 +185,8 @@ public class PerspectiveDemo3 extends JFrame {
 		perspective.addView("task.list", this.taskListView);
 		perspective.addView("class.view", this.classViewView);
 		
-		perspective.dock("start.page", "solution.explorer", DockingPort.SOUTH_REGION, .3f);
-		perspective.dock("start.page", "task.list", DockingPort.WEST_REGION, .3f);
+		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
+		perspective.dock("solution.explorer", "task.list", DockingPort.SOUTH_REGION, .5f);
 		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
 		
 		return perspective;

@@ -402,7 +402,12 @@ public class View extends JComponent implements Dockable {
 				evt.consume();
 		}
 	}
-
-
+	
+	/**
+	 * @see java.awt.Component#toString()
+	 */
+	public String toString() {
+		return "View[Id="+this.id+"]";
+	}
 
 }
