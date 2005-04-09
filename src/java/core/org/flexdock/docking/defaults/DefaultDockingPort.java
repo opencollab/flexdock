@@ -280,6 +280,48 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		return DockingManager.getRegisteredDockable(docked);
 	}
 	
+	public Component getComponent(String region) {
+		Component docked = getDockedComponent();
+	
+		if(docked instanceof JTabbedPane) {
+			// they can only get tabbed dockables if they were checking the CENTER region.
+			if(!CENTER_REGION.equals(region))
+				return null;
+			
+			JTabbedPane tabs = (JTabbedPane)docked;
+			return tabs.getSelectedComponent();
+		}
+		
+		if(docked instanceof JSplitPane) {
+			// they can only get split dockables if they were checking an outer region.
+			if(CENTER_REGION.equals(region))
+				return null;
+			
+			JSplitPane split = (JSplitPane)docked;
+			boolean left = NORTH_REGION.equals(region) || WEST_REGION.equals(region);
+			Component c = left? split.getLeftComponent(): split.getRightComponent();
+			// split panes only contain sub-dockingports.  if 'c' is not a sub-dockingport, 
+			// then something is really screwed up.
+			if(!(c instanceof DockingPort))
+				return null;
+			
+			// get the dockable contained in the sub-dockingport
+			return ((DockingPort)c).getDockedComponent();
+		}
+		
+		// we already checked the tabbed layout and split layout.  all that's left is
+		// the direct-child component itself.  this will only ever exist in the CENTER, 
+		// so return it if they requested the CENTER region.
+		return CENTER_REGION.equals(region)? docked: null;
+	}
+	
+	public Dockable getDockable(String region) {
+		Component c = getComponent(region);
+		return DockingManager.getRegisteredDockable(c);
+	}
+	
+	
+	
 	protected DockingPort createChildPort() {
 		DockingStrategy strategy = getDockingStrategy();
 		return strategy.createDockingPort(this);
@@ -578,15 +620,15 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		if(parent==null)
 			return false;
 			
-		// if the component is inside a JTabbedPane, check to see of the tabbed pane
+		// if the component is inside a tabbed or split pane, check to see of the tab/split
 		// is embedded within us.  if not, then 'comp' is not a child docked within us.
-		if(parent instanceof JTabbedPane) {
+		if(parent instanceof JTabbedPane || parent instanceof JSplitPane) {
 			Container grandParent = parent.getParent();
 			if(grandParent!=this)
 				return false;
 		}
 		else {
-			// not a JTabbedPane child, so make sure 'comp' is a direct child of 'this'
+			// not a tabbed or split child, so make sure 'comp' is a direct child of 'this'
 			if(parent!=this)
 				return false;
 		}
