@@ -2,41 +2,50 @@
 package org.flexdock.demos.view;
 
 import java.awt.event.ActionEvent;
-import java.util.Iterator;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
 
 /**
  * @author Mateusz Szczap
  */
 public class CommonView extends View {
 
-	private ViewDockingInfo m_viewDockingInfo = null;
-	private ViewDockingInfo m_accessoryDockingInfo = null;
+	private ViewDockingInfo m_mainDockingInfo = null;
 	
-	public CommonView(String name, String title, ViewDockingInfo dockingInfo) {
+	private PreservingStrategy m_preservingStrategy = new SimplePreservingStrategy();
+	
+	public CommonView(String name, String title, ViewDockingInfo viewDockingInfo) {
 		super(name);
-		m_viewDockingInfo = dockingInfo;
+		m_mainDockingInfo = viewDockingInfo;
 		setTitle(title, true);
 		addAction(new CloseAction());
 		addDockingListener(new DockingHandler());
 	}
 
-	public ViewDockingInfo getViewDockingInfo() {
-		return m_viewDockingInfo;
+	public ViewDockingInfo getMainViewDockingInfo() {
+		return m_mainDockingInfo;
 	}
 	
-	public ViewDockingInfo getAccessoryDockingInfo() {
-		return m_accessoryDockingInfo;
+	public void setPreservingStrategy(PreservingStrategy preservingStrategy) {
+		//TODO property changed fire?
+		m_preservingStrategy = preservingStrategy;
 	}
 	
+	public PreservingStrategy getPreservingStrategy() {
+		return m_preservingStrategy;
+	}
+
+	public ViewDockingInfo[] getAccessoryDockingInfos() {
+		return m_preservingStrategy.getAccessoryDockingInfos();
+	}
+
 	private class CloseAction extends AbstractAction {
 
 		private CloseAction() {
@@ -60,25 +69,9 @@ public class CommonView extends View {
 		 * @see org.flexdock.docking.event.DockingListener#dockingComplete(org.flexdock.docking.event.DockingEvent)
 		 */
 		public void dockingComplete(DockingEvent dockingEvent) {
-			if (dockingEvent.getNewDockingPort() instanceof Viewport) {
-				Viewport viewPort = (Viewport) dockingEvent.getNewDockingPort();
-				if (!viewPort.getViewset().isEmpty()) {
-					for (Iterator it = viewPort.getViewset().iterator(); it.hasNext();) {
-						CommonView commonView = (CommonView) it.next();
-						if (!commonView.equals(CommonView.this)) {
-							String region = dockingEvent.getRegion();
-							Float ratioObject = getDockingProperties().getRegionInset(region);
-							float ratio = -1.0f;
-							if (ratioObject != null) {
-								ratio = ratioObject.floatValue();
-							} else {
-								ratio = 0.5f;
-							}
-							m_accessoryDockingInfo = new ViewDockingInfo(commonView, region, ratio);
-						}
-					}
-				}
-			}
+			DockingPort dockingPort = dockingEvent.getNewDockingPort();
+			String region = dockingEvent.getRegion();
+			m_preservingStrategy.preserve(CommonView.this, dockingPort, region);
 		}
 
 	}

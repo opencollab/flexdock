@@ -131,15 +131,18 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			ViewDockingInfo dockingInfo = m_commonView.getViewDockingInfo();
-			ViewDockingInfo accessoryDockingInfo = m_commonView.getAccessoryDockingInfo();
+			ViewDockingInfo dockingInfo = m_commonView.getMainViewDockingInfo();
+			ViewDockingInfo[] accessoryDockingInfos = m_commonView.getAccessoryDockingInfos();
 
 			boolean docked = false;
-			if (accessoryDockingInfo != null) {
-				View view = accessoryDockingInfo.getView();
-				String region = accessoryDockingInfo.getRegion();
-				float ratio = accessoryDockingInfo.getRatio();
-				docked = view.dock(m_commonView, region, ratio);
+			if (accessoryDockingInfos != null && accessoryDockingInfos.length > 0) {
+				for (int i=0; i<accessoryDockingInfos.length; i++) {
+					View view = accessoryDockingInfos[i].getView();
+					String region = accessoryDockingInfos[i].getRegion();
+					float ratio = accessoryDockingInfos[i].getRatio();
+					docked = view.dock(m_commonView, region, ratio);
+					if (docked) break;
+				}
 			}
 			
 			if (!docked) {
