@@ -1,9 +1,3 @@
-/*
- * Created on 2005-03-24
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package org.flexdock.view.perspective;
 
 import java.awt.Container;
@@ -18,10 +12,7 @@ import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
 
 /**
- * @author mateusz
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author Mateusz Szczap
  */
 public class PerspectiveManager implements IPerspectiveManager {
 	
@@ -32,6 +23,8 @@ public class PerspectiveManager implements IPerspectiveManager {
 	private static IPerspectiveManager SINGLETON = null;
 	
 	private IPerspective m_defaultPerspective = null;
+	
+	private IPerspective m_currentPerspective = null;
 	
 	public static IPerspectiveManager getInstance() {
 		if (SINGLETON == null) {
@@ -48,6 +41,8 @@ public class PerspectiveManager implements IPerspectiveManager {
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
 		
 		m_perspectives.put(perspectiveId, perspective);
+		
+		firePerspectiveAdded(perspective);
 	}
 	
 	/**
@@ -56,8 +51,12 @@ public class PerspectiveManager implements IPerspectiveManager {
 	public void removePerspective(String perspectiveId) {
 		if (perspectiveId == null) throw new NullPointerException("perspectiveId cannot be null");
 		
-		m_perspectives.remove(perspectiveId);
+		IPerspective perspective = getPerspective(perspectiveId);
+		if (perspective == null) throw new RuntimeException("Unable to find perspective: "+perspectiveId);
 		
+		m_perspectives.remove(perspectiveId);
+
+		firePerspectiveRemoved(perspective);
 	}
 	
 	/**
@@ -140,7 +139,10 @@ public class PerspectiveManager implements IPerspectiveManager {
 			sourceView.dock(targetView, region, ratio);
 		}
 		
-		//TODO fire listener
+		IPerspective oldPerspective = m_currentPerspective;
+		m_currentPerspective = perspective;
+		
+		firePerspectiveChanged(oldPerspective, perspective);
 	}
 	
 	/**
@@ -154,4 +156,25 @@ public class PerspectiveManager implements IPerspectiveManager {
 		}
 	}
 	
+	protected void firePerspectiveChanged(IPerspective oldPerspective, IPerspective newPerspective) {
+		for (int i=0; i<m_listeners.size(); i++) {
+			PerspectiveListener perspectiveListener = (PerspectiveListener) m_listeners.get(i);
+			perspectiveListener.onPerspectiveChanged(oldPerspective, newPerspective);
+		}
+	}
+
+	protected void firePerspectiveAdded(IPerspective perspective) {
+		for (int i=0; i<m_listeners.size(); i++) {
+			PerspectiveListener perspectiveListener = (PerspectiveListener) m_listeners.get(i);
+			perspectiveListener.onPerspectiveAdded(perspective);
+		}
+	}
+
+	protected void firePerspectiveRemoved(IPerspective perspective) {
+		for (int i=0; i<m_listeners.size(); i++) {
+			PerspectiveListener perspectiveListener = (PerspectiveListener) m_listeners.get(i);
+			perspectiveListener.onPerspectiveRemoved(perspective);
+		}
+	}
+
 }

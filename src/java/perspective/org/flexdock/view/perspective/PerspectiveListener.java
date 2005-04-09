@@ -16,6 +16,10 @@ import java.util.EventListener;
  */
 public interface PerspectiveListener extends EventListener {
 
-	void onPerspectiveChanged();
+	void onPerspectiveAdded(IPerspective perspective);
+
+	void onPerspectiveRemoved(IPerspective perspective);
+
+	void onPerspectiveChanged(IPerspective oldPerspective, IPerspective newPerspective);
 	
 }
