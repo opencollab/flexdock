@@ -145,10 +145,21 @@ public class DockingManager {
 			DockingPort.WEST_REGION.equals(region); 
 	}
 
+	/**
+	 * Checks whether a supplied dockable is docked in a supplied dockingPort instance.
+	 */
 	public static boolean isDocked(DockingPort dockingPort, Dockable dockable) {
 		return dockingPort.isParentDockingPort(dockable.getDockable());
 	}
 	
+	public static boolean isDocked(Dockable dockable) {
+		return getDockingPort(dockable) != null;
+	}
+
+	public static boolean isDocked(Component component) {
+		return getDockingPort(component) != null;
+	}
+
 	public static DockingPort getDockingPort(Dockable dockable) {
 		return DockingUtility.getParentDockingPort(dockable);
 	}
