@@ -6,10 +6,11 @@
  */
 package org.flexdock.view.perspective;
 
-import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -113,24 +114,37 @@ public class PerspectiveManager implements IPerspectiveManager {
 		if (container == null) throw new NullPointerException("container cannot be null");
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
 
-//		//TODO is it ok that we remove all components, we should probably remove
-//		//only the objects that are instanceof View, Dockable and/or DockingPort
-		for (int i=0; i<container.getComponentCount(); i++) {
-			Component component = container.getComponent(i);
-			if (component instanceof View) {
-				View view = (View) component;
-				if (DockingManager.isDocked((Dockable)view)) {
-					DockingManager.undock(view);
-				}
-			}
-		}
-
 		Viewport mainViewPort = perspective.getMainViewport();
 		View centerView = perspective.getTerritoralView();
-//		if (DockingManager.isDocked((Dockable)centerView)) {
-			DockingManager.undock(centerView);
+
+		Set viewSet = mainViewPort.getViewset();
+		for (Iterator it = viewSet.iterator(); it.hasNext();) {
+			View view = (View) it.next();
+			if (DockingManager.isDocked((Dockable)view)) {
+				DockingManager.undock(view);
+			}
+		}
+		
+////		//TODO is it ok that we remove all components, we should probably remove
+////		//only the objects that are instanceof View, Dockable and/or DockingPort
+//		for (int i=0; i<container.getComponentCount(); i++) {
+//			Component component = container.getComponent(i);
+//			if (component instanceof View) {
+//				View view = (View) component;
+//				if (DockingManager.isDocked((Dockable)view) && view != centerView) {
+//					DockingManager.undock(view);
+//				}
+//			}
 //		}
-		mainViewPort.dock(centerView);
+
+//		if (DockingManager.isDocked((Dockable)centerView)) {
+//			DockingManager.undock(centerView);
+//		}
+
+		if (!DockingManager.isDocked((Dockable)centerView)) {
+			mainViewPort.dock(centerView);
+		}
+
 		
 //		//maybe we should pass something like IViewPage and access our parent container
 //		//only through that interface.

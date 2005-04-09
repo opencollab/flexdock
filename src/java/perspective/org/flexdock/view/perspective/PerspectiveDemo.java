@@ -27,7 +27,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
@@ -111,19 +110,19 @@ public class PerspectiveDemo extends JFrame {
 		this.perspective2 = createPerspective2(mainViewPort, startPage);
 
 		p.add(mainViewPort, BorderLayout.CENTER);
-		p.add(createSouthPanel(), BorderLayout.SOUTH);
+		p.add(createSouthPanel(p), BorderLayout.SOUTH);
 		
 		return p;
 	}
 
-	private JPanel createSouthPanel() {
+	private JPanel createSouthPanel(Container parent) {
 		JPanel panel = new JPanel(new FlowLayout());
 		
 		JButton b1 = new JButton("Perspective1");
 		JButton b2 = new JButton("Perspective2");
 		
-		b1.addActionListener(new B1ActionHandler(panel));
-		b2.addActionListener(new B2ActionHandler(panel));
+		b1.addActionListener(new B1ActionHandler(this));
+		b2.addActionListener(new B2ActionHandler(this));
 		
 		panel.add(b1);
 		panel.add(b2);
@@ -295,12 +294,8 @@ public class PerspectiveDemo extends JFrame {
 		page.add(tabPane, BorderLayout.CENTER);
 		page.setBorder(new LineBorder(Color.GRAY, 1));
 		
-		View view = new View(id, null, null) {
-			public boolean isTerritorial(Dockable dockable, String region) {
-				return DockingPort.CENTER_REGION.equals(region);
-			}
-		};
-
+		View view = new View(id, null, null);
+		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
 		view.setTitlebar(null);
 		view.setContentPane(page);
 		return view;
