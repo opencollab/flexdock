@@ -7,6 +7,7 @@
 package org.flexdock.view.perspective;
 
 import org.flexdock.view.View;
+import org.flexdock.view.Viewport;
 
 /**
  * @author mateusz
@@ -22,20 +23,28 @@ public interface IPerspective {
 	
 	View getTerritoralView();
 	
+	void setMainViewport(Viewport viewport);
+	
+	Viewport getMainViewport();
+	
 	void addView(String viewId, View view);
 
 	boolean removeView(String viewId);
 	
 	View getView(String viewId);
 	
-	String[] getViewIds();
+	View[] getViews();
 	
 	Perspective.ViewDockingInfo[] getDockingInfoChain();
-	
-	void dock(String view1Id, String view2Id, String region, float ratio);
 
 	void dock(String view1Id, String view2Id);
+	
+	void dock(String sourceViewId, String targetViewId, String region, float ratio);
+	
+	void dock(View sourceView, View targetView, String region, float ratio);
 
-	void undock(int index);
+	void dock(View sourceView, View targetView);
+
+	void undock(View sourceView, View targetView);
 
 }

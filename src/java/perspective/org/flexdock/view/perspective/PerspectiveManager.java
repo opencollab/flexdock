@@ -6,15 +6,15 @@
  */
 package org.flexdock.view.perspective;
 
+import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
-import org.flexdock.util.DockingUtility;
 import org.flexdock.view.View;
+import org.flexdock.view.Viewport;
 
 /**
  * @author mateusz
@@ -113,51 +113,39 @@ public class PerspectiveManager implements IPerspectiveManager {
 		if (container == null) throw new NullPointerException("container cannot be null");
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
 
-		Perspective.ViewDockingInfo[] infos = perspective.getDockingInfoChain();
-		for (int i=0; i<infos.length; i++) {
-			Perspective.ViewDockingInfo info = infos[i];
-			String view1Id = info.getView1Id();
-			View view1 = perspective.getView(view1Id);
-			if (view1 != null) {
-				DockingManager.undock(view1);				
-			}
-		}
-		
 //		//TODO is it ok that we remove all components, we should probably remove
 //		//only the objects that are instanceof View, Dockable and/or DockingPort
-//		for (int i=0; i<container.getComponentCount(); i++) {
-//			Component component = container.getComponent(i);
-//			if (component instanceof View) {
-//				View view = (View) container.getComponent(i);
-//				DockingManager.undock(view);
-//			}
-//		}
-
-		View centerView = perspective.getTerritoralView();
-//		DockingManager.undock(centerView);
-		
-		DockingPort dockingPort = DockingUtility.getParentDockingPort((Dockable)centerView);
-		if (dockingPort != null) {
-			dockingPort.dock(centerView, DockingPort.CENTER_REGION);
+		for (int i=0; i<container.getComponentCount(); i++) {
+			Component component = container.getComponent(i);
+			if (component instanceof View) {
+				View view = (View) component;
+				if (DockingManager.isDocked((Dockable)view)) {
+					DockingManager.undock(view);
+				}
+			}
 		}
+
+		Viewport mainViewPort = perspective.getMainViewport();
+		View centerView = perspective.getTerritoralView();
+//		if (DockingManager.isDocked((Dockable)centerView)) {
+			DockingManager.undock(centerView);
+//		}
+		mainViewPort.dock(centerView);
 		
-		//maybe we should pass something like IViewPage and access our parent container
-		//only through that interface.
-		//Ones root panel would then implement the interfaces
-		//therefore one could only be able to remove views only which is fine.
-		//but perspective should probably not remove JToolbar and other components
-		
+//		//maybe we should pass something like IViewPage and access our parent container
+//		//only through that interface.
+//		//Ones root panel would then implement the interfaces
+//		//therefore one could only be able to remove views only which is fine.
+//		//but perspective should probably not remove JToolbar and other components
 		Perspective.ViewDockingInfo[] dockingInfos = perspective.getDockingInfoChain();
 		for (int i=0; i<dockingInfos.length; i++) {
 			Perspective.ViewDockingInfo dockingInfo = (Perspective.ViewDockingInfo) dockingInfos[i];
-			String view1Id = dockingInfo.getView1Id();
-			String view2id = dockingInfo.getView2Id();
+			View sourceView = dockingInfo.getSourceView();
+			View targetView = dockingInfo.getTargetView();
 			String region = dockingInfo.getRelativeRegion();
 			float ratio = dockingInfo.getRatio();
-			View view1 = perspective.getView(view1Id);
-			View view2 = perspective.getView(view2id);
 			
-			view1.dock(view2, region, ratio);
+			sourceView.dock(targetView, region, ratio);
 		}
 		
 		//TODO fire listener
