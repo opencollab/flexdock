@@ -39,7 +39,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			return false;
 		
 		// cache the old parent
-		DockingPort oldPort = DockingUtility.getParentDockingPort(dockable);
+		DockingPort oldPort = dockable.getDockingPort();
 
 		// perform the drop operation.
 		DockingResults results = dropComponent(dockable, port, region, token);
@@ -72,7 +72,28 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		Dockable docked = DockingManager.getRegisteredDockable(port.getDockedComponent());
 		if(docked==null)
 			return true;
-		return !docked.getDockingProperties().isTerritoryBlocked(region).booleanValue();
+
+		// don't allow them to dock into this region if the territory there is blocked.
+		if(docked.getDockingProperties().isTerritoryBlocked(region).booleanValue())
+			return false;
+		
+		// check to see if we're already docked into this region.
+		// get the parent dockingPort.
+		Container container = docked.getDockable().getParent();
+		// now get the grandparent dockingport
+		DockingPort grandparent = DockingManager.getDockingPort(container);
+		
+		// if we don't share the grandparent dockingport, then we're definitely not split in the same dockingport
+		// across different region.  in this case, it's ok to proceed with the dock
+		if(grandparent==null)
+			return true;
+		
+		Component currentlyInRegion = grandparent.getComponent(region);
+		// block docking if we're already the component docked within the specified region
+		if(currentlyInRegion==dockable.getDockable())
+			return false;
+		
+		return true;
 	}
 	
 
