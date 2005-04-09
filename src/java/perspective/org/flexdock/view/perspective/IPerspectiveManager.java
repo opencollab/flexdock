@@ -6,7 +6,6 @@
  */
 package org.flexdock.view.perspective;
 
-import java.awt.Container;
 
 
 /**
@@ -27,8 +26,10 @@ public interface IPerspectiveManager extends PerspectiveMonitor {
 
 	IPerspective getDefaultPerspective();
 	
-	void applyPerspective(Container container, IPerspective perspective);
+	void applyPerspective(IPerspective perspective);
 
-	void applyPerspective(Container container, String perspectiveId);
+	void applyPerspective(String perspectiveId);
+	
+	void clearPerspective(IPerspective perspective);
 
 }

@@ -1,6 +1,5 @@
 package org.flexdock.view.perspective;
 
-import java.awt.Container;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -109,21 +108,13 @@ public class PerspectiveManager implements IPerspectiveManager {
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#applyPerspective(java.awt.Container, org.flexdock.view.perspective.IPerspective)
 	 */
-	public void applyPerspective(Container container, IPerspective perspective) {
-		if (container == null) throw new NullPointerException("container cannot be null");
+	public void applyPerspective(IPerspective perspective) {
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
+
+		clearPerspective(perspective);
 
 		Viewport mainViewPort = perspective.getMainViewport();
 		View centerView = perspective.getTerritoralView();
-
-		Set viewSet = mainViewPort.getViewset();
-		for (Iterator it = viewSet.iterator(); it.hasNext();) {
-			View view = (View) it.next();
-			if (DockingManager.isDocked((Dockable)view)) {
-				DockingManager.undock(view);
-			}
-		}
-		
 		if (!DockingManager.isDocked((Dockable)centerView)) {
 			mainViewPort.dock(centerView);
 		}
@@ -146,13 +137,29 @@ public class PerspectiveManager implements IPerspectiveManager {
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#undockAll(org.flexdock.view.perspective.IPerspective)
+	 */
+	public void clearPerspective(IPerspective perspective) {
+		Viewport mainViewPort = perspective.getMainViewport();
+
+		Set viewSet = mainViewPort.getViewset();
+		for (Iterator it = viewSet.iterator(); it.hasNext();) {
+			View view = (View) it.next();
+			if (DockingManager.isDocked((Dockable)view)) {
+				DockingManager.undock(view);
+			}
+		}
+
+	}
+	
+	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#applyPerspective(java.awt.Container, java.lang.String)
 	 */
-	public void applyPerspective(Container container, String perspectiveId) {
+	public void applyPerspective(String perspectiveId) {
 		IPerspective perspective = getPerspective(perspectiveId);
 
 		if (perspective != null) {
-			applyPerspective(container, perspectiveId);
+			applyPerspective(perspectiveId);
 		}
 	}
 	

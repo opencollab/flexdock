@@ -63,35 +63,23 @@ public class PerspectiveDemo2 extends JFrame {
 	
 	private class B1ActionHandler implements ActionListener {
 
-		private Container c;
-		
-		public B1ActionHandler(Container c) {
-			this.c = c;
-		}
-		
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
 			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(c, perspective1);
+			perspectiveRegistry.applyPerspective(perspective1);
 		}
 	}
 
 	private class B2ActionHandler implements ActionListener {
 
-		private Container c = null;
-		
-		public B2ActionHandler(Container c) {
-			this.c = c;
-		}
-		
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
 			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(c, perspective2);
+			perspectiveRegistry.applyPerspective(perspective2);
 		}
 	}
 
@@ -121,8 +109,8 @@ public class PerspectiveDemo2 extends JFrame {
 		JButton b1 = new JButton("Perspective1");
 		JButton b2 = new JButton("Perspective2");
 		
-		b1.addActionListener(new B1ActionHandler(this));
-		b2.addActionListener(new B2ActionHandler(this));
+		b1.addActionListener(new B1ActionHandler());
+		b2.addActionListener(new B2ActionHandler());
 		
 		panel.add(b1);
 		panel.add(b2);

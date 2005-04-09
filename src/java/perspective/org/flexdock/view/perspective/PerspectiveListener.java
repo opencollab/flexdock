@@ -21,5 +21,7 @@ public interface PerspectiveListener extends EventListener {
 	void onPerspectiveRemoved(IPerspective perspective);
 
 	void onPerspectiveChanged(IPerspective oldPerspective, IPerspective newPerspective);
+
+	void onPerspectiveCleared(IPerspective perspective);
 	
 }

@@ -5,7 +5,6 @@ package org.flexdock.view.perspective;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -63,35 +62,23 @@ public class PerspectiveDemo extends JFrame {
 	
 	private class B1ActionHandler implements ActionListener {
 
-		private Container c;
-		
-		public B1ActionHandler(Container c) {
-			this.c = c;
-		}
-		
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
 			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(c, perspective1);
+			perspectiveRegistry.applyPerspective(perspective1);
 		}
 	}
 
 	private class B2ActionHandler implements ActionListener {
 
-		private Container c = null;
-		
-		public B2ActionHandler(Container c) {
-			this.c = c;
-		}
-		
 		/**
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
 			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(c, perspective2);
+			perspectiveRegistry.applyPerspective(perspective2);
 		}
 	}
 
@@ -110,33 +97,25 @@ public class PerspectiveDemo extends JFrame {
 		this.perspective2 = createPerspective2(mainViewPort, startPage);
 
 		p.add(mainViewPort, BorderLayout.CENTER);
-		p.add(createSouthPanel(p), BorderLayout.SOUTH);
+		p.add(createSouthPanel(), BorderLayout.SOUTH);
 		
 		return p;
 	}
 
-	private JPanel createSouthPanel(Container parent) {
+	private JPanel createSouthPanel() {
 		JPanel panel = new JPanel(new FlowLayout());
 		
 		JButton b1 = new JButton("Perspective1");
 		JButton b2 = new JButton("Perspective2");
 		
-		b1.addActionListener(new B1ActionHandler(this));
-		b2.addActionListener(new B2ActionHandler(this));
+		b1.addActionListener(new B1ActionHandler());
+		b2.addActionListener(new B2ActionHandler());
 		
 		panel.add(b1);
 		panel.add(b2);
 		
 		return panel;
 	}
-	
-//	private JMenuBar createMenuBar() {
-//		JMenuBar menuBar = new JMenuBar();
-//		JMenu perspectivesMenu = new JMenu("Perspectives");
-//
-//		per
-//		
-//	}
 	
 	private View createView(String id, String text) {
 		View view = new View(id, text);
