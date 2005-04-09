@@ -26,13 +26,14 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
+import org.flexdock.view.layout.LayoutManager;
+import org.flexdock.view.layout.ViewDockingInfo;
 
 /**
  * @author Christopher Butler
@@ -40,10 +41,10 @@ import org.flexdock.view.Viewport;
  */
 public class SimpleShowViewportDemo extends JFrame {
 
-	private static CommonView view1;
-	private static CommonView view2;
-	private static CommonView view3;
-	private static CommonView view4;
+	private static View view1 = null;
+	private static View view2 = null;
+	private static View view3 = null;
+	private static View view4 = null;
 
 	public static void main(String[] args) {
 		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -86,8 +87,10 @@ public class SimpleShowViewportDemo extends JFrame {
 		return panel;
 	}
 	
-	private CommonView createView(String id, String text, ViewDockingInfo viewDockingInfo) {
-		CommonView view = new CommonView(id, text, viewDockingInfo);
+	private View createView(String id, String text, ViewDockingInfo viewDockingInfo) {
+		View view = new View(id, text);
+		view.addAction(new CloseAction(view));
+		LayoutManager.getInstance().registerView(view, viewDockingInfo);
 		
 		JPanel p = new JPanel();
 		p.setBorder(new LineBorder(Color.GRAY, 1));
@@ -114,7 +117,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		return menuBar;
 	}
 
-	private Action createShowViewActionFor(CommonView commonView) {
+	private Action createShowViewActionFor(View commonView) {
 		ShowViewAction showViewAction = new ShowViewAction(commonView);
 		showViewAction.putValue(Action.NAME, commonView.getTitle());
 		
@@ -123,9 +126,9 @@ public class SimpleShowViewportDemo extends JFrame {
 	
 	private class ShowViewAction extends AbstractAction {
 		
-		private CommonView m_commonView = null;
+		private View m_commonView = null;
 		
-		private ShowViewAction(CommonView commonView) {
+		private ShowViewAction(View commonView) {
 			m_commonView = commonView;
 		}
 		
@@ -133,34 +136,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			
-			if (DockingManager.isDocked((Dockable) m_commonView)) {
-				m_commonView.setActive(true);
-				SwingUtility.focus(m_commonView);
-				return;
-			}
-			
-			ViewDockingInfo dockingInfo = m_commonView.getMainViewDockingInfo();
-			ViewDockingInfo[] accessoryDockingInfos = m_commonView.getAccessoryDockingInfos();
-
-			boolean docked = false;
-			if (accessoryDockingInfos != null && accessoryDockingInfos.length > 0) {
-				for (int i=0; i<accessoryDockingInfos.length; i++) {
-					View view = accessoryDockingInfos[i].getView();
-					String region = accessoryDockingInfos[i].getRegion();
-					float ratio = accessoryDockingInfos[i].getRatio();
-					docked = view.dock(m_commonView, region, ratio);
-					if (docked) break;
-				}
-			}
-			
-			if (!docked) {
-				View view = dockingInfo.getView();
-				String region = dockingInfo.getRegion();
-				float ratio = dockingInfo.getRatio();
-				docked = view.dock(m_commonView, region, ratio);
-			}
-
+			LayoutManager.getInstance().showView(m_commonView);
 		}
 
 	}
@@ -259,12 +235,33 @@ public class SimpleShowViewportDemo extends JFrame {
 		page.add(tabPane, BorderLayout.CENTER);
 		page.setBorder(new LineBorder(Color.GRAY, 1));
 		
-		CommonView view = new CommonView(id, null, null);
+		View view = new View(id, null, null);
 		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
 		view.setTitlebar(null);
 		view.setContentPane(page);
-
+		LayoutManager.getInstance().registerTerritoralView(view);
+		
 		return view;
 	}
 	
+	private class CloseAction extends AbstractAction {
+
+		private View m_view;
+		
+		private CloseAction(View view) {
+			m_view = view;
+			putValue(Action.NAME, "close");
+			putValue(Action.SHORT_DESCRIPTION, "Close");
+			putValue(Action.ACTION_COMMAND_KEY, "close");
+		}
+
+        /**
+         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+         */
+        public void actionPerformed(ActionEvent e) {
+            DockingManager.undock(m_view);
+		}
+		
+	}
+
 }

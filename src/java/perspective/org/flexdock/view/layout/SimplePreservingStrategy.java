@@ -4,8 +4,9 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.demos.view;
+package org.flexdock.view.layout;
 
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.flexdock.docking.DockingPort;
@@ -18,7 +19,7 @@ import org.flexdock.view.Viewport;
  */
 public class SimplePreservingStrategy implements PreservingStrategy {
 
-	private ViewDockingInfo m_accessoryDockingInfo = null;
+	private HashMap m_accessoryDockingInfos = new HashMap();
 	
 	/**
 	 * @see org.flexdock.demos.view.PreservingStrategy#preserve(org.flexdock.docking.DockingPort)
@@ -36,7 +37,7 @@ public class SimplePreservingStrategy implements PreservingStrategy {
 					} else {
 						ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
 					}
-					m_accessoryDockingInfo = new ViewDockingInfo(childView, region, ratio);
+					m_accessoryDockingInfos.put(view.getPersistentId(), new ViewDockingInfo(childView, region, ratio)); 
 					return true;
 				}
 			}
@@ -47,8 +48,10 @@ public class SimplePreservingStrategy implements PreservingStrategy {
 	/**
 	 * @see org.flexdock.demos.view.PreservingStrategy#getAccessoryDockingInfos()
 	 */
-	public ViewDockingInfo[] getAccessoryDockingInfos() {
-		return new ViewDockingInfo[] {m_accessoryDockingInfo};
+	public ViewDockingInfo[] getAccessoryDockingInfos(View view) {
+		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(view.getPersistentId());
+		if (dockingInfo == null) return new ViewDockingInfo[]{};
+		return new ViewDockingInfo[] {dockingInfo};
 	}
 
 }
