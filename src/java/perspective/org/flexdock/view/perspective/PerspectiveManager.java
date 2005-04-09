@@ -96,8 +96,8 @@ public class PerspectiveManager implements IPerspectiveManager {
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#setDefaultPerspective(org.flexdock.view.perspective.IPerspective)
 	 */
-	public void setDefaultPerspective(IPerspective perspective) {
-		m_defaultPerspective = perspective;
+	public void setDefaultPerspective(String perspectiveId) {
+		m_defaultPerspective = getPerspective(perspectiveId);
 	}
 	
 	/**
@@ -125,32 +125,10 @@ public class PerspectiveManager implements IPerspectiveManager {
 			}
 		}
 		
-////		//TODO is it ok that we remove all components, we should probably remove
-////		//only the objects that are instanceof View, Dockable and/or DockingPort
-//		for (int i=0; i<container.getComponentCount(); i++) {
-//			Component component = container.getComponent(i);
-//			if (component instanceof View) {
-//				View view = (View) component;
-//				if (DockingManager.isDocked((Dockable)view) && view != centerView) {
-//					DockingManager.undock(view);
-//				}
-//			}
-//		}
-
-//		if (DockingManager.isDocked((Dockable)centerView)) {
-//			DockingManager.undock(centerView);
-//		}
-
 		if (!DockingManager.isDocked((Dockable)centerView)) {
 			mainViewPort.dock(centerView);
 		}
 
-		
-//		//maybe we should pass something like IViewPage and access our parent container
-//		//only through that interface.
-//		//Ones root panel would then implement the interfaces
-//		//therefore one could only be able to remove views only which is fine.
-//		//but perspective should probably not remove JToolbar and other components
 		Perspective.ViewDockingInfo[] dockingInfos = perspective.getDockingInfoChain();
 		for (int i=0; i<dockingInfos.length; i++) {
 			Perspective.ViewDockingInfo dockingInfo = (Perspective.ViewDockingInfo) dockingInfos[i];
@@ -169,8 +147,11 @@ public class PerspectiveManager implements IPerspectiveManager {
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#applyPerspective(java.awt.Container, java.lang.String)
 	 */
 	public void applyPerspective(Container container, String perspectiveId) {
-		// TODO Auto-generated method stub
-		
+		IPerspective perspective = getPerspective(perspectiveId);
+
+		if (perspective != null) {
+			applyPerspective(container, perspectiveId);
+		}
 	}
 	
 }

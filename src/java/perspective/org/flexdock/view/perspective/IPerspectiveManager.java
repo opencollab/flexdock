@@ -23,7 +23,7 @@ public interface IPerspectiveManager extends PerspectiveMonitor {
 	
 	IPerspective getPerspective(String perspectiveId);
 	
-	void setDefaultPerspective(IPerspective perspective);
+	void setDefaultPerspective(String perspectiveId);
 
 	IPerspective getDefaultPerspective();
 	

@@ -9,6 +9,7 @@ package org.flexdock.view.perspective;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.flexdock.docking.DockingPort;
@@ -125,8 +126,15 @@ public class Perspective implements IPerspective {
 	 * @see org.flexdock.view.perspective.IPerspective#undock(org.flexdock.view.View, org.flexdock.view.View)
 	 */
 	public void undock(View sourceView, View targetView) {
-		// TODO Auto-generated method stub
-
+		for (Iterator it = m_dockingInfosList.iterator(); it.hasNext();) {
+			ViewDockingInfo dockingInfo = (ViewDockingInfo) it.next();
+			View childSourceView = dockingInfo.getSourceView();
+			View childTargetView = dockingInfo.getTargetView();
+			if (childTargetView == targetView && childSourceView == sourceView) {
+				m_dockingInfosList.remove(dockingInfo);
+			}
+		}
+		
 	}
 	
 	/**
@@ -134,13 +142,6 @@ public class Perspective implements IPerspective {
 	 */
 	public void dock(String view1Id, String view2Id) {
 		dock(view1Id, view2Id, DockingPort.CENTER_REGION, -1.0f);
-	}
-	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#undock(java.lang.String, java.lang.String)
-	 */
-	public void undock(int index) {
-		//m_dockingInfosList.remove(index);
 	}
 	
 	/**
