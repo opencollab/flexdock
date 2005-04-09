@@ -19,6 +19,8 @@ import org.flexdock.view.Viewport;
  */
 public class SimplePreservingStrategy implements PreservingStrategy {
 
+	private HashMap m_mainDockingInfos = new HashMap();
+
 	private HashMap m_accessoryDockingInfos = new HashMap();
 	
 	/**
@@ -45,6 +47,20 @@ public class SimplePreservingStrategy implements PreservingStrategy {
 		return false;
 	}
 
+	/**
+	 * @see org.flexdock.view.layout.PreservingStrategy#getMainDockingInfo(org.flexdock.view.View)
+	 */
+	public ViewDockingInfo getMainDockingInfo(View view) {
+		return (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
+	}
+
+	/**
+	 * @see org.flexdock.view.layout.PreservingStrategy#setMainDockingInfo(org.flexdock.view.View, org.flexdock.view.layout.ViewDockingInfo)
+	 */
+	public void setMainDockingInfo(View view, ViewDockingInfo dockingInfo) {
+		m_mainDockingInfos.put(view.getPersistentId(), dockingInfo);
+	}
+	
 	/**
 	 * @see org.flexdock.demos.view.PreservingStrategy#getAccessoryDockingInfos()
 	 */

@@ -19,8 +19,10 @@ public interface ILayoutManager {
 	void registerTerritoralView(View view);
 	
 	void registerView(View view, ViewDockingInfo mainViewDockingInfo);
-	
+
 	void unregisterView(View view);
+
+	void unregisterView(String viewId);
 	
 	boolean showView(View view);
 

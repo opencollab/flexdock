@@ -25,7 +25,7 @@ public class LayoutManager implements ILayoutManager {
 	private static LayoutManager SINGLETON = null;
 	
 	private HashMap m_registeredViews = new HashMap();
-	private HashMap m_mainDockingInfos = new HashMap();
+	private HashMap m_registeredListeners = new HashMap();
 	
 	private PreservingStrategy m_preservingStrategy = new SimplePreservingStrategy();
 
@@ -41,21 +41,25 @@ public class LayoutManager implements ILayoutManager {
 	/**
 	 * @see org.flexdock.view.layout.ILayoutManager#registerTerritoralView(org.flexdock.view.View)
 	 */
-	public void registerTerritoralView(View view) {
-		m_territoralView = view;
+	public void registerTerritoralView(View territoralView) {
+		if (territoralView == null) throw new IllegalArgumentException("territoralView cannot be null");
+			
+		m_territoralView = territoralView;
 	}
 	
 	/**
 	 * @see org.flexdock.view.layout.ILayoutManager#showView(org.flexdock.view.View)
 	 */
 	public boolean showView(View view) {
+		if (view == null) throw new IllegalArgumentException("view cannot be null");
+		
 		if (DockingManager.isDocked((Dockable) view)) {
 			view.setActive(true);
 			SwingUtility.focus(view);
 			return true;
 		}
 		
-		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
+		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_preservingStrategy.getMainDockingInfo(view);
 		ViewDockingInfo[] accessoryDockingInfos = m_preservingStrategy.getAccessoryDockingInfos(view);
 
 		boolean docked = false;
@@ -87,6 +91,7 @@ public class LayoutManager implements ILayoutManager {
 	 * @see org.flexdock.view.layout.ILayoutManager#hideView(org.flexdock.view.View)
 	 */
 	public boolean hideView(View view) {
+		if (view == null) throw new IllegalArgumentException("view cannot be null");
 		//TODO in future we might do some other stuff here
 		return DockingManager.undock(view);
 	}
@@ -98,18 +103,28 @@ public class LayoutManager implements ILayoutManager {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 		if (viewDockingInfo == null) throw new IllegalArgumentException("viewDockingInfo cannot be null");
 
+		DockingHandler dockingHandler = new DockingHandler();
 		m_registeredViews.put(view.getPersistentId(), view);
-		m_mainDockingInfos.put(view.getPersistentId(), viewDockingInfo);
+		m_registeredListeners.put(view.getPersistentId(), dockingHandler);
+		view.addDockingListener(dockingHandler);
+		m_preservingStrategy.setMainDockingInfo(view, viewDockingInfo);
 	}
 
+	/**
+	 * @see org.flexdock.view.layout.ILayoutManager#unregisterView(java.lang.String)
+	 */
+	public void unregisterView(String viewId) {
+		View view = (View) m_registeredViews.get(viewId);
+		m_registeredViews.remove(viewId);
+		DockingListener dockingListener = (DockingListener) m_registeredListeners.get(viewId);
+		view.removeDockingListener(dockingListener);
+	}
+	
 	/**
 	 * @see org.flexdock.view.layout.ILayoutManager#unregisterView(org.flexdock.view.View)
 	 */
 	public void unregisterView(View view) {
-		if (view == null) throw new IllegalArgumentException("view cannot be null");
-		
-		m_registeredViews.remove(view.getPersistentId());
-		m_mainDockingInfos.remove(view.getPersistentId());
+		unregisterView(view.getPersistentId());
 	}
 	
 	/**
