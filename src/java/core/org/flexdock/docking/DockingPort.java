@@ -71,6 +71,20 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	 * Returns a reference to the currently docked component.
 	 */	
 	public Component getDockedComponent();
+	
+	/**
+	 * Returns a reference to Dockable currently docked in the target region.  Returns null if there is
+	 * no Dockable there.  If a tabbed layout is present, this method will return the Dockable in the
+	 * currently selected tab. 
+	 */	
+	public Dockable getDockable(String region);
+
+	/**
+	 * Returns a reference to Component currently docked in the target region.  Returns null if there is
+	 * no Component there.  If a tabbed layout is present, this method will return the Component in the
+	 * currently selected tab. 
+	 */	
+	public Component getComponent(String region);
 
 	/**
 	 * Returns a <code>String</code> identifier that is unique within a JVM instance, but persistent 
