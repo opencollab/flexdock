@@ -267,5 +267,4 @@ public class SimpleShowViewportDemo extends JFrame {
 		return view;
 	}
 	
-	
 }
