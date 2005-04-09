@@ -82,6 +82,14 @@ public class LayoutManager implements ILayoutManager {
 		
 		return docked;
 	}
+	
+	/**
+	 * @see org.flexdock.view.layout.ILayoutManager#hideView(org.flexdock.view.View)
+	 */
+	public boolean hideView(View view) {
+		//TODO in future we might do some other stuff here
+		return DockingManager.undock(view);
+	}
 
 	/**
 	 * @see org.flexdock.view.layout.ILayoutManager#registerView(org.flexdock.view.View)

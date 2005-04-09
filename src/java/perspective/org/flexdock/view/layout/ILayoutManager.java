@@ -19,11 +19,13 @@ public interface ILayoutManager {
 	void registerTerritoralView(View view);
 	
 	void registerView(View view, ViewDockingInfo mainViewDockingInfo);
-
+	
 	void unregisterView(View view);
 	
 	boolean showView(View view);
 
+	boolean hideView(View view); 
+	
 	void setPreservingStrategy(PreservingStrategy preservingStrategy);
 
 	PreservingStrategy getPreservingStrategy();

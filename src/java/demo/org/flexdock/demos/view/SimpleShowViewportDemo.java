@@ -26,7 +26,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
@@ -73,11 +72,18 @@ public class SimpleShowViewportDemo extends JFrame {
 		
 		View startPage = createStartPage();
 		
-		view1 = createView("solution.explorer", "Solution Explorer", new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
-		view2 = createView("task.list", "Task List", new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
-		view3 = createView("class.view", "Class View", new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
-		view4 = createView("message.log", "Message Log", new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
+		view1 = createView("solution.explorer", "Solution Explorer");
+		view2 = createView("task.list", "Task List");
+		view3 = createView("class.view", "Class View");
+		view4 = createView("message.log", "Message Log");
 
+		LayoutManager.getInstance().registerTerritoralView(startPage);
+
+		LayoutManager.getInstance().registerView(view1, new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
+		LayoutManager.getInstance().registerView(view2, new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
+		LayoutManager.getInstance().registerView(view3, new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
+		LayoutManager.getInstance().registerView(view4, new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
+		
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);
 		startPage.dock(view2, DockingPort.SOUTH_REGION, .3f);
@@ -87,10 +93,9 @@ public class SimpleShowViewportDemo extends JFrame {
 		return panel;
 	}
 	
-	private View createView(String id, String text, ViewDockingInfo viewDockingInfo) {
+	private View createView(String id, String text) {
 		View view = new View(id, text);
 		view.addAction(new CloseAction(view));
-		LayoutManager.getInstance().registerView(view, viewDockingInfo);
 		
 		JPanel p = new JPanel();
 		p.setBorder(new LineBorder(Color.GRAY, 1));
@@ -239,7 +244,6 @@ public class SimpleShowViewportDemo extends JFrame {
 		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
 		view.setTitlebar(null);
 		view.setContentPane(page);
-		LayoutManager.getInstance().registerTerritoralView(view);
 		
 		return view;
 	}
@@ -259,8 +263,8 @@ public class SimpleShowViewportDemo extends JFrame {
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
-            DockingManager.undock(m_view);
-		}
+        	LayoutManager.getInstance().hideView(m_view);
+        }
 		
 	}
 
