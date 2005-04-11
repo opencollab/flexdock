@@ -182,4 +182,8 @@ public class DockableComponentWrapper implements Dockable {
 	public DockingPort getDockingPort() {
 		return DockingManager.getDockingPort(this);
 	}
+	
+	public Dockable getSibling(String region) {
+		return DefaultDockingStrategy.getSibling(this, region);
+	}
 }

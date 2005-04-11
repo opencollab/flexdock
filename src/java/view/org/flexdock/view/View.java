@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
@@ -309,6 +310,10 @@ public class View extends JComponent implements Dockable {
 	
 	public DockingPort getDockingPort() {
 		return DockingManager.getDockingPort((Dockable)this);
+	}
+	
+	public Dockable getSibling(String region) {
+		return DefaultDockingStrategy.getSibling(this, region);
 	}
 	
 	public Viewport getViewport() {

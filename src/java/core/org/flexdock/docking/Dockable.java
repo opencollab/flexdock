@@ -69,4 +69,6 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	 * this method will return null.
 	 */
 	public DockingPort getDockingPort();
+	
+	public Dockable getSibling(String region);
 }
