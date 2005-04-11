@@ -296,8 +296,21 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			// they can only get split dockables if they were checking an outer region.
 			if(CENTER_REGION.equals(region))
 				return null;
-			
+
 			JSplitPane split = (JSplitPane)docked;
+			
+			// make sure the supplied regions correspond to the current 
+			// splitpane orientation
+			boolean horizontal = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT;
+			if(horizontal) {
+				if(NORTH_REGION.equals(region) || SOUTH_REGION.equals(region))
+					return null;
+			}
+			else {
+				if(EAST_REGION.equals(region) || WEST_REGION.equals(region))
+					return null;				
+			}
+			
 			boolean left = NORTH_REGION.equals(region) || WEST_REGION.equals(region);
 			Component c = left? split.getLeftComponent(): split.getRightComponent();
 			// split panes only contain sub-dockingports.  if 'c' is not a sub-dockingport, 
