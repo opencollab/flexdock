@@ -30,6 +30,28 @@ import org.flexdock.util.SwingUtility;
 public class DefaultDockingStrategy implements DockingStrategy {
 	public static final String PREFERRED_PROPORTION = "DefaultDockingStrategy.PREFERRED_PROPORTION";
 	
+	public static Dockable getSibling(Dockable dockable, String region) {
+		if(dockable==null || !DockingManager.isValidDockingRegion(region) || DockingPort.CENTER_REGION.equals(region))
+			return null;
+		
+		DockingPort port = dockable.getDockingPort();
+		if(port==null)
+			return null;
+		
+		Component docked = port.getDockedComponent();
+		if(!(docked instanceof JSplitPane)) {
+			port = DockingManager.getDockingPort((Component)port);
+			docked = port==null? null: port.getDockedComponent();
+			if(!(docked instanceof JSplitPane))
+				return null;
+		}
+		
+		Dockable sibling = port.getDockable(region);
+		if(sibling==null)
+			return null;
+		return sibling.getDockable()==dockable.getDockable()? null: sibling;
+	}
+	
 	public boolean dock(Dockable dockable, DockingPort port, String region) {
 		return dock(dockable, port, region, null);
 	}
