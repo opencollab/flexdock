@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -24,6 +25,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
@@ -238,6 +241,27 @@ public class ViewportDemo extends JFrame {
 		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
 		view.setTitlebar(null);
 		view.setContentPane(page);
+		
+		
+		button1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ae) {
+				String id = null;
+				id = "startPage";
+//				id = "solution.explorer";
+//				id = "task.list";
+//				id = "class.view";
+//				id = "message.log";
+				Dockable dockable = DockingManager.getRegisteredDockable(id);
+				System.out.println(dockable);
+				if(dockable==null)
+					return;
+				
+				Dockable sibling = null;
+				sibling = dockable.getSibling(DockingPort.EAST_REGION);
+				System.out.println(sibling);
+			}
+		});
+		
 		return view;
 	}
 }
