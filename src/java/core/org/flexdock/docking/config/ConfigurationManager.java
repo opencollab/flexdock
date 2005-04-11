@@ -93,6 +93,10 @@ public class ConfigurationManager {
 		return DOCKABLES_BY_ID.containsKey(id);
 	}
 	
+	public static Dockable getRegisteredDockable(String id) {
+		return id==null? null: (Dockable)DOCKABLES_BY_ID.get(id);
+	}
+	
 	public static void replaceDockingPort(String oldId, String newId, DockingPort port) {
 		if(DOCKING_PORTS_BY_ID.containsKey(oldId))
 			DOCKING_PORTS_BY_ID.remove(oldId);

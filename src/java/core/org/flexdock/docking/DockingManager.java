@@ -236,6 +236,10 @@ public class DockingManager {
 	public static Dockable getRegisteredDockable(Component comp) {
 		return comp==null? null: (Dockable)DOCKABLES_BY_COMPONENT.get(comp);
 	}
+	
+	public static Dockable getRegisteredDockable(String id) {
+		return ConfigurationManager.getRegisteredDockable(id);
+	}
 
 	private static Dockable getDragInitiator(Component c) {
 		return getDockableForComponent(c, null);
