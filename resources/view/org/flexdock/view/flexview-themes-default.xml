@@ -10,6 +10,14 @@
 	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
 				handler="org.flexdock.view.plaf.mappings.SkinLFResolver" />
 
+	<plaf name="com.jgoodies.plaf.plastic.PlasticLookAndFeel" ref="eclipse2" />
+	<plaf name="com.jgoodies.plaf.plastic.Plastic3DLookAndFeel" ref="eclipse2"/>
+	<plaf name="com.jgoodies.plaf.plastic.PlasticXPLookAndFeel" ref="eclipse2"/>
+
+	<plaf name="com.jgoodies.looks.plastic.PlasticLookAndFeel" ref="eclipse2" />
+	<plaf name="com.jgoodies.looks.plastic.Plastic3DLookAndFeel" ref="eclipse2"/>
+	<plaf name="com.jgoodies.looks.plastic.PlasticXPLookAndFeel" ref="eclipse2"/>
+
 	<!-- Create a set of resource handlers -->
 	<handler name="color" value="org.flexdock.view.plaf.resources.ColorResourceHandler" />
 	<handler name="font" value="org.flexdock.view.plaf.resources.FontResourceHandler" />
