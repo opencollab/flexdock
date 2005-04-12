@@ -7,9 +7,11 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Point;
 
+import javax.swing.JSplitPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 
 /**
@@ -46,5 +48,25 @@ public class DockingUtility {
 		// DockingPort.  Since Container is a subclass of Component, we're fine in returning both
 		// cases.
 		return (DockingPort) SwingUtilities.getAncestorOfClass(DockingPort.class, deepestComponent);
+	}
+	
+	public static String translateRegion(JSplitPane splitPane, String region) {
+		if(splitPane==null || !DockingManager.isValidDockingRegion(region))
+			return null;
+		
+		boolean horizontal = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT;
+		if(horizontal) {
+			if(DockingPort.NORTH_REGION.equals(region))
+				region = DockingPort.WEST_REGION;
+			else if(DockingPort.SOUTH_REGION.equals(region))
+				region = DockingPort.EAST_REGION;
+		}
+		else {
+			if(DockingPort.WEST_REGION.equals(region))
+				region = DockingPort.NORTH_REGION;
+			else if(DockingPort.EAST_REGION.equals(region))
+				region = DockingPort.SOUTH_REGION;
+		}
+		return region;
 	}
 }
