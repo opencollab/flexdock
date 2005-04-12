@@ -28,8 +28,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -95,6 +97,12 @@ public class ConfigurationManager {
 	
 	public static Dockable getRegisteredDockable(String id) {
 		return id==null? null: (Dockable)DOCKABLES_BY_ID.get(id);
+	}
+	
+	public static Set getDockableIds() {
+		synchronized(DOCKABLES_BY_ID) {
+			return new HashSet(DOCKABLES_BY_ID.keySet());
+		}
 	}
 	
 	public static void replaceDockingPort(String oldId, String newId, DockingPort port) {
