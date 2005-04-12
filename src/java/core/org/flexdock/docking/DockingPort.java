@@ -119,4 +119,6 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	
 	public DockingPortProps getDockingProperties();
 	
+	public DockingStrategy getDockingStrategy();
+	
 }

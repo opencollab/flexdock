@@ -363,7 +363,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		return pane;
 	}
 	
-	protected DockingStrategy getDockingStrategy() {
+	public DockingStrategy getDockingStrategy() {
 		return DockingManager.getDockingStrategy(this);
 	}
 
