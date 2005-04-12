@@ -98,8 +98,8 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 		}
 	}
 
-	public void dockingComplete(DockingEvent evt) {
-		super.dockingComplete(evt);
+	public void undockingComplete(DockingEvent evt) {
+		super.undockingComplete(evt);
 		if(evt.getOldDockingPort()==this && this.getViewset().size()==0) {
 			frame.destroy();
 			frame = null;
@@ -137,4 +137,5 @@ public class FloatingViewport extends Viewport implements MouseListener, MouseMo
 	}
 	public void mouseReleased(MouseEvent e) {
 	}
+
 }
