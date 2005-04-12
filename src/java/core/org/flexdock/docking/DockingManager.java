@@ -23,6 +23,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.flexdock.docking.config.ConfigurationManager;
@@ -122,21 +123,31 @@ public class DockingManager {
 	 * @param dockable the <code>Dockable</code> we wish to undock
 	 */
 	public static boolean undock(Dockable dockable) {
-		DockingManager mgr = getDockingManager();
-		if (mgr != null)
-			return mgr.defaultDocker.undock(dockable);
+		DockingStrategy strategy = findDockingStrategy(dockable);
+		if (strategy != null)
+			return strategy.undock(dockable);
 
 		return false; //TODO think of changing it to runtime exception I don't see a situation
 		//when there would be no default docker.
 	}
 
 	public static boolean dock(Dockable dockable, DockingPort port, String region) {
-		DockingManager mgr = getDockingManager();
-		if (mgr != null)
-			return mgr.defaultDocker.dock(dockable, port,  region);
+		DockingStrategy strategy = getDockingStrategy(port);
+		if (strategy != null)
+			return strategy.dock(dockable, port,  region);
 	
 		return false; //TODO think of changing it to runtime exception I don't see a situation
 		//when there would be no docker.
+	}
+	
+	private static DockingStrategy findDockingStrategy(Dockable dockable) {
+		DockingPort port = dockable.getDockingPort();
+		DockingStrategy strategy = port==null? null: port.getDockingStrategy();
+		if(strategy==null) {
+			DockingManager mgr = getDockingManager();
+			strategy = mgr==null? null: mgr.defaultDocker;
+		}
+		return strategy;
 	}
 
 	public static boolean isValidDockingRegion(String region) {
@@ -239,6 +250,10 @@ public class DockingManager {
 	
 	public static Dockable getRegisteredDockable(String id) {
 		return ConfigurationManager.getRegisteredDockable(id);
+	}
+	
+	public static Set getDockableIds() {
+		return ConfigurationManager.getDockableIds();
 	}
 
 	private static Dockable getDragInitiator(Component c) {
