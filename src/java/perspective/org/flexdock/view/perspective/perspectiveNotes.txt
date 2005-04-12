@@ -9,3 +9,5 @@ the perspective or view becomes undocked and
 can no longer be relatively addressed unless
 a view is removed or undocked other view takes over
 this view and new mapping info (ViewDockingInfo) is added.
+
+Get rid of addView and getView methods as DockingManager got new lovely getRegisteredDockable method!

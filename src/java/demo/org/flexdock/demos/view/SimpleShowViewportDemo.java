@@ -79,10 +79,10 @@ public class SimpleShowViewportDemo extends JFrame {
 
 		LayoutManager.getInstance().registerTerritoralView(startPage);
 
-		LayoutManager.getInstance().registerView(view1, new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
-		LayoutManager.getInstance().registerView(view2, new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
-		LayoutManager.getInstance().registerView(view3, new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
-		LayoutManager.getInstance().registerView(view4, new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
+		LayoutManager.getInstance().registerView(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
+		LayoutManager.getInstance().registerView(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
+		LayoutManager.getInstance().registerView(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
+		LayoutManager.getInstance().registerView(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
 		
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);

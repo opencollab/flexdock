@@ -18,7 +18,7 @@ public interface IPerspective {
 	
 	Viewport getMainViewport();
 	
-	void addView(String viewId, View view);
+	void addView(View view);
 
 	boolean removeView(String viewId);
 	

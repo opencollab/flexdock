@@ -147,10 +147,10 @@ public class PerspectiveDemo3 extends JFrame {
 	private IPerspective createPerspective1(Viewport viewport, View centerView) {
 		IPerspective perspective = new Perspective("test1");
 		
-		perspective.addView("start.page", centerView);
-		perspective.addView("solution.explorer", solutionExplorerView);
-		perspective.addView("task.list", taskListView);
-		perspective.addView("class.view", classViewView);
+		perspective.addView(centerView);
+		perspective.addView(solutionExplorerView);
+		perspective.addView(taskListView);
+		perspective.addView(classViewView);
 		
 		perspective.setMainViewport(viewport);
 		perspective.setTerritoralView(centerView);
@@ -169,10 +169,10 @@ public class PerspectiveDemo3 extends JFrame {
 		perspective.setMainViewport(viewport);
 		perspective.setTerritoralView(centerView);
 
-		perspective.addView("start.page", centerView);
-		perspective.addView("solution.explorer", this.solutionExplorerView);
-		perspective.addView("task.list", this.taskListView);
-		perspective.addView("class.view", this.classViewView);
+		perspective.addView(centerView);
+		perspective.addView(this.solutionExplorerView);
+		perspective.addView(this.taskListView);
+		perspective.addView(this.classViewView);
 		
 		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
 		perspective.dock("solution.explorer", "task.list", DockingPort.SOUTH_REGION, .5f);
@@ -183,7 +183,7 @@ public class PerspectiveDemo3 extends JFrame {
 	
 	private static View createStartPage() {
 		String name = "Start Page";
-		String id = "startPage";
+		String id = "start.page";
 		final Icon miscIcons = ResourceManager.createIcon("org/flexdock/demos/view/ms_misc_icons001.png");
 		final Image tabsImg = ResourceManager.createImage("org/flexdock/demos/view/ms_tabs001.png");
 		final Color tabRunBG = new Color(247, 243, 233);

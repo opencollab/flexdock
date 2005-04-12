@@ -159,7 +159,7 @@ public class PerspectiveManager implements IPerspectiveManager {
 		IPerspective perspective = getPerspective(perspectiveId);
 
 		if (perspective != null) {
-			applyPerspective(perspectiveId);
+			applyPerspective(perspective);
 		}
 	}
 	

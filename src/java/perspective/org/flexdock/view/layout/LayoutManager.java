@@ -24,7 +24,6 @@ public class LayoutManager implements ILayoutManager {
 
 	private static LayoutManager SINGLETON = null;
 	
-	private HashMap m_registeredViews = new HashMap();
 	private HashMap m_registeredListeners = new HashMap();
 	
 	private PreservingStrategy m_preservingStrategy = new SimplePreservingStrategy();
@@ -99,13 +98,15 @@ public class LayoutManager implements ILayoutManager {
 	/**
 	 * @see org.flexdock.view.layout.ILayoutManager#registerView(org.flexdock.view.View)
 	 */
-	public void registerView(View view, ViewDockingInfo viewDockingInfo) {
-		if (view == null) throw new IllegalArgumentException("view cannot be null");
+	public void registerView(String viewId, ViewDockingInfo viewDockingInfo) {
+		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
 		if (viewDockingInfo == null) throw new IllegalArgumentException("viewDockingInfo cannot be null");
 
+		View view = (View) DockingManager.getRegisteredDockable(viewId);
+
 		DockingHandler dockingHandler = new DockingHandler();
-		m_registeredViews.put(view.getPersistentId(), view);
-		m_registeredListeners.put(view.getPersistentId(), dockingHandler);
+		//m_registeredViews.put(view.getPersistentId(), view);
+		m_registeredListeners.put(viewId, dockingHandler);
 		view.addDockingListener(dockingHandler);
 		m_preservingStrategy.setMainDockingInfo(view, viewDockingInfo);
 	}
@@ -114,17 +115,11 @@ public class LayoutManager implements ILayoutManager {
 	 * @see org.flexdock.view.layout.ILayoutManager#unregisterView(java.lang.String)
 	 */
 	public void unregisterView(String viewId) {
-		View view = (View) m_registeredViews.get(viewId);
-		m_registeredViews.remove(viewId);
+		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
+
+		View view = (View) DockingManager.getRegisteredDockable(viewId);
 		DockingListener dockingListener = (DockingListener) m_registeredListeners.get(viewId);
 		view.removeDockingListener(dockingListener);
-	}
-	
-	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#unregisterView(org.flexdock.view.View)
-	 */
-	public void unregisterView(View view) {
-		unregisterView(view.getPersistentId());
 	}
 	
 	/**

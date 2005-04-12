@@ -17,10 +17,7 @@ import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
 
 /**
- * @author mateusz
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author Mateusz Szczap
  */
 public class Perspective implements IPerspective {
 	
@@ -69,10 +66,9 @@ public class Perspective implements IPerspective {
 	/**
 	 * @see org.flexdock.view.perspective.IPerspective#addView(java.lang.String, org.flexdock.view.View)
 	 */
-	public void addView(String viewId, View view) {
-		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
+	public void addView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
-		m_views.put(viewId, view);
+		m_views.put(view.getPersistentId(), view);
 	}
 	
 	/**
@@ -165,7 +161,8 @@ public class Perspective implements IPerspective {
 		return (ViewDockingInfo) m_dockingInfosList.get(index);
 	}
 	
-	public static class ViewDockingInfo {
+	//friendly
+	static class ViewDockingInfo {
 		
 		private View m_sourceView = null;
 		private View m_targetView = null;
