@@ -35,32 +35,41 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			return null;
 		
 		DockingPort port = dockable.getDockingPort();
-		Dockable sibling = findDockable(port, dockable.getDockable(), region);
+		String startRegion = findRegion(dockable.getDockable());
+		Dockable sibling = findDockable(port, dockable.getDockable(), region, startRegion);
 
 		return sibling;
 		
 	}
 	
-	private static Dockable findDockable(DockingPort port, Component self, String region) {
+	private static Dockable findDockable(DockingPort port, Component self, String region, String startRegion) {
 		if(port==null)
 			return null;
 		
 		Component docked = port.getDockedComponent();
+		// if we're not a split port, then there is no concept of 'outer regions'.
+		// jump up a level to find the parent split port
 		if(!(docked instanceof JSplitPane)) {
-			port = DockingManager.getDockingPort((Component)port);
-			return findDockable(port, self, region);
+			DockingPort superPort = DockingManager.getDockingPort((Component)port);
+			return findDockable(superPort, self, region, startRegion);
 		}
 		
 		JSplitPane split = (JSplitPane)docked;
 		Component sibling = port.getComponent(region);
-		if(sibling==self)
+		if(sibling==self) {
+			if(!(self instanceof JSplitPane)) {
+				DockingPort superPort = DockingManager.getDockingPort((Component)port);
+				return findDockable(superPort, self, region, startRegion);				
+			}
 			return null;
+		}
 		
 		if(sibling instanceof JSplitPane) {
 			// go one level deeper
 			DockingPort subPort = DockingManager.getDockingPort(sibling);
-			String subRegion = DockingUtility.translateRegion((JSplitPane)sibling, region);
-			return findDockable(subPort, self, subRegion);
+			Component other = port.getComponent(DockingUtility.flipRegion(region));
+			String subRegion = findSubRegion((JSplitPane)sibling, other, region, startRegion);
+			return findDockable(subPort, self, subRegion, startRegion);
 		}
 		
 		// if we have no direct sibling in the specified region, the jump
@@ -68,10 +77,45 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		if(sibling==null) {
 			DockingPort superPort = DockingManager.getDockingPort((Component)port);
 			self = port.getDockedComponent();
-			return findDockable(superPort, self, region);
+			return findDockable(superPort, self, region, startRegion);
 		}
 
 		return DockingManager.getRegisteredDockable(sibling);
+	}
+	
+	private static String findSubRegion(JSplitPane split, Component other, String targetRegion, String baseRegion) {
+		String region = DockingUtility.translateRegion(split, targetRegion);
+		if(!(other instanceof JSplitPane))
+			return region;
+
+		
+		boolean translated = !targetRegion.equals(region);
+		if(translated && !DockingUtility.isAxisEquivalent(region, baseRegion)) {
+			region = DockingUtility.flipRegion(region);
+		}
+
+		return region;
+	}
+	
+	public static String findRegion(Component comp) {
+		DockingPort port = DockingManager.getDockingPort(comp);
+		Component docked = port.getDockedComponent();
+		if(!(docked instanceof JSplitPane)) {
+			DockingPort superPort = DockingManager.getDockingPort((Component)port);
+			docked = superPort.getDockedComponent();
+		}
+		
+		if(!(docked instanceof JSplitPane))
+			return DockingPort.CENTER_REGION;
+		
+		JSplitPane split = (JSplitPane)docked;
+		boolean horiz = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT;
+		Component left = split.getLeftComponent();
+		if(left==port) {
+			return horiz? DockingPort.WEST_REGION: DockingPort.NORTH_REGION;
+		}
+		return horiz? DockingPort.EAST_REGION: DockingPort.SOUTH_REGION;
+			
 	}
 	
 	public boolean dock(Dockable dockable, DockingPort port, String region) {
