@@ -69,4 +69,42 @@ public class DockingUtility {
 		}
 		return region;
 	}
+	
+	public static String flipRegion(String region) {
+		if(!DockingManager.isValidDockingRegion(region) || DockingPort.CENTER_REGION.equals(region))
+			return DockingPort.CENTER_REGION;
+		
+		if(DockingPort.NORTH_REGION.equals(region))
+			return DockingPort.SOUTH_REGION;
+		
+		if(DockingPort.SOUTH_REGION.equals(region))
+			return DockingPort.NORTH_REGION;
+		
+		if(DockingPort.EAST_REGION.equals(region))
+			return DockingPort.WEST_REGION;
+		
+		return DockingPort.EAST_REGION;
+	}
+	
+	public static boolean isAxisEquivalent(String region, String otherRegion) {
+		if(!DockingManager.isValidDockingRegion(region) || !DockingManager.isValidDockingRegion(otherRegion))
+			return false;
+		
+		if(region.equals(otherRegion))
+			return true;
+		
+		if(DockingPort.CENTER_REGION.equals(region))
+			return false;
+		
+		if(DockingPort.NORTH_REGION.equals(region))
+			return DockingPort.WEST_REGION.equals(otherRegion);
+		if(DockingPort.SOUTH_REGION.equals(region))
+			return DockingPort.EAST_REGION.equals(otherRegion);
+		if(DockingPort.EAST_REGION.equals(region))
+			return DockingPort.SOUTH_REGION.equals(otherRegion);
+		if(DockingPort.WEST_REGION.equals(region))
+			return DockingPort.NORTH_REGION.equals(otherRegion);
+		
+		return false;
+	}
 }
