@@ -76,7 +76,13 @@ public class LayoutManager implements ILayoutManager {
 			View sourceView = dockingInfo.getView();
 			String region = dockingInfo.getRegion();
 			float ratio = dockingInfo.getRatio();
-			docked = sourceView.dock(view, region, ratio);
+			View siblingView = (View) sourceView.getSibling(region);
+			if (siblingView != null) {
+				docked = siblingView.dock(view);
+			} else {
+				docked = sourceView.dock(view, region, ratio);
+			}
+			
 		}
 
 		if (!docked && m_territoralView != null) {
