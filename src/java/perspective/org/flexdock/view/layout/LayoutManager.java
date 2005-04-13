@@ -1,9 +1,3 @@
-/*
- * Created on 2005-04-09
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package org.flexdock.view.layout;
 
 import java.util.HashMap;
@@ -67,7 +61,16 @@ public class LayoutManager implements ILayoutManager {
 				View sourceView = accessoryDockingInfos[i].getView();
 				String region = accessoryDockingInfos[i].getRegion();
 				float ratio = accessoryDockingInfos[i].getRatio();
-				docked = sourceView.dock(view, region, ratio);
+				if (sourceView == m_territoralView) {
+					View siblingView = (View) sourceView.getSibling(region);
+					if (siblingView != null) {
+						docked = siblingView.dock(view);
+					} else {
+						docked = sourceView.dock(view, region, ratio);
+					}
+				} else {
+					docked = sourceView.dock(view, region, ratio);
+				}
 				if (docked) break;
 			}
 		}
