@@ -233,20 +233,6 @@ public class ViewportDemo extends JFrame {
 				dialog.setVisible(true);
 				dialog.pack();
 				testSiblings();
-				
-				/*
-				String id = null;
-				id = "startPage";
-				id = "solution.explorer";
-				//				id = "task.list";
-				//				id = "class.view";
-				//				id = "message.log";
-				Dockable dockable = DockingManager.getRegisteredDockable(id);
-
-				Dockable sibling = null;
-				sibling = dockable.getSibling(DockingPort.EAST_REGION);
-				System.out.println(sibling);
-				*/
 			}
 		});
 
