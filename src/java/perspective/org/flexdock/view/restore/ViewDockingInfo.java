@@ -1,4 +1,4 @@
-package org.flexdock.view.layout;
+package org.flexdock.view.restore;
 
 import org.flexdock.docking.DockingPort;
 import org.flexdock.view.View;

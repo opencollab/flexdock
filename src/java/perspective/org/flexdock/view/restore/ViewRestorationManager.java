@@ -1,4 +1,4 @@
-package org.flexdock.view.layout;
+package org.flexdock.view.restore;
 
 import java.util.HashMap;
 
@@ -14,9 +14,9 @@ import org.flexdock.view.View;
 /**
  * @author Mateusz Szczap
  */
-public class LayoutManager implements ILayoutManager {
+public class ViewRestorationManager implements IViewRestorationManager {
 
-	private static LayoutManager SINGLETON = null;
+	private static ViewRestorationManager SINGLETON = null;
 	
 	private HashMap m_registeredListeners = new HashMap();
 	
@@ -24,15 +24,15 @@ public class LayoutManager implements ILayoutManager {
 
 	private View m_territoralView = null;
 	
-	public static LayoutManager getInstance() {
+	public static ViewRestorationManager getInstance() {
 		if (SINGLETON == null) {
-			SINGLETON = new LayoutManager();
+			SINGLETON = new ViewRestorationManager();
 		}
 		return SINGLETON;
 	}
 
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#registerTerritoralView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#registerTerritoralView(org.flexdock.view.View)
 	 */
 	public void registerTerritoralView(View territoralView) {
 		if (territoralView == null) throw new IllegalArgumentException("territoralView cannot be null");
@@ -41,7 +41,7 @@ public class LayoutManager implements ILayoutManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#showView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#showView(org.flexdock.view.View)
 	 */
 	public boolean showView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
@@ -96,7 +96,7 @@ public class LayoutManager implements ILayoutManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#hideView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#hideView(org.flexdock.view.View)
 	 */
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
@@ -105,7 +105,7 @@ public class LayoutManager implements ILayoutManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#registerView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#registerView(org.flexdock.view.View)
 	 */
 	public void registerView(String viewId, ViewDockingInfo viewDockingInfo) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
@@ -121,7 +121,7 @@ public class LayoutManager implements ILayoutManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#unregisterView(java.lang.String)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#unregisterView(java.lang.String)
 	 */
 	public void unregisterView(String viewId) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
@@ -132,14 +132,14 @@ public class LayoutManager implements ILayoutManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#setPreservingStrategy(org.flexdock.view.layout.PreservingStrategy)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#setPreservingStrategy(org.flexdock.view.layout.PreservingStrategy)
 	 */
 	public void setPreservingStrategy(PreservingStrategy preservingStrategy) {
 		m_preservingStrategy = preservingStrategy;
 	}
 
 	/**
-	 * @see org.flexdock.view.layout.ILayoutManager#getPreservingStrategy()
+	 * @see org.flexdock.view.restore.IViewRestorationManager#getPreservingStrategy()
 	 */
 	public PreservingStrategy getPreservingStrategy() {
 		return m_preservingStrategy;

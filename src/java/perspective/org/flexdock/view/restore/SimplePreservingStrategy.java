@@ -4,7 +4,7 @@
  * TODO To change the template for this generated file go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-package org.flexdock.view.layout;
+package org.flexdock.view.restore;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,14 +48,14 @@ public class SimplePreservingStrategy implements PreservingStrategy {
 	}
 
 	/**
-	 * @see org.flexdock.view.layout.PreservingStrategy#getMainDockingInfo(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.PreservingStrategy#getMainDockingInfo(org.flexdock.view.View)
 	 */
 	public ViewDockingInfo getMainDockingInfo(View view) {
 		return (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
 	}
 
 	/**
-	 * @see org.flexdock.view.layout.PreservingStrategy#setMainDockingInfo(org.flexdock.view.View, org.flexdock.view.layout.ViewDockingInfo)
+	 * @see org.flexdock.view.restore.PreservingStrategy#setMainDockingInfo(org.flexdock.view.View, org.flexdock.view.layout.ViewDockingInfo)
 	 */
 	public void setMainDockingInfo(View view, ViewDockingInfo dockingInfo) {
 		m_mainDockingInfos.put(view.getPersistentId(), dockingInfo);

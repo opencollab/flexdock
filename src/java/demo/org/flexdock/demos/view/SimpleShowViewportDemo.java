@@ -31,8 +31,8 @@ import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
-import org.flexdock.view.layout.LayoutManager;
-import org.flexdock.view.layout.ViewDockingInfo;
+import org.flexdock.view.restore.ViewRestorationManager;
+import org.flexdock.view.restore.ViewDockingInfo;
 
 /**
  * @author Christopher Butler
@@ -77,12 +77,12 @@ public class SimpleShowViewportDemo extends JFrame {
 		view3 = createView("class.view", "Class View");
 		view4 = createView("message.log", "Message Log");
 
-		LayoutManager.getInstance().registerTerritoralView(startPage);
+		ViewRestorationManager.getInstance().registerTerritoralView(startPage);
 
-		LayoutManager.getInstance().registerView(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
-		LayoutManager.getInstance().registerView(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
-		LayoutManager.getInstance().registerView(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
-		LayoutManager.getInstance().registerView(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
+		ViewRestorationManager.getInstance().registerView(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
+		ViewRestorationManager.getInstance().registerView(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
+		ViewRestorationManager.getInstance().registerView(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
+		ViewRestorationManager.getInstance().registerView(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
 		
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);
@@ -141,7 +141,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			LayoutManager.getInstance().showView(m_commonView);
+			ViewRestorationManager.getInstance().showView(m_commonView);
 		}
 
 	}
@@ -263,7 +263,7 @@ public class SimpleShowViewportDemo extends JFrame {
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
-        	LayoutManager.getInstance().hideView(m_view);
+        	ViewRestorationManager.getInstance().hideView(m_view);
         }
 		
 	}
