@@ -31,8 +31,8 @@ import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
-import org.flexdock.view.restore.ViewRestorationManager;
 import org.flexdock.view.restore.ViewDockingInfo;
+import org.flexdock.view.restore.ViewRestorationManager;
 
 /**
  * @author Christopher Butler
@@ -79,10 +79,10 @@ public class SimpleShowViewportDemo extends JFrame {
 
 		ViewRestorationManager.getInstance().registerTerritoralView(startPage);
 
-		ViewRestorationManager.getInstance().registerView(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
-		ViewRestorationManager.getInstance().registerView(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
-		ViewRestorationManager.getInstance().registerView(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
-		ViewRestorationManager.getInstance().registerView(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
+		ViewRestorationManager.getInstance().registerViewDockingInfo(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
+		ViewRestorationManager.getInstance().registerViewDockingInfo(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
+		ViewRestorationManager.getInstance().registerViewDockingInfo(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
+		ViewRestorationManager.getInstance().registerViewDockingInfo(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
 		
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);

@@ -16,10 +16,18 @@ public interface IViewRestorationManager {
 
 	void registerTerritoralView(View view);
 	
-	void registerView(String viewId, ViewDockingInfo mainViewDockingInfo);
+	void registerViewDockingInfo(String viewId, ViewDockingInfo mainViewDockingInfo);
 
-	void unregisterView(String viewId);
+	void unregisterViewDockingInfo(String viewId);
 
+	void addShowViewHandler(ShowViewHandler showViewHandler);
+	
+	void removeShowViewHandler(ShowViewHandler showViewHandler);
+	
+	void removeAllShowViewHandlers();
+	
+	void initializeDefaultShowViewHandlers();
+	
 	boolean showView(View view);
 
 	boolean hideView(View view); 

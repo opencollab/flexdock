@@ -1,14 +1,12 @@
 package org.flexdock.view.restore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 
 /**
@@ -23,6 +21,12 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	private PreservingStrategy m_preservingStrategy = new SimplePreservingStrategy();
 
 	private View m_territoralView = null;
+
+	private ArrayList m_showViewHandlers = new ArrayList();
+	
+	private ViewRestorationManager() {
+		initializeDefaultShowViewHandlers();
+	}
 	
 	public static ViewRestorationManager getInstance() {
 		if (SINGLETON == null) {
@@ -45,51 +49,23 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	 */
 	public boolean showView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
-		
-		if (DockingManager.isDocked((Dockable) view)) {
-			view.setActive(true);
-			SwingUtility.focus(view);
-			return true;
-		}
-		
+
 		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_preservingStrategy.getMainDockingInfo(view);
 		ViewDockingInfo[] accessoryDockingInfos = m_preservingStrategy.getAccessoryDockingInfos(view);
 
-		boolean docked = false;
-		if (accessoryDockingInfos != null && accessoryDockingInfos.length > 0) {
-			for (int i=0; i<accessoryDockingInfos.length; i++) {
-				View sourceView = accessoryDockingInfos[i].getView();
-				String region = accessoryDockingInfos[i].getRegion();
-				float ratio = accessoryDockingInfos[i].getRatio();
-				if (sourceView == m_territoralView) {
-					View siblingView = (View) sourceView.getSibling(region);
-					if (siblingView != null) {
-						docked = siblingView.dock(view);
-					} else {
-						docked = sourceView.dock(view, region, ratio);
-					}
-				} else {
-					docked = sourceView.dock(view, region, ratio);
-				}
-				if (docked) break;
-			}
-		}
+		HashMap context = new HashMap();
+		context.put("territoral.view", m_territoralView);
+		context.put("main.docking.info", dockingInfo);
+		context.put("accessory.docking.infos", accessoryDockingInfos);
 		
-		if (!docked) {
-			View sourceView = dockingInfo.getView();
-			String region = dockingInfo.getRegion();
-			float ratio = dockingInfo.getRatio();
-			View siblingView = (View) sourceView.getSibling(region);
-			if (siblingView != null) {
-				docked = siblingView.dock(view);
-			} else {
-				docked = sourceView.dock(view, region, ratio);
+		boolean docked = false;
+		for (int i=0; i<m_showViewHandlers.size(); i++) {
+			ShowViewHandler showViewHandler = (ShowViewHandler) m_showViewHandlers.get(i);
+			boolean isShown = showViewHandler.showView(view, context);
+			if (isShown) {
+				docked = isShown;
+				break;
 			}
-			
-		}
-
-		if (!docked && m_territoralView != null) {
-			docked = m_territoralView.dock(view, DockingPort.EAST_REGION, RegionChecker.DEFAULT_SIBLING_SIZE);
 		}
 		
 		return docked;
@@ -105,25 +81,24 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#registerView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#registerViewDockingInfo(java.lang.String, org.flexdock.view.restore.ViewDockingInfo)
 	 */
-	public void registerView(String viewId, ViewDockingInfo viewDockingInfo) {
+	public void registerViewDockingInfo(String viewId, ViewDockingInfo mainViewDockingInfo) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
-		if (viewDockingInfo == null) throw new IllegalArgumentException("viewDockingInfo cannot be null");
+		if (mainViewDockingInfo == null) throw new IllegalArgumentException("viewDockingInfo cannot be null");
 
 		View view = (View) DockingManager.getRegisteredDockable(viewId);
 
 		DockingHandler dockingHandler = new DockingHandler();
-		//m_registeredViews.put(view.getPersistentId(), view);
 		m_registeredListeners.put(viewId, dockingHandler);
 		view.addDockingListener(dockingHandler);
-		m_preservingStrategy.setMainDockingInfo(view, viewDockingInfo);
+		m_preservingStrategy.setMainDockingInfo(view, mainViewDockingInfo);
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#unregisterView(java.lang.String)
+	 * @see org.flexdock.view.restore.IViewRestorationManager#unregisterViewDockingInfo(java.lang.String)
 	 */
-	public void unregisterView(String viewId) {
+	public void unregisterViewDockingInfo(String viewId) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
 
 		View view = (View) DockingManager.getRegisteredDockable(viewId);
@@ -131,6 +106,15 @@ public class ViewRestorationManager implements IViewRestorationManager {
 		view.removeDockingListener(dockingListener);
 	}
 	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#removeShowViewHandler(org.flexdock.view.restore.ShowViewHandler)
+	 */
+	public void removeShowViewHandler(ShowViewHandler showViewHandler) {
+		if (showViewHandler == null) throw new NullPointerException("showViewHandler cannot be null");
+		
+		m_showViewHandlers.remove(showViewHandler);
+	}
+
 	/**
 	 * @see org.flexdock.view.restore.IViewRestorationManager#setPreservingStrategy(org.flexdock.view.layout.PreservingStrategy)
 	 */
@@ -143,6 +127,32 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	 */
 	public PreservingStrategy getPreservingStrategy() {
 		return m_preservingStrategy;
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#initializeDefaultShowViewHandlers()
+	 */
+	public void initializeDefaultShowViewHandlers() {
+		addShowViewHandler(new ViewShownHandler());
+		addShowViewHandler(new AccessoryShowViewHandler());
+		addShowViewHandler(new MainShowViewHandler());
+		addShowViewHandler(new LastResortShowViewHandler());
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#addShowViewHandler(org.flexdock.view.perspective.ShowViewHandler)
+	 */
+	public void addShowViewHandler(ShowViewHandler showViewHandler) {
+		if (showViewHandler == null) throw new NullPointerException("showViewHandler cannot be null");
+		
+		m_showViewHandlers.add(showViewHandler);
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#removeAllShowViewHandlers()
+	 */
+	public void removeAllShowViewHandlers() {
+		m_showViewHandlers.clear();
 	}
 	
 	private class DockingHandler extends DockingListener.DockingAdapter {
