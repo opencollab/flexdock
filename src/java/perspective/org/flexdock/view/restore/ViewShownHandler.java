@@ -12,6 +12,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
+import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * Mateusz Szczap
@@ -21,8 +22,9 @@ public class ViewShownHandler implements ShowViewHandler {
 	public boolean showView(View view, Map context) {
 
 		if (DockingManager.isDocked((Dockable) view)) {
-			view.setActive(true);
+			ViewTracker.requestViewActivation(view);
 			SwingUtility.focus(view);
+
 			return true;
 		}
 
