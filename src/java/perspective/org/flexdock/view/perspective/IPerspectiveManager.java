@@ -23,6 +23,8 @@ public interface IPerspectiveManager extends PerspectiveMonitor {
 
 	void applyPerspective(String perspectiveId);
 	
+	void applyDefaultPerspective();
+	
 	void clearPerspective(IPerspective perspective);
 
 	IPerspective createPerspective(String perspectiveName, Viewport centralViewport);

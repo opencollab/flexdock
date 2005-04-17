@@ -169,6 +169,15 @@ public class PerspectiveManager implements IPerspectiveManager {
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#applyDefaultPerspective()
+	 */
+	public void applyDefaultPerspective() {
+		if (m_defaultPerspective != null) {
+			applyPerspective(m_defaultPerspective);
+		}
+	}
+	
+	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#undockAll(org.flexdock.view.perspective.IPerspective)
 	 */
 	public void clearPerspective(IPerspective perspective) {
