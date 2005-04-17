@@ -13,10 +13,7 @@ import org.flexdock.docking.RegionChecker;
 import org.flexdock.view.View;
 
 /**
- * @author mati
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * @author Mateusz Szczap
  */
 public class LastResortShowViewHandler implements ShowViewHandler {
 

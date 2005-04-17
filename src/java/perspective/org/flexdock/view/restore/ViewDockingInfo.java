@@ -13,7 +13,7 @@ public class ViewDockingInfo {
 	
 	private String m_region = DockingPort.UNKNOWN_REGION;
 	
-	private float m_ratio = -1.0f;
+	private float m_ratio = -1.0F;
 
 	public ViewDockingInfo(View view, String region, float ratio) {
 		m_view = view;

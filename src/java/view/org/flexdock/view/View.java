@@ -291,8 +291,8 @@ public class View extends JComponent implements Dockable {
 		return getDockingProperties().isTerritoryBlocked(region).booleanValue();
 	}
 	
-	public void setTerritoryBlocked(String region, boolean b) {
-		getDockingProperties().setTerritoryBlocked(region, b);
+	public void setTerritoryBlocked(String region, boolean blocked) {
+		getDockingProperties().setTerritoryBlocked(region, blocked);
 	}
 
 	public String getTabText() {
