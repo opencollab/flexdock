@@ -32,7 +32,7 @@ import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
 import org.flexdock.view.restore.ViewDockingInfo;
-import org.flexdock.view.restore.ViewRestorationManager;
+import org.flexdock.view.restore.ViewManager;
 
 /**
  * @author Christopher Butler
@@ -68,7 +68,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		Viewport viewport = new Viewport();
-		ViewRestorationManager.getInstance().registerCenterViewport(viewport);
+		ViewManager.getInstance().registerCenterViewport(viewport);
 		panel.add(viewport, BorderLayout.CENTER);
 		
 		View startPage = createStartPage();
@@ -78,12 +78,12 @@ public class SimpleShowViewportDemo extends JFrame {
 		view3 = createView("class.view", "Class View");
 		view4 = createView("message.log", "Message Log");
 
-		ViewRestorationManager.getInstance().registerTerritoralView(startPage);
+		ViewManager.getInstance().registerTerritoralView(startPage);
 
-		ViewRestorationManager.getInstance().registerViewDockingInfo(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
-		ViewRestorationManager.getInstance().registerViewDockingInfo(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
-		ViewRestorationManager.getInstance().registerViewDockingInfo(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
-		ViewRestorationManager.getInstance().registerViewDockingInfo(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
+		ViewManager.getInstance().registerViewDockingInfo(view1.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
+		ViewManager.getInstance().registerViewDockingInfo(view2.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
+		ViewManager.getInstance().registerViewDockingInfo(view3.getPersistentId(), new ViewDockingInfo(view1, DockingPort.EAST_REGION, .3f));
+		ViewManager.getInstance().registerViewDockingInfo(view4.getPersistentId(), new ViewDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
 		
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);
@@ -144,7 +144,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			ViewRestorationManager.getInstance().showView(m_commonView);
+			ViewManager.getInstance().showView(m_commonView);
 		}
 
 	}
@@ -266,7 +266,7 @@ public class SimpleShowViewportDemo extends JFrame {
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
-        	ViewRestorationManager.getInstance().hideView(m_view);
+        	ViewManager.getInstance().hideView(m_view);
         }
 		
 	}
@@ -286,7 +286,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			ViewRestorationManager.getInstance().maximizeView(m_view);
+			ViewManager.getInstance().maximizeView(m_view);
 		}
 		
 	}
@@ -306,7 +306,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			ViewRestorationManager.getInstance().unmaximizeView(m_view);
+			ViewManager.getInstance().unmaximizeView(m_view);
 		}
 		
 	}

@@ -16,9 +16,9 @@ import org.flexdock.view.Viewport;
 /**
  * @author Mateusz Szczap
  */
-public class ViewRestorationManager implements IViewRestorationManager {
+public class ViewManager implements IViewManager {
 
-	private static ViewRestorationManager SINGLETON = null;
+	private static ViewManager SINGLETON = null;
 	
 	private HashMap m_registeredListeners = new HashMap();
 
@@ -34,19 +34,19 @@ public class ViewRestorationManager implements IViewRestorationManager {
 
 	private HashMap m_accessoryDockingInfos = new HashMap();
 
-	private ViewRestorationManager() {
+	private ViewManager() {
 		initializeDefaultShowViewHandlers();
 	}
 	
-	public static ViewRestorationManager getInstance() {
+	public static ViewManager getInstance() {
 		if (SINGLETON == null) {
-			SINGLETON = new ViewRestorationManager();
+			SINGLETON = new ViewManager();
 		}
 		return SINGLETON;
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#registerTerritoralView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewManager#registerTerritoralView(org.flexdock.view.View)
 	 */
 	public void registerTerritoralView(View territoralView) {
 		if (territoralView == null) throw new IllegalArgumentException("territoralView cannot be null");
@@ -55,7 +55,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#showView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewManager#showView(org.flexdock.view.View)
 	 */
 	public boolean showView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
@@ -86,7 +86,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#hideView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewManager#hideView(org.flexdock.view.View)
 	 */
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
@@ -100,7 +100,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#registerCenterViewport(org.flexdock.view.Viewport)
+	 * @see org.flexdock.view.restore.IViewManager#registerCenterViewport(org.flexdock.view.Viewport)
 	 */
 	public void registerCenterViewport(Viewport viewport) {
 		if (viewport == null) throw new IllegalArgumentException("viewPort cannot be null");
@@ -109,7 +109,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#maximizeView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewManager#maximizeView(org.flexdock.view.View)
 	 */
 	public void maximizeView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
@@ -123,14 +123,14 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#unmaximizeView(org.flexdock.view.View)
+	 * @see org.flexdock.view.restore.IViewManager#unmaximizeView(org.flexdock.view.View)
 	 */
 	public void unmaximizeView(View view) {
 		m_centerViewport.dock(m_territoralView);
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#registerViewDockingInfo(java.lang.String, org.flexdock.view.restore.ViewDockingInfo)
+	 * @see org.flexdock.view.restore.IViewManager#registerViewDockingInfo(java.lang.String, org.flexdock.view.restore.ViewDockingInfo)
 	 */
 	public void registerViewDockingInfo(String viewId, ViewDockingInfo mainViewDockingInfo) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
@@ -146,7 +146,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#unregisterViewDockingInfo(java.lang.String)
+	 * @see org.flexdock.view.restore.IViewManager#unregisterViewDockingInfo(java.lang.String)
 	 */
 	public void unregisterViewDockingInfo(String viewId) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
@@ -157,7 +157,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#removeShowViewHandler(org.flexdock.view.restore.ShowViewHandler)
+	 * @see org.flexdock.view.restore.IViewManager#removeShowViewHandler(org.flexdock.view.restore.ShowViewHandler)
 	 */
 	public void removeShowViewHandler(ShowViewHandler showViewHandler) {
 		if (showViewHandler == null) throw new NullPointerException("showViewHandler cannot be null");
@@ -166,7 +166,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#initializeDefaultShowViewHandlers()
+	 * @see org.flexdock.view.restore.IViewManager#initializeDefaultShowViewHandlers()
 	 */
 	public void initializeDefaultShowViewHandlers() {
 		addShowViewHandler(new ViewShownHandler());
@@ -176,7 +176,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#addShowViewHandler(org.flexdock.view.perspective.ShowViewHandler)
+	 * @see org.flexdock.view.restore.IViewManager#addShowViewHandler(org.flexdock.view.perspective.ShowViewHandler)
 	 */
 	public void addShowViewHandler(ShowViewHandler showViewHandler) {
 		if (showViewHandler == null) throw new NullPointerException("showViewHandler cannot be null");
@@ -185,14 +185,14 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#removeAllShowViewHandlers()
+	 * @see org.flexdock.view.restore.IViewManager#removeAllShowViewHandlers()
 	 */
 	public void removeAllShowViewHandlers() {
 		m_showViewHandlers.clear();
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#addViewStateListener(org.flexdock.view.restore.ViewStateListener)
+	 * @see org.flexdock.view.restore.IViewManager#addViewStateListener(org.flexdock.view.restore.ViewStateListener)
 	 */
 	public void addViewStateListener(ViewStateListener viewStateListener) {
 		if (viewStateListener == null) throw new IllegalArgumentException("viewStateListener cannot be null");
@@ -201,7 +201,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#removeViewStateListener(org.flexdock.view.restore.ViewStateListener)
+	 * @see org.flexdock.view.restore.IViewManager#removeViewStateListener(org.flexdock.view.restore.ViewStateListener)
 	 */
 	public void removeViewStateListener(ViewStateListener viewStateListener) {
 		if (viewStateListener == null) throw new IllegalArgumentException("viewStateListener cannot be null");
@@ -210,7 +210,7 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#getViewStateListeners()
+	 * @see org.flexdock.view.restore.IViewManager#getViewStateListeners()
 	 */
 	public ViewStateListener[] getViewStateListeners() {
 		return (ViewStateListener[]) m_viewStateListeners.toArray(new ViewStateListener[]{});

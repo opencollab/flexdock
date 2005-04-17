@@ -7,7 +7,7 @@ import org.flexdock.view.Viewport;
  * 
  * @author Mateusz Szczap
  */
-public interface IViewRestorationManager extends ViewStateMonitor {
+public interface IViewManager extends ViewStateMonitor {
 
 	void registerCenterViewport(Viewport viewport);
 	
