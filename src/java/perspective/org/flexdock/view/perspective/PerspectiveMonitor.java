@@ -18,6 +18,6 @@ public interface PerspectiveMonitor {
 
 	void removePerspectiveListener(PerspectiveListener perspectiveListener);
 	
-	IPerspective[] getPerspectiveListners();
+	IPerspective[] getPerspectiveListeners();
 	
 }

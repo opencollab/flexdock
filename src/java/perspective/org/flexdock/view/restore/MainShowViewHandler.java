@@ -16,9 +16,9 @@ public class MainShowViewHandler implements ShowViewHandler {
 
 		ViewDockingInfo mainViewDockingInfo = (ViewDockingInfo) context.get("main.docking.info");
 		if (mainViewDockingInfo == null) return false;
-		
-		boolean docked = false;
 
+		boolean docked = false;
+		
 		if (!docked) {
 			View sourceView = mainViewDockingInfo.getView();
 			String region = mainViewDockingInfo.getRegion();

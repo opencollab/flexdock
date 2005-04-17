@@ -68,6 +68,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		Viewport viewport = new Viewport();
+		ViewRestorationManager.getInstance().registerCenterViewport(viewport);
 		panel.add(viewport, BorderLayout.CENTER);
 		
 		View startPage = createStartPage();
@@ -96,6 +97,8 @@ public class SimpleShowViewportDemo extends JFrame {
 	private View createView(String id, String text) {
 		View view = new View(id, text);
 		view.addAction(new CloseAction(view));
+		view.addAction(new MaximizeViewAction(view));
+		view.addAction(new UnmaximizeViewAction(view));
 		
 		JPanel p = new JPanel();
 		p.setBorder(new LineBorder(Color.GRAY, 1));
@@ -148,7 +151,7 @@ public class SimpleShowViewportDemo extends JFrame {
 	
 	private static View createStartPage() {
 		String name = "Start Page";
-		String id = "startPage";
+		String id = "start.page";
 		final Icon miscIcons = ResourceManager.createIcon("org/flexdock/demos/view/ms_misc_icons001.png");
 		final Image tabsImg = ResourceManager.createImage("org/flexdock/demos/view/ms_tabs001.png");
 		final Color tabRunBG = new Color(247, 243, 233);
@@ -247,10 +250,10 @@ public class SimpleShowViewportDemo extends JFrame {
 		
 		return view;
 	}
-	
+
 	private class CloseAction extends AbstractAction {
 
-		private View m_view;
+		private View m_view = null;
 		
 		private CloseAction(View view) {
 			m_view = view;
@@ -265,6 +268,46 @@ public class SimpleShowViewportDemo extends JFrame {
         public void actionPerformed(ActionEvent e) {
         	ViewRestorationManager.getInstance().hideView(m_view);
         }
+		
+	}
+
+	private class MaximizeViewAction extends AbstractAction {
+
+		private View m_view = null;
+
+		private MaximizeViewAction(View view) {
+			m_view = view;
+			putValue(Action.NAME, "maximize");
+			putValue(Action.SHORT_DESCRIPTION, "Maximize");
+			putValue(Action.ACTION_COMMAND_KEY, "maximize");
+		}
+
+		/**
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		public void actionPerformed(ActionEvent actionEvent) {
+			ViewRestorationManager.getInstance().maximizeView(m_view);
+		}
+		
+	}
+
+	private class UnmaximizeViewAction extends AbstractAction {
+
+		private View m_view = null;
+
+		private UnmaximizeViewAction(View view) {
+			m_view = view;
+			putValue(Action.NAME, "unmaximize");
+			putValue(Action.SHORT_DESCRIPTION, "Unmaximize");
+			putValue(Action.ACTION_COMMAND_KEY, "unmaximize");
+		}
+
+		/**
+		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+		 */
+		public void actionPerformed(ActionEvent actionEvent) {
+			ViewRestorationManager.getInstance().unmaximizeView(m_view);
+		}
 		
 	}
 

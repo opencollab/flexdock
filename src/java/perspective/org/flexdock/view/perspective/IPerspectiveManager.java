@@ -1,5 +1,7 @@
 package org.flexdock.view.perspective;
 
+import org.flexdock.view.Viewport;
+
 /**
  * @author Mateusz Szczap
  */
@@ -10,6 +12,8 @@ public interface IPerspectiveManager extends PerspectiveMonitor {
 	void removePerspective(String perspectiveId);
 	
 	IPerspective getPerspective(String perspectiveId);
+
+	IPerspective createPerspective(String perspectiveName, Viewport centralViewport);
 	
 	void setDefaultPerspective(String perspectiveId);
 

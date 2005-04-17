@@ -26,7 +26,7 @@ public class Perspective implements IPerspective {
 	private HashMap m_views = new HashMap();
 	private List m_dockingInfosList = new ArrayList();
 	
-	private View m_centerView = null;
+	private String m_centerViewId = null;
 	private Viewport m_centerViewport = null;
 	
 	public Perspective(String perspectiveName) {
@@ -39,10 +39,6 @@ public class Perspective implements IPerspective {
 	 */
 	public String getPerspectiveName() {
 		return m_perspectiveName;
-	}
-	
-	public void setTerritoralView(View centerView) {
-		m_centerView = centerView;
 	}
 	
 	/**
@@ -59,10 +55,13 @@ public class Perspective implements IPerspective {
 		return m_centerViewport;
 	}
 
-	public View getTerritoralView() {
-		return m_centerView;
+	/**
+	 * @see org.flexdock.view.perspective.IPerspective#getCenterViewId()
+	 */
+	public String getCenterViewId() {
+		return m_centerViewId;
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspective#addView(java.lang.String, org.flexdock.view.View)
 	 */
@@ -86,16 +85,30 @@ public class Perspective implements IPerspective {
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspective#dockToCenterViewport(java.lang.String)
+	 */
+	public void dockToCenterViewport(String viewId) {
+		m_centerViewId = viewId;
+	}
+	
+	/**
 	 * @see org.flexdock.view.perspective.IPerspective#dock(org.flexdock.view.View, org.flexdock.view.View, java.lang.String, float)
 	 */
 	public void dock(View sourceView, View targetView, String region, float ratio) {
-		ViewDockingInfo viewDockingInfo = new ViewDockingInfo();
+		Perspective.ViewDockingInfo viewDockingInfo = new Perspective.ViewDockingInfo();
 		viewDockingInfo.m_sourceView = sourceView;
 		viewDockingInfo.m_targetView = targetView;
 		viewDockingInfo.m_relativeRegion = region;
 		viewDockingInfo.m_ratio = ratio;
 		
 		m_dockingInfosList.add(viewDockingInfo);
+	}
+	
+	/**
+	 * @see org.flexdock.view.perspective.IPerspective#dock(java.lang.String)
+	 */
+	public void dock(String viewId) {
+		m_centerViewId = viewId;
 	}
 	
 	/**

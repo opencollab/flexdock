@@ -10,9 +10,7 @@ public interface IPerspective {
 
 	String getPerspectiveName();
 	
-	void setTerritoralView(View view);
-	
-	View getTerritoralView();
+	String getCenterViewId();
 	
 	void setMainViewport(Viewport viewport);
 	
@@ -27,6 +25,8 @@ public interface IPerspective {
 	View[] getViews();
 	
 	Perspective.ViewDockingInfo[] getDockingInfoChain();
+
+	void dockToCenterViewport(String viewId);
 
 	void dock(String view1Id, String view2Id);
 	

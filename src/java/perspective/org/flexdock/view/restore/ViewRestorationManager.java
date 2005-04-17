@@ -8,6 +8,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
+import org.flexdock.view.Viewport;
 
 /**
  * @author Mateusz Szczap
@@ -20,6 +21,8 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	
 	private PreservingStrategy m_preservingStrategy = new SimplePreservingStrategy();
 
+	private Viewport m_centerViewport = null;
+	
 	private View m_territoralView = null;
 
 	private ArrayList m_showViewHandlers = new ArrayList();
@@ -80,6 +83,36 @@ public class ViewRestorationManager implements IViewRestorationManager {
 		return DockingManager.undock(view);
 	}
 
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#registerCenterViewport(org.flexdock.view.Viewport)
+	 */
+	public void registerCenterViewport(Viewport viewport) {
+		if (viewport == null) throw new IllegalArgumentException("viewPort cannot be null");
+		
+		m_centerViewport = viewport;
+	}
+
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#maximizeView(org.flexdock.view.View)
+	 */
+	public void maximizeView(View view) {
+		if (view == null) throw new IllegalArgumentException("view cannot be null");
+		
+		if (view == m_territoralView) {
+			//close all views except territoral view
+		}
+
+		DockingManager.undock(m_territoralView);
+		m_centerViewport.dock(view);
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#unmaximizeView(org.flexdock.view.View)
+	 */
+	public void unmaximizeView(View view) {
+		m_centerViewport.dock(m_territoralView);
+	}
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewRestorationManager#registerViewDockingInfo(java.lang.String, org.flexdock.view.restore.ViewDockingInfo)
 	 */

@@ -7,6 +7,7 @@
 package org.flexdock.view.restore;
 
 import org.flexdock.view.View;
+import org.flexdock.view.Viewport;
 
 /**
  * 
@@ -14,6 +15,9 @@ import org.flexdock.view.View;
  */
 public interface IViewRestorationManager {
 
+	void registerCenterViewport(Viewport viewport);
+	
+	//TODO should we get rid of it?
 	void registerTerritoralView(View view);
 	
 	void registerViewDockingInfo(String viewId, ViewDockingInfo mainViewDockingInfo);
@@ -21,6 +25,10 @@ public interface IViewRestorationManager {
 	void unregisterViewDockingInfo(String viewId);
 
 	void addShowViewHandler(ShowViewHandler showViewHandler);
+	
+	void maximizeView(View view);
+
+	void unmaximizeView(View view);
 	
 	void removeShowViewHandler(ShowViewHandler showViewHandler);
 	
