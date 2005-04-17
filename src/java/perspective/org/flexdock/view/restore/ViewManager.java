@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
@@ -87,6 +88,21 @@ public class ViewManager implements IViewManager {
 		}
 		
 		return docked;
+	}
+
+	/**
+	 * @see org.flexdock.view.restore.IViewManager#getRegisteredView(java.lang.String)
+	 */
+	public View getRegisteredView(String viewId) {
+		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
+		
+		Dockable dockable = DockingManager.getRegisteredDockable(viewId);
+		
+		if (dockable != null && dockable instanceof View) {
+			return (View) dockable;
+		}
+
+		return null;
 	}
 	
 	/**
