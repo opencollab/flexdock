@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -38,8 +39,21 @@ public class PerspectiveManager implements IPerspectiveManager {
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective)
 	 */
 	public void addPerspective(String perspectiveId, IPerspective perspective) {
+		addPerspective(perspectiveId, perspective, false);
+	}
+
+	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective, boolean)
+	 */
+	public void addPerspective(String perspectiveId, IPerspective perspective, boolean isDefaultPerspective) {
 		if (perspectiveId == null) throw new NullPointerException("perspectiveId cannot be null");
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
+		
+		if (isDefaultPerspective) {
+			m_defaultPerspective = perspective;
+		} else if (m_defaultPerspective == null) {
+			m_defaultPerspective = perspective;
+		}
 		
 		m_perspectives.put(perspectiveId, perspective);
 		
@@ -56,6 +70,11 @@ public class PerspectiveManager implements IPerspectiveManager {
 		if (perspective == null) throw new RuntimeException("Unable to find perspective: "+perspectiveId);
 		
 		m_perspectives.remove(perspectiveId);
+
+		//set defaultPerspective
+		if (perspective == m_defaultPerspective && m_perspectives.values().iterator().hasNext()) {
+			m_defaultPerspective = (IPerspective) m_perspectives.values().iterator().next();
+		}
 
 		firePerspectiveRemoved(perspective);
 	}
@@ -118,11 +137,17 @@ public class PerspectiveManager implements IPerspectiveManager {
 		Viewport mainViewPort = perspective.getMainViewport();
 
 		String centerViewId = perspective.getCenterViewId();
+		boolean wasTerritoralDocked = false;
 		if (centerViewId != null) {
 			View centerView = (View) DockingManager.getRegisteredDockable(centerViewId);
-			mainViewPort.dock(centerView);
+			wasTerritoralDocked = DockingManager.dock(centerView, mainViewPort, DockingPort.CENTER_REGION);
+			//wasTerritoralDocked = mainViewPort.dock(centerView);
 		}
 
+		if (!wasTerritoralDocked) {
+			return;
+		}
+		
 		Perspective.ViewDockingInfo[] dockingInfos = perspective.getDockingInfoChain();
 		for (int i=0; i<dockingInfos.length; i++) {
 			Perspective.ViewDockingInfo dockingInfo = (Perspective.ViewDockingInfo) dockingInfos[i];

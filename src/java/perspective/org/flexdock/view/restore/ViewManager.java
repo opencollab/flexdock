@@ -60,6 +60,10 @@ public class ViewManager implements IViewManager {
 	public boolean showView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 
+		if (view == m_territoralView) {
+			return m_centerViewport.dock(view);
+		}
+		
 		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view);
 		ViewDockingInfo[] accessoryDockingInfos = (ViewDockingInfo[]) m_accessoryDockingInfos.get(view);
 

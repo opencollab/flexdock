@@ -9,6 +9,8 @@ public interface IPerspectiveManager extends PerspectiveMonitor {
 
 	void addPerspective(String perspectiveId, IPerspective perspective);
 
+	void addPerspective(String perspectiveId, IPerspective perspective, boolean isDefaultPerspective);
+
 	void removePerspective(String perspectiveId);
 	
 	IPerspective getPerspective(String perspectiveId);
