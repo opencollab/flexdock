@@ -2,9 +2,12 @@ package org.flexdock.view.restore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
@@ -18,15 +21,19 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	private static ViewRestorationManager SINGLETON = null;
 	
 	private HashMap m_registeredListeners = new HashMap();
-	
-	private PreservingStrategy m_preservingStrategy = new SimplePreservingStrategy();
 
+	private HashSet m_viewStateListeners = new HashSet();
+	
 	private Viewport m_centerViewport = null;
 	
 	private View m_territoralView = null;
 
 	private ArrayList m_showViewHandlers = new ArrayList();
 	
+	private HashMap m_mainDockingInfos = new HashMap();
+
+	private HashMap m_accessoryDockingInfos = new HashMap();
+
 	private ViewRestorationManager() {
 		initializeDefaultShowViewHandlers();
 	}
@@ -53,8 +60,8 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	public boolean showView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 
-		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_preservingStrategy.getMainDockingInfo(view);
-		ViewDockingInfo[] accessoryDockingInfos = m_preservingStrategy.getAccessoryDockingInfos(view);
+		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view);
+		ViewDockingInfo[] accessoryDockingInfos = (ViewDockingInfo[]) m_accessoryDockingInfos.get(view);
 
 		HashMap context = new HashMap();
 		context.put("territoral.view", m_territoralView);
@@ -71,6 +78,10 @@ public class ViewRestorationManager implements IViewRestorationManager {
 			}
 		}
 		
+		if (docked) {
+			fireViewStateChanged(view, ViewStateEvent.VIEW_SHOWN);
+		}
+		
 		return docked;
 	}
 	
@@ -79,8 +90,13 @@ public class ViewRestorationManager implements IViewRestorationManager {
 	 */
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
-		//TODO in future we might do some other stuff here
-		return DockingManager.undock(view);
+		boolean isHidden = DockingManager.undock(view);
+
+		if (isHidden) {
+			fireViewStateChanged(view, ViewStateEvent.VIEW_HIDDEN);
+		}
+
+		return isHidden;
 	}
 
 	/**
@@ -125,7 +141,8 @@ public class ViewRestorationManager implements IViewRestorationManager {
 		DockingHandler dockingHandler = new DockingHandler();
 		m_registeredListeners.put(viewId, dockingHandler);
 		view.addDockingListener(dockingHandler);
-		m_preservingStrategy.setMainDockingInfo(view, mainViewDockingInfo);
+		
+		m_mainDockingInfos.put(view, mainViewDockingInfo);
 	}
 
 	/**
@@ -148,20 +165,6 @@ public class ViewRestorationManager implements IViewRestorationManager {
 		m_showViewHandlers.remove(showViewHandler);
 	}
 
-	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#setPreservingStrategy(org.flexdock.view.layout.PreservingStrategy)
-	 */
-	public void setPreservingStrategy(PreservingStrategy preservingStrategy) {
-		m_preservingStrategy = preservingStrategy;
-	}
-
-	/**
-	 * @see org.flexdock.view.restore.IViewRestorationManager#getPreservingStrategy()
-	 */
-	public PreservingStrategy getPreservingStrategy() {
-		return m_preservingStrategy;
-	}
-	
 	/**
 	 * @see org.flexdock.view.restore.IViewRestorationManager#initializeDefaultShowViewHandlers()
 	 */
@@ -188,6 +191,40 @@ public class ViewRestorationManager implements IViewRestorationManager {
 		m_showViewHandlers.clear();
 	}
 	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#addViewStateListener(org.flexdock.view.restore.ViewStateListener)
+	 */
+	public void addViewStateListener(ViewStateListener viewStateListener) {
+		if (viewStateListener == null) throw new IllegalArgumentException("viewStateListener cannot be null");
+
+		m_viewStateListeners.add(viewStateListener);
+	}
+
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#removeViewStateListener(org.flexdock.view.restore.ViewStateListener)
+	 */
+	public void removeViewStateListener(ViewStateListener viewStateListener) {
+		if (viewStateListener == null) throw new IllegalArgumentException("viewStateListener cannot be null");
+
+		m_viewStateListeners.remove(viewStateListener);
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewRestorationManager#getViewStateListeners()
+	 */
+	public ViewStateListener[] getViewStateListeners() {
+		return (ViewStateListener[]) m_viewStateListeners.toArray(new ViewStateListener[]{});
+	}
+	
+	protected void fireViewStateChanged(View view, int viewStateEventType) {
+		ViewStateEvent viewStateEvent = new ViewStateEvent(this, view, viewStateEventType);
+
+		for (Iterator it = m_viewStateListeners.iterator(); it.hasNext();) {
+			ViewStateListener viewStateListener = (ViewStateListener) it.next();
+			viewStateListener.viewStateChanged(viewStateEvent);
+		}
+	}
+	
 	private class DockingHandler extends DockingListener.DockingAdapter {
 
 		/**
@@ -198,7 +235,28 @@ public class ViewRestorationManager implements IViewRestorationManager {
 			DockingPort dockingPort = dockingEvent.getNewDockingPort();
 			String region = dockingEvent.getRegion();
 
-			m_preservingStrategy.preserve(sourceView, dockingPort, region);
+			preserve(sourceView, dockingPort, region);
+		}
+
+		private boolean preserve(View view, DockingPort dockingPort, String region) {
+			Viewport viewPort = (Viewport) dockingPort;
+			if (!viewPort.getViewset().isEmpty()) {
+				for (Iterator it = viewPort.getViewset().iterator(); it.hasNext();) {
+					View childView = (View) it.next();
+					if (!childView.equals(view)) {
+						Float ratioObject = view.getDockingProperties().getRegionInset(region);
+						float ratio = -1.0f;
+						if (ratioObject != null) {
+							ratio = ratioObject.floatValue();
+						} else {
+							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
+						}
+						m_accessoryDockingInfos.put(view.getPersistentId(), new ViewDockingInfo(childView, region, ratio)); 
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 
 	}

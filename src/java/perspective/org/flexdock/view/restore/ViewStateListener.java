@@ -6,16 +6,13 @@
  */
 package org.flexdock.view.restore;
 
-import org.flexdock.view.View;
 
 /**
- * @author mati
- *
- * TODO To change the template for this generated type comment go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * 
+ * @author Mateusz Szczap
  */
 public interface ViewStateListener {
 
-	void viewStateChanged(View view, int newState);
+	void viewStateChanged(ViewStateEvent viewStateEvent);
 	
 }

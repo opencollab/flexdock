@@ -1,9 +1,3 @@
-/*
- * Created on 2005-04-09
- *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
- */
 package org.flexdock.view.restore;
 
 import org.flexdock.view.View;
@@ -13,7 +7,7 @@ import org.flexdock.view.Viewport;
  * 
  * @author Mateusz Szczap
  */
-public interface IViewRestorationManager {
+public interface IViewRestorationManager extends ViewStateMonitor {
 
 	void registerCenterViewport(Viewport viewport);
 	
@@ -40,8 +34,4 @@ public interface IViewRestorationManager {
 
 	boolean hideView(View view); 
 	
-	void setPreservingStrategy(PreservingStrategy preservingStrategy);
-
-	PreservingStrategy getPreservingStrategy();
-
 }
