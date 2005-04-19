@@ -5,6 +5,8 @@ package org.flexdock.docking.props;
 
 import java.util.Map;
 
+import javax.swing.Icon;
+
 import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.TypedHashtable;
@@ -86,6 +88,9 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		return (CursorProvider)get(CURSOR_PROVIDER);
 	}
 	
+	public Icon getDockbarIcon() {
+		return (Icon)get(DOCKBAR_ICON);
+	}
 
 	public String getDockableDesc() {
 		return (String)get(DESCRIPTION);
@@ -119,11 +124,19 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		return getFloat(DRAG_THRESHOLD);
 	}
 	
+	public Float getPinSize() {
+		return getFloat(PIN_SIZE);
+	}
+	
 	
 	
 	
 	public void setCursorProvider(CursorProvider cursorProvider) {
 		put(CURSOR_PROVIDER, cursorProvider);
+	}
+	
+	public void setDockbarIcon(Icon icon) {
+		put(DOCKBAR_ICON, icon);
 	}
 	
 	public void setDockableDesc(String dockableDesc) {
@@ -166,5 +179,11 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 	public void setDragTheshold(float threshold) {
 		threshold = Math.max(threshold, 0);
 		put(DRAG_THRESHOLD, threshold);
+	}
+	
+	public void setPinSize(float pinSize) {
+		pinSize = Math.max(pinSize, 0f);
+		pinSize = Math.min(pinSize, 1f);
+		put(PIN_SIZE, pinSize);
 	}
 }

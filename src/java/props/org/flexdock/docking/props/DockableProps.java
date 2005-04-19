@@ -3,6 +3,8 @@
  */
 package org.flexdock.docking.props;
 
+import javax.swing.Icon;
+
 import org.flexdock.docking.CursorProvider;
 
 /**
@@ -32,6 +34,8 @@ public interface DockableProps {
 	public static final String TERRITORY_BLOCKED_WEST = "Dockable.TERRITORY_BLOCKED_WEST";
 
 	public static final String TERRITORY_BLOCKED_CENTER = "Dockable.TERRITORY_BLOCKED_CENTER";
+	public static final String DOCKBAR_ICON = "Dockable.DOCKBAR_ICON";
+	public static final String PIN_SIZE = "Dockable.PIN_SIZE";
 	
 	public CursorProvider getCursorProvider();
 
@@ -48,6 +52,10 @@ public interface DockableProps {
 	public Boolean isTerritoryBlocked(String region);
 	
 	public Float getDragThreshold();
+	
+	public Icon getDockbarIcon();
+	
+	public Float getPinSize();
 	
 	
 	
@@ -66,4 +74,8 @@ public interface DockableProps {
 	public void setTerritoryBlocked(String region, boolean blocked);
 	
 	public void setDragTheshold(float threshold);
+	
+	public void setDockbarIcon(Icon icon);
+	
+	public void setPinSize(float size);
 }

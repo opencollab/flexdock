@@ -14,6 +14,7 @@ public class RootDockableProps extends BasicDockableProps {
 	private static final Float DEFAULT_REGION_INSETS = new Float(RegionChecker.DEFAULT_REGION_SIZE);
 	private static final Float DEFAULT_SIBLING_INSETS = new Float(RegionChecker.DEFAULT_SIBLING_SIZE);
 	public static final Float DEFAULT_DRAG_THRESHOLD = new Float(4);
+	public static final Float DEFAULT_PIN_SIZE = new Float(0.3);
 
 	private HashSet constraints;
 	
@@ -42,6 +43,7 @@ public class RootDockableProps extends BasicDockableProps {
 		constrain(TERRITORY_BLOCKED_CENTER, Boolean.FALSE);
 		
 		constrain(DRAG_THRESHOLD, DEFAULT_DRAG_THRESHOLD);
+		constrain(PIN_SIZE, DEFAULT_PIN_SIZE);
 	}
 	
 	public void constrain(Object key, Object value) {
