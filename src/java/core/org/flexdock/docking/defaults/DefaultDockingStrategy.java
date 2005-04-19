@@ -12,6 +12,7 @@ import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
+import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -402,5 +403,17 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	
 	public static Float getPreferredProportion(Component c) {
 		return c==null? null: (Float)SwingUtility.getClientProperty(c, PREFERRED_PROPORTION);
+	}
+	
+	
+	public void pin(Dockable dockable, Component component, int edge) {
+		DockbarManager mgr = DockbarManager.getInstance(component);
+		if(mgr==null)
+			return;
+		
+		if(edge==DockbarManager.UNSPECIFIED_EDGE)
+			mgr.dock(dockable);
+		else
+			mgr.dock(dockable, edge);
 	}
 }
