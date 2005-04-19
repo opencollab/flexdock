@@ -100,9 +100,13 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	public static String findRegion(Component comp) {
 		DockingPort port = DockingManager.getDockingPort(comp);
 		Component docked = port.getDockedComponent();
+
 		if(!(docked instanceof JSplitPane)) {
+			// we didn't find a split pane, to check the grandparent dockingport
 			DockingPort superPort = DockingManager.getDockingPort((Component)port);
-			docked = superPort.getDockedComponent();
+			// if there was no grandparent DockingPort, then we're stuck with the docked
+			// component we already found.  this can happen on the root dockingport.
+			docked = superPort==null? docked: superPort.getDockedComponent();
 		}
 		
 		if(!(docked instanceof JSplitPane))
