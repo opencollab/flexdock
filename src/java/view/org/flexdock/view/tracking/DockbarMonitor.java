@@ -1,0 +1,32 @@
+/*
+ * Created on Apr 18, 2005
+ */
+package org.flexdock.view.tracking;
+
+import org.flexdock.dockbar.event.DockbarEvent;
+import org.flexdock.dockbar.event.DockbarListener;
+import org.flexdock.docking.Dockable;
+import org.flexdock.view.View;
+
+/**
+ * @author Christopher Butler
+ */
+public class DockbarMonitor implements DockbarListener {
+
+	public void dockableActivated(DockbarEvent evt) {
+		View view = getView(evt);
+		if(view!=null)
+			ViewTracker.requestViewActivation(view);
+	}
+	
+	public void dockableDeactivated(DockbarEvent evt) {
+//		View view = getView(evt);
+//		if(view!=null)
+//			ViewTracker.requestViewActivation(view);
+	}
+	
+	private View getView(DockbarEvent evt) {
+		Dockable d = (Dockable)evt.getSource();
+		return d instanceof View? (View)d: null;
+	}
+}
