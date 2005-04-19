@@ -19,6 +19,8 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking;
 
 import java.awt.Component;
+import java.awt.KeyboardFocusManager;
+import java.awt.Window;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
@@ -26,6 +28,9 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import javax.swing.SwingUtilities;
+
+import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
@@ -444,6 +449,33 @@ public class DockingManager {
 	
 	public static DockableProps getDockableRoot() {
 		return PropertyManager.getDockableRoot();
+	}
+	
+	public static void pin(Dockable dockable) {
+		Component cmp = dockable==null? null: dockable.getDockable();
+		Window window = cmp==null? null: SwingUtilities.getWindowAncestor(cmp);
+		pin(dockable, window);
+	}
+	
+	public static void pin(Dockable dockable, Window window) {
+		pin(dockable, window, DockbarManager.UNSPECIFIED_EDGE);
+	}
+
+	public static void pin(Dockable dockable, int edge) {
+		pin(dockable, null, edge);
+	}
+	
+	public static void pin(Dockable dockable, Window window, int edge) {
+		if(dockable==null)
+			return;
+		
+		if(window==null)
+			window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+		if(window==null)
+			return;
+		
+		DockingStrategy strategy = getDockingStrategy(dockable);
+		strategy.pin(dockable, window, edge);
 	}
 
 }
