@@ -7,6 +7,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -21,6 +24,7 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  */
 public class SlideoutPane extends JPanel implements SwingConstants {
+	private static final EmptyMouseAdapter EMPTY_MOUSE_ADAPTER = new EmptyMouseAdapter();
 	private static final Dimension RESIZE_DIMS = new Dimension(5, 5);
 	private String dockableId;
 	private int orientation;
@@ -37,6 +41,11 @@ public class SlideoutPane extends JPanel implements SwingConstants {
 		dragEdge.addMouseMotionListener(listener);
 		
 		setOrientation(DockbarManager.DEFAULT_EDGE, true);
+		
+		// intercept rouge mouse events so they don't fall 
+		// through to the content pane
+		addMouseListener(EMPTY_MOUSE_ADAPTER);
+		addMouseMotionListener(EMPTY_MOUSE_ADAPTER);
 	}
 
 
@@ -111,5 +120,10 @@ public class SlideoutPane extends JPanel implements SwingConstants {
 		return DockingManager.getRegisteredDockable(dockableId);
 	}
 
-
+	private static class EmptyMouseAdapter extends MouseAdapter implements MouseMotionListener {
+		public void mouseDragged(MouseEvent e) {
+		}
+		public void mouseMoved(MouseEvent e) {
+		}
+	}
 }
