@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * @author marius
+ * @author Christopher Butler
  */
 public class Utilities {
 	private static final String OS_FAMILIES_URI = "org/flexdock/util/os-families.xml";
@@ -85,5 +85,15 @@ public class Utilities {
 				e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public static boolean isChanged(Object oldObj, Object newObj) {
+		if(oldObj==newObj)
+			return false;
+		
+		if(oldObj==null || newObj==null)
+			return true;
+		
+		return !oldObj.equals(newObj);
 	}
 }
