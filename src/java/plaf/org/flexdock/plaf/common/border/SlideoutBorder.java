@@ -19,6 +19,9 @@ public class SlideoutBorder implements Border, SwingConstants {
 	private int orientation;
 	public static final Color WIN32_GRAY = new Color(212, 208, 200); 
 	
+	public SlideoutBorder() {
+	}
+	
 	public Insets getBorderInsets(Component c) {
 		Insets insets = new Insets(0, 0, 0, 0);
 		switch(orientation) {
