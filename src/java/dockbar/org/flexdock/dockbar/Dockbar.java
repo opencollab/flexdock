@@ -3,7 +3,6 @@
  */
 package org.flexdock.dockbar;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,8 +10,10 @@ import java.util.Iterator;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.plaf.common.border.SlideoutBorder;
 import org.flexdock.util.Utilities;
 
 
@@ -20,8 +21,6 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  */
 public class Dockbar extends JPanel implements SwingConstants {
-	public static final Color COLOR = new Color(247, 243, 239);
-
 	private int orientation;
 	private DockbarManager manager;
 	private ArrayList mDocks = new ArrayList();
@@ -46,9 +45,8 @@ public class Dockbar extends JPanel implements SwingConstants {
 
 	public Dockbar(DockbarManager manager, int orientation) {
 		this.manager = manager;
+		setBorder(new SlideoutBorder());
 		setOrientation(orientation);
-		setBackground(COLOR);
-		setOpaque(false);
 	}
 
 	void undock(Dockable dockable) {
@@ -103,6 +101,11 @@ public class Dockbar extends JPanel implements SwingConstants {
 	private void setOrientation(int orientation) {
 		orientation = getValidOrientation(orientation);
 		this.orientation = orientation;
+		
+		Border border = getBorder();
+		if(border instanceof SlideoutBorder)
+			((SlideoutBorder)border).setOrientation(orientation);
+		
 		int boxConstraint = orientation==TOP || orientation==BOTTOM? BoxLayout.LINE_AXIS: BoxLayout.PAGE_AXIS;
 		setLayout(new BoxLayout(this, boxConstraint));
 	}
