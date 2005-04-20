@@ -89,13 +89,13 @@ public class DockbarManager implements SwingConstants {
 		dockedPane = new DockbarPane(this);
 		windowRef = new WeakReference(window);
 		
-		dockbarPanel = new JPanel(new BorderLayout(0, 0));
+		dockbarPanel = new JPanel(new DockbarPanelLayout());
 		dockbarPanel.setOpaque(false);
-		dockbarPanel.setBackground(Color.red);
+
+		dockbarPanel.add(dockedPane, BorderLayout.CENTER);
 		dockbarPanel.add(leftBar, BorderLayout.WEST);
 		dockbarPanel.add(rightBar, BorderLayout.EAST);
 		dockbarPanel.add(bottomBar, BorderLayout.SOUTH);
-		dockbarPanel.add(dockedPane, BorderLayout.CENTER);
 	}
 	
 	public RootWindow getWindow() {
@@ -328,6 +328,17 @@ public class DockbarManager implements SwingConstants {
 		dockedPane.setOrientation(activeEdge);
 	}
 	
+	private Dockbar getActiveDockbar() {
+		int edge = getActiveEdge();
+		switch(edge) {
+			case TOP:
+				return bottomBar;
+			case RIGHT:
+				return rightBar;
+			default:
+				return leftBar;
+		}
+	}
 
 	public String getActiveDockable() {
 		return activeDockable;
@@ -335,6 +346,8 @@ public class DockbarManager implements SwingConstants {
 	
 	public void setActiveDockable(String dockableId) {
 		Dockable oldDockable = dockedPane.getDockable();
+		Dockable newDockable = DockingManager.getRegisteredDockable(dockableId);
+		dockableId = newDockable==null? null: newDockable.getPersistentId();
 		
 		boolean changed = Utilities.isChanged(activeDockable, dockableId);
 		activeDockable = dockableId;
@@ -387,6 +400,39 @@ public class DockbarManager implements SwingConstants {
 			case DockbarEvent.DEACTIVATED:
 				listener.dockableDeactivated(evt);
 				break;
+		}
+	}
+	
+	private class DockbarPanelLayout extends BorderLayout {
+		public DockbarPanelLayout() {
+			super(0, 0);
+		}
+		public void layoutContainer(Container target) {
+			super.layoutContainer(target);
+			
+			if(getActiveDockable()==null)
+				return;
+			
+			// overlay the expanded dockable in the CENTER so that the slideout-view
+			// sits overtop the other dockbars all the way to the edge of the frame
+			Rectangle rect = new Rectangle(0, 0, dockbarPanel.getWidth(), dockbarPanel.getHeight());
+			if(activeEdge==TOP || activeEdge==BOTTOM) {
+				rect.height -= bottomBar.getHeight();
+			}
+			// else assume LEFT or RIGHT
+			else {
+				int offsetX = leftBar.getWidth();
+				rect.x = offsetX;
+				rect.width -= (offsetX + rightBar.getWidth());
+			}
+			dockedPane.setBounds(rect);
+			
+			// if we're expanded from the LEFT side, overlay the left dockbar
+			// on top of the left edge of the bottom dockbar since the slideout-view
+			// won't be covering that part
+			if(activeEdge==LEFT) {
+				leftBar.setSize(leftBar.getWidth(), leftBar.getHeight() + bottomBar.getHeight());
+			}
 		}
 	}
 }
