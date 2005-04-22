@@ -24,6 +24,7 @@ import javax.swing.border.Border;
 
 import org.flexdock.dockbar.activation.ActivationQueue;
 import org.flexdock.dockbar.activation.Animation;
+import org.flexdock.dockbar.event.ActivationListener;
 import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.dockbar.event.EventDispatcher;
@@ -50,9 +51,12 @@ public class DockbarManager implements SwingConstants {
 	
 	private EventDispatcher eventDispatcher;
 	private DockbarLayout dockbarLayout;
+	private ActivationListener activationListener;
 
 	private int activeEdge = UNSPECIFIED_EDGE;
 	private String activeDockableId;
+	private boolean animating;
+	private boolean dragging;
 
 	
 	public static DockbarManager getInstance(Component c) {
@@ -80,6 +84,7 @@ public class DockbarManager implements SwingConstants {
 	private DockbarManager(RootWindow window) {
 		eventDispatcher = new EventDispatcher();
 		dockbarLayout = new DockbarLayout(this);
+		activationListener = new ActivationListener(this);
 		
 		leftBar = new Dockbar(this, LEFT);
 		rightBar = new Dockbar(this, RIGHT);
@@ -396,12 +401,12 @@ public class DockbarManager implements SwingConstants {
 		return eventDispatcher.removeListener(listener);
 	}
 
-
+	
 	public void setActiveDockable(String dockableId) {
 		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
 		setActiveDockable(dockable);
 	}
-	
+		
 	public void setActiveDockable(Dockable dockable) {
 		// if we're not currently docked to any particular edge, then
 		// we cannot activate the specified dockable.  instead, set the
@@ -424,8 +429,8 @@ public class DockbarManager implements SwingConstants {
 			
 			// exit here so we can test our animation.  after it's working, we can 
 			// re-add the event dispatching
-			if(true)
-				return;
+//			if(true)
+//				return;
 			
 			// dispatch event notification
 			dispatchEvent(oldDockable, dockable);
@@ -439,6 +444,7 @@ public class DockbarManager implements SwingConstants {
 			newDockable = oldDockable;
 			evtType = DockbarEvent.DEACTIVATED;
 		}
+		
 		if(newDockable!=null) {
 			DockbarEvent evt = new DockbarEvent(newDockable, evtType, getActiveEdge());
 			eventDispatcher.dispatch(evt);				
@@ -465,7 +471,7 @@ public class DockbarManager implements SwingConstants {
 			}
 		};
 
-		ActivationQueue queue = new ActivationQueue(deactivation, updater1, activation, updater2);
+		ActivationQueue queue = new ActivationQueue(this, deactivation, updater1, activation, updater2);
 		queue.start();
 	}
 	
@@ -476,4 +482,22 @@ public class DockbarManager implements SwingConstants {
 
 
 
+	public boolean isAnimating() {
+		return animating;
+	}
+	
+	public void setAnimating(boolean animating) {
+		this.animating = animating;
+	}
+
+	public boolean isDragging() {
+		return dragging;
+	}
+	
+	public void setDragging(boolean dragging) {
+		this.dragging = dragging;
+	}
+	public ActivationListener getActivationListener() {
+		return activationListener;
+	}
 }
