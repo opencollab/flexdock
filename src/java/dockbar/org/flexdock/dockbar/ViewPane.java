@@ -7,9 +7,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -22,7 +19,7 @@ import org.flexdock.plaf.common.border.SlideoutBorder;
 /**
  * @author Christopher Butler
  */
-public class ViewPane extends JPanel implements SwingConstants, MouseListener, MouseMotionListener {
+public class ViewPane extends JPanel implements SwingConstants {
 	private static final Dimension RESIZE_DIMS = new Dimension(3, 3);
 	public static final int UNSPECIFIED_PREFERRED_SIZE = -1;
 	private DockbarManager manager;
@@ -48,8 +45,8 @@ public class ViewPane extends JPanel implements SwingConstants, MouseListener, M
 		
 		// intercept rouge mouse events so they don't fall 
 		// through to the content pane
-		addMouseListener(this);
-		addMouseMotionListener(this);
+		addMouseListener(mgr.getActivationListener());
+		addMouseMotionListener(mgr.getActivationListener());
 	}
 
 
@@ -102,22 +99,6 @@ public class ViewPane extends JPanel implements SwingConstants, MouseListener, M
 		int orientation = manager.getActiveEdge();
 		return orientation==LEFT || orientation==RIGHT? Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR): Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
 	}
-
-	public void mouseClicked(MouseEvent e) {
-	}
-	public void mouseEntered(MouseEvent e) {
-	}
-	public void mouseExited(MouseEvent e) {
-	}
-	public void mousePressed(MouseEvent e) {
-	}
-	public void mouseReleased(MouseEvent e) {
-	}
-	public void mouseDragged(MouseEvent e) {
-	}
-	public void mouseMoved(MouseEvent e) {
-	}
-	
 	
 	public int getPrefSize() {
 		return prefSize;
