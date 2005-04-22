@@ -52,7 +52,7 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 	private String dockingId; 
 	
 	private boolean mSelected = false;
-	private boolean mDragging = false;
+//	private boolean mDragging = false;
 	private RoundedLineBorder mBorder;
 	private boolean mInPaint = false;
 	private boolean mActive = false;
@@ -142,7 +142,7 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 
 	// protected
 
-	protected void activate() {
+	protected void activate(boolean soft) {
 		Dockbar dockbar = (Dockbar)SwingUtilities.getAncestorOfClass(Dockbar.class, this);
 		if(dockbar!=null)
 			dockbar.activate(dockingId);
@@ -203,35 +203,6 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 			borderInsets.right = insets.right;
 		}
 	}
-
-	// override MouseListener
-
-	public void mousePressed(MouseEvent e) {
-		mDragging = e.getButton() == MouseEvent.BUTTON1;
-
-		setSelected(mDragging);
-	}
-
-	public void mouseReleased(MouseEvent e) {
-		if (mSelected)
-			activate();
-
-		setSelected(false);
-		mDragging = false;
-	}
-
-	public void mouseClicked(MouseEvent e) {
-	}
-
-	public void mouseEntered(MouseEvent e) {
-		if (mDragging)
-			setSelected(true);
-	}
-
-	public void mouseExited(MouseEvent e) {
-		if (mDragging)
-			setSelected(false);
-	}
 	
 	public Dockable getDockable() {
 		return DockingManager.getRegisteredDockable(dockingId);
@@ -256,6 +227,33 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 		int h = insets.top + icon.getIconHeight() + insets.bottom;
 		return new Dimension(w, h);
 	}
+
+	// override MouseListener
+
+	public void mousePressed(MouseEvent e) {
+
+	}
+
+	public void mouseReleased(MouseEvent e) {
+
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		if(e.getButton() != MouseEvent.BUTTON1)
+			return;
+		
+		activate(false);
+	}
+
+	public void mouseEntered(MouseEvent e) {
+		activate(true);
+	}
+
+	public void mouseExited(MouseEvent e) {
+
+	}
+	
+
 
 }
 
