@@ -49,11 +49,13 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener,
 		rootWindow.setGlassPane(dragGlassPane);
 		dragGlassPane.setCursor(manager.getResizeCursor());
 		dragGlassPane.setVisible(true);
+		manager.setDragging(true);
 	}
 	
 	public void mouseReleased(MouseEvent e) {
 		dockable = null;
 		dragGlassPane.setVisible(false);
+		manager.setDragging(false);
 		
 		if(rootWindow!=null && cachedGlassPane!=null) {
 			rootWindow.setGlassPane(cachedGlassPane);
