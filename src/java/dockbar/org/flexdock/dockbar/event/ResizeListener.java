@@ -1,10 +1,11 @@
 /*
  * Created on Apr 18, 2005
  */
-package org.flexdock.dockbar;
+package org.flexdock.dockbar.event;
 
 import java.awt.Component;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -13,10 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
+import org.flexdock.dockbar.DockbarLayout;
+import org.flexdock.dockbar.DockbarManager;
+import org.flexdock.dockbar.ViewPane;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.util.RootWindow;
-import org.flexdock.util.SwingUtility;
 
 /**
  * @author Christopher Butler
@@ -38,12 +41,13 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener,
 	public void mouseMoved(MouseEvent e) {
 		// noop
 	}
+	
 	public void mousePressed(MouseEvent e) {
-		dockable = manager.getDockbarPane().getDockable();
+		dockable = manager.getActiveDockable();
 		rootWindow = manager.getWindow();
 		cachedGlassPane = rootWindow.getGlassPane();
 		rootWindow.setGlassPane(dragGlassPane);
-		dragGlassPane.setCursor(manager.getDockbarPane().getResizeCursor());
+		dragGlassPane.setCursor(manager.getResizeCursor());
 		dragGlassPane.setVisible(true);
 	}
 	
@@ -64,27 +68,29 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener,
 	}
 	
 	private void handleResizeEvent(MouseEvent me) {
-		DockbarPane pane = manager.getDockbarPane();
-		Point p = SwingUtilities.convertPoint((Component)me.getSource(), me.getPoint(), pane);
-		int w = pane.getWidth();
-		int h = pane.getHeight();
+		ViewPane viewPane = manager.getViewPane();
+		Point p = SwingUtilities.convertPoint((Component)me.getSource(), me.getPoint(), viewPane.getParent());
+		Rectangle viewArea = manager.getViewPaneArea();
 		
 		p.x = Math.max(p.x, 0);
-		p.x = Math.min(p.x, w);
+		p.x = Math.min(p.x, viewArea.width);
 		p.y = Math.max(p.y, 0);
-		p.y = Math.min(p.y, h);
+		p.y = Math.min(p.y, viewArea.height);
 		
-		int orientation = pane.getOrientation();
+		int orientation = manager.getActiveEdge();
 		int loc = orientation==LEFT || orientation==RIGHT? p.x: p.y;
-		int dim = orientation==LEFT || orientation==RIGHT? w: h;
+		int dim = orientation==LEFT || orientation==RIGHT? viewArea.width: viewArea.height;
 		
 		if(orientation==RIGHT || orientation==BOTTOM)
 			loc = dim - loc;
 		
 		float percent = (float)loc/(float)dim;
+		float minPercent = (float)DockbarLayout.MINIMUM_VIEW_SIZE/(float)dim;
+		percent = Math.max(percent, minPercent);
+		
 		DockableProps props = dockable.getDockingProperties();
 		props.setPinSize(percent);
-		SwingUtility.revalidateComponent(pane);
+		manager.revalidate();
 	}
 
 }

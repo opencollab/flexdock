@@ -3,10 +3,9 @@
  */
 package org.flexdock.dockbar;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Insets;
@@ -15,19 +14,19 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.Vector;
 import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
+import org.flexdock.dockbar.activation.ActivationQueue;
+import org.flexdock.dockbar.activation.Animation;
 import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarListener;
+import org.flexdock.dockbar.event.EventDispatcher;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.plaf.common.border.CompoundEmptyBorder;
@@ -43,18 +42,17 @@ public class DockbarManager implements SwingConstants {
 	public static final int DEFAULT_EDGE = LEFT;
 	public static final int UNSPECIFIED_EDGE = -1;
 
-	private JPanel dockbarPanel;
+	private WeakReference windowRef;
 	private Dockbar leftBar;
 	private Dockbar rightBar;
 	private Dockbar bottomBar;
-	private DockbarPane dockedPane;
-	private WeakReference windowRef;
+	private ViewPane viewPane;
+	
+	private EventDispatcher eventDispatcher;
+	private DockbarLayout dockbarLayout;
+
 	private int activeEdge = UNSPECIFIED_EDGE;
-	private String activeDockable;
-	
-	private ResizeListener resizeListener;
-	private Vector dockbarListeners;
-	
+	private String activeDockableId;
 
 	
 	public static DockbarManager getInstance(Component c) {
@@ -80,31 +78,19 @@ public class DockbarManager implements SwingConstants {
 	
 	
 	private DockbarManager(RootWindow window) {
-		resizeListener = new ResizeListener(this);
-		dockbarListeners = new Vector();
+		eventDispatcher = new EventDispatcher();
+		dockbarLayout = new DockbarLayout(this);
 		
 		leftBar = new Dockbar(this, LEFT);
 		rightBar = new Dockbar(this, RIGHT);
 		bottomBar = new Dockbar(this, BOTTOM);
-		dockedPane = new DockbarPane(this);
-		windowRef = new WeakReference(window);
-		
-		dockbarPanel = new JPanel(new DockbarPanelLayout());
-		dockbarPanel.setOpaque(false);
+		viewPane = new ViewPane(this);
 
-		dockbarPanel.add(dockedPane, BorderLayout.CENTER);
-		dockbarPanel.add(leftBar, BorderLayout.WEST);
-		dockbarPanel.add(rightBar, BorderLayout.EAST);
-		dockbarPanel.add(bottomBar, BorderLayout.SOUTH);
+		windowRef = new WeakReference(window);
 	}
 	
 	public RootWindow getWindow() {
 		return (RootWindow)windowRef.get();
-	}
-	
-	
-	public ResizeListener getResizeListener() {
-		return resizeListener;
 	}
 
 	
@@ -114,39 +100,67 @@ public class DockbarManager implements SwingConstants {
 			return;
 		
 		JLayeredPane layerPane = window.getLayeredPane();
-		if(dockbarPanel.getParent()==layerPane)
-			return;
+		boolean changed = install(leftBar, layerPane);
+		changed = install(rightBar, layerPane) || changed;
+		changed = install(bottomBar, layerPane) || changed;
+		changed = install(viewPane, layerPane) || changed;
 
-		if(dockbarPanel.getParent()!=null)
-			dockbarPanel.getParent().remove(dockbarPanel);
-		dockbarPanel.setBackground(Color.red);
-		
-		layerPane.add(dockbarPanel, DOCKBAR_LAYER);
-		layerPane.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent evt) {
-				if(evt.getSource() instanceof JLayeredPane)
-					revalidateDockbarPane();
-			}
-		});
-		
-		revalidateDockbarPane();
+		if(changed) {
+			layerPane.addComponentListener(new ComponentAdapter() {
+				public void componentResized(ComponentEvent evt) {
+					if(evt.getSource() instanceof JLayeredPane)
+						revalidate();
+				}
+			});
+		}
+		revalidate();
 	}
 	
-	private void revalidateDockbarPane() {
+	private boolean install(Component c, JLayeredPane layerPane) {
+		if(c.getParent()!=layerPane) {
+			if(c.getParent()!=null)
+				c.getParent().remove(c);
+			layerPane.add(c, DOCKBAR_LAYER);
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+	public Dockbar getBottomBar() {
+		return bottomBar;
+	}
+
+	public Dockbar getLeftBar() {
+		return leftBar;
+	}
+	
+	public Dockbar getRightBar() {
+		return rightBar;
+	}
+	
+	public ViewPane getViewPane() {
+		return viewPane;
+	}
+	
+	public Rectangle getViewPaneArea() {
+		return dockbarLayout.getViewpaneArea();
+	}
+	
+	
+	
+	
+	
+	
+	
+	public void revalidate() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				RootWindow window = getWindow();
-				if(window==null)
-					return;
-				
-				Container contentPane = window.getContentPane();
-				JLayeredPane layeredPane = window.getLayeredPane();
-
-				// no rectangle translation required because layeredPane is already the direct
-				// parent of contentPane.
-
-				dockbarPanel.setBounds(contentPane.getBounds());
-				dockbarPanel.validate();
 				validate();
 			}
 		});
@@ -156,6 +170,8 @@ public class DockbarManager implements SwingConstants {
 	public void validate() {
 		toggleDockbars();
 		updateInsets();
+		dockbarLayout.layout();
+		viewPane.revalidate();
 	}
 	
 	private void updateInsets() {
@@ -255,18 +271,22 @@ public class DockbarManager implements SwingConstants {
 
 		return edge;
 	}
+
+	public int getEdge(String dockableId) {
+		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		return getEdge(dockable);
+	}
 	
-	public Dockbar getDockbar(int edge) {
-		edge = Dockbar.getValidOrientation(edge);
-		
-		switch(edge) {
-			case RIGHT:
-				return rightBar;
-			case BOTTOM:
-				return bottomBar;
-			default:
-				return leftBar;
-		}
+	public int getEdge(Dockable dockable) {
+		Dockbar dockbar = getDockbar(dockable);
+
+		if(dockbar==leftBar)
+			return LEFT;
+		if(dockbar==rightBar)
+			return RIGHT;
+		if(dockbar==bottomBar)
+			return BOTTOM;
+		return UNSPECIFIED_EDGE;
 	}
 	
 	public Dockbar getDockbar(Dockable dockable) {
@@ -281,6 +301,23 @@ public class DockbarManager implements SwingConstants {
 			return bottomBar;
 		return null;
 	}
+
+	public Dockbar getDockbar(int edge) {
+		edge = Dockbar.getValidOrientation(edge);
+		switch(edge) {
+			case RIGHT:
+				return rightBar;
+			case BOTTOM:
+				return bottomBar;
+			default:
+				return leftBar;
+		}
+	}
+	
+	
+	
+	
+	
 	
 	public void dock(Dockable dockable) {
 		if(dockable==null)
@@ -306,7 +343,7 @@ public class DockbarManager implements SwingConstants {
 		DockingManager.undock(dockable);
 		// place in the dockbar
 		dockbar.dock(dockable);
-		revalidateDockbarPane();
+		revalidate();
 	}
 	
 	
@@ -314,18 +351,13 @@ public class DockbarManager implements SwingConstants {
 		Dockbar dockbar = getDockbar(dockable);
 		if(dockbar!=null) {
 			dockbar.undock(dockable);
-			revalidateDockbarPane();
+			revalidate();
 		}
 	}
 	
 	
 	public int getActiveEdge() {
 		return activeEdge;
-	}
-	
-	void setActiveEdge(int edge) {
-		activeEdge = Dockbar.getValidOrientation(edge);
-		dockedPane.setOrientation(activeEdge);
 	}
 	
 	private Dockbar getActiveDockbar() {
@@ -340,99 +372,108 @@ public class DockbarManager implements SwingConstants {
 		}
 	}
 
-	public String getActiveDockable() {
-		return activeDockable;
+	public String getActiveDockableId() {
+		return activeDockableId;
 	}
 	
-	public void setActiveDockable(String dockableId) {
-		Dockable oldDockable = dockedPane.getDockable();
-		Dockable newDockable = DockingManager.getRegisteredDockable(dockableId);
-		dockableId = newDockable==null? null: newDockable.getPersistentId();
-		
-		boolean changed = Utilities.isChanged(activeDockable, dockableId);
-		activeDockable = dockableId;
-		
-		if(changed) {
-			dockedPane.setDockable(dockableId);
-			Dockable d = dockedPane.getDockable(); 
-			dockedPane.setExpanded(d!=null);
-			
-			int evtType = DockbarEvent.ACTIVATED;
-			if(d==null && oldDockable!=null) {
-				d = oldDockable;
-				evtType = DockbarEvent.DEACTIVATED;
-			}
-			
-			if(d!=null) {
-				DockbarEvent evt = new DockbarEvent(d, evtType, getActiveEdge());
-				dispatchEvent(evt);				
-			}
-		}
+	public Dockable getActiveDockable() {
+		return DockingManager.getRegisteredDockable(activeDockableId);
 	}
 	
-	
-	public DockbarPane getDockbarPane() {
-		return dockedPane;
+	public Cursor getResizeCursor() {
+		return viewPane.getResizeCursor();
 	}
-	
+	 
+	public boolean isActive() {
+		return getActiveDockable()!=null;
+	}
 	
 	public void addListener(DockbarListener listener) {
-		if(listener!=null)
-			dockbarListeners.add(listener);
+		eventDispatcher.addListener(listener);
 	}
 	
 	public boolean removeListener(DockbarListener listener) {
-		return dockbarListeners.remove(listener);
+		return eventDispatcher.removeListener(listener);
 	}
 
-	private void dispatchEvent(DockbarEvent evt) {
-		for(Iterator it=dockbarListeners.iterator(); it.hasNext();) {
-			DockbarListener listener = (DockbarListener)it.next();
-			dispatchEvent(evt, listener);
-		}
+
+	public void setActiveDockable(String dockableId) {
+		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		setActiveDockable(dockable);
 	}
 	
-	private void dispatchEvent(DockbarEvent evt, DockbarListener listener) {
-		switch(evt.getType()) {
-			case DockbarEvent.ACTIVATED:
-				listener.dockableActivated(evt);
-				break;
-			case DockbarEvent.DEACTIVATED:
-				listener.dockableDeactivated(evt);
-				break;
-		}
-	}
-	
-	private class DockbarPanelLayout extends BorderLayout {
-		public DockbarPanelLayout() {
-			super(0, 0);
-		}
-		public void layoutContainer(Container target) {
-			super.layoutContainer(target);
+	public void setActiveDockable(Dockable dockable) {
+		// if we're not currently docked to any particular edge, then
+		// we cannot activate the specified dockable.  instead, set the
+		// active dockable to null
+		final int newEdge = getEdge(dockable);
+		if(newEdge==UNSPECIFIED_EDGE)
+			dockable = null;
+
+		// check for dockable changes
+		Dockable oldDockable = getActiveDockable();
+		final String newDockableId = dockable==null? null: dockable.getPersistentId();
+		boolean changed = Utilities.isChanged(activeDockableId, newDockableId);
+		// check for edge changes
+		changed = changed || newEdge!=activeEdge;
+
+		
+		// if nothing has changed, then we're done
+		if(changed) {
+			startAnimation(oldDockable, newDockableId, newEdge);
 			
-			if(getActiveDockable()==null)
+			// exit here so we can test our animation.  after it's working, we can 
+			// re-add the event dispatching
+			if(true)
 				return;
 			
-			// overlay the expanded dockable in the CENTER so that the slideout-view
-			// sits overtop the other dockbars all the way to the edge of the frame
-			Rectangle rect = new Rectangle(0, 0, dockbarPanel.getWidth(), dockbarPanel.getHeight());
-			if(activeEdge==TOP || activeEdge==BOTTOM) {
-				rect.height -= bottomBar.getHeight();
-			}
-			// else assume LEFT or RIGHT
-			else {
-				int offsetX = leftBar.getWidth();
-				rect.x = offsetX;
-				rect.width -= (offsetX + rightBar.getWidth());
-			}
-			dockedPane.setBounds(rect);
-			
-			// if we're expanded from the LEFT side, overlay the left dockbar
-			// on top of the left edge of the bottom dockbar since the slideout-view
-			// won't be covering that part
-			if(activeEdge==LEFT) {
-				leftBar.setSize(leftBar.getWidth(), leftBar.getHeight() + bottomBar.getHeight());
-			}
+			// dispatch event notification
+			dispatchEvent(oldDockable, dockable);
 		}
 	}
+	
+	private void dispatchEvent(Dockable oldDockable, Dockable newDockable) {
+		// dispatch to event listeners
+		int evtType = DockbarEvent.ACTIVATED;
+		if(newDockable==null && oldDockable!=null) {
+			newDockable = oldDockable;
+			evtType = DockbarEvent.DEACTIVATED;
+		}
+		if(newDockable!=null) {
+			DockbarEvent evt = new DockbarEvent(newDockable, evtType, getActiveEdge());
+			eventDispatcher.dispatch(evt);				
+		}		
+	}
+	
+	private void startAnimation(Dockable oldDockable, final String newDockableId, final int newEdge) {
+		Animation deactivation = oldDockable==null? null: new Animation(this, true);
+		Runnable updater1 = new Runnable() {
+			public void run() {
+				activeEdge = newEdge;
+				activeDockableId = newDockableId;
+				viewPane.updateOrientation();
+				viewPane.updateContents();
+			}
+		};
+		Animation activation = newDockableId==null? null: new Animation(this, false);		
+		Runnable updater2 = new Runnable() {
+			public void run() {
+				viewPane.setPrefSize(ViewPane.UNSPECIFIED_PREFERRED_SIZE);
+				viewPane.updateOrientation();
+				viewPane.updateContents();
+				revalidate();
+			}
+		};
+
+		ActivationQueue queue = new ActivationQueue(deactivation, updater1, activation, updater2);
+		queue.start();
+	}
+	
+	public int getPreferredViewpaneSize() {
+		return dockbarLayout.getDesiredViewpaneSize();
+	}
+	
+
+
+
 }

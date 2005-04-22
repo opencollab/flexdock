@@ -14,7 +14,6 @@ import javax.swing.border.Border;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.plaf.common.border.SlideoutBorder;
-import org.flexdock.util.Utilities;
 
 
 /**
@@ -119,15 +118,7 @@ public class Dockbar extends JPanel implements SwingConstants {
 	}
 	
 	void activate(String dockableId) {
-		if(manager==null)
-			return;
-		
-		manager.setActiveEdge(getOrientation());
-		boolean changed = Utilities.isChanged(manager.getActiveDockable(), dockableId);
-		
-		manager.setActiveDockable(null);
-		if(changed) {
+		if(manager!=null)
 			manager.setActiveDockable(dockableId);
-		}
 	}
 }
