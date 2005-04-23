@@ -15,5 +15,6 @@
 	<classpathentry kind="src" path="resources/misc"/>
 	<classpathentry kind="src" path="resources/plaf"/>
 	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
+	<classpathentry kind="lib" path="lib/skinlf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

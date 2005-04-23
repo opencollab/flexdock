@@ -3,6 +3,7 @@
 
 	<!-- build-source properties -->
     <property name="java.src" value="${basedir}/src/java" />
+	<property name="lib.dir" value="${basedir}/lib" />
     <property name="java.src.core" value="${java.src}/core" />
     <property name="java.src.demo" value="${java.src}/demo" />
     <property name="java.src.dockbar" value="${java.src}/dockbar" />
@@ -14,7 +15,8 @@
     <property name="java.src.test" value="${java.src}/test" />
     <property name="java.src.view" value="${java.src}/view" />
 
-    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.dockbar};${java.src.drag};${java.src.misc};${java.src.perspective};${java.src.plaf};${java.src.props};${java.src.test};${java.src.view};" />
+    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.dockbar};${java.src.drag};${java.src.misc};${java.src.perspective};${java.src.plaf};${java.src.props};${java.src.test};${java.src.view}" />
+	<property name="lib.jars" value="${lib.dir}/skinlf.jar" />
     <property name="resource.dir" value="${basedir}/resources" />
 
     <!-- build-output properties -->
@@ -57,16 +59,16 @@
 	</target>
 
 	<target name="compile" depends="init, init.resources">
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.core}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.demo}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.dockbar}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.drag}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.misc}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.perspective}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.plaf}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.props}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.test}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" srcdir="${java.src.view}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.core}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.demo}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.dockbar}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.drag}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.misc}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.perspective}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.plaf}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.props}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.test}" destdir="${bin.dir}"/>
+		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.view}" destdir="${bin.dir}"/>
 	</target>
 
 	<!--
