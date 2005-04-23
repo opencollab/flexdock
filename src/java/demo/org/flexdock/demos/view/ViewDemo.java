@@ -33,13 +33,13 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 
 import org.flexdock.docking.DockingPort;
+import org.flexdock.plaf.Configurator;
+import org.flexdock.plaf.PlafManager;
+import org.flexdock.plaf.theme.Theme;
+import org.flexdock.plaf.theme.UIFactory;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
-import org.flexdock.view.plaf.Configurator;
-import org.flexdock.view.plaf.PlafManager;
-import org.flexdock.view.plaf.theme.Theme;
-import org.flexdock.view.plaf.theme.UIFactory;
 import org.w3c.dom.Element;
 
 /**
