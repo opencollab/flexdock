@@ -24,10 +24,10 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.plaf.PlafManager;
+import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.view.floating.FloatingViewport;
-import org.flexdock.view.plaf.PlafManager;
-import org.flexdock.view.plaf.theme.ViewUI;
 import org.flexdock.view.tracking.ViewListener;
 
 /**

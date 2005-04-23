@@ -12,8 +12,8 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
-import org.flexdock.view.plaf.PlafManager;
-import org.flexdock.view.plaf.theme.TitlebarUI;
+import org.flexdock.plaf.PlafManager;
+import org.flexdock.plaf.theme.TitlebarUI;
 
 /**
  * @author Christopher Butler

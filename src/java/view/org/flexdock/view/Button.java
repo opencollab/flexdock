@@ -6,7 +6,7 @@ package org.flexdock.view;
 import javax.swing.Action;
 import javax.swing.JButton;
 
-import org.flexdock.view.plaf.PlafManager;
+import org.flexdock.plaf.PlafManager;
 
 /**
  * @author Christopher Butler
