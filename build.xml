@@ -52,7 +52,7 @@
 			<fileset dir="${resource.dir}/core" />
 			<fileset dir="${resource.dir}/demo" />
 			<fileset dir="${resource.dir}/misc" />
-			<fileset dir="${resource.dir}/view" />
+			<fileset dir="${resource.dir}/plaf" />
 		</copy>
 	</target>
 

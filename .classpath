@@ -13,7 +13,7 @@
 	<classpathentry kind="src" path="resources/core"/>
 	<classpathentry kind="src" path="resources/demo"/>
 	<classpathentry kind="src" path="resources/misc"/>
-	<classpathentry kind="src" path="resources/view"/>
+	<classpathentry kind="src" path="resources/plaf"/>
 	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
