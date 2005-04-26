@@ -117,8 +117,11 @@ public class Dockbar extends JPanel implements SwingConstants {
 		return label.getPreferredSize();
 	}
 	
-	void activate(String dockableId) {
-		if(manager!=null)
+	void activate(String dockableId, boolean lock) {
+		if(manager!=null) {
 			manager.setActiveDockable(dockableId);
+			if(lock)
+				manager.getActivationListener().lockViewpane();
+		}
 	}
 }
