@@ -34,6 +34,11 @@ import org.flexdock.docking.defaults.DefaultDockingPort;
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class SwingUtility {
+
+	public static Component toComponent(Object obj) {
+		return obj instanceof Component? (Component)obj: null;
+	}
+	
 	public static void revalidateComponent(Component comp) {
 		if (comp instanceof JComponent)
 			 ((JComponent) comp).revalidate();
@@ -315,6 +320,11 @@ public class SwingUtility {
 		if(c instanceof JComponent) {
 			((JComponent)c).putClientProperty(key, null);
 		}
+	}
+	
+	public static Window getActiveWindow() {
+		KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+		return mgr.getActiveWindow();
 	}
 
 }
