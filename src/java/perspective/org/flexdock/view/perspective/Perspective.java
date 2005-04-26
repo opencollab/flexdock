@@ -88,6 +88,7 @@ public class Perspective implements IPerspective {
 	 * @see org.flexdock.view.perspective.IPerspective#dockToCenterViewport(java.lang.String)
 	 */
 	public void dockToCenterViewport(String viewId) {
+		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
 		m_centerViewId = viewId;
 	}
 	

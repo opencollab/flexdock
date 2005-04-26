@@ -23,10 +23,6 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
-import org.flexdock.view.perspective.IPerspective;
-import org.flexdock.view.perspective.IPerspectiveManager;
-import org.flexdock.view.perspective.Perspective;
-import org.flexdock.view.perspective.PerspectiveManager;
 import org.flexdock.view.restore.IViewManager;
 import org.flexdock.view.restore.ViewDockingInfo;
 import org.flexdock.view.restore.ViewManager;
@@ -35,7 +31,7 @@ import org.flexdock.view.restore.ViewManager;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FlexDockDemo.java,v 1.1 2005-04-18 17:32:15 winnetou25 Exp $
+ * @version $Id: FlexDockDemo.java,v 1.2 2005-04-26 18:27:21 winnetou25 Exp $
  */
 public class FlexDockDemo extends JFrame {
 
@@ -290,7 +286,8 @@ public class FlexDockDemo extends JFrame {
 
 	public static void main(String[] args) {
 		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
-
+		//SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
+		
 		FlexDockDemo flexDockDemo = new FlexDockDemo();
 	
 		flexDockDemo.setSize(800, 600);

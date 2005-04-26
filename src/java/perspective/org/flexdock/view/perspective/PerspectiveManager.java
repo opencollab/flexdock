@@ -12,6 +12,9 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
+import org.flexdock.view.restore.ViewManager;
+import org.flexdock.view.restore.ViewStateEvent;
+import org.flexdock.view.restore.ViewStateListener;
 
 /**
  * @author Mateusz Szczap
@@ -28,11 +31,17 @@ public class PerspectiveManager implements IPerspectiveManager {
 	
 	private IPerspective m_currentPerspective = null;
 	
+	private HashMap m_managedPerspectives = new HashMap();
+	
 	public static IPerspectiveManager getInstance() {
 		if (SINGLETON == null) {
 			SINGLETON = new PerspectiveManager();
 		}
 		return SINGLETON;
+	}
+	
+	private PerspectiveManager() {
+		ViewManager.getInstance().addViewStateListener(new ViewStateHandler());
 	}
 	
 	/**
@@ -127,6 +136,26 @@ public class PerspectiveManager implements IPerspectiveManager {
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#managerPerspective(org.flexdock.view.perspective.IPerspective)
+	 */
+	public void managePerspective(IPerspective perspective) {
+		m_managedPerspectives.put(perspective.getPerspectiveName(), perspective);
+		//zamykanie view
+		//otwieranie view
+		//zmiana rozmaru JSplitPane
+		//przedokowanie view
+
+	}
+	
+	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#unmanagePerspective(org.flexdock.view.perspective.IPerspective)
+	 */
+	public void unmanagePerspective(IPerspective perspective) {
+		
+		
+	}
+	
+	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#applyPerspective(java.awt.Container, org.flexdock.view.perspective.IPerspective)
 	 */
 	public void applyPerspective(IPerspective perspective) {
@@ -141,7 +170,6 @@ public class PerspectiveManager implements IPerspectiveManager {
 		if (centerViewId != null) {
 			View centerView = (View) DockingManager.getRegisteredDockable(centerViewId);
 			wasTerritoralDocked = DockingManager.dock(centerView, mainViewPort, DockingPort.CENTER_REGION);
-			//wasTerritoralDocked = mainViewPort.dock(centerView);
 		}
 
 		if (!wasTerritoralDocked) {
@@ -206,6 +234,13 @@ public class PerspectiveManager implements IPerspectiveManager {
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#getCurrentPerspective()
+	 */
+	public IPerspective getCurrentPerspective() {
+		return m_currentPerspective;
+	}
+	
+	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#createPerspective(org.flexdock.view.Viewport)
 	 */
 	public IPerspective createPerspective(String perspectiveName, Viewport centralViewport) {
@@ -252,4 +287,23 @@ public class PerspectiveManager implements IPerspectiveManager {
 		}
 	}
 
+	private class ViewStateHandler implements ViewStateListener {
+
+		/**
+		 * @see org.flexdock.view.restore.ViewStateListener#viewStateChanged(org.flexdock.view.restore.ViewStateEvent)
+		 */
+		public void viewStateChanged(ViewStateEvent viewStateEvent) {
+			int eventType = viewStateEvent.getEventType();
+			
+			for (Iterator it = m_managedPerspectives.values().iterator(); it.hasNext();) {
+				IPerspective perspective = (IPerspective) it.next();
+				if (perspective.getView(viewStateEvent.getView().getPersistentId()) != null) {
+					
+				}
+			}
+			
+		}
+		
+	}
+	
 }

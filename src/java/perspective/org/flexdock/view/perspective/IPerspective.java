@@ -9,7 +9,8 @@ import org.flexdock.view.Viewport;
 public interface IPerspective {
 
 	String getPerspectiveName();
-	
+
+	//TODO get rid of it somehow
 	String getCenterViewId();
 	
 	void setMainViewport(Viewport viewport);
@@ -26,6 +27,7 @@ public interface IPerspective {
 	
 	Perspective.ViewDockingInfo[] getDockingInfoChain();
 
+	//TODO get rid of it somehow
 	void dockToCenterViewport(String viewId);
 
 	void dock(String view1Id, String view2Id);
