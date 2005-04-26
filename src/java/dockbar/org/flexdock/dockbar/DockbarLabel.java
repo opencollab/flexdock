@@ -142,10 +142,12 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 
 	// protected
 
-	protected void activate(boolean soft) {
+	protected void activate(boolean lock) {
 		Dockbar dockbar = (Dockbar)SwingUtilities.getAncestorOfClass(Dockbar.class, this);
-		if(dockbar!=null)
-			dockbar.activate(dockingId);
+		if(dockbar!=null) {
+			dockbar.activate(dockingId, lock);
+			
+		}
 	}
 
 	// private
@@ -242,11 +244,11 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 		if(e.getButton() != MouseEvent.BUTTON1)
 			return;
 		
-		activate(false);
+		activate(true);
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		activate(true);
+		activate(false);
 	}
 
 	public void mouseExited(MouseEvent e) {
