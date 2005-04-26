@@ -451,21 +451,21 @@ public class DockingManager {
 		return PropertyManager.getDockableRoot();
 	}
 	
-	public static void pin(Dockable dockable) {
+	public static void setMinimized(Dockable dockable, boolean minimized) {
 		Component cmp = dockable==null? null: dockable.getDockable();
 		Window window = cmp==null? null: SwingUtilities.getWindowAncestor(cmp);
-		pin(dockable, window);
+		setMinimized(dockable, minimized, window);
 	}
 	
-	public static void pin(Dockable dockable, Window window) {
-		pin(dockable, window, DockbarManager.UNSPECIFIED_EDGE);
+	public static void setMinimized(Dockable dockable, boolean minimized, Window window) {
+		setMinimized(dockable, minimized, window, DockbarManager.UNSPECIFIED_EDGE);
 	}
 
-	public static void pin(Dockable dockable, int edge) {
-		pin(dockable, null, edge);
+	public static void setMinimized(Dockable dockable, boolean minimized, int edge) {
+		setMinimized(dockable, minimized, null, edge);
 	}
 	
-	public static void pin(Dockable dockable, Window window, int edge) {
+	public static void setMinimized(Dockable dockable, boolean minimized, Window window, int edge) {
 		if(dockable==null)
 			return;
 		
@@ -475,7 +475,7 @@ public class DockingManager {
 			return;
 		
 		DockingStrategy strategy = getDockingStrategy(dockable);
-		strategy.pin(dockable, window, edge);
+		strategy.setMinimized(dockable, minimized, window, edge);
 	}
 
 }
