@@ -21,17 +21,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.flexdock.util.DockingConstants;
+import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 
 /**
  * @author Christopher Butler
  */
-public class ViewListener implements PropertyChangeListener, ChangeListener, AWTEventListener {
+public class ViewListener implements DockingConstants, PropertyChangeListener, ChangeListener, AWTEventListener {
 	private static final ViewListener SINGLETON = new ViewListener();
 	private static HashSet PROP_EVENTS = new HashSet();
-	private static final String PERMANENT_FOCUS_OWNER = "permanentFocusOwner";
-	public static final String ACTIVE_WINDOW = "activeWindow";
-	private static final String MOUSE_PRESSED = "mousePressed";
 
 	static {
 		primeImpl();
@@ -93,8 +92,8 @@ public class ViewListener implements PropertyChangeListener, ChangeListener, AWT
 		if(!PROP_EVENTS.contains(pName))
 			return;
 		
-		Component oldVal = toComponent(evt.getOldValue());
-		Component newVal = toComponent(evt.getNewValue());
+		Component oldVal = SwingUtility.toComponent(evt.getOldValue());
+		Component newVal = SwingUtility.toComponent(evt.getNewValue());
 		boolean switchTo = newVal!=null;
 		
 		if(ACTIVE_WINDOW.equals(pName))
@@ -132,10 +131,7 @@ public class ViewListener implements PropertyChangeListener, ChangeListener, AWT
 			tracker.setActive(view);
 		}
 	}
-	
-	private static Component toComponent(Object obj) {
-		return obj instanceof Component? (Component)obj: null;
-	}
+
 
 	public void stateChanged(ChangeEvent e) {
 		Object obj = e.getSource();
