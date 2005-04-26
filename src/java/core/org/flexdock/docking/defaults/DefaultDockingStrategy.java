@@ -406,14 +406,20 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	}
 	
 	
-	public void pin(Dockable dockable, Component component, int edge) {
+	public void setMinimized(Dockable dockable, boolean minimized, Component component, int edge) {
 		DockbarManager mgr = DockbarManager.getInstance(component);
 		if(mgr==null)
 			return;
-		
-		if(edge==DockbarManager.UNSPECIFIED_EDGE)
-			mgr.dock(dockable);
+
+		// if minimizing, send to the dockbar
+		if(minimized) {
+			if(edge==DockbarManager.UNSPECIFIED_EDGE)
+				mgr.dock(dockable);
+			else
+				mgr.dock(dockable, edge);
+		}
+		// otherwise, remove from the dockbar
 		else
-			mgr.dock(dockable, edge);
+			mgr.undock(dockable);
 	}
 }
