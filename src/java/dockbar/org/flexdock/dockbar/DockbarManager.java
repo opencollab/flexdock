@@ -27,6 +27,7 @@ import org.flexdock.dockbar.activation.Animation;
 import org.flexdock.dockbar.event.ActivationListener;
 import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarListener;
+import org.flexdock.dockbar.event.DockbarTracker;
 import org.flexdock.dockbar.event.EventDispatcher;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -42,6 +43,8 @@ public class DockbarManager implements SwingConstants {
 	public static final Integer DOCKBAR_LAYER = new Integer(JLayeredPane.PALETTE_LAYER.intValue()-5);
 	public static final int DEFAULT_EDGE = LEFT;
 	public static final int UNSPECIFIED_EDGE = -1;
+	
+	private static DockbarManager currentManager;
 
 	private WeakReference windowRef;
 	private Dockbar leftBar;
@@ -58,6 +61,10 @@ public class DockbarManager implements SwingConstants {
 	private boolean animating;
 	private boolean dragging;
 
+
+	static {
+		DockbarTracker.register();
+	}
 	
 	public static DockbarManager getInstance(Component c) {
 		RootWindow window = RootWindow.getRootContainer(c);
@@ -76,9 +83,20 @@ public class DockbarManager implements SwingConstants {
 			}
 			mgr.install();
 		}
+		
+		if(currentManager==null)
+			currentManager = mgr;
+		
 		return mgr;		
 	}
 	
+	public static void windowChanged(Component newWindow) {
+		currentManager = getInstance(newWindow);
+	}
+
+	public static DockbarManager getCurrent() {
+		return currentManager;
+	}
 	
 	
 	private DockbarManager(RootWindow window) {
@@ -353,6 +371,9 @@ public class DockbarManager implements SwingConstants {
 	
 	
 	public void undock(Dockable dockable) {
+		if(getActiveDockable()==dockable)
+			setActiveDockable((Dockable)null);
+		
 		Dockbar dockbar = getDockbar(dockable);
 		if(dockbar!=null) {
 			dockbar.undock(dockable);
@@ -425,24 +446,23 @@ public class DockbarManager implements SwingConstants {
 		
 		// if nothing has changed, then we're done
 		if(changed) {
-			startAnimation(oldDockable, newDockableId, newEdge);
+			viewPane.setLocked(false);
+			startAnimation(oldDockable, dockable, newDockableId, newEdge);
 			
 			// exit here so we can test our animation.  after it's working, we can 
 			// re-add the event dispatching
 //			if(true)
 //				return;
-			
-			// dispatch event notification
-			dispatchEvent(oldDockable, dockable);
+
 		}
 	}
 	
 	private void dispatchEvent(Dockable oldDockable, Dockable newDockable) {
 		// dispatch to event listeners
-		int evtType = DockbarEvent.ACTIVATED;
+		int evtType = DockbarEvent.EXPANDED;
 		if(newDockable==null && oldDockable!=null) {
 			newDockable = oldDockable;
-			evtType = DockbarEvent.DEACTIVATED;
+			evtType = DockbarEvent.COLLAPSED;
 		}
 		
 		if(newDockable!=null) {
@@ -451,7 +471,7 @@ public class DockbarManager implements SwingConstants {
 		}		
 	}
 	
-	private void startAnimation(Dockable oldDockable, final String newDockableId, final int newEdge) {
+	private void startAnimation(final Dockable oldDockable, final Dockable newDockable, final String newDockableId, final int newEdge) {
 		Animation deactivation = oldDockable==null? null: new Animation(this, true);
 		Runnable updater1 = new Runnable() {
 			public void run() {
@@ -468,6 +488,9 @@ public class DockbarManager implements SwingConstants {
 				viewPane.updateOrientation();
 				viewPane.updateContents();
 				revalidate();
+				
+				// dispatch event notification
+				dispatchEvent(oldDockable, newDockable);
 			}
 		};
 
@@ -497,7 +520,13 @@ public class DockbarManager implements SwingConstants {
 	public void setDragging(boolean dragging) {
 		this.dragging = dragging;
 	}
+
 	public ActivationListener getActivationListener() {
 		return activationListener;
 	}
+	
+	public EventDispatcher getEventDispatcher() {
+		return eventDispatcher;
+	}	
+	
 }
