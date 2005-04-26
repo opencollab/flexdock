@@ -35,7 +35,7 @@ public interface DockableProps {
 
 	public static final String TERRITORY_BLOCKED_CENTER = "Dockable.TERRITORY_BLOCKED_CENTER";
 	public static final String DOCKBAR_ICON = "Dockable.DOCKBAR_ICON";
-	public static final String PIN_SIZE = "Dockable.PIN_SIZE";
+	public static final String PREVIEW_SIZE = "Dockable.PREVIEW_SIZE";
 	
 	public CursorProvider getCursorProvider();
 
@@ -55,7 +55,7 @@ public interface DockableProps {
 	
 	public Icon getDockbarIcon();
 	
-	public Float getPinSize();
+	public Float getPreviewSize();
 	
 	
 	
@@ -77,5 +77,5 @@ public interface DockableProps {
 	
 	public void setDockbarIcon(Icon icon);
 	
-	public void setPinSize(float size);
+	public void setPreviewSize(float size);
 }

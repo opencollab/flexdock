@@ -124,8 +124,8 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		return getFloat(DRAG_THRESHOLD);
 	}
 	
-	public Float getPinSize() {
-		return getFloat(PIN_SIZE);
+	public Float getPreviewSize() {
+		return getFloat(PREVIEW_SIZE);
 	}
 	
 	
@@ -181,9 +181,9 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		put(DRAG_THRESHOLD, threshold);
 	}
 	
-	public void setPinSize(float pinSize) {
-		pinSize = Math.max(pinSize, 0f);
-		pinSize = Math.min(pinSize, 1f);
-		put(PIN_SIZE, pinSize);
+	public void setPreviewSize(float previewSize) {
+		previewSize = Math.max(previewSize, 0f);
+		previewSize = Math.min(previewSize, 1f);
+		put(PREVIEW_SIZE, previewSize);
 	}
 }

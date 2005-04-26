@@ -97,8 +97,8 @@ public class ScopedDockableProps extends BasicDockableProps implements ScopedMap
 		return (Float)PropertyManager.getProperty(DRAG_THRESHOLD, this);
 	}
 	
-	public Float getPinSize() {
-		return (Float)PropertyManager.getProperty(PIN_SIZE, this);
+	public Float getPreviewSize() {
+		return (Float)PropertyManager.getProperty(PREVIEW_SIZE, this);
 	}
 
 }
