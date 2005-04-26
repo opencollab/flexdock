@@ -3,24 +3,15 @@
  */
 package org.flexdock.dockbar.event;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-
-import javax.swing.SwingUtilities;
 
 import org.flexdock.dockbar.DockbarManager;
-import org.flexdock.dockbar.ViewPane;
 import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
  */
-public class ActivationListener implements MouseListener, MouseMotionListener {
+public class ActivationListener {
 	private DockbarManager manager;
 	private Deactivator deactivator;
 	private boolean enabled;
@@ -30,17 +21,6 @@ public class ActivationListener implements MouseListener, MouseMotionListener {
 	public ActivationListener(DockbarManager mgr) {
 		manager = mgr;
 		setEnabled(true);
-	}
-	
-	public void mouseClicked(MouseEvent e) {
-	}
-	public void mousePressed(MouseEvent e) {
-	}
-	public void mouseReleased(MouseEvent e) {
-	}
-	public void mouseDragged(MouseEvent e) {
-	}
-	public void mouseMoved(MouseEvent e) {
 	}
 
 	public boolean isEnabled() {
@@ -55,38 +35,24 @@ public class ActivationListener implements MouseListener, MouseMotionListener {
 		this.enabled = enabled;
 	}
 
-	private boolean isAvailable() {
+	public boolean isAvailable() {
 		return isEnabled() && isActive();
 	}
 	
-	private Rectangle getViewpaneBounds() {
-		ViewPane viewPane = manager.getViewPane();
-		Rectangle bounds = viewPane.getBounds();
-		bounds.setLocation(0, 0);
-		return bounds; 
+	public boolean isViewpaneLocked() {
+		return manager.getViewPane().isLocked();
 	}
 	
-	private boolean isOverDockbars(MouseEvent evt) {
-		Container pane = manager.getLeftBar().getParent();
-		Point p = SwingUtilities.convertPoint((Component)evt.getSource(), evt.getPoint(), pane);
-
-		return manager.getLeftBar().getBounds().contains(p)
-			|| manager.getRightBar().getBounds().contains(p)
-			|| manager.getBottomBar().getBounds().contains(p);
-	}
-	
-	private boolean isValidMouseExit(MouseEvent evt) {
-		Rectangle bounds = getViewpaneBounds();
-		
-		Point p = evt.getPoint();
-		p = SwingUtilities.convertPoint((Component)evt.getSource(), p, manager.getViewPane());
-		return !bounds.contains(p);
+	private boolean isOverDockbars(Point mousePoint) {
+		return manager.getLeftBar().getBounds().contains(mousePoint)
+			|| manager.getRightBar().getBounds().contains(mousePoint)
+			|| manager.getBottomBar().getBounds().contains(mousePoint);
 	}
 	
 	
 	
-	public void mouseEntered(MouseEvent e) {
-		if(!isAvailable() || mouseOver)
+	public void mouseEntered(Point mousePoint) {
+		if(mouseOver)
 			return;
 
 		mouseOver = true;
@@ -95,17 +61,40 @@ public class ActivationListener implements MouseListener, MouseMotionListener {
 		deactivator = null;
 	}
 	
-	public void mouseExited(MouseEvent e) {
-		if(!isAvailable() || !isValidMouseExit(e))
+	public void mouseExited(Point mousePoint) {
+		if(!mouseOver)
 			return;
 		
 		mouseOver = false;
-		
-		if(!isOverDockbars(e)) {
+		if(!isOverDockbars(mousePoint)) {
 			deactivator = new Deactivator(manager.getActiveDockableId());
 			deactivator.setEnabled(true);
 			deactivator.start();			
 		}
+	}
+
+	public void mousePressed(Point mousePoint, boolean mouseOver) {
+		if(mouseOver) {
+			if(!isViewpaneLocked()) {
+				lockViewpane();
+			}
+		}
+		else {
+			if(!isOverDockbars(mousePoint)) {
+				manager.setActiveDockable((String)null);
+			}
+		}
+	}
+	
+	public void lockViewpane() {
+		manager.getViewPane().setLocked(true);
+		dispatchDockbarEvent(DockbarEvent.LOCKED);		
+	}
+	
+	private void dispatchDockbarEvent(int type) {
+		EventDispatcher dispatcher = manager.getEventDispatcher();
+		DockbarEvent evt = new DockbarEvent(manager.getActiveDockable(), type, manager.getActiveEdge());
+		dispatcher.dispatch(evt);
 	}
 	
 	private class Deactivator extends Thread {
@@ -132,10 +121,15 @@ public class ActivationListener implements MouseListener, MouseMotionListener {
 				e.printStackTrace();
 			}
 			
-			if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) )
+			if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&
+					!isViewpaneLocked())
 				manager.setActiveDockable((String)null);
 		}
 
+	}
+
+	public boolean isMouseOver() {
+		return mouseOver;
 	}
 
 }
