@@ -15,16 +15,19 @@ import javax.swing.border.Border;
 import org.flexdock.dockbar.event.ResizeListener;
 import org.flexdock.docking.Dockable;
 import org.flexdock.plaf.common.border.SlideoutBorder;
+import org.flexdock.util.Adapters;
 
 /**
  * @author Christopher Butler
  */
 public class ViewPane extends JPanel implements SwingConstants {
 	private static final Dimension RESIZE_DIMS = new Dimension(3, 3);
+	private static final Adapters.MouseEventAdapter EMPTY_MOUSE_LISTENER = new Adapters.MouseEventAdapter();
 	public static final int UNSPECIFIED_PREFERRED_SIZE = -1;
 	private DockbarManager manager;
 	private JPanel dragEdge;
 	private int prefSize;
+	private boolean locked;
 
 	
 	public ViewPane(DockbarManager mgr) {
@@ -45,8 +48,8 @@ public class ViewPane extends JPanel implements SwingConstants {
 		
 		// intercept rouge mouse events so they don't fall 
 		// through to the content pane
-		addMouseListener(mgr.getActivationListener());
-		addMouseMotionListener(mgr.getActivationListener());
+		addMouseListener(EMPTY_MOUSE_LISTENER);
+		addMouseMotionListener(EMPTY_MOUSE_LISTENER);
 	}
 
 
@@ -105,5 +108,11 @@ public class ViewPane extends JPanel implements SwingConstants {
 	}
 	public void setPrefSize(int prefSize) {
 		this.prefSize = prefSize;
+	}
+	public boolean isLocked() {
+		return locked;
+	}
+	public void setLocked(boolean locked) {
+		this.locked = locked;
 	}
 }
