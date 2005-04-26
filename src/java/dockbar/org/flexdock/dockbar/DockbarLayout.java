@@ -77,7 +77,7 @@ public class DockbarLayout implements SwingConstants {
 		DockableProps props = dockable.getDockingProperties();
 		
 		// determine what percentage of the viewable area we want the viewpane to take up
-		float viewSize = props.getPinSize().floatValue();
+		float viewSize = props.getPreviewSize().floatValue();
 		int edge = manager.getActiveEdge();
 		if(edge==LEFT || edge==RIGHT) {
 			return (int)(((float)rect.width)*viewSize);

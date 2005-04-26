@@ -91,7 +91,7 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener,
 		percent = Math.max(percent, minPercent);
 		
 		DockableProps props = dockable.getDockingProperties();
-		props.setPinSize(percent);
+		props.setPreviewSize(percent);
 		manager.revalidate();
 	}
 
