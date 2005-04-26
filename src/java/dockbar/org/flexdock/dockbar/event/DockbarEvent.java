@@ -11,8 +11,9 @@ import org.flexdock.docking.Dockable;
  * @author Christopher Butler
  */
 public class DockbarEvent extends EventObject {
-	public static final int ACTIVATED = 0;
-	public static final int DEACTIVATED = 1;
+	public static final int EXPANDED = 0;
+	public static final int LOCKED = 1;
+	public static final int COLLAPSED = 2;
 	
 	private int edge;
 	private int type;
