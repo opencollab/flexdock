@@ -35,11 +35,14 @@ public class EventDispatcher {
 	
 	private void dispatchEvent(DockbarEvent evt, DockbarListener listener) {
 		switch(evt.getType()) {
-			case DockbarEvent.ACTIVATED:
-				listener.dockableActivated(evt);
+			case DockbarEvent.EXPANDED:
+				listener.dockableExpanded(evt);
 				break;
-			case DockbarEvent.DEACTIVATED:
-				listener.dockableDeactivated(evt);
+			case DockbarEvent.LOCKED:
+				listener.dockableLocked(evt);
+				break;
+			case DockbarEvent.COLLAPSED:
+				listener.dockableCollapsed(evt);
 				break;
 		}
 	}
