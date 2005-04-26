@@ -7,6 +7,7 @@ package org.flexdock.dockbar.event;
  * @author Christopher Butler
  */
 public interface DockbarListener {
-	public void dockableActivated(DockbarEvent evt);
-	public void dockableDeactivated(DockbarEvent evt);
+	public void dockableExpanded(DockbarEvent evt);
+	public void dockableLocked(DockbarEvent evt);
+	public void dockableCollapsed(DockbarEvent evt);
 }

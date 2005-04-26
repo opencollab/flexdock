@@ -13,16 +13,18 @@ import org.flexdock.view.View;
  */
 public class DockbarMonitor implements DockbarListener {
 
-	public void dockableActivated(DockbarEvent evt) {
+	public void dockableLocked(DockbarEvent evt) {
 		View view = getView(evt);
 		if(view!=null)
 			ViewTracker.requestViewActivation(view);
 	}
 	
-	public void dockableDeactivated(DockbarEvent evt) {
-//		View view = getView(evt);
-//		if(view!=null)
-//			ViewTracker.requestViewActivation(view);
+	public void dockableCollapsed(DockbarEvent evt) {
+
+	}
+	
+	public void dockableExpanded(DockbarEvent evt) {
+
 	}
 	
 	private View getView(DockbarEvent evt) {
