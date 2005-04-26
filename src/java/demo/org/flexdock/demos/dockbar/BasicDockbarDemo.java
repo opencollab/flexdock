@@ -16,7 +16,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.view.View;
 
@@ -53,9 +52,9 @@ public class BasicDockbarDemo {
 		JButton bottomButton = new JButton("Pin Bottom");
 		JButton rightButton = new JButton("Pin Right");
 		
-		leftButton.addActionListener(createPinner(SwingConstants.LEFT));
-		bottomButton.addActionListener(createPinner(SwingConstants.BOTTOM));
-		rightButton.addActionListener(createPinner(SwingConstants.RIGHT));
+		leftButton.addActionListener(createMinimizeAction(SwingConstants.LEFT));
+		bottomButton.addActionListener(createMinimizeAction(SwingConstants.BOTTOM));
+		rightButton.addActionListener(createMinimizeAction(SwingConstants.RIGHT));
 
 		cp.add(leftButton);
 		cp.add(bottomButton);
@@ -63,15 +62,13 @@ public class BasicDockbarDemo {
 
 		// Display the window.
 		frame.setVisible(true);
-		
-		DockbarManager.getInstance(leftButton);
 	}
 	
-	private static ActionListener createPinner(final int edge) {
+	private static ActionListener createMinimizeAction(final int edge) {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				View view = createView();
-				DockingManager.pin(view, edge);
+				DockingManager.setMinimized(view, true, edge);
 			}
 		};
 	}
