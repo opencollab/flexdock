@@ -6,6 +6,8 @@ package org.flexdock.plaf.theme;
 import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -19,6 +21,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import org.flexdock.plaf.IFlexViewComponentUI;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.icons.IconResource;
+import org.flexdock.view.Button;
 import org.flexdock.view.Titlebar;
 
 /**
@@ -41,6 +44,7 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 	public void paint(Graphics g, JComponent c) {
 		AbstractButton b = (AbstractButton) c;
 		ButtonModel model = b.getModel();
+		updateTooltip(b);
 		
 		boolean active = isParentActive(b);
 		boolean pressed = isPressed(b);
@@ -203,6 +207,10 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		button.setRequestFocusEnabled(false);
 		button.setOpaque(false);
 		button.setBorder(null);
+		
+		// add the toggle listener
+		button.addItemListener(new ToggleListener());
+		updateTooltip(button);
 	}
 
 	public void uninstallUI(JComponent c) {
@@ -264,4 +272,34 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		setBorderPressed(creationParameters.getBorder(BORDER_PRESSED));
 	}
 
+	private class ToggleListener implements ItemListener {
+		public void itemStateChanged(ItemEvent e) {
+			if(e.getStateChange()!=ItemEvent.SELECTED && e.getStateChange()!=ItemEvent.DESELECTED)
+				return;
+			
+			Button button = (Button)e.getSource();
+			updateTooltip(button);
+		}
+	}
+	
+	private void updateTooltip(AbstractButton button) {
+		Action action = button.getAction();
+		if(action==null)
+			return;
+		
+		String toolTip = (String)action.getValue(Action.SHORT_DESCRIPTION);
+		if(toolTip!=null)
+			return;
+		
+		IconResource resource = action==null? null: (IconResource)action.getValue(ICON_RESOURCE);
+		if(resource==null)
+			return;
+		
+		toolTip = button.isSelected()? resource.getTooltipSelected(): resource.getTooltip();
+		if(toolTip==null)
+			toolTip = resource.getTooltip();
+
+		if(toolTip!=null)
+			button.setToolTipText(toolTip);		
+	}
 }
