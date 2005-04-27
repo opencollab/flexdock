@@ -148,17 +148,42 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 		if(resource==null)
 			return null;
 		
-		if(pressed)
-			return resource.getIconPressed();
-		if(active) {
-			if(hover)
-				return resource.getIconActiveHover();
-			return resource.getIconActive();
+		boolean selected = button.isSelected();
+		
+		if(pressed) {
+			Icon icon = selected? resource.getIconSelectedPressed(): null;
+			if(icon==null)
+				icon = resource.getIconPressed();
+			return icon;
 		}
-		if(hover)
-			return resource.getIconHover();
-		return resource.getIcon();
+		
+		if(active) {
+			if(hover) {
+				Icon icon = selected? resource.getIconSelectedActiveHover(): null;
+				if(icon==null)
+					icon = resource.getIconActiveHover();
+				return icon;
+			}
+			
+			Icon icon = selected? resource.getIconSelectedActive(): null;
+			if(icon==null)
+				icon = resource.getIconActive();
+			return icon;
+		}
+		
+		if(hover) {
+			Icon icon = selected? resource.getIconSelectedHover(): null;
+			if(icon==null)
+				icon = resource.getIconHover();
+			return icon;
+		}
+		
+		Icon icon = selected? resource.getIconSelected(): null;
+		if(icon==null)
+			icon = resource.getIcon();
+		return icon;
 	}
+
 	
 	protected boolean isPressed(AbstractButton button) {
 		ButtonModel model = button.getModel();

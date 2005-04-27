@@ -16,6 +16,12 @@ public class IconResource implements UIResource {
 	private Icon iconActiveHover;
 	private Icon iconPressed;
 	
+	private Icon iconSelected;
+	private Icon iconSelectedHover;
+	private Icon iconSelectedActive;
+	private Icon iconSelectedActiveHover;
+	private Icon iconSelectedPressed;
+	
 	/**
 	 * @return Returns the icon.
 	 */
@@ -77,4 +83,34 @@ public class IconResource implements UIResource {
 		this.iconPressed = iconPressed;
 	}
 
+	public Icon getIconSelected() {
+		return iconSelected;
+	}
+	public void setIconSelected(Icon iconSelected) {
+		this.iconSelected = iconSelected;
+	}
+	public Icon getIconSelectedActive() {
+		return iconSelectedActive;
+	}
+	public void setIconSelectedActive(Icon iconSelectedActive) {
+		this.iconSelectedActive = iconSelectedActive;
+	}
+	public Icon getIconSelectedActiveHover() {
+		return iconSelectedActiveHover;
+	}
+	public void setIconSelectedActiveHover(Icon iconSelectedActiveHover) {
+		this.iconSelectedActiveHover = iconSelectedActiveHover;
+	}
+	public Icon getIconSelectedHover() {
+		return iconSelectedHover;
+	}
+	public void setIconSelectedHover(Icon iconSelectedHover) {
+		this.iconSelectedHover = iconSelectedHover;
+	}
+	public Icon getIconSelectedPressed() {
+		return iconSelectedPressed;
+	}
+	public void setIconSelectedPressed(Icon iconSelectedPressed) {
+		this.iconSelectedPressed = iconSelectedPressed;
+	}
 }

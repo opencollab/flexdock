@@ -25,6 +25,13 @@ public class IconResourceFactory implements XMLConstants {
 	public static final String ACTIVE = "active";
 	public static final String ACTIVE_HOVER = "active.hover";
 	public static final String PRESSED = "pressed";
+	
+	public static final String DEFAULT_SELECTED = "default.selected";
+	public static final String HOVER_SELECTED = "hover.selected";
+	public static final String ACTIVE_SELECTED = "active.selected";
+	public static final String ACTIVE_SELECTED_HOVER = "active.armed.selected";
+	public static final String PRESSED_SELECTED = "pressed.selected";
+	
 	private static final HashMap RESOURCE_CACHE = new HashMap();
 	private static final HashMap RESOURCE_MAP_CACHE = new HashMap();
 	private static final HashSet BAD_RESOURCE_NAMES = new HashSet();
@@ -90,11 +97,18 @@ public class IconResourceFactory implements XMLConstants {
 	
 	private static IconResource createResource(PropertySet properties) {
 		IconResource icons = new IconResource();
+		
 		icons.setIcon(properties.getIcon(DEFAULT));
 		icons.setIconHover(properties.getIcon(HOVER));
 		icons.setIconActive(properties.getIcon(ACTIVE));
 		icons.setIconActiveHover(properties.getIcon(ACTIVE_HOVER));
 		icons.setIconPressed(properties.getIcon(PRESSED));
+
+		icons.setIconSelected(properties.getIcon(DEFAULT_SELECTED));
+		icons.setIconSelectedHover(properties.getIcon(HOVER_SELECTED));
+		icons.setIconSelectedActive(properties.getIcon(ACTIVE_SELECTED));
+		icons.setIconSelectedActiveHover(properties.getIcon(ACTIVE_SELECTED_HOVER));
+		icons.setIconSelectedPressed(properties.getIcon(PRESSED_SELECTED));
 		
 		return icons;		
 	}

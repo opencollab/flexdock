@@ -121,7 +121,9 @@
 		</icon-resource>
 		<icon-resource name="win32.pin">
 			<property name="default" value="org/flexdock/plaf/titlebar/win32/pin_default.png" />
+			<property name="default.selected" value="org/flexdock/plaf/titlebar/win32/pin_default_selected.png" />
 			<property name="active" value="org/flexdock/plaf/titlebar/win32/pin_active.png" />
+			<property name="active.selected" value="org/flexdock/plaf/titlebar/win32/pin_active_selected.png" />
 		</icon-resource>
 	</theme>
 	<!-- End Windows Classic -->
