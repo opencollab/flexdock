@@ -15,6 +15,7 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -372,6 +373,23 @@ public class View extends JComponent implements Dockable {
 	public boolean isActiveStateLocked() {
 		return getViewProperties().isActiveStateLocked().booleanValue();
 	}
+	
+	public boolean isMinimized() {
+		return getViewProperties().isMinimized().booleanValue();
+	}
+	
+	public int getMinimizedEdge() {
+		Integer edge = getViewProperties().getMinimizedEdge();
+		return edge==null? DockbarManager.UNSPECIFIED_EDGE: edge.intValue();
+	}
+	
+	public void setMinimizedEdge(int edge) {
+		getViewProperties().setMinimizedEdge(edge);
+	}
+	
+	
+	
+	
 
 
 	public void addDockingListener(DockingListener listener) {

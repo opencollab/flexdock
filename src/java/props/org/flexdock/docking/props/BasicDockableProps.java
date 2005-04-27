@@ -128,6 +128,16 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		return getFloat(PREVIEW_SIZE);
 	}
 	
+	public Boolean isMinimized() {
+		return getBoolean(MINIMIZED);
+	}
+
+	public Integer getMinimizedEdge() {
+		return getInt(MINIMIZED_EDGE);
+	}
+	
+	
+	
 	
 	
 	
@@ -185,5 +195,13 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		previewSize = Math.max(previewSize, 0f);
 		previewSize = Math.min(previewSize, 1f);
 		put(PREVIEW_SIZE, previewSize);
+	}
+	
+	public void setMinimized(boolean minimized) {
+		put(MINIMIZED, minimized);
+	}
+	
+	public void setMinimizedEdge(int edge) {
+		put(MINIMIZED_EDGE, edge);
 	}
 }

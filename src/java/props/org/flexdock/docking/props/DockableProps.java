@@ -37,6 +37,9 @@ public interface DockableProps {
 	public static final String DOCKBAR_ICON = "Dockable.DOCKBAR_ICON";
 	public static final String PREVIEW_SIZE = "Dockable.PREVIEW_SIZE";
 	
+	public static final String MINIMIZED = "Dockable.MINIMIZED";
+	public static final String MINIMIZED_EDGE = "Dockable.MINIMIZED_EDGE";
+	
 	public CursorProvider getCursorProvider();
 
 	public String getDockableDesc();
@@ -56,6 +59,10 @@ public interface DockableProps {
 	public Icon getDockbarIcon();
 	
 	public Float getPreviewSize();
+	
+	public Boolean isMinimized();
+	
+	public Integer getMinimizedEdge();
 	
 	
 	
@@ -78,4 +85,8 @@ public interface DockableProps {
 	public void setDockbarIcon(Icon icon);
 	
 	public void setPreviewSize(float size);
+	
+	public void setMinimized(boolean minimized);
+	
+	public void setMinimizedEdge(int edge);
 }

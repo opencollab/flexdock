@@ -44,6 +44,8 @@ public class RootDockableProps extends BasicDockableProps {
 		
 		constrain(DRAG_THRESHOLD, DEFAULT_DRAG_THRESHOLD);
 		constrain(PREVIEW_SIZE, DEFAULT_PREVIEW_SIZE);
+		
+		constrain(MINIMIZED, Boolean.FALSE);
 	}
 	
 	public void constrain(Object key, Object value) {
