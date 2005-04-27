@@ -29,6 +29,8 @@
 	<handler name="insets" value="org.flexdock.plaf.resources.InsetsResourceHandler" />
 	<handler name="rounded-border" value="org.flexdock.plaf.resources.border.RoundedBorderResource" />
 	<handler name="raised-border" value="org.flexdock.plaf.resources.border.RaisedBorderResource" />
+	<handler name="action" value="org.flexdock.plaf.resources.ActionFactoryResourceHandler" />
+	<handler name="string" value="org.flexdock.plaf.resources.StringResourceHandler" />
 	
 	<!-- Specify a set of default property handlers for specific tags. -->
 	<!-- For instance, a <prop-handler> with name="icon-resource" and  -->
@@ -81,6 +83,16 @@
 			<property name="border.active.hover" value="#808080" handler="rounded-border" />
 			<property name="border.pressed" value="#0C0C0C" handler="rounded-border" />
 		</button-ui>
+		
+		<icon-resource name="default.close">
+			<property name="action.factory" value="org.flexdock.view.actions.DefaultViewActionFactory" handler="action" />
+			<property name="tooltip" value="Close" handler="string" />
+		</icon-resource>
+		<icon-resource name="default.pin">
+			<property name="action.factory" value="org.flexdock.view.actions.DefaultViewActionFactory" handler="action" />
+			<property name="tooltip" value="Unpin" handler="string" />
+			<property name="tooltip.selected" value="Pin" handler="string" />
+		</icon-resource>
 	</theme>
 
 	<!-- Begin Windows Classic -->
@@ -115,11 +127,11 @@
 		</icon-map>
 		
 		<!-- List available icons -->
-		<icon-resource name="win32.close">
+		<icon-resource name="win32.close" extends="default.close">
 			<property name="default" value="org/flexdock/plaf/titlebar/win32/close_default.png" />
 			<property name="active" value="org/flexdock/plaf/titlebar/win32/close_active.png" />
 		</icon-resource>
-		<icon-resource name="win32.pin">
+		<icon-resource name="win32.pin" extends="default.pin">
 			<property name="default" value="org/flexdock/plaf/titlebar/win32/pin_default.png" />
 			<property name="default.selected" value="org/flexdock/plaf/titlebar/win32/pin_default_selected.png" />
 			<property name="active" value="org/flexdock/plaf/titlebar/win32/pin_active.png" />
@@ -184,11 +196,11 @@
 		</icon-map>
 		
 		<!-- List available icons -->
-		<icon-resource name="gradient.close">
+		<icon-resource name="gradient.close" extends="default.close">
 			<property name="default" value="org/flexdock/plaf/titlebar/eclipse2/close_default.gif" />
 			<property name="active" value="org/flexdock/plaf/titlebar/eclipse2/close_default.gif" />
 		</icon-resource>
-		<icon-resource name="gradient.pin">
+		<icon-resource name="gradient.pin" extends="default.pin">
 			<property name="default" value="org/flexdock/plaf/titlebar/eclipse2/pin_default.gif" />
 			<property name="active" value="org/flexdock/plaf/titlebar/eclipse2/pin_default.gif" />
 		</icon-resource>
