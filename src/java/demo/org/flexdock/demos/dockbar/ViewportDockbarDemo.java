@@ -17,6 +17,7 @@ import javax.swing.border.LineBorder;
 
 import org.flexdock.demos.util.VSNetStartPage;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -24,7 +25,7 @@ import org.flexdock.view.Viewport;
 /**
  * @author Christopher Butler
  */
-public class ViewportDockbarDemo extends JFrame {
+public class ViewportDockbarDemo extends JFrame implements DockingConstants {
 	private JDialog siblingTestDialog;
 	
 	public static void main(String[] args) {
@@ -75,8 +76,8 @@ public class ViewportDockbarDemo extends JFrame {
 
 	private View createView(String id, String text) {
 		View view = new View(id, text);
-		view.addAction("close");
-		view.addAction("pin");
+		view.addAction(CLOSE_ACTION);
+		view.addAction(PIN_ACTION);
 
 		JPanel p = new JPanel();
 		//		p.setBackground(Color.WHITE);

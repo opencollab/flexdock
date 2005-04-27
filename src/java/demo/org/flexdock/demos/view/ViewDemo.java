@@ -37,6 +37,7 @@ import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.Theme;
 import org.flexdock.plaf.theme.UIFactory;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -46,7 +47,7 @@ import org.w3c.dom.Element;
  * @author Christopher Butler
  * @author Claudio Romano
  */
-public class ViewDemo {
+public class ViewDemo implements DockingConstants {
 
     private JList viewUIList;
     private JList titlebarUIList;
@@ -96,8 +97,8 @@ public class ViewDemo {
     private View buildView(String id, String name, JComponent component) {
         View view = new View(id, name);
 		view.setIcon("org/flexdock/demos/view/titlebar/msvs001.png");
-		view.addAction(new EmptyAction("close"));
-		view.addAction(new EmptyAction("pin"));
+		view.addAction(new EmptyAction(CLOSE_ACTION));
+		view.addAction(new EmptyAction(PIN_ACTION));
         view.setContentPane(component);
 
         return view;

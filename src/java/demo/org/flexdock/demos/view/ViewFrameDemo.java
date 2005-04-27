@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.floating.ViewFrame;
@@ -20,7 +21,7 @@ import org.flexdock.view.floating.ViewFrame;
 /**
  * @author Christopher Butler
  */
-public class ViewFrameDemo extends JFrame implements ActionListener {
+public class ViewFrameDemo extends JFrame implements ActionListener, DockingConstants {
 	private ViewFrame viewframe;
 	
 	public static void main(String[] args) {
@@ -62,8 +63,8 @@ public class ViewFrameDemo extends JFrame implements ActionListener {
 	
 	private View createView(String id, String text) {
 		View view = new View(id, text);
-		view.addAction(createAction("close", "Close"));
-		view.addAction(createAction("pin", "Pin"));
+		view.addAction(createAction(CLOSE_ACTION, "Close"));
+		view.addAction(createAction(PIN_ACTION, "Pin"));
 		
 		JPanel p = new JPanel();
 		p.setBackground(Color.WHITE);
