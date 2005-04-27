@@ -92,15 +92,15 @@ public class Perspective implements IPerspective {
 		m_centerViewId = viewId;
 	}
 	
+	public List getDockingInfoList() {
+		return m_dockingInfosList;
+	}
+	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspective#dock(org.flexdock.view.View, org.flexdock.view.View, java.lang.String, float)
 	 */
 	public void dock(View sourceView, View targetView, String region, float ratio) {
-		Perspective.ViewDockingInfo viewDockingInfo = new Perspective.ViewDockingInfo();
-		viewDockingInfo.m_sourceView = sourceView;
-		viewDockingInfo.m_targetView = targetView;
-		viewDockingInfo.m_relativeRegion = region;
-		viewDockingInfo.m_ratio = ratio;
+		Perspective.ViewDockingInfo viewDockingInfo = new Perspective.ViewDockingInfo(sourceView, targetView, region, ratio);
 		
 		m_dockingInfosList.add(viewDockingInfo);
 	}
@@ -175,15 +175,21 @@ public class Perspective implements IPerspective {
 		return (ViewDockingInfo) m_dockingInfosList.get(index);
 	}
 	
-	//friendly
-	static class ViewDockingInfo {
+	public static class ViewDockingInfo {
 		
 		private View m_sourceView = null;
 		private View m_targetView = null;
 		
 		private String m_relativeRegion = DockingPort.UNKNOWN_REGION;
 		
-		private float m_ratio;
+		private float m_ratio = -1.0f;
+		
+		public ViewDockingInfo(View sourceView, View targetView, String region, float ratio) {
+			m_sourceView = sourceView;
+			m_targetView = targetView;
+			m_relativeRegion = region;
+			m_ratio = ratio;
+		}
 		
 		public View getSourceView() {
 			return m_sourceView;
@@ -201,6 +207,22 @@ public class Perspective implements IPerspective {
 			return m_ratio;
 		}
 		
+		public void setSourceView(View sourceView) {
+			m_sourceView = sourceView;
+		}
+
+		public void setTargetView(View targetView) {
+			m_targetView = targetView;
+		}
+		
+		public void setRelativeRegion(String region) {
+			m_relativeRegion = region;
+		}
+		
+		public void setRatio(float ratio) {
+			m_ratio = ratio;
+		}
+
 	}
 	
 }

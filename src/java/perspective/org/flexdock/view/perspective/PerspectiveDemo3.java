@@ -67,8 +67,7 @@ public class PerspectiveDemo3 extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(perspective1);
+			((UpdateablePerspective) perspective1).activate();
 		}
 	}
 
@@ -78,8 +77,7 @@ public class PerspectiveDemo3 extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(perspective2);
+			((UpdateablePerspective) perspective2).activate();
 		}
 	}
 
@@ -145,7 +143,7 @@ public class PerspectiveDemo3 extends JFrame {
 	}
 	
 	private IPerspective createPerspective1(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test1");
+		IPerspective perspective = new UpdateablePerspective("test1");
 		perspective.setMainViewport(viewport);
 		
 		perspective.addView(centerView);
@@ -163,7 +161,7 @@ public class PerspectiveDemo3 extends JFrame {
 	}
 
 	private IPerspective createPerspective2(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test2");
+		IPerspective perspective = new UpdateablePerspective("test2");
 		perspective.setMainViewport(viewport);
 
 		perspective.addView(centerView);
