@@ -16,6 +16,9 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.border.Border;
 
+import org.flexdock.plaf.resources.action.AbstractActionFactory;
+import org.flexdock.plaf.resources.action.DefaultActionFactory;
+
 /**
  * @author Christopher Butler
  */
@@ -62,6 +65,11 @@ public class PropertySet {
 	public Icon getIcon(String key) {
 		Object property = getProperty(key);
 		return property instanceof Icon? (Icon)property: null;
+	}
+	
+	public AbstractActionFactory getActionFactory(String key) {
+		Object property = getProperty(key);
+		return property instanceof AbstractActionFactory? (AbstractActionFactory)property: DefaultActionFactory.SINGLETON;
 	}
 	
 	public String getString(String key) {

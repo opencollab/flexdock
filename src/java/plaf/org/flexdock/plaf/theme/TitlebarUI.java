@@ -24,6 +24,7 @@ import org.flexdock.plaf.FlexViewComponentUI;
 import org.flexdock.plaf.icons.IconMap;
 import org.flexdock.plaf.icons.IconResource;
 import org.flexdock.plaf.icons.IconResourceFactory;
+import org.flexdock.plaf.resources.action.AbstractActionFactory;
 import org.flexdock.plaf.resources.paint.Painter;
 import org.flexdock.view.Button;
 import org.flexdock.view.Titlebar;
@@ -208,8 +209,9 @@ public class TitlebarUI extends FlexViewComponentUI {
             return;
 
         IconResource icons = getIcons(action);
-        if (icons != null)
+        if (icons != null) {
             action.putValue(ICON_RESOURCE, icons);
+        }
     }
 
     private void reconfigureActions(JComponent c) {
@@ -345,6 +347,11 @@ public class TitlebarUI extends FlexViewComponentUI {
 
     public IconResource getIcons(String key) {
         return defaultIcons == null ? null : defaultIcons.getIcons(key);
+    }
+    
+    public AbstractActionFactory getActionFactory(String actionKey) {
+    	IconResource resource = getIcons(actionKey);
+    	return resource==null? null: resource.getActionFactory();
     }
 
     /**
