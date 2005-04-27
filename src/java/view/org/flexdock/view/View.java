@@ -114,6 +114,11 @@ public class View extends JComponent implements Dockable {
 			titlepane.addAction(action);
 	}
 	
+	public void addAction(String action) {
+		if(titlepane!=null)
+			titlepane.addAction(action);
+	}
+	
 	public void setIcon(Icon icon) {
 		if(titlepane!=null)
 			titlepane.setIcon(icon);
