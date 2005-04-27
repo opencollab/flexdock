@@ -24,7 +24,6 @@ import org.flexdock.plaf.FlexViewComponentUI;
 import org.flexdock.plaf.icons.IconMap;
 import org.flexdock.plaf.icons.IconResource;
 import org.flexdock.plaf.icons.IconResourceFactory;
-import org.flexdock.plaf.resources.action.AbstractActionFactory;
 import org.flexdock.plaf.resources.paint.Painter;
 import org.flexdock.view.Button;
 import org.flexdock.view.Titlebar;
@@ -349,9 +348,12 @@ public class TitlebarUI extends FlexViewComponentUI {
         return defaultIcons == null ? null : defaultIcons.getIcons(key);
     }
     
-    public AbstractActionFactory getActionFactory(String actionKey) {
+    public Action getAction(String actionKey) {
     	IconResource resource = getIcons(actionKey);
-    	return resource==null? null: resource.getActionFactory();
+    	Action action = resource==null? null: resource.getAction();
+    	if(action!=null)
+    		action.putValue(Action.NAME, actionKey);
+    	return action;
     }
 
     /**

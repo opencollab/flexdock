@@ -17,18 +17,26 @@ import org.flexdock.view.View;
 public abstract class ViewAction extends AbstractAction {
 	public static final ViewAction EMPTY_ACTION = createDefault();
 	
-	public abstract void actionPerformed(ActionEvent e);
+	protected View getView(ActionEvent evt) {
+		Component c = (Component)evt.getSource();
+		return (View)SwingUtilities.getAncestorOfClass(View.class, c);
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		View view = getView(e);
+		actionPerformed(view);
+	}
+	
+	public abstract void actionPerformed(View view);
 	
 	private static ViewAction createDefault() {
 		return new ViewAction() {
-			public void actionPerformed(ActionEvent ae) {
+			public void actionPerformed(View view) {
 				
 			}
 		};
 	}
 	
-	protected View getView(ActionEvent evt) {
-		Component c = (Component)evt.getSource();
-		return (View)SwingUtilities.getAncestorOfClass(View.class, c);
-	}
+
+
 }

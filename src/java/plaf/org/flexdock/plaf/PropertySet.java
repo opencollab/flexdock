@@ -13,11 +13,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.border.Border;
-
-import org.flexdock.plaf.resources.action.AbstractActionFactory;
-import org.flexdock.plaf.resources.action.DefaultActionFactory;
 
 /**
  * @author Christopher Butler
@@ -67,9 +65,9 @@ public class PropertySet {
 		return property instanceof Icon? (Icon)property: null;
 	}
 	
-	public AbstractActionFactory getActionFactory(String key) {
+	public Action getAction(String key) {
 		Object property = getProperty(key);
-		return property instanceof AbstractActionFactory? (AbstractActionFactory)property: DefaultActionFactory.SINGLETON;
+		return property instanceof Action? (Action)property: null;
 	}
 	
 	public String getString(String key) {

@@ -8,13 +8,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 
 import org.flexdock.plaf.PlafManager;
-import org.flexdock.plaf.resources.action.AbstractActionFactory;
 import org.flexdock.plaf.theme.TitlebarUI;
 
 /**
@@ -67,11 +65,7 @@ public class Titlebar extends JComponent {
 			return;
 		
 		TitlebarUI tbarUI = (TitlebarUI)ui;
-		AbstractActionFactory factory = tbarUI.getActionFactory(actionName);
-		if(factory==null)
-			return;
-		
-		AbstractAction action = factory.createAction(actionName);
+		Action action = tbarUI.getAction(actionName);
 		addAction(action);
 	}
 	

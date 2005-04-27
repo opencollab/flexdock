@@ -29,7 +29,7 @@
 	<handler name="insets" value="org.flexdock.plaf.resources.InsetsResourceHandler" />
 	<handler name="rounded-border" value="org.flexdock.plaf.resources.border.RoundedBorderResource" />
 	<handler name="raised-border" value="org.flexdock.plaf.resources.border.RaisedBorderResource" />
-	<handler name="action" value="org.flexdock.plaf.resources.ActionFactoryResourceHandler" />
+	<handler name="action" value="org.flexdock.plaf.resources.ActionResourceHandler" />
 	<handler name="string" value="org.flexdock.plaf.resources.StringResourceHandler" />
 	
 	<!-- Specify a set of default property handlers for specific tags. -->
@@ -85,11 +85,11 @@
 		</button-ui>
 		
 		<icon-resource name="default.close">
-			<property name="action.factory" value="org.flexdock.view.actions.DefaultViewActionFactory" handler="action" />
+			<property name="action" value="org.flexdock.view.actions.DefaultCloseAction" handler="action" />
 			<property name="tooltip" value="Close" handler="string" />
 		</icon-resource>
 		<icon-resource name="default.pin">
-			<property name="action.factory" value="org.flexdock.view.actions.DefaultViewActionFactory" handler="action" />
+			<property name="action" value="org.flexdock.view.actions.DefaultPinAction" handler="action" />
 			<property name="tooltip" value="Unpin" handler="string" />
 			<property name="tooltip.selected" value="Pin" handler="string" />
 		</icon-resource>

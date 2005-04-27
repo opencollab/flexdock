@@ -20,7 +20,7 @@ public class IconResourceFactory implements XMLConstants {
 	public static final String ICON_RESOURCE_KEY = "icon-resource";
 	public static final String ICON_MAP_KEY = "icon-map";
 	
-	public static final String ACTION_FACTORY_KEY = "action.factory";
+	public static final String ACTION_KEY = "action";
 	
 	public static final String DEFAULT = "default";
 	public static final String HOVER = "hover";
@@ -115,7 +115,7 @@ public class IconResourceFactory implements XMLConstants {
 		icons.setIconSelectedActiveHover(properties.getIcon(ACTIVE_SELECTED_HOVER));
 		icons.setIconSelectedPressed(properties.getIcon(PRESSED_SELECTED));
 		
-		icons.setActionFactory(properties.getActionFactory(ACTION_FACTORY_KEY));
+		icons.setAction(properties.getAction(ACTION_KEY));
 		
 		icons.setTooltip(properties.getString(TOOLTIP));
 		icons.setTooltipSelected(properties.getString(TOOLTIP_SELECTED));

@@ -3,10 +3,9 @@
  */
 package org.flexdock.plaf.icons;
 
+import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.plaf.UIResource;
-
-import org.flexdock.plaf.resources.action.AbstractActionFactory;
 
 /**
  * @author Christopher Butler
@@ -24,7 +23,7 @@ public class IconResource implements UIResource {
 	private Icon iconSelectedActiveHover;
 	private Icon iconSelectedPressed;
 	
-	private AbstractActionFactory actionFactory;
+	private Action action;
 	
 	private String tooltip;
 	private String tooltipSelected;
@@ -120,12 +119,6 @@ public class IconResource implements UIResource {
 	public void setIconSelectedPressed(Icon iconSelectedPressed) {
 		this.iconSelectedPressed = iconSelectedPressed;
 	}
-	public AbstractActionFactory getActionFactory() {
-		return actionFactory;
-	}
-	public void setActionFactory(AbstractActionFactory actionFactory) {
-		this.actionFactory = actionFactory;
-	}
 	public String getTooltip() {
 		return tooltip;
 	}
@@ -137,5 +130,12 @@ public class IconResource implements UIResource {
 	}
 	public void setTooltipSelected(String tooltipSelected) {
 		this.tooltipSelected = tooltipSelected;
+	}
+	
+	public Action getAction() {
+		return action;
+	}
+	public void setAction(Action action) {
+		this.action = action;
 	}
 }
