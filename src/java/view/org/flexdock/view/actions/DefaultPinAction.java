@@ -3,6 +3,8 @@
  */
 package org.flexdock.view.actions;
 
+import java.awt.event.ActionEvent;
+
 import org.flexdock.view.View;
 
 /**
@@ -14,7 +16,7 @@ public class DefaultPinAction extends ViewAction {
 		
 	}
 	
-	public void actionPerformed(View view) {
-		System.out.println("pinning : " + view);
+	public void actionPerformed(View view, ActionEvent evt) {
+		System.out.println("pinning: " + view);
 	}
 }

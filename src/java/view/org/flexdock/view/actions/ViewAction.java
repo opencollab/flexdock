@@ -24,14 +24,14 @@ public abstract class ViewAction extends AbstractAction {
 	
 	public void actionPerformed(ActionEvent e) {
 		View view = getView(e);
-		actionPerformed(view);
+		actionPerformed(view, e);
 	}
 	
-	public abstract void actionPerformed(View view);
+	public abstract void actionPerformed(View view, ActionEvent evt);
 	
 	private static ViewAction createDefault() {
 		return new ViewAction() {
-			public void actionPerformed(View view) {
+			public void actionPerformed(View view, ActionEvent evt) {
 				
 			}
 		};
