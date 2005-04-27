@@ -368,6 +368,8 @@ public class DockbarManager implements SwingConstants {
 		dockbar.dock(dockable);
 		// make sure they can't drag the dockable while it's in the dockbar
 		dockable.getDockingProperties().setDockingEnabled(false);
+		// indicate that the dockable is minimized
+		dockable.getDockingProperties().setMinimized(true);
 		revalidate();
 	}
 	
@@ -382,6 +384,8 @@ public class DockbarManager implements SwingConstants {
 			// restore drag capability to the dockable after removing
 			// from the dockbar
 			dockable.getDockingProperties().setDockingEnabled(true);
+			// indicate that the dockable is no longer minimized
+			dockable.getDockingProperties().setMinimized(false);
 			revalidate();
 		}
 	}
