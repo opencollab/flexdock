@@ -7,10 +7,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -78,8 +75,8 @@ public class ViewportDockbarDemo extends JFrame {
 
 	private View createView(String id, String text) {
 		View view = new View(id, text);
-		view.addAction(createAction("close", "Close"));
-		view.addAction(createAction("pin", "Pin"));
+		view.addAction("close");
+		view.addAction("pin");
 
 		JPanel p = new JPanel();
 		//		p.setBackground(Color.WHITE);
@@ -91,16 +88,6 @@ public class ViewportDockbarDemo extends JFrame {
 
 		view.setContentPane(p);
 		return view;
-	}
-
-	private Action createAction(String name, String tooltip) {
-		Action a = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		a.putValue(Action.NAME, name);
-		a.putValue(Action.SHORT_DESCRIPTION, tooltip);
-		return a;
 	}
 
 	private View createStartPage() {
