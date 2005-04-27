@@ -366,6 +366,8 @@ public class DockbarManager implements SwingConstants {
 		DockingManager.undock(dockable);
 		// place in the dockbar
 		dockbar.dock(dockable);
+		// make sure they can't drag the dockable while it's in the dockbar
+		dockable.getDockingProperties().setDockingEnabled(false);
 		revalidate();
 	}
 	
@@ -377,6 +379,9 @@ public class DockbarManager implements SwingConstants {
 		Dockbar dockbar = getDockbar(dockable);
 		if(dockbar!=null) {
 			dockbar.undock(dockable);
+			// restore drag capability to the dockable after removing
+			// from the dockbar
+			dockable.getDockingProperties().setDockingEnabled(true);
 			revalidate();
 		}
 	}
