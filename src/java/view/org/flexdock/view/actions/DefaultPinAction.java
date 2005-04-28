@@ -5,6 +5,7 @@ package org.flexdock.view.actions;
 
 import java.awt.event.ActionEvent;
 
+import org.flexdock.docking.DockingManager;
 import org.flexdock.view.View;
 
 /**
@@ -17,6 +18,11 @@ public class DefaultPinAction extends ViewAction {
 	}
 	
 	public void actionPerformed(View view, ActionEvent evt) {
-		System.out.println("pinning: " + view);
+		boolean minimize = view.isMinimized()? false: true;
+		
+		System.out.println("pinning: " + minimize + " " + view);
+		
+		DockingManager.setMinimized(view, minimize);
+		
 	}
 }
