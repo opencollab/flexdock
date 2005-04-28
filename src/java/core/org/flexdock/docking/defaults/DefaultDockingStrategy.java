@@ -304,6 +304,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			DefaultDockingPort ddp = (DefaultDockingPort)base;
 			newPort.setBorderManager(ddp.getBorderManager());
 			newPort.setTabsAsDragSource(ddp.isTabsAsDragSource());
+			newPort.setTransient(true);
 		}
 		return port;
 	}
