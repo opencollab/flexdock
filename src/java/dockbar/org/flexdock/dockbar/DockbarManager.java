@@ -37,6 +37,7 @@ import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
+ * @author Bobby Rosenberger
  */
 public class DockbarManager implements SwingConstants {
 	private static final WeakHashMap MANAGERS_BY_WINDOW = new WeakHashMap();
@@ -270,7 +271,7 @@ public class DockbarManager implements SwingConstants {
 		Rectangle dockRect = SwingUtilities.convertRectangle(cmp.getParent(), cmp.getBounds(), contentPane);
 		
 		// get the center of the dockable
-		Point dockCenter = new Point(dockRect.x = (dockRect.width/2), dockRect.y + (dockRect.height/2));
+		Point dockCenter = new Point(dockRect.x + (dockRect.width/2), dockRect.y + (dockRect.height/2));
 		// get the center left, right, and bottom points
 		Point leftCenter = new Point(0, contentRect.height/2);
 		Point bottomCenter = new Point(contentRect.width/2, contentRect.height);
@@ -348,7 +349,7 @@ public class DockbarManager implements SwingConstants {
 		
 		int edge = DEFAULT_EDGE;
 		RootWindow window = getWindow();
-		if(window!=null && !DockingManager.isDocked(dockable)) {
+		if(window!=null && DockingManager.isDocked(dockable)) {
 			edge = findDockbarEdge(dockable);
 		}
 		
