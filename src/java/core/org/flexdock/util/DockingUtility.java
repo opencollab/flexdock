@@ -31,6 +31,10 @@ public class DockingUtility {
 		return port.isParentDockingPort(comp)? port: null;
 	}
 	
+	public static boolean isSubport(DockingPort dockingPort) {
+		return dockingPort==null? false: SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)dockingPort)!=null;
+	}
+	
 	public static DockingPort findDockingPort(Container c, Point p) {
 		if(c==null || p==null)
 			return null;
