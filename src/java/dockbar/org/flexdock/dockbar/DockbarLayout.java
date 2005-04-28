@@ -65,6 +65,7 @@ public class DockbarLayout implements SwingConstants {
 	public Rectangle getViewpaneArea() {
 		Rectangle leftBar = manager.getLeftBar().getBounds();
 		Rectangle bottomBar = manager.getBottomBar().getBounds();
+		
 		return new Rectangle(leftBar.x + leftBar.width, leftBar.y, bottomBar.width, leftBar.height);
 	}
 	
@@ -101,7 +102,7 @@ public class DockbarLayout implements SwingConstants {
 		Rectangle rect = getViewpaneArea();
 		if(edge==LEFT || edge==RIGHT) {
 			if(edge==RIGHT) {
-				rect.x = rect.width - viewpaneSize;
+				rect.x = rect.x + rect.width - viewpaneSize;
 			}
 			rect.width = viewpaneSize;
 		}
