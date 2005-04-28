@@ -145,4 +145,9 @@ public class Viewport extends DefaultDockingPort {
 
 		ViewTracker.requestViewActivation((View)src);
 	}
+	
+	public String toString() {
+		String id = getPersistentId();
+		return "ViewPort[id=" + id + "]";
+	}
 }
