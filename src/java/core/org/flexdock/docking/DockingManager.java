@@ -461,11 +461,11 @@ public class DockingManager {
 		setMinimized(dockable, minimized, window, DockbarManager.UNSPECIFIED_EDGE);
 	}
 
-	public static void setMinimized(Dockable dockable, boolean minimized, int edge) {
-		setMinimized(dockable, minimized, null, edge);
+	public static void setMinimized(Dockable dockable, boolean minimizing, int edge) {
+		setMinimized(dockable, minimizing, null, edge);
 	}
 	
-	public static void setMinimized(Dockable dockable, boolean minimized, Window window, int edge) {
+	public static void setMinimized(Dockable dockable, boolean minimizing, Window window, int edge) {
 		if(dockable==null)
 			return;
 		
@@ -475,7 +475,7 @@ public class DockingManager {
 			return;
 		
 		DockingStrategy strategy = getDockingStrategy(dockable);
-		strategy.setMinimized(dockable, minimized, window, edge);
+		strategy.setMinimized(dockable, minimizing, window, edge);
 	}
 
 }
