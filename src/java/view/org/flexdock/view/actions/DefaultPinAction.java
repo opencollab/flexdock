@@ -10,6 +10,7 @@ import org.flexdock.view.View;
 
 /**
  * @author Christopher Butler
+ * @author Bobby Rosenberger
  */
 public class DefaultPinAction extends ViewAction {
 
@@ -19,10 +20,6 @@ public class DefaultPinAction extends ViewAction {
 	
 	public void actionPerformed(View view, ActionEvent evt) {
 		boolean minimize = view.isMinimized()? false: true;
-		
-		System.out.println("pinning: " + minimize + " " + view);
-		
 		DockingManager.setMinimized(view, minimize);
-		
 	}
 }
