@@ -43,6 +43,7 @@ import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.TabbedDragListener;
+import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.SwingUtility;
@@ -118,6 +119,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	private BorderManager borderManager;
 	private String persistentId;
 	private boolean tabsAsDragSource;
+	private boolean transientPort;
 
 	
 	/**
@@ -137,6 +139,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		
 		DockingPortProps props = getDockingProperties();
 		props.setRegionChecker(new DefaultRegionChecker());
+		
+		// check container hierarchy to track root dockingports
+		addHierarchyListener(DockingPortTracker.getInstance());
 	}
 
 	/**
@@ -579,6 +584,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	 * 
 	 */
 	public void setPersistentId(String id) {
+		if(id==null)
+			id = String.valueOf(hashCode());
 		String oldId = persistentId;
 		persistentId = id;
 		ConfigurationManager.replaceDockingPort(oldId, persistentId, this);
@@ -960,4 +967,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		return getDockingProperties().getTabPlacement().intValue();
 	}
 
+	public boolean isTransient() {
+		return transientPort;
+	}
+	public void setTransient(boolean portTransient) {
+		this.transientPort = portTransient;
+	}
 }
