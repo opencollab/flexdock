@@ -121,4 +121,6 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	
 	public DockingStrategy getDockingStrategy();
 	
+	public boolean isTransient();
+	
 }
