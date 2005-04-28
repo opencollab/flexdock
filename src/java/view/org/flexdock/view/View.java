@@ -417,6 +417,20 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public void undockingComplete(DockingEvent evt) {
+		clearButtonRollovers();
+	}
+	
+	private void clearButtonRollovers() {
+		if(titlepane==null)
+			return;
+		
+		Component[] comps = titlepane.getComponents();
+		for(int i=0; i<comps.length; i++) {
+			Button button = comps[i] instanceof Button? (Button)comps[i]: null;
+			if(button!=null) {
+				button.getModel().setRollover(false);
+			}
+		}
 	}
 	
 	public void dropStarted(DockingEvent evt) {
