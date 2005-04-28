@@ -19,7 +19,6 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking;
 
 import java.awt.Component;
-import java.awt.KeyboardFocusManager;
 import java.awt.Window;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -35,6 +34,8 @@ import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
 import org.flexdock.docking.drag.DragManager;
+import org.flexdock.docking.event.hierarchy.DockingPortTracker;
+import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
@@ -439,6 +440,23 @@ public class DockingManager {
 	
 	
 	
+	public static DockingPort getMainDockingPort(Component comp) {
+		RootDockingPortInfo info = getRootDockingPortInfo(comp);
+		return info==null? null: info.getMainPort();
+	}
+	
+	public static void setMainDockingPort(Component comp, String portId) {
+		RootDockingPortInfo info = getRootDockingPortInfo(comp);
+		if(info!=null)
+			info.setMainPort(portId);		
+	}
+	
+	public static RootDockingPortInfo getRootDockingPortInfo(Component comp) {
+		return DockingPortTracker.getRootDockingPortInfo(comp);
+	}
+	
+	
+	
 	
 	
 	
@@ -470,7 +488,7 @@ public class DockingManager {
 			return;
 		
 		if(window==null)
-			window = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+			window = SwingUtility.getActiveWindow();
 		if(window==null)
 			return;
 		
