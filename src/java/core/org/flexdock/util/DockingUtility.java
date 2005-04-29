@@ -17,7 +17,7 @@ import org.flexdock.docking.DockingPort;
 /**
  * @author Christopher Butler
  */
-public class DockingUtility {
+public class DockingUtility implements DockingConstants {
 	
 	public static DockingPort getParentDockingPort(Dockable d) {
 		return d==null? null: getParentDockingPort(d.getDockable());
@@ -110,5 +110,22 @@ public class DockingUtility {
 			return DockingPort.NORTH_REGION.equals(otherRegion);
 		
 		return false;
+	}
+	
+	public static String getRegion(int regionType) {
+		switch(regionType) {
+			case LEFT:
+				return DockingPort.WEST_REGION;
+			case RIGHT:
+				return DockingPort.EAST_REGION;
+			case TOP:
+				return DockingPort.NORTH_REGION;
+			case BOTTOM:
+				return DockingPort.SOUTH_REGION;
+			case CENTER:
+				return DockingPort.CENTER_REGION;
+			default:
+				return DockingPort.UNKNOWN_REGION;
+		}
 	}
 }
