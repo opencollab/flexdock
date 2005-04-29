@@ -15,7 +15,6 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
 import javax.swing.border.LineBorder;
 
 import org.flexdock.util.ResourceManager;
@@ -129,7 +128,7 @@ public class VSNetStartPage extends JPanel {
 	}
 	
 	private JTabbedPane createTabbedPane() {
-		return new JTabbedPane(SwingConstants.TOP) {
+		return new JTabbedPane(JTabbedPane.TOP) {
 			protected void paintComponent(Graphics g) {
 				Color orig = g.getColor();
 				Rectangle tabBounds = getBoundsAt(0);

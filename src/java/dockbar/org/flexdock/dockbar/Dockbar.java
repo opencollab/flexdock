@@ -9,17 +9,17 @@ import java.util.Iterator;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.plaf.common.border.SlideoutBorder;
+import org.flexdock.util.DockingConstants;
 
 
 /**
  * @author Christopher Butler
  */
-public class Dockbar extends JPanel implements SwingConstants {
+public class Dockbar extends JPanel implements DockingConstants {
 	private int orientation;
 	private DockbarManager manager;
 	private ArrayList mDocks = new ArrayList();

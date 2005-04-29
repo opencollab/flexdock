@@ -11,12 +11,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import org.flexdock.docking.DockingManager;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.view.View;
 
 /**
@@ -52,9 +52,9 @@ public class BasicDockbarDemo {
 		JButton bottomButton = new JButton("Pin Bottom");
 		JButton rightButton = new JButton("Pin Right");
 		
-		leftButton.addActionListener(createMinimizeAction(SwingConstants.LEFT));
-		bottomButton.addActionListener(createMinimizeAction(SwingConstants.BOTTOM));
-		rightButton.addActionListener(createMinimizeAction(SwingConstants.RIGHT));
+		leftButton.addActionListener(createMinimizeAction(DockingConstants.LEFT));
+		bottomButton.addActionListener(createMinimizeAction(DockingConstants.BOTTOM));
+		rightButton.addActionListener(createMinimizeAction(DockingConstants.RIGHT));
 
 		cp.add(leftButton);
 		cp.add(bottomButton);

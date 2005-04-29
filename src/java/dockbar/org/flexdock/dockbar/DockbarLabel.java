@@ -28,7 +28,6 @@ import java.awt.event.MouseListener;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -39,12 +38,13 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.plaf.common.border.RoundedLineBorder;
+import org.flexdock.util.DockingConstants;
 
 /**
  * @author Andreas Ernst
  * @author Christopher Butler
  */
-public class DockbarLabel extends JLabel implements MouseListener, SwingConstants {
+public class DockbarLabel extends JLabel implements MouseListener, DockingConstants {
 	private static final Insets[] INSETS = createInsets();
 	private static final int[] ROTATIONS = createRotations();
 	
@@ -61,21 +61,21 @@ public class DockbarLabel extends JLabel implements MouseListener, SwingConstant
 	
 	private static Insets[] createInsets() {
 		Insets[] insets = new Insets[5];
-		insets[CENTER] = new Insets(1, 1, 1, 1);
-		insets[LEFT] = new Insets(1, 1, 2, 1);
-		insets[RIGHT] = new Insets(1, 1, 2, 1);
-		insets[TOP] = new Insets(1, 1, 1, 2);
-		insets[BOTTOM] = new Insets(1, 1, 1, 2);
+		insets[DockingConstants.CENTER] = new Insets(1, 1, 1, 1);
+		insets[DockingConstants.LEFT] = new Insets(1, 1, 2, 1);
+		insets[DockingConstants.RIGHT] = new Insets(1, 1, 2, 1);
+		insets[DockingConstants.TOP] = new Insets(1, 1, 1, 2);
+		insets[DockingConstants.BOTTOM] = new Insets(1, 1, 1, 2);
 		return insets;
 	}
 	
 	private static int[] createRotations() {
 		int[] rotations = new int[5];
-		rotations[CENTER] = TextIcon.ROTATE_NONE;
-		rotations[LEFT] = TextIcon.ROTATE_LEFT;
-		rotations[RIGHT] = TextIcon.ROTATE_RIGHT;
-		rotations[TOP] = TextIcon.ROTATE_NONE;
-		rotations[BOTTOM] = TextIcon.ROTATE_NONE;
+		rotations[DockingConstants.CENTER] = TextIcon.ROTATE_NONE;
+		rotations[DockingConstants.LEFT] = TextIcon.ROTATE_LEFT;
+		rotations[DockingConstants.RIGHT] = TextIcon.ROTATE_RIGHT;
+		rotations[DockingConstants.TOP] = TextIcon.ROTATE_NONE;
+		rotations[DockingConstants.BOTTOM] = TextIcon.ROTATE_NONE;
 		return rotations;
 	}
 	

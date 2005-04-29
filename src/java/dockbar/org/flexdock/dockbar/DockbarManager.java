@@ -18,7 +18,6 @@ import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
@@ -32,6 +31,7 @@ import org.flexdock.dockbar.event.EventDispatcher;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.plaf.common.border.CompoundEmptyBorder;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.Utilities;
 
@@ -39,7 +39,7 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  * @author Bobby Rosenberger
  */
-public class DockbarManager implements SwingConstants {
+public class DockbarManager implements DockingConstants {
 	private static final WeakHashMap MANAGERS_BY_WINDOW = new WeakHashMap();
 	public static final Integer DOCKBAR_LAYER = new Integer(JLayeredPane.PALETTE_LAYER.intValue()-5);
 	public static final int DEFAULT_EDGE = LEFT;

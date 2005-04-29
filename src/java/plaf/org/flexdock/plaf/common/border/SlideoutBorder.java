@@ -9,13 +9,14 @@ import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 
-import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+
+import org.flexdock.util.DockingConstants;
 
 /**
  * @author Christopher Butler
  */
-public class SlideoutBorder implements Border, SwingConstants {
+public class SlideoutBorder implements Border, DockingConstants {
 	private int orientation;
 	public static final Color WIN32_GRAY = new Color(212, 208, 200); 
 	

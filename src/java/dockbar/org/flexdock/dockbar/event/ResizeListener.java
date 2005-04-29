@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.dockbar.DockbarLayout;
@@ -19,12 +18,13 @@ import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockableProps;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
 /**
  * @author Christopher Butler
  */
-public class ResizeListener extends MouseAdapter implements MouseMotionListener, SwingConstants {
+public class ResizeListener extends MouseAdapter implements MouseMotionListener, DockingConstants {
 	private DockbarManager manager;
 	private Dockable dockable;
 	

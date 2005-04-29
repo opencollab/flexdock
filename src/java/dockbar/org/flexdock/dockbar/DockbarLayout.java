@@ -8,16 +8,16 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 
 import javax.swing.JLayeredPane;
-import javax.swing.SwingConstants;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockableProps;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
 /**
  * @author Christopher Butler
  */
-public class DockbarLayout implements SwingConstants {
+public class DockbarLayout implements DockingConstants {
 	public static final int MINIMUM_VIEW_SIZE = 20;
 	
 	private DockbarManager manager;
