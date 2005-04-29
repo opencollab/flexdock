@@ -5,6 +5,7 @@ package org.flexdock.view.actions;
 
 import java.awt.event.ActionEvent;
 
+import org.flexdock.dockbar.restore.DockingPath;
 import org.flexdock.view.View;
 
 /**
@@ -17,6 +18,7 @@ public class DefaultCloseAction extends ViewAction {
 	}
 	
 	public void actionPerformed(View view, ActionEvent evt) {
-		System.out.println("closing: " + view);
+		DockingPath path = DockingPath.create(view);
+		System.out.println(path);
 	}
 }
