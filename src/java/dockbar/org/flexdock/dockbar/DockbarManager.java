@@ -28,6 +28,7 @@ import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.dockbar.event.DockbarTracker;
 import org.flexdock.dockbar.event.EventDispatcher;
+import org.flexdock.dockbar.restore.DockingPath;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.plaf.common.border.CompoundEmptyBorder;
@@ -363,6 +364,9 @@ public class DockbarManager implements DockingConstants {
 		edge = Dockbar.getValidOrientation(edge);
 		Dockbar dockbar = getDockbar(edge);
 		
+		// cache the restoration path
+		DockingPath.setRestorePath(dockable);
+		
 		// undock the dockable 
 		DockingManager.undock(dockable);
 		// place in the dockbar
@@ -389,6 +393,8 @@ public class DockbarManager implements DockingConstants {
 			dockable.getDockingProperties().setMinimized(false);
 			revalidate();
 		}
+		
+		DockingPath.restore(dockable);
 	}
 	
 	

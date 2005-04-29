@@ -16,11 +16,14 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.DockingConstants;
+import org.flexdock.util.DockingUtility;
 
 /**
  * @author Christopher Butler
  */
 public class DockingPath implements DockingConstants {
+	public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY"; 
+	
 	private ArrayList nodes;
 	private String dockableId;
 	private DockingPort rootPort;
@@ -78,9 +81,27 @@ public class DockingPath implements DockingConstants {
 		return c instanceof DockingPort && !((DockingPort)c).isTransient();
 	}
 
-
+	public static DockingPath getRestorePath(Dockable dockable) {
+		Object obj = dockable==null? null: dockable.getClientProperty(RESTORE_PATH_KEY);
+		return obj instanceof DockingPath? (DockingPath)obj: null;
+	}
 	
+	public static void setRestorePath(Dockable dockable, DockingPath restorePath) {
+		if(dockable==null || restorePath==null)
+			return;
+		dockable.putClientProperty(RESTORE_PATH_KEY, restorePath);
+	}
 	
+	public static void setRestorePath(Dockable dockable) {
+		DockingPath path  = create(dockable);
+		setRestorePath(dockable, path);
+	}	
+	
+	public static void restore(Dockable dockable) {
+		DockingPath path = getRestorePath(dockable);
+		if(path!=null)
+			path.restore();
+	}
 	
 	
 	private DockingPath(Dockable dockable) {
@@ -123,5 +144,53 @@ public class DockingPath implements DockingConstants {
 			stringForm = sb.toString();
 		}
 		return stringForm;
+	}
+	
+	public void restore() {
+		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		if(dockable==null || DockingManager.isDocked(dockable))
+			return;
+		
+		String region = DockingPort.CENTER_REGION;
+		if(nodes.size()==0) {
+			DockingManager.dock(dockable, rootPort, region);
+			return;
+		}
+		
+		DockingPort port = rootPort;
+		for(Iterator it=nodes.iterator(); it.hasNext();) {
+			SplitNode node = (SplitNode)it.next();
+			Component comp = port.getDockedComponent();
+			region = getRegion(node, comp);
+			
+			// path was broken.  we don't have a JSplitPane to go with
+			// the current node.
+			if(!(comp instanceof JSplitPane)) {
+				DockingManager.dock(dockable, port, region);
+				return;
+			}
+			
+			// path was broken.  SplitPane doesn't match the orientation
+			// of the current node, meaning the path was altered at this point.
+			JSplitPane splitPane = (JSplitPane)comp;
+			if(splitPane.getOrientation()!=node.getOrientation()) {
+				DockingManager.dock(dockable, port, region);
+				return;				
+			}
+			
+			// assume there is a transient sub-dockingPort in the split pane
+			comp = node.getRegion()==LEFT || node.getRegion()==TOP? splitPane.getLeftComponent(): splitPane.getRightComponent();
+			port = (DockingPort)comp;
+			
+			// move on to the next node
+		}
+		
+		DockingManager.dock(dockable, port, region);
+	}
+	
+	private String getRegion(SplitNode node, Component dockedComponent) {
+		if(dockedComponent==null)
+			return DockingPort.CENTER_REGION;
+		return DockingUtility.getRegion(node.getRegion());
 	}
 }
