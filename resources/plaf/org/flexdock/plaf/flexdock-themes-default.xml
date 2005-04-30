@@ -232,5 +232,24 @@
 		</painter-resource>
 	</theme>
 	<!-- End Metal Look -->
+	
+	<!-- Skin Look And Feel -->
+	<theme name="skinlf" description="Skin LookAndFeel" view-ui="skinlf">
+		<view-ui name="skinlf">
+			<property name="titlebar-ui" value="skinlf"/>
+		</view-ui>
+	
+		<!-- List the various titlebars that are available -->
+		<titlebar-ui name="skinlf" extends="default">
+			<property name="classname" value="org.flexdock.plaf.theme.skinlf.SkinLFTitlebarUI" />
+			<property name="icon-map" value="eclipse2" />	
+			<property name="painter" value="skinlf" handler="paint"/> 
+		</titlebar-ui>
+				
+		<painter-resource name="skinlf">
+			<property name="classname" value="org.flexdock.plaf.theme.skinlf.SkinLFPainter"/>
+		</painter-resource>	
+	</theme>
+	<!-- Skin Look And Feel -->
 
 </flexview-themes>
