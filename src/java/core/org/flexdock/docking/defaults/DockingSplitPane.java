@@ -27,6 +27,10 @@ public class DockingSplitPane extends JSplitPane {
 		// the controlling item is in the topLeft if our new item (represented
 		// by the "region" string) is in the SOUTH or EAST.
 		controllerInTopLeft = DockingPort.SOUTH_REGION.equals(region) || DockingPort.EAST_REGION.equals(region);
+		
+		// set the proper resize weight
+		int weight = controllerInTopLeft? 1: 0;
+		setResizeWeight(weight);
 	}
 
 	protected boolean isDividerSizeProperlyDetermined() {
