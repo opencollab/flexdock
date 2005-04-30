@@ -200,7 +200,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		Component docked = target.getDockedComponent();
 		Component dockableCmp = dockable.getDockable();
 		if (dockableCmp!=null && dockableCmp == docked) {
-			// don't allow docking the same compnent back into the same port
+			// don't allow docking the same component back into the same port
 			return results;
 		}
 
