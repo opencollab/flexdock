@@ -16,7 +16,6 @@ import java.awt.RenderingHints;
 
 import javax.swing.Action;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
@@ -216,9 +215,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     private void reconfigureActions(JComponent c) {
         Component[] c1 = c.getComponents();
         for (int i = 0; i < c1.length; i++) {
-            if (!(c1[i] instanceof JButton))
+            if (!(c1[i] instanceof Button))
                 continue;
-            JButton b = (JButton) c1[i];
+            Button b = (Button) c1[i];
             configureAction(b.getAction());
         }
     }
