@@ -11,3 +11,10 @@ a view is removed or undocked other view takes over
 this view and new mapping info (ViewDockingInfo) is added.
 
 Get rid of addView and getView methods as DockingManager got new lovely getRegisteredDockable method!
+
+-> perspective must be aware that a certain view is pinned
+-> in case view is not docked to any component but is instead floating
+   the perspective should hold information that this view is floating
+   and the location (point) of this floating view and also the bounds
+   of the window so that when one restores perspective the view is still floating.
+
