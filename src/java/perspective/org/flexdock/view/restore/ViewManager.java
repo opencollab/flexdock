@@ -67,12 +67,12 @@ public class ViewManager implements IViewManager {
 			return m_centerViewport.dock(view);
 		}
 		
-		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
+		ViewDockingInfo mainDockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
 
 		HashMap context = new HashMap();
 		context.put("territoral.view", m_territoralView);
-		context.put("main.docking.info", dockingInfo);
-		context.put("accessory.docking.infos", m_accessoryDockingInfos);
+		context.put("main.docking.info", mainDockingInfo);
+		context.put("accessory.docking.info", m_accessoryDockingInfos.get(view.getPersistentId()));
 		
 		boolean docked = false;
 		for (int i=0; i<m_showViewHandlers.size(); i++) {

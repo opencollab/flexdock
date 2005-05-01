@@ -1,8 +1,14 @@
 package org.flexdock.view.restore;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.Map;
 
+import javax.swing.JWindow;
+
 import org.flexdock.view.View;
+import org.flexdock.view.Viewport;
 
 /**
  * @author Mateusz Szczap
@@ -14,20 +20,28 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 	 */
 	public boolean showView(View view, Map context) {
 		View territoralView = (View) context.get("territoral.view");
-		Map accessoryDockingInfos = (Map) context.get("accessory.docking.infos");
-		ViewDockingInfo viewDockingInfo = (ViewDockingInfo) accessoryDockingInfos.get(view.getPersistentId());
+		ViewDockingInfo accessoryDockingInfo = (ViewDockingInfo) context.get("accessory.docking.info");
 
 		boolean docked = false;
-		if (viewDockingInfo != null) {
-			View sourceView = (View) viewDockingInfo.getView();
-			String region = viewDockingInfo.getRegion();
-			float ratio = viewDockingInfo.getRatio();
+		if (accessoryDockingInfo != null) {
+			View sourceView = (View) accessoryDockingInfo.getView();
+			String region = accessoryDockingInfo.getRegion();
+			float ratio = accessoryDockingInfo.getRatio();
 
-//			if (viewDockingInfo.isFloating()) {
-//				Point locationOnScreen = viewDockingInfo.getFloatingLocation();
-//				Dimension dim = viewDockingInfo.getFloatingWindowDimension();
-//				sourceView.doc
-//			}
+			if (accessoryDockingInfo.isFloating()) {
+				JWindow window = new JWindow();
+				window.setLayout(new BorderLayout());
+				Point locationOnScreen = accessoryDockingInfo.getFloatingLocation();
+				Dimension dim = accessoryDockingInfo.getFloatingWindowDimension();
+				window.setLocation(locationOnScreen);
+				window.setSize(dim);
+				Viewport viewport = new Viewport("some view port");
+				window.add(viewport, BorderLayout.CENTER);
+				viewport.dock(sourceView);
+				window.setVisible(true);
+				return true;
+				//sourceView.doc
+			}
 			
 			if (sourceView == territoralView) {
 				View siblingView = (View) sourceView.getSibling(region);
