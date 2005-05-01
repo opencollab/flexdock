@@ -360,6 +360,9 @@ public class DockbarManager implements DockingConstants {
 	public void dock(Dockable dockable, int edge) {
 		if(dockable==null)
 			return;
+		
+		if(isDockingCancelled(dockable, edge))
+			return;
 			
 		edge = Dockbar.getValidOrientation(edge);
 		Dockbar dockbar = getDockbar(edge);
@@ -376,6 +379,16 @@ public class DockbarManager implements DockingConstants {
 		// indicate that the dockable is minimized
 		dockable.getDockingProperties().setMinimized(true);
 		revalidate();
+		
+		// send event notification
+		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_COMPLETED, edge);
+		eventDispatcher.dispatch(evt);
+	}
+	
+	private boolean isDockingCancelled(Dockable dockable, int edge) {
+		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_STARTED, edge);
+		eventDispatcher.dispatch(evt);
+		return evt.isConsumed();
 	}
 	
 	
