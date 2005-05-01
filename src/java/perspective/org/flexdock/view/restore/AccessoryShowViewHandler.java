@@ -1,5 +1,6 @@
 package org.flexdock.view.restore;
 
+import java.util.List;
 import java.util.Map;
 
 import org.flexdock.view.View;
@@ -14,14 +15,15 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 	 */
 	public boolean showView(View view, Map context) {
 		View territoralView = (View) context.get("territoral.view");
-		ViewDockingInfo[] accessoryDockingInfos = (ViewDockingInfo[]) context.get("accessory.docking.infos");
+		List accessoryDockingInfos = (List) context.get("accessory.docking.infos");
 
 		boolean docked = false;
-		if (accessoryDockingInfos != null && accessoryDockingInfos.length > 0) {
-			for (int i=0; i<accessoryDockingInfos.length; i++) {
-				View sourceView = accessoryDockingInfos[i].getView();
-				String region = accessoryDockingInfos[i].getRegion();
-				float ratio = accessoryDockingInfos[i].getRatio();
+		if (accessoryDockingInfos != null && accessoryDockingInfos.size() > 0) {
+			for (int i=0; i<accessoryDockingInfos.size(); i++) {
+				ViewDockingInfo viewDockingInfo = (ViewDockingInfo) accessoryDockingInfos.get(i);
+				View sourceView = (View) viewDockingInfo.getView();
+				String region = viewDockingInfo.getRegion();
+				float ratio = viewDockingInfo.getRatio();
 				if (sourceView == territoralView) {
 					View siblingView = (View) sourceView.getSibling(region);
 					if (siblingView != null) {

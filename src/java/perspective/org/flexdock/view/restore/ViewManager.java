@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -65,8 +66,8 @@ public class ViewManager implements IViewManager {
 			return m_centerViewport.dock(view);
 		}
 		
-		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view);
-		ViewDockingInfo[] accessoryDockingInfos = (ViewDockingInfo[]) m_accessoryDockingInfos.get(view);
+		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
+		List accessoryDockingInfos = (List) m_accessoryDockingInfos.get(view.getPersistentId());
 
 		HashMap context = new HashMap();
 		context.put("territoral.view", m_territoralView);
@@ -162,7 +163,7 @@ public class ViewManager implements IViewManager {
 		m_registeredListeners.put(viewId, dockingHandler);
 		view.addDockingListener(dockingHandler);
 		
-		m_mainDockingInfos.put(view, mainViewDockingInfo);
+		m_mainDockingInfos.put(view.getPersistentId(), mainViewDockingInfo);
 	}
 
 	/**
@@ -271,7 +272,12 @@ public class ViewManager implements IViewManager {
 						} else {
 							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
 						}
-						m_accessoryDockingInfos.put(view.getPersistentId(), new ViewDockingInfo(childView, region, ratio)); 
+						List dockingInfos = (List) m_accessoryDockingInfos.get(view.getPersistentId());
+						if (dockingInfos == null) {
+							dockingInfos = new ArrayList();
+						}
+						dockingInfos.add(new ViewDockingInfo(childView, region, ratio));
+						m_accessoryDockingInfos.put(view.getPersistentId(), dockingInfos); 
 						return true;
 					}
 				}
