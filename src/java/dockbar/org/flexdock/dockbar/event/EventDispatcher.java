@@ -44,6 +44,12 @@ public class EventDispatcher {
 			case DockbarEvent.COLLAPSED:
 				listener.dockableCollapsed(evt);
 				break;
+			case DockbarEvent.MINIMIZE_STARTED:
+				listener.minimizeStarted(evt);
+				break;
+			case DockbarEvent.MINIMIZE_COMPLETED:
+				listener.minimizeCompleted(evt);
+				break;
 		}
 	}
 }

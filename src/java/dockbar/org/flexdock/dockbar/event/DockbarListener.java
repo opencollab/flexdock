@@ -10,4 +10,7 @@ public interface DockbarListener {
 	public void dockableExpanded(DockbarEvent evt);
 	public void dockableLocked(DockbarEvent evt);
 	public void dockableCollapsed(DockbarEvent evt);
+	
+	public void minimizeStarted(DockbarEvent evt);
+	public void minimizeCompleted(DockbarEvent evt);
 }

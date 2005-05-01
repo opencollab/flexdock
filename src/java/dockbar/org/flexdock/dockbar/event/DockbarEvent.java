@@ -15,8 +15,12 @@ public class DockbarEvent extends EventObject {
 	public static final int LOCKED = 1;
 	public static final int COLLAPSED = 2;
 	
+	public static final int MINIMIZE_STARTED = 10;
+	public static final int MINIMIZE_COMPLETED = 11;
+	
 	private int edge;
 	private int type;
+	private boolean consumed;
 	
 	public DockbarEvent(Dockable dockable, int type, int edge) {
 		super(dockable);
@@ -30,5 +34,13 @@ public class DockbarEvent extends EventObject {
 	
 	public int getType() {
 		return type;
+	}
+
+	public boolean isConsumed() {
+		return consumed;
+	}
+	
+	public void consume() {
+		consumed = true;
 	}
 }
