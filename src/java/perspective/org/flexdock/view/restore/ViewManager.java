@@ -1,10 +1,11 @@
 package org.flexdock.view.restore;
 
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -67,12 +68,11 @@ public class ViewManager implements IViewManager {
 		}
 		
 		ViewDockingInfo dockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
-		List accessoryDockingInfos = (List) m_accessoryDockingInfos.get(view.getPersistentId());
 
 		HashMap context = new HashMap();
 		context.put("territoral.view", m_territoralView);
 		context.put("main.docking.info", dockingInfo);
-		context.put("accessory.docking.infos", accessoryDockingInfos);
+		context.put("accessory.docking.infos", m_accessoryDockingInfos);
 		
 		boolean docked = false;
 		for (int i=0; i<m_showViewHandlers.size(); i++) {
@@ -252,18 +252,42 @@ public class ViewManager implements IViewManager {
 		 * @see org.flexdock.docking.event.DockingListener#dockingComplete(org.flexdock.docking.event.DockingEvent)
 		 */
 		public void dockingComplete(DockingEvent dockingEvent) {
+			System.out.println("overWindow: "+dockingEvent.isOverWindow());
 			View sourceView = (View) dockingEvent.getSource();
 			DockingPort dockingPort = dockingEvent.getNewDockingPort();
 			String region = dockingEvent.getRegion();
-
-			preserve(sourceView, dockingPort, region);
+			boolean isOverWindow = dockingEvent.isOverWindow();
+			
+			preserve(sourceView, dockingPort, region, isOverWindow);
 		}
 
-		private boolean preserve(View view, DockingPort dockingPort, String region) {
+		private boolean preserve(View view, DockingPort dockingPort, String region, boolean isOverWindow) {
 			Viewport viewPort = (Viewport) dockingPort;
 			if (!viewPort.getViewset().isEmpty()) {
 				for (Iterator it = viewPort.getViewset().iterator(); it.hasNext();) {
 					View childView = (View) it.next();
+
+					if (!isOverWindow) {
+						Float ratioObject = view.getDockingProperties().getRegionInset(region);
+						float ratio = -1.0f;
+						if (ratioObject != null) {
+							ratio = ratioObject.floatValue();
+						} else {
+							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
+						}
+
+						ViewDockingInfo viewDockingInfo = new ViewDockingInfo(childView, region, ratio);
+						viewDockingInfo.setFloating(true);
+						Point locationOnScreen = view.getLocationOnScreen();
+						Dimension dim = view.getSize();
+						System.out.println("Point: "+locationOnScreen);
+						System.out.println("Dimension: "+dim);
+						viewDockingInfo.setFloatingLocation(locationOnScreen);
+						viewDockingInfo.setFloatingWindowDimension(dim);
+						m_accessoryDockingInfos.put(view.getPersistentId(), viewDockingInfo); 
+						return true;
+					}
+					
 					if (!childView.equals(view)) {
 						Float ratioObject = view.getDockingProperties().getRegionInset(region);
 						float ratio = -1.0f;
@@ -272,12 +296,8 @@ public class ViewManager implements IViewManager {
 						} else {
 							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
 						}
-						List dockingInfos = (List) m_accessoryDockingInfos.get(view.getPersistentId());
-						if (dockingInfos == null) {
-							dockingInfos = new ArrayList();
-						}
-						dockingInfos.add(new ViewDockingInfo(childView, region, ratio));
-						m_accessoryDockingInfos.put(view.getPersistentId(), dockingInfos); 
+						ViewDockingInfo viewDockingInfo = new ViewDockingInfo(childView, region, ratio);
+						m_accessoryDockingInfos.put(view.getPersistentId(), viewDockingInfo); 
 						return true;
 					}
 				}

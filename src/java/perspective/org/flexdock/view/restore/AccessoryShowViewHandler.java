@@ -1,6 +1,5 @@
 package org.flexdock.view.restore;
 
-import java.util.List;
 import java.util.Map;
 
 import org.flexdock.view.View;
@@ -15,26 +14,30 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 	 */
 	public boolean showView(View view, Map context) {
 		View territoralView = (View) context.get("territoral.view");
-		List accessoryDockingInfos = (List) context.get("accessory.docking.infos");
+		Map accessoryDockingInfos = (Map) context.get("accessory.docking.infos");
+		ViewDockingInfo viewDockingInfo = (ViewDockingInfo) accessoryDockingInfos.get(view.getPersistentId());
 
 		boolean docked = false;
-		if (accessoryDockingInfos != null && accessoryDockingInfos.size() > 0) {
-			for (int i=0; i<accessoryDockingInfos.size(); i++) {
-				ViewDockingInfo viewDockingInfo = (ViewDockingInfo) accessoryDockingInfos.get(i);
-				View sourceView = (View) viewDockingInfo.getView();
-				String region = viewDockingInfo.getRegion();
-				float ratio = viewDockingInfo.getRatio();
-				if (sourceView == territoralView) {
-					View siblingView = (View) sourceView.getSibling(region);
-					if (siblingView != null) {
-						docked = siblingView.dock(view);
-					} else {
-						docked = sourceView.dock(view, region, ratio);
-					}
+		if (viewDockingInfo != null) {
+			View sourceView = (View) viewDockingInfo.getView();
+			String region = viewDockingInfo.getRegion();
+			float ratio = viewDockingInfo.getRatio();
+
+//			if (viewDockingInfo.isFloating()) {
+//				Point locationOnScreen = viewDockingInfo.getFloatingLocation();
+//				Dimension dim = viewDockingInfo.getFloatingWindowDimension();
+//				sourceView.doc
+//			}
+			
+			if (sourceView == territoralView) {
+				View siblingView = (View) sourceView.getSibling(region);
+				if (siblingView != null) {
+					docked = siblingView.dock(view);
 				} else {
 					docked = sourceView.dock(view, region, ratio);
 				}
-				if (docked) break;
+			} else {
+				docked = sourceView.dock(view, region, ratio);
 			}
 		}
 
