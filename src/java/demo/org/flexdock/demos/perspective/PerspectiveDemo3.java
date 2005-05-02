@@ -1,10 +1,11 @@
 /*
  * Created on Mar 24, 2005
  */
-package org.flexdock.view.perspective;
+package org.flexdock.demos.perspective;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -31,11 +32,13 @@ import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
+import org.flexdock.view.perspective.IPerspective;
+import org.flexdock.view.perspective.UpdateablePerspective;
 
 /**
  * @author Mateusz Szczap
  */
-public class PerspectiveDemo extends JFrame {
+public class PerspectiveDemo3 extends JFrame {
 
 	private View startPage = null;
 	private View solutionExplorerView = null;
@@ -48,15 +51,15 @@ public class PerspectiveDemo extends JFrame {
 	public static void main(String[] args) {
 		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		
-		JFrame f = new PerspectiveDemo();
+		JFrame f = new PerspectiveDemo3();
 		f.setSize(800, 600);
 		SwingUtility.centerOnScreen(f);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}
 	
-	public PerspectiveDemo() {
-		super("Perspective Demo");
+	public PerspectiveDemo3() {
+		super("Perspective Demo3");
 		setContentPane(createContentPane());
 	}	
 	
@@ -66,8 +69,8 @@ public class PerspectiveDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(perspective1);
+			((UpdateablePerspective) perspective2).deactivate();
+			((UpdateablePerspective) perspective1).activate();
 		}
 	}
 
@@ -77,8 +80,8 @@ public class PerspectiveDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			IPerspectiveManager perspectiveRegistry = PerspectiveManager.getInstance();
-			perspectiveRegistry.applyPerspective(perspective2);
+			((UpdateablePerspective) perspective1).deactivate();
+			((UpdateablePerspective) perspective2).activate();
 		}
 	}
 
@@ -97,12 +100,12 @@ public class PerspectiveDemo extends JFrame {
 		this.perspective2 = createPerspective2(mainViewPort, startPage);
 
 		p.add(mainViewPort, BorderLayout.CENTER);
-		p.add(createSouthPanel(), BorderLayout.SOUTH);
+		p.add(createSouthPanel(p), BorderLayout.SOUTH);
 		
 		return p;
 	}
 
-	private JPanel createSouthPanel() {
+	private JPanel createSouthPanel(Container parent) {
 		JPanel panel = new JPanel(new FlowLayout());
 		
 		JButton b1 = new JButton("Perspective1");
@@ -144,27 +147,35 @@ public class PerspectiveDemo extends JFrame {
 	}
 	
 	private IPerspective createPerspective1(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test1");
+		IPerspective perspective = new UpdateablePerspective("test1");
 		perspective.setMainViewport(viewport);
-
+		
 		perspective.addView(centerView);
 		perspective.addView(solutionExplorerView);
-		
+		perspective.addView(taskListView);
+		perspective.addView(classViewView);
+
 		perspective.dockToCenterViewport("start.page");
 		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
+		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
+
+		perspective.dock("solution.explorer", "task.list");
 		
 		return perspective;
 	}
 
 	private IPerspective createPerspective2(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test2");
+		IPerspective perspective = new UpdateablePerspective("test2");
 		perspective.setMainViewport(viewport);
 
 		perspective.addView(centerView);
+		perspective.addView(this.solutionExplorerView);
 		perspective.addView(this.taskListView);
 		perspective.addView(this.classViewView);
 
 		perspective.dockToCenterViewport("start.page");
+		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
+		perspective.dock("solution.explorer", "task.list", DockingPort.SOUTH_REGION, .5f);
 		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
 		
 		return perspective;

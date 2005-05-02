@@ -2,11 +2,14 @@ package org.flexdock.view.restore;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.HierarchyBoundsListener;
+import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.flexdock.dockbar.restore.DockingPath;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -68,11 +71,12 @@ public class ViewManager implements IViewManager {
 		}
 		
 		ViewDockingInfo mainDockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
-
+		ViewDockingInfo accessoryDockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(view.getPersistentId());
+		
 		HashMap context = new HashMap();
 		context.put("territoral.view", m_territoralView);
 		context.put("main.docking.info", mainDockingInfo);
-		context.put("accessory.docking.info", m_accessoryDockingInfos.get(view.getPersistentId()));
+		context.put("accessory.docking.info", accessoryDockingInfo);
 		
 		boolean docked = false;
 		for (int i=0; i<m_showViewHandlers.size(); i++) {
@@ -111,6 +115,8 @@ public class ViewManager implements IViewManager {
 	 */
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
+		DockingPath.setRestorePath(view);
+
 		boolean isHidden = DockingManager.undock(view);
 
 		if (isHidden) {
@@ -133,21 +139,21 @@ public class ViewManager implements IViewManager {
 	 * @see org.flexdock.view.restore.IViewManager#maximizeView(org.flexdock.view.View)
 	 */
 	public void maximizeView(View view) {
-		if (view == null) throw new IllegalArgumentException("view cannot be null");
-		
-		if (view == m_territoralView) {
-			//close all views except territoral view
-		}
-
-		DockingManager.undock(m_territoralView);
-		m_centerViewport.dock(view);
+//		if (view == null) throw new IllegalArgumentException("view cannot be null");
+//		
+//		if (view == m_territoralView) {
+//			//close all views except territoral view
+//		}
+//
+//		DockingManager.undock(m_territoralView);
+//		m_centerViewport.dock(view);
 	}
 	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#unmaximizeView(org.flexdock.view.View)
 	 */
 	public void unmaximizeView(View view) {
-		m_centerViewport.dock(m_territoralView);
+		//m_centerViewport.dock(m_territoralView);
 	}
 	
 	/**
@@ -246,13 +252,12 @@ public class ViewManager implements IViewManager {
 		}
 	}
 	
-	private class DockingHandler extends DockingListener.DockingAdapter {
+	private class DockingHandler extends DockingListener.DockingAdapter implements HierarchyBoundsListener {
 
 		/**
 		 * @see org.flexdock.docking.event.DockingListener#dockingComplete(org.flexdock.docking.event.DockingEvent)
 		 */
 		public void dockingComplete(DockingEvent dockingEvent) {
-			System.out.println("overWindow: "+dockingEvent.isOverWindow());
 			View sourceView = (View) dockingEvent.getSource();
 			DockingPort dockingPort = dockingEvent.getNewDockingPort();
 			String region = dockingEvent.getRegion();
@@ -261,14 +266,16 @@ public class ViewManager implements IViewManager {
 			preserve(sourceView, dockingPort, region, isOverWindow);
 		}
 
-		private boolean preserve(View view, DockingPort dockingPort, String region, boolean isOverWindow) {
+		private boolean preserve(View sourceView, DockingPort dockingPort, String region, boolean isOverWindow) {
 			Viewport viewPort = (Viewport) dockingPort;
 			if (!viewPort.getViewset().isEmpty()) {
 				for (Iterator it = viewPort.getViewset().iterator(); it.hasNext();) {
 					View childView = (View) it.next();
 
 					if (!isOverWindow) {
-						Float ratioObject = view.getDockingProperties().getRegionInset(region);
+						//if it is a floating window register as component listener
+						childView.addHierarchyBoundsListener(this);
+						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
 						float ratio = -1.0f;
 						if (ratioObject != null) {
 							ratio = ratioObject.floatValue();
@@ -278,18 +285,22 @@ public class ViewManager implements IViewManager {
 
 						ViewDockingInfo viewDockingInfo = new ViewDockingInfo(childView, region, ratio);
 						viewDockingInfo.setFloating(true);
-						Point locationOnScreen = view.getLocationOnScreen();
-						Dimension dim = view.getSize();
-						System.out.println("Point: "+locationOnScreen);
-						System.out.println("Dimension: "+dim);
+						Point locationOnScreen = sourceView.getLocationOnScreen();
+						Dimension dim = sourceView.getSize();
 						viewDockingInfo.setFloatingLocation(locationOnScreen);
 						viewDockingInfo.setFloatingWindowDimension(dim);
-						m_accessoryDockingInfos.put(view.getPersistentId(), viewDockingInfo); 
+						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
 						return true;
+					} else {
+						sourceView.removeHierarchyBoundsListener(this);
+						ViewDockingInfo dockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(sourceView.getPersistentId());
+						if (dockingInfo != null) {
+							dockingInfo.setFloating(false);
+						}
 					}
 					
-					if (!childView.equals(view)) {
-						Float ratioObject = view.getDockingProperties().getRegionInset(region);
+					if (!childView.equals(sourceView)) {
+						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
 						float ratio = -1.0f;
 						if (ratioObject != null) {
 							ratio = ratioObject.floatValue();
@@ -297,7 +308,7 @@ public class ViewManager implements IViewManager {
 							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
 						}
 						ViewDockingInfo viewDockingInfo = new ViewDockingInfo(childView, region, ratio);
-						m_accessoryDockingInfos.put(view.getPersistentId(), viewDockingInfo); 
+						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
 						return true;
 					}
 				}
@@ -305,6 +316,28 @@ public class ViewManager implements IViewManager {
 			return false;
 		}
 
+		public void ancestorMoved(HierarchyEvent e) {
+			View sourceView = (View) e.getSource();
+			if (sourceView.isShowing()) {
+				handle(sourceView);
+			}
+		}
+		
+		public void ancestorResized(HierarchyEvent e) {
+			View sourceView = (View) e.getSource();
+			if (sourceView.isShowing()) {
+				handle(sourceView);
+			}
+		}
+
+		private void handle(View sourceView) {
+			Dimension dimension = sourceView.getSize();
+			Point location = sourceView.getLocationOnScreen();
+			ViewDockingInfo viewDockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(sourceView.getPersistentId());
+			viewDockingInfo.setFloatingLocation(location);
+			viewDockingInfo.setFloatingWindowDimension(dimension);
+		}
+		
 	}
 	
 }

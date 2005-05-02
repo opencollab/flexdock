@@ -255,10 +255,6 @@ public class DragPipeline {
 		}
 	}
 	
-	public static void main(String[] args) {
-
-	}
-
 	public DragToken getDragToken() {
 		return dragToken;
 	}

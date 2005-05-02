@@ -5,10 +5,9 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.util.Map;
 
-import javax.swing.JWindow;
-
+import org.flexdock.docking.DockingManager;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
+import org.flexdock.view.floating.ViewFrame;
 
 /**
  * @author Mateusz Szczap
@@ -29,18 +28,21 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 			float ratio = accessoryDockingInfo.getRatio();
 
 			if (accessoryDockingInfo.isFloating()) {
-				JWindow window = new JWindow();
-				window.setLayout(new BorderLayout());
+				ViewFrame viewFrame = ViewFrame.create(territoralView);
+				viewFrame.setLayout(new BorderLayout());
+				viewFrame.setResizable(true);
+				
 				Point locationOnScreen = accessoryDockingInfo.getFloatingLocation();
 				Dimension dim = accessoryDockingInfo.getFloatingWindowDimension();
-				window.setLocation(locationOnScreen);
-				window.setSize(dim);
-				Viewport viewport = new Viewport("some view port");
-				window.add(viewport, BorderLayout.CENTER);
-				viewport.dock(sourceView);
-				window.setVisible(true);
+
+				DockingManager.undock(sourceView);
+
+				viewFrame.addView(sourceView);
+				
+				viewFrame.setLocation(locationOnScreen);
+				viewFrame.setSize(dim);
+				viewFrame.setVisible(true);
 				return true;
-				//sourceView.doc
 			}
 			
 			if (sourceView == territoralView) {

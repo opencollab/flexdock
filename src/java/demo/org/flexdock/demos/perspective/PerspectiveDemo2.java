@@ -1,7 +1,7 @@
 /*
  * Created on Mar 24, 2005
  */
-package org.flexdock.view.perspective;
+package org.flexdock.demos.perspective;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -32,6 +32,10 @@ import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
+import org.flexdock.view.perspective.IPerspective;
+import org.flexdock.view.perspective.IPerspectiveManager;
+import org.flexdock.view.perspective.Perspective;
+import org.flexdock.view.perspective.PerspectiveManager;
 
 /**
  * @author Mateusz Szczap
