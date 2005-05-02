@@ -34,6 +34,9 @@ import org.flexdock.view.Viewport;
 import org.flexdock.view.restore.ViewDockingInfo;
 import org.flexdock.view.restore.ViewManager;
 
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
 /**
  * @author Christopher Butler
  * @author Mateusz Szczap
@@ -45,8 +48,13 @@ public class SimpleShowViewportDemo extends JFrame {
 	private static View view3 = null;
 	private static View view4 = null;
 
-	public static void main(String[] args) {
-		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+	public static void main(String[] args) throws Exception {
+		Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
+        SkinLookAndFeel.setSkin(theSkinToUse);
+        
+//		http://dev.l2fprod.com/javadoc/com/l2fprod/gui/plaf/skin/SkinLookAndFeel.html
+		SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
+//		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 //		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 //		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 		

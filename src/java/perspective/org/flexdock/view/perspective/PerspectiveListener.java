@@ -24,4 +24,6 @@ public interface PerspectiveListener extends EventListener {
 
 	void onPerspectiveCleared(IPerspective perspective);
 	
+	void onPerspectiveResetted(IPerspective perspective);
+	
 }

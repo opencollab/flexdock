@@ -10,7 +10,8 @@ public interface IPerspective {
 
 	String getPerspectiveName();
 
-	//TODO get rid of it somehow
+	String getPersistentId();
+	
 	String getCenterViewId();
 	
 	void setMainViewport(Viewport viewport);
@@ -27,17 +28,19 @@ public interface IPerspective {
 	
 	Perspective.ViewDockingInfo[] getDockingInfoChain();
 
-	//TODO get rid of it somehow
-	void dockToCenterViewport(String viewId);
+	//can be used for reset perspective
+	Perspective.ViewDockingInfo[] getDefaultDockingInfoChain();
 
-	void dock(String view1Id, String view2Id);
-	
-	void dock(String sourceViewId, String targetViewId, String region, float ratio);
-	
-	void dock(View sourceView, View targetView, String region, float ratio);
+	void dockToCenterViewport(String viewId, boolean isDefault);
 
-	void dock(View sourceView, View targetView);
+	void dock(String view1Id, String view2Id, boolean isDefault);
+	
+	void dock(String sourceViewId, String targetViewId, String region, float ratio, boolean isDefault);
+	
+	void dock(View sourceView, View targetView, String region, float ratio, boolean isDefault);
+
+	void dock(View sourceView, View targetView, boolean isDefault);
 
 	void undock(View sourceView, View targetView);
-
+	
 }

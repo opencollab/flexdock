@@ -183,22 +183,22 @@ public class PerspectiveDemo2 extends JFrame {
 	}
 	
 	private IPerspective createPerspective1(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test1");
+		IPerspective perspective = new Perspective("p1", "test1");
 		perspective.setMainViewport(viewport);
 		
 		perspective.addView(centerView);
 		perspective.addView(solutionExplorerView);
 		perspective.addView(taskListView);
 		
-		perspective.dockToCenterViewport("start.page");
-		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
-		perspective.dock("solution.explorer", "task.list", DockingPort.CENTER_REGION, -1.0f);
+		perspective.dockToCenterViewport("start.page", true);
+		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f, true);
+		perspective.dock("solution.explorer", "task.list", DockingPort.CENTER_REGION, -1.0f, true);
 		
 		return perspective;
 	}
 
 	private IPerspective createPerspective2(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test2");
+		IPerspective perspective = new Perspective("p2", "test2");
 
 		perspective.setMainViewport(viewport);
 
@@ -206,9 +206,9 @@ public class PerspectiveDemo2 extends JFrame {
 		perspective.addView(this.solutionExplorerView);
 		perspective.addView(this.taskListView);
 
-		perspective.dockToCenterViewport("start.page");
-		perspective.dock("start.page", "solution.explorer", DockingPort.SOUTH_REGION, .3f);
-		perspective.dock("start.page", "task.list", DockingPort.WEST_REGION, .3f);
+		perspective.dockToCenterViewport("start.page", true);
+		perspective.dock("start.page", "solution.explorer", DockingPort.SOUTH_REGION, .3f, true);
+		perspective.dock("start.page", "task.list", DockingPort.WEST_REGION, .3f, true);
 		
 		return perspective;
 	}

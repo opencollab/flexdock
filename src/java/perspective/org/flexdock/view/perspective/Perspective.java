@@ -21,16 +21,20 @@ import org.flexdock.view.Viewport;
  */
 public class Perspective implements IPerspective {
 	
+	private String m_persistentId = null;
 	private String m_perspectiveName = null;
 	
 	private HashMap m_views = new HashMap();
 	private List m_dockingInfosList = new ArrayList();
+	private List m_defaultDockingInfosList = new ArrayList();
 	
 	private String m_centerViewId = null;
 	private Viewport m_centerViewport = null;
 	
-	public Perspective(String perspectiveName) {
+	public Perspective(String persistentId, String perspectiveName) {
+		if (persistentId == null) throw new NullPointerException("perspectiveName cannot be null");
 		if (perspectiveName == null) throw new NullPointerException("perspectiveName cannot be null");
+		m_persistentId = persistentId;
 		m_perspectiveName = perspectiveName;
 	}
 	
@@ -39,6 +43,10 @@ public class Perspective implements IPerspective {
 	 */
 	public String getPerspectiveName() {
 		return m_perspectiveName;
+	}
+	
+	public String getPersistentId() {
+		return m_persistentId;
 	}
 	
 	/**
@@ -84,52 +92,57 @@ public class Perspective implements IPerspective {
 		return (View) m_views.get(viewId);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#dockToCenterViewport(java.lang.String)
-	 */
-	public void dockToCenterViewport(String viewId) {
-		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
-		m_centerViewId = viewId;
-	}
-	
 	public List getDockingInfoList() {
 		return m_dockingInfosList;
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspective#dockToCenterViewport(java.lang.String)
+	 */
+	public void dockToCenterViewport(String viewId, boolean isDefault) {
+		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
+		m_centerViewId = viewId;
+	}
+
+	/**
 	 * @see org.flexdock.view.perspective.IPerspective#dock(org.flexdock.view.View, org.flexdock.view.View, java.lang.String, float)
 	 */
-	public void dock(View sourceView, View targetView, String region, float ratio) {
+	public void dock(View sourceView, View targetView, String region, float ratio, boolean isDefault) {
 		Perspective.ViewDockingInfo viewDockingInfo = new Perspective.ViewDockingInfo(sourceView, targetView, region, ratio);
-		
+
+		if (isDefault) {
+			m_defaultDockingInfosList.add(viewDockingInfo);
+		}
+
 		m_dockingInfosList.add(viewDockingInfo);
-	}
-	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#dock(java.lang.String)
-	 */
-	public void dock(String viewId) {
-		m_centerViewId = viewId;
+
 	}
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspective#dock(java.lang.String, org.flexdock.view.View, java.lang.String, float)
 	 */
-	public void dock(String sourceViewId, String targetViewId, String region, float ratio) {
+	public void dock(String sourceViewId, String targetViewId, String region, float ratio, boolean isDefault) {
 		View sourceView = getView(sourceViewId);
 		View targetView = getView(targetViewId);
 
 		if (sourceView == null) throw new RuntimeException("Unable to find sourceView: "+sourceViewId);
 		if (targetViewId == null) throw new RuntimeException("Unable to find targetView: "+targetViewId);
 
-		dock(sourceView, targetView, region, ratio);
+		dock(sourceView, targetView, region, ratio, isDefault);
 	}
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspective#dock(org.flexdock.view.View, org.flexdock.view.View)
 	 */
-	public void dock(View sourceView, View targetView) {
-		dock(sourceView, targetView, DockingPort.CENTER_REGION, -1.0f);
+	public void dock(View sourceView, View targetView, boolean isDefault) {
+		dock(sourceView, targetView, DockingPort.CENTER_REGION, -1.0f, isDefault);
+	}
+	
+	/**
+	 * @see org.flexdock.view.perspective.IPerspective#dock(java.lang.String, java.lang.String)
+	 */
+	public void dock(String view1Id, String view2Id, boolean isDefault) {
+		dock(view1Id, view2Id, DockingPort.CENTER_REGION, -1.0f, isDefault);
 	}
 	
 	/**
@@ -148,13 +161,6 @@ public class Perspective implements IPerspective {
 	}
 	
 	/**
-	 * @see org.flexdock.view.perspective.IPerspective#dock(java.lang.String, java.lang.String)
-	 */
-	public void dock(String view1Id, String view2Id) {
-		dock(view1Id, view2Id, DockingPort.CENTER_REGION, -1.0f);
-	}
-	
-	/**
 	 * @see org.flexdock.view.perspective.IPerspective#getViewIds()
 	 */
 	public View[] getViews() {
@@ -166,6 +172,13 @@ public class Perspective implements IPerspective {
 	 */
 	public ViewDockingInfo[] getDockingInfoChain() {
 		return (ViewDockingInfo[]) m_dockingInfosList.toArray(new ViewDockingInfo[]{});
+	}
+
+	/**
+	 * @see org.flexdock.view.perspective.IPerspective#getDefaultDockingInfoChain()
+	 */
+	public ViewDockingInfo[] getDefaultDockingInfoChain() {
+		return (ViewDockingInfo[]) m_defaultDockingInfosList.toArray(new ViewDockingInfo[]{});
 	}
 	
 	/**
@@ -183,6 +196,8 @@ public class Perspective implements IPerspective {
 		private String m_relativeRegion = DockingPort.UNKNOWN_REGION;
 		
 		private float m_ratio = -1.0f;
+		
+		private boolean m_isFloatingView = false;
 		
 		public ViewDockingInfo(View sourceView, View targetView, String region, float ratio) {
 			m_sourceView = sourceView;
@@ -222,7 +237,7 @@ public class Perspective implements IPerspective {
 		public void setRatio(float ratio) {
 			m_ratio = ratio;
 		}
-
+		
 	}
 	
 }

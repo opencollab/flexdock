@@ -7,9 +7,9 @@ import org.flexdock.view.Viewport;
  */
 public interface IPerspectiveManager extends PerspectiveMonitor {
 
-	void addPerspective(String perspectiveId, IPerspective perspective);
+	void addPerspective(IPerspective perspective);
 
-	void addPerspective(String perspectiveId, IPerspective perspective, boolean isDefaultPerspective);
+	void addPerspective(IPerspective perspective, boolean isDefaultPerspective);
 
 	void removePerspective(String perspectiveId);
 	
@@ -23,6 +23,8 @@ public interface IPerspectiveManager extends PerspectiveMonitor {
 	
 	void applyPerspective(IPerspective perspective);
 
+	void resetPerspective(IPerspective perspective);
+	
 	void applyPerspective(String perspectiveId);
 	
 	void applyDefaultPerspective();

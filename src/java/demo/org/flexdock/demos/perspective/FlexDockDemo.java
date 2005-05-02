@@ -36,7 +36,7 @@ import org.flexdock.view.restore.ViewManager;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FlexDockDemo.java,v 1.1 2005-05-02 11:11:55 winnetou25 Exp $
+ * @version $Id: FlexDockDemo.java,v 1.2 2005-05-02 13:54:07 winnetou25 Exp $
  */
 public class FlexDockDemo extends JFrame {
 
@@ -77,9 +77,9 @@ public class FlexDockDemo extends JFrame {
 		IPerspective perspective3 = createPerspective3(viewport, mainView);
 
 		IPerspectiveManager perspectiveManager = PerspectiveManager.getInstance();
-		perspectiveManager.addPerspective("perspective_1", perspective1);
-		perspectiveManager.addPerspective("perspective_2", perspective2);
-		perspectiveManager.addPerspective("perspective_3", perspective3, true);
+		perspectiveManager.addPerspective(perspective1);
+		perspectiveManager.addPerspective(perspective2);
+		perspectiveManager.addPerspective(perspective3, true);
 		
 		perspectiveManager.applyDefaultPerspective();
 
@@ -141,9 +141,9 @@ public class FlexDockDemo extends JFrame {
 
 		JMenu perspectiveMenu = new JMenu("Perspective");
 		//pobieramy perspektywe nr 1
-		IPerspective perspective1 = PerspectiveManager.getInstance().getPerspective("perspective_1");
-		IPerspective perspective2 = PerspectiveManager.getInstance().getPerspective("perspective_2");
-		IPerspective perspective3 = PerspectiveManager.getInstance().getPerspective("perspective_3");
+		IPerspective perspective1 = PerspectiveManager.getInstance().getPerspective("p1");
+		IPerspective perspective2 = PerspectiveManager.getInstance().getPerspective("p2");
+		IPerspective perspective3 = PerspectiveManager.getInstance().getPerspective("p3");
 
 		perspectiveMenu.add(createOpenPerspectiveActionFor(perspective1));
 		perspectiveMenu.add(createOpenPerspectiveActionFor(perspective2));
@@ -156,7 +156,7 @@ public class FlexDockDemo extends JFrame {
 	}
 
 	private IPerspective createPerspective1(Viewport viewport, View mainView) {
-		IPerspective perspective = new Perspective("Perspective1");
+		IPerspective perspective = new Perspective("p1", "Perspective1");
 		//ustawiamy glowny view port na perspektywie
 		perspective.setMainViewport(viewport);
 
@@ -171,18 +171,18 @@ public class FlexDockDemo extends JFrame {
 		perspective.addView(problemView);
 		perspective.addView(consoleView);
 		
-		perspective.dockToCenterViewport("main.view");
-		perspective.dock("main.view", "bird.view", DockingPort.EAST_REGION, .3f);
-		perspective.dock("main.view", "message.log", DockingPort.WEST_REGION, .3f);
+		perspective.dockToCenterViewport("main.view", true); //tru here means that when we reset perspective it will be default
+		perspective.dock("main.view", "bird.view", DockingPort.EAST_REGION, .3f, true);
+		perspective.dock("main.view", "message.log", DockingPort.WEST_REGION, .3f, true);
 
-		perspective.dock("message.log", "problem");
-		perspective.dock("message.log", "console");
+		perspective.dock("message.log", "problem", true);
+		perspective.dock("message.log", "console", true);
 		
 		return perspective;
 	}
 
 	private IPerspective createPerspective2(Viewport viewport, View mainView) {
-		IPerspective perspective = new Perspective("Perspective2");
+		IPerspective perspective = new Perspective("p2", "Perspective2");
 		//ustawiamy glowny view port na perspektywie
 		perspective.setMainViewport(viewport);
 
@@ -198,22 +198,22 @@ public class FlexDockDemo extends JFrame {
 		perspective.addView(consoleView);
 		
 		//dokujemy main.view do glownego view portu
-		perspective.dockToCenterViewport("main.view");
-		perspective.dock("main.view", "bird.view", DockingPort.WEST_REGION, .3f);
-		perspective.dock("bird.view", "message.log", DockingPort.SOUTH_REGION, .5f);
-		perspective.dock("message.log", "problem");
-		perspective.dock("message.log", "console", DockingPort.EAST_REGION, .5f);
+		perspective.dockToCenterViewport("main.view", true);
+		perspective.dock("main.view", "bird.view", DockingPort.WEST_REGION, .3f, true);
+		perspective.dock("bird.view", "message.log", DockingPort.SOUTH_REGION, .5f, true);
+		perspective.dock("message.log", "problem", true);
+		perspective.dock("message.log", "console", DockingPort.EAST_REGION, .5f, true);
 		
 		return perspective;
 	}
 
 	private IPerspective createPerspective3(Viewport viewport, View mainView) {
-		IPerspective perspective = new Perspective("Perspective3");
+		IPerspective perspective = new Perspective("p3", "Perspective3");
 		perspective.setMainViewport(viewport);
 
 		perspective.addView(mainView);
 
-		perspective.dockToCenterViewport("main.view");
+		perspective.dockToCenterViewport("main.view", true);
 		
 		return perspective;
 	}
@@ -292,7 +292,6 @@ public class FlexDockDemo extends JFrame {
 
 	public static void main(String[] args) {
 		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
-		//SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
 		
 		FlexDockDemo flexDockDemo = new FlexDockDemo();
 	

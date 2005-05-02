@@ -148,28 +148,28 @@ public class PerspectiveDemo extends JFrame {
 	}
 	
 	private IPerspective createPerspective1(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test1");
+		IPerspective perspective = new Perspective("p1", "test1");
 		perspective.setMainViewport(viewport);
 
 		perspective.addView(centerView);
 		perspective.addView(solutionExplorerView);
 		
-		perspective.dockToCenterViewport("start.page");
-		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
+		perspective.dockToCenterViewport("start.page", true);
+		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f, true);
 		
 		return perspective;
 	}
 
 	private IPerspective createPerspective2(Viewport viewport, View centerView) {
-		IPerspective perspective = new Perspective("test2");
+		IPerspective perspective = new Perspective("p2", "test2");
 		perspective.setMainViewport(viewport);
 
 		perspective.addView(centerView);
 		perspective.addView(this.taskListView);
 		perspective.addView(this.classViewView);
 
-		perspective.dockToCenterViewport("start.page");
-		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
+		perspective.dockToCenterViewport("start.page", true);
+		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f, true);
 		
 		return perspective;
 	}

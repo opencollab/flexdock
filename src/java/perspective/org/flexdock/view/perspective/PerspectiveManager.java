@@ -1,6 +1,5 @@
 package org.flexdock.view.perspective;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,7 +8,6 @@ import java.util.Set;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
@@ -49,15 +47,14 @@ public class PerspectiveManager implements IPerspectiveManager {
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective)
 	 */
-	public void addPerspective(String perspectiveId, IPerspective perspective) {
-		addPerspective(perspectiveId, perspective, false);
+	public void addPerspective(IPerspective perspective) {
+		addPerspective(perspective, false);
 	}
 
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective, boolean)
 	 */
-	public void addPerspective(String perspectiveId, IPerspective perspective, boolean isDefaultPerspective) {
-		if (perspectiveId == null) throw new NullPointerException("perspectiveId cannot be null");
+	public void addPerspective(IPerspective perspective, boolean isDefaultPerspective) {
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
 		
 		if (isDefaultPerspective) {
@@ -66,7 +63,7 @@ public class PerspectiveManager implements IPerspectiveManager {
 			m_defaultPerspective = perspective;
 		}
 		
-		m_perspectives.put(perspectiveId, perspective);
+		m_perspectives.put(perspective.getPersistentId(), perspective);
 		
 		firePerspectiveAdded(perspective);
 	}
@@ -204,6 +201,43 @@ public class PerspectiveManager implements IPerspectiveManager {
 	}
 	
 	/**
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#resetPerspective(org.flexdock.view.perspective.IPerspective)
+	 */
+	public void resetPerspective(IPerspective perspective) {
+		if (perspective == null) throw new NullPointerException("perspective cannot be null");
+
+		clearPerspective(perspective);
+		Viewport mainViewPort = perspective.getMainViewport();
+
+		String centerViewId = perspective.getCenterViewId();
+		boolean wasTerritoralDocked = false;
+		if (centerViewId != null) {
+			View centerView = (View) DockingManager.getRegisteredDockable(centerViewId);
+			wasTerritoralDocked = DockingManager.dock(centerView, mainViewPort, DockingPort.CENTER_REGION);
+		}
+
+		if (!wasTerritoralDocked) {
+			return;
+		}
+		
+		Perspective.ViewDockingInfo[] dockingInfos = perspective.getDefaultDockingInfoChain();
+		for (int i=0; i<dockingInfos.length; i++) {
+			Perspective.ViewDockingInfo dockingInfo = (Perspective.ViewDockingInfo) dockingInfos[i];
+			View sourceView = dockingInfo.getSourceView();
+			View targetView = dockingInfo.getTargetView();
+			String region = dockingInfo.getRelativeRegion();
+			float ratio = dockingInfo.getRatio();
+			
+			if (!DockingManager.isDocked((Dockable) targetView)) {
+				sourceView.dock(targetView, region, ratio);
+			}
+			
+		}
+		
+		firePerspectiveResetted(perspective);
+	}
+	
+	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#applyDefaultPerspective()
 	 */
 	public void applyDefaultPerspective() {
@@ -251,21 +285,29 @@ public class PerspectiveManager implements IPerspectiveManager {
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#createPerspective(org.flexdock.view.Viewport)
 	 */
 	public IPerspective createPerspective(String perspectiveName, Viewport centralViewport) {
-		if (perspectiveName == null) throw new IllegalArgumentException("perspectiveName cannot be null");
-		if (centralViewport == null) throw new IllegalArgumentException("centralViewport cannot be null");
-
-		IPerspective perspective = new Perspective(perspectiveName);
-		perspective.setMainViewport(centralViewport);
-
-		Component component = centralViewport.getDockedComponent();
-		if (component instanceof DockingSplitPane) {
-			DockingSplitPane dockingSplitPane = (DockingSplitPane) component;
-			
-		}
-		
-		return perspective;
+//		if (perspectiveName == null) throw new IllegalArgumentException("perspectiveName cannot be null");
+//		if (centralViewport == null) throw new IllegalArgumentException("centralViewport cannot be null");
+//
+//		IPerspective perspective = new Perspective(perspectiveName);
+//		perspective.setMainViewport(centralViewport);
+//
+//		Component component = centralViewport.getDockedComponent();
+//		if (component instanceof DockingSplitPane) {
+//			DockingSplitPane dockingSplitPane = (DockingSplitPane) component;
+//			
+//		}
+//		
+//		return perspective;
+		return null;
 	}
-	
+
+	protected void firePerspectiveResetted(IPerspective perspective) {
+		for (int i=0; i<m_listeners.size(); i++) {
+			PerspectiveListener perspectiveListener = (PerspectiveListener) m_listeners.get(i);
+			perspectiveListener.onPerspectiveResetted(perspective);
+		}
+	}
+
 	protected void firePerspectiveChanged(IPerspective oldPerspective, IPerspective newPerspective) {
 		for (int i=0; i<m_listeners.size(); i++) {
 			PerspectiveListener perspectiveListener = (PerspectiveListener) m_listeners.get(i);

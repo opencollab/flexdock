@@ -155,11 +155,11 @@ public class PerspectiveDemo3 extends JFrame {
 		perspective.addView(taskListView);
 		perspective.addView(classViewView);
 
-		perspective.dockToCenterViewport("start.page");
-		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
-		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
+		perspective.dockToCenterViewport("start.page", true);
+		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f, true);
+		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f, true);
 
-		perspective.dock("solution.explorer", "task.list");
+		perspective.dock("solution.explorer", "task.list", true);
 		
 		return perspective;
 	}
@@ -173,10 +173,10 @@ public class PerspectiveDemo3 extends JFrame {
 		perspective.addView(this.taskListView);
 		perspective.addView(this.classViewView);
 
-		perspective.dockToCenterViewport("start.page");
-		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f);
-		perspective.dock("solution.explorer", "task.list", DockingPort.SOUTH_REGION, .5f);
-		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f);
+		perspective.dockToCenterViewport("start.page", true);
+		perspective.dock("start.page", "solution.explorer", DockingPort.WEST_REGION, .3f, true);
+		perspective.dock("solution.explorer", "task.list", DockingPort.SOUTH_REGION, .5f, true);
+		perspective.dock("start.page", "class.view", DockingPort.EAST_REGION, .3f, true);
 		
 		return perspective;
 	}
