@@ -7,10 +7,12 @@ import java.awt.Dimension;
 import java.awt.Point;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.drag.DragToken;
 import org.flexdock.util.SwingUtility;
+import org.flexdock.view.floating.FloatingViewport;
 import org.flexdock.view.floating.ViewFrame;
 
 /**
@@ -50,9 +52,25 @@ public class ViewDockingStrategy extends DefaultDockingStrategy {
 		if(isFloatable(dockable, token))
 			return true;
 		
+		
+		// check to see if we're already floating and we're trying to drop into the 
+		// same dialog.
+		DockingPort oldPort = DockingManager.getDockingPort(dockable);
+		if(oldPort instanceof FloatingViewport && oldPort==port) {
+			// only allow this situation if we're not the *last* dockable
+			// in the viewport.  if we're removing the last dockable, then
+			// the dialog will disappear before we redock, and we don't want this
+			// to happen.
+			FloatingViewport viewport = (FloatingViewport)oldPort;
+			if(viewport.getViewset().size()==1)
+				return false;
+		}
+		
+
 		// if not floatable, then use the default validation algorithm
 		return super.isDockingPossible(dockable, port, region, token);
 	}
+
 	
 	protected DockingResults dropComponent(Dockable dockable, DockingPort target, String region, DragToken token) {
 		// if we're not floatable, then proceed with the default behavior
