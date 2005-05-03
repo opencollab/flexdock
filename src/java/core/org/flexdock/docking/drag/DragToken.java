@@ -23,6 +23,7 @@ public class DragToken {
 	private String targetRegion;
 	private boolean overWindow;
 	private boolean pseudoDrag;
+	private long started;
 
 	
 	public DragToken(Component dockable, Point dragOrigin, MouseEvent evt) {
@@ -50,6 +51,8 @@ public class DragToken {
 		pseudoDrag = fakeDrag;
 		if(!fakeDrag)
 			parentDockingPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, dockable);
+		
+		started = -1;
 	}
 	
 	private Point calculateMouseOffset(Point evtPoint) {
@@ -157,5 +160,14 @@ public class DragToken {
 
 	public DockingPort getParentDockingPort() {
 		return parentDockingPort;
+	}
+	
+	public void start() {
+		if(started==-1)
+			started = System.currentTimeMillis();
+	}
+	
+	public long getStartTime() {
+		return started;
 	}
 }
