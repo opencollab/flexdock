@@ -13,6 +13,12 @@ public class ViewStateEvent extends EventObject {
 	public final static int VIEW_SHOWN = 0;
 	public final static int VIEW_HIDDEN = 1;
 
+	public final static int VIEW_REGISTERED = 2;
+	public final static int VIEW_UNREGISTERED = 3;
+
+	public final static int HANDLER_REGISTERED = 4;
+	public final static int HANDLER_UNREGISTERED = 5;
+
 	private int m_eventType = -1;
 	private View m_view;
 	

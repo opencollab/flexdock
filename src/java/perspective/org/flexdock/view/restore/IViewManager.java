@@ -14,6 +14,10 @@ public interface IViewManager extends ViewStateMonitor {
 	//TODO should we get rid of it?
 	void registerTerritoralView(View view);
 
+	void registerView(View view);
+
+	void unregisterView(String viewId);
+	
 	View getRegisteredView(String viewId);
 	
 	void registerViewDockingInfo(String viewId, ViewDockingInfo mainViewDockingInfo);

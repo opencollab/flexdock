@@ -10,6 +10,7 @@ import java.util.EventListener;
  * @author Christopher Butler
  */
 public interface DockingListener extends EventListener {
+	
 	/**
 	 * Fired when docking of a <code>Dockable</code> has completed.
 	 * 
@@ -17,7 +18,7 @@ public interface DockingListener extends EventListener {
 	 *            the <code>DockingEvent</code> event which provides the
 	 *            source Dockable, the old DockingPort and the new DockingPort
 	 */
-	public void dockingComplete(DockingEvent evt);
+	void dockingComplete(DockingEvent evt);
 
 	/**
 	 * Fired when docking of a <code>Dockable</code> is canceled during the operation.
@@ -26,7 +27,7 @@ public interface DockingListener extends EventListener {
 	 *            the <code>DockingEvent</code> event which provides the
 	 *            source Dockable, the old DockingPort and the new DockingPort
 	 */
-	public void dockingCanceled(DockingEvent evt);
+	void dockingCanceled(DockingEvent evt);
 	
 	
 	/**
@@ -36,7 +37,7 @@ public interface DockingListener extends EventListener {
 	 *            the <code>DockingEvent</code> event which provides the
 	 *            source Dockable, the old DockingPort and the new DockingPort
 	 */
-	public void dragStarted(DockingEvent evt);
+	void dragStarted(DockingEvent evt);
 	
 	
 	/**
@@ -47,26 +48,21 @@ public interface DockingListener extends EventListener {
 	 *            the <code>DockingEvent</code> event which provides the
 	 *            source Dockable, the old DockingPort and the new DockingPort
 	 */
-	public void dropStarted(DockingEvent evt);
+	void dropStarted(DockingEvent evt);
 	
 	public void undockingComplete(DockingEvent evt);
 	
-	
-	public static class DockingAdapter implements DockingListener {
+	class Stub implements DockingListener {
 
-		public void dockingCanceled(DockingEvent evt) {
-		}
+		public void dockingCanceled(DockingEvent evt) {}
 
-		public void dockingComplete(DockingEvent evt) {
-		}
+		public void dockingComplete(DockingEvent evt) {}
 
-		public void dragStarted(DockingEvent evt) {
-		}
+		public void dragStarted(DockingEvent evt) {}
 
-		public void dropStarted(DockingEvent evt) {
-		}
+		public void dropStarted(DockingEvent evt) {}
 
-		public void undockingComplete(DockingEvent evt) {
-		}
+		public void undockingComplete(DockingEvent evt) {}
+		
 	}
 }

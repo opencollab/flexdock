@@ -36,7 +36,7 @@ import org.flexdock.view.restore.ViewManager;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FlexDockDemo.java,v 1.2 2005-05-02 13:54:07 winnetou25 Exp $
+ * @version $Id: FlexDockDemo.java,v 1.3 2005-05-03 12:29:35 winnetou25 Exp $
  */
 public class FlexDockDemo extends JFrame {
 
@@ -65,12 +65,18 @@ public class FlexDockDemo extends JFrame {
 		View problemView = createView("problem", "Problems");
 		View consoleView = createView("console", "Console");
 
+		viewManager.registerView(mainView);
+		viewManager.registerView(birdViewView);
+		viewManager.registerView(messageLogView);
+		viewManager.registerView(problemView);
+		viewManager.registerView(consoleView);
+		
 		viewManager.registerTerritoralView(mainView);
 
-		viewManager.registerViewDockingInfo(birdViewView.getPersistentId(), new ViewDockingInfo(mainView, DockingPort.WEST_REGION, .3f));
-		viewManager.registerViewDockingInfo(messageLogView.getPersistentId(), new ViewDockingInfo(mainView, DockingPort.SOUTH_REGION, .3f));
-		viewManager.registerViewDockingInfo(problemView.getPersistentId(), new ViewDockingInfo(mainView, DockingPort.SOUTH_REGION, .3f));
-		viewManager.registerViewDockingInfo(consoleView.getPersistentId(), new ViewDockingInfo(mainView, DockingPort.SOUTH_REGION, .3f));
+		viewManager.registerViewDockingInfo(birdViewView.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(mainView, DockingPort.WEST_REGION, .3f));
+		viewManager.registerViewDockingInfo(messageLogView.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(mainView, DockingPort.SOUTH_REGION, .3f));
+		viewManager.registerViewDockingInfo(problemView.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(mainView, DockingPort.SOUTH_REGION, .3f));
+		viewManager.registerViewDockingInfo(consoleView.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(mainView, DockingPort.SOUTH_REGION, .3f));
 
 		IPerspective perspective1 = createPerspective1(viewport, mainView);
 		IPerspective perspective2 = createPerspective2(viewport, mainView);

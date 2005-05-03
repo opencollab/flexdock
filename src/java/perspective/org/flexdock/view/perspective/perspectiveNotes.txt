@@ -4,7 +4,7 @@ Is it ok that perspective holds information
 views that are RELATIVELY docked to each other.
 
 It seems to be alright but the problem might arise
-when some deletes certain view from
+when some undocks certain view from
 the perspective or view becomes undocked and
 can no longer be relatively addressed unless
 a view is removed or undocked other view takes over
@@ -16,5 +16,9 @@ Get rid of addView and getView methods as DockingManager got new lovely getRegis
 -> in case view is not docked to any component but is instead floating
    the perspective should hold information that this view is floating
    and the location (point) of this floating view and also the bounds
-   of the window so that when one restores perspective the view is still floating.
+   of the window so that when one restores perspective the view is still floating
+   in the same place.
 
+
+I am wondering thought what happends when view is undocked, new parent it now in charge for this
+view, are we getting docking complete events afterwards?

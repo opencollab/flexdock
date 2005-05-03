@@ -244,6 +244,11 @@ public class DockingManager {
 		
 		// allow the configuration manager to keep track of this dockable.  This 
 		// will allow docking configurations to survive JVM instances.
+		
+		//TODO this should fire event that the dockable was registered
+		//lets not mess up this with persistence so that persistence is decoupled.
+		//that is why listener design pattern was invented
+		//so that lower level does not have to know of higher level.
 		ConfigurationManager.registerDockable(dockable);
 		
 		// return the dockable

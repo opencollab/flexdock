@@ -8,8 +8,6 @@ import java.util.Set;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.event.DockingEvent;
-import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
 import org.flexdock.view.restore.ViewManager;
@@ -142,7 +140,7 @@ public class PerspectiveManager implements IPerspectiveManager {
 		for (int i = 0; i<perspective.getViews().length; i++) {
 			View view = (View) perspective.getViews()[i];
 			//potential memory leak
-			view.addDockingListener(new DockingHandler());
+			//view.addDockingListener(new DockingHandler());
 		}
 		//zamykanie view
 		//otwieranie view
@@ -355,15 +353,15 @@ public class PerspectiveManager implements IPerspectiveManager {
 		
 	}
 	
-	private class DockingHandler extends DockingListener.DockingAdapter {
-
-		/**
-		 * @see org.flexdock.docking.event.DockingListener.DockingAdapter#dockingComplete(org.flexdock.docking.event.DockingEvent)
-		 */
-		public void dockingComplete(DockingEvent dockingEvent) {
-			
-		}
-		
-	}
+//	private class DockingHandler extends DockingListener.Stub {
+//
+//		/**
+//		 * @see org.flexdock.docking.event.DockingListener.DockingAdapter#dockingComplete(org.flexdock.docking.event.DockingEvent)
+//		 */
+//		public void dockingComplete(DockingEvent dockingEvent) {
+//			
+//		}
+//		
+//	}
 	
 }

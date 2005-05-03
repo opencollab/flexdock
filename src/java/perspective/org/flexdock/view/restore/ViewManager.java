@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
-import org.flexdock.dockbar.restore.DockingPath;
-import org.flexdock.docking.Dockable;
+import org.flexdock.dockbar.DockbarManager;
+import org.flexdock.dockbar.event.DockbarEvent;
+import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
@@ -23,23 +25,25 @@ import org.flexdock.view.Viewport;
  * @author Mateusz Szczap
  */
 public class ViewManager implements IViewManager {
-
+	
 	private static ViewManager SINGLETON = null;
 	
+	private Map m_registeredViews = new HashMap();
+	
 	private HashMap m_registeredListeners = new HashMap();
-
+	
 	private HashSet m_viewStateListeners = new HashSet();
 	
 	private Viewport m_centerViewport = null;
 	
 	private View m_territoralView = null;
-
+	
 	private ArrayList m_showViewHandlers = new ArrayList();
 	
 	private HashMap m_mainDockingInfos = new HashMap();
-
+	
 	private HashMap m_accessoryDockingInfos = new HashMap();
-
+	
 	private ViewManager() {
 		initializeDefaultShowViewHandlers();
 	}
@@ -50,14 +54,49 @@ public class ViewManager implements IViewManager {
 		}
 		return SINGLETON;
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#registerTerritoralView(org.flexdock.view.View)
 	 */
 	public void registerTerritoralView(View territoralView) {
 		if (territoralView == null) throw new IllegalArgumentException("territoralView cannot be null");
-			
+		
 		m_territoralView = territoralView;
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewManager#registerView(org.flexdock.view.View)
+	 */
+	public void registerView(View view) {
+		if (view == null) throw new IllegalArgumentException("view cannot be null");
+		
+		DockingHandler dockingHandler = (DockingHandler) m_registeredListeners.get(view.getPersistentId());
+		if (dockingHandler == null) {
+			dockingHandler = new DockingHandler();
+			m_registeredListeners.put(view.getPersistentId(), dockingHandler);
+		}
+		view.addDockingListener(dockingHandler);
+		
+		//it is ok since ViewManager is higher level so that it can know of the lower lever.
+		//DockingManager is lower level
+		DockingManager.registerDockable(view);
+		m_registeredViews.put(view.getPersistentId(), view);
+	}
+	
+	/**
+	 * @see org.flexdock.view.restore.IViewManager#unregisterView(org.flexdock.view.View)
+	 */
+	public void unregisterView(String viewid) {
+		if (viewid == null) throw new IllegalArgumentException("viewid cannot be null");
+		
+		if (m_registeredViews.containsKey(viewid)) {
+			View view = (View) m_registeredViews.get(viewid);
+			DockingHandler dockingHandler = (DockingHandler) m_registeredListeners.get(view.getPersistentId());
+			if (dockingHandler != null) {
+				view.removeDockingListener(dockingHandler);
+			}
+			m_registeredViews.remove(viewid);
+		}
 	}
 	
 	/**
@@ -65,7 +104,7 @@ public class ViewManager implements IViewManager {
 	 */
 	public boolean showView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
-
+		
 		if (view == m_territoralView) {
 			return m_centerViewport.dock(view);
 		}
@@ -89,24 +128,29 @@ public class ViewManager implements IViewManager {
 		}
 		
 		if (docked) {
+			DockingHandler dockingHandler = (DockingHandler) m_registeredListeners.get(view.getPersistentId());
+			if (dockingHandler != null) {
+				DockbarManager.getInstance(view).removeListener(dockingHandler);
+				DockbarManager.getInstance(view).addListener(dockingHandler);
+			}
 			fireViewStateChanged(view, ViewStateEvent.VIEW_SHOWN);
 		}
 		
 		return docked;
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#getRegisteredView(java.lang.String)
 	 */
 	public View getRegisteredView(String viewId) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
 		
-		Dockable dockable = DockingManager.getRegisteredDockable(viewId);
+		View view = (View) m_registeredViews.get(viewId);
 		
-		if (dockable != null && dockable instanceof View) {
-			return (View) dockable;
+		if (view != null) {
+			return view;
 		}
-
+		
 		return null;
 	}
 	
@@ -115,17 +159,27 @@ public class ViewManager implements IViewManager {
 	 */
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
-		DockingPath.setRestorePath(view);
-
+		if (view.isMinimized()) {
+			//it is fine since we are higher lever manager
+			DockingManager.setMinimized(view, false);
+		}
+		
+		if (m_registeredListeners.containsKey(view.getPersistentId())) {
+			DockingHandler dockingHandler = (DockingHandler) m_registeredListeners.get(view.getPersistentId());
+			if (dockingHandler != null) {
+				DockbarManager.getInstance(view).removeListener(dockingHandler);
+			}
+		}
+		
 		boolean isHidden = DockingManager.undock(view);
-
+		
 		if (isHidden) {
 			fireViewStateChanged(view, ViewStateEvent.VIEW_HIDDEN);
 		}
-
+		
 		return isHidden;
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#registerCenterViewport(org.flexdock.view.Viewport)
 	 */
@@ -134,19 +188,19 @@ public class ViewManager implements IViewManager {
 		
 		m_centerViewport = viewport;
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#maximizeView(org.flexdock.view.View)
 	 */
 	public void maximizeView(View view) {
-//		if (view == null) throw new IllegalArgumentException("view cannot be null");
-//		
-//		if (view == m_territoralView) {
-//			//close all views except territoral view
-//		}
-//
-//		DockingManager.undock(m_territoralView);
-//		m_centerViewport.dock(view);
+		//		if (view == null) throw new IllegalArgumentException("view cannot be null");
+		//		
+		//		if (view == m_territoralView) {
+		//			//close all views except territoral view
+		//		}
+		//
+		//		DockingManager.undock(m_territoralView);
+		//		m_centerViewport.dock(view);
 	}
 	
 	/**
@@ -162,25 +216,19 @@ public class ViewManager implements IViewManager {
 	public void registerViewDockingInfo(String viewId, ViewDockingInfo mainViewDockingInfo) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
 		if (mainViewDockingInfo == null) throw new IllegalArgumentException("viewDockingInfo cannot be null");
-
-		View view = (View) DockingManager.getRegisteredDockable(viewId);
-
-		DockingHandler dockingHandler = new DockingHandler();
-		m_registeredListeners.put(viewId, dockingHandler);
-		view.addDockingListener(dockingHandler);
 		
+		View view = (View) DockingManager.getRegisteredDockable(viewId);
 		m_mainDockingInfos.put(view.getPersistentId(), mainViewDockingInfo);
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#unregisterViewDockingInfo(java.lang.String)
 	 */
 	public void unregisterViewDockingInfo(String viewId) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
-
+		
 		View view = (View) DockingManager.getRegisteredDockable(viewId);
-		DockingListener dockingListener = (DockingListener) m_registeredListeners.get(viewId);
-		view.removeDockingListener(dockingListener);
+		m_mainDockingInfos.remove(view.getPersistentId());
 	}
 	
 	/**
@@ -191,7 +239,7 @@ public class ViewManager implements IViewManager {
 		
 		m_showViewHandlers.remove(showViewHandler);
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#initializeDefaultShowViewHandlers()
 	 */
@@ -223,16 +271,16 @@ public class ViewManager implements IViewManager {
 	 */
 	public void addViewStateListener(ViewStateListener viewStateListener) {
 		if (viewStateListener == null) throw new IllegalArgumentException("viewStateListener cannot be null");
-
+		
 		m_viewStateListeners.add(viewStateListener);
 	}
-
+	
 	/**
 	 * @see org.flexdock.view.restore.IViewManager#removeViewStateListener(org.flexdock.view.restore.ViewStateListener)
 	 */
 	public void removeViewStateListener(ViewStateListener viewStateListener) {
 		if (viewStateListener == null) throw new IllegalArgumentException("viewStateListener cannot be null");
-
+		
 		m_viewStateListeners.remove(viewStateListener);
 	}
 	
@@ -245,15 +293,15 @@ public class ViewManager implements IViewManager {
 	
 	protected void fireViewStateChanged(View view, int viewStateEventType) {
 		ViewStateEvent viewStateEvent = new ViewStateEvent(this, view, viewStateEventType);
-
+		
 		for (Iterator it = m_viewStateListeners.iterator(); it.hasNext();) {
 			ViewStateListener viewStateListener = (ViewStateListener) it.next();
 			viewStateListener.viewStateChanged(viewStateEvent);
 		}
 	}
 	
-	private class DockingHandler extends DockingListener.DockingAdapter implements HierarchyBoundsListener {
-
+	private class DockingHandler extends DockingListener.Stub implements HierarchyBoundsListener, DockbarListener {
+		
 		/**
 		 * @see org.flexdock.docking.event.DockingListener#dockingComplete(org.flexdock.docking.event.DockingEvent)
 		 */
@@ -263,42 +311,35 @@ public class ViewManager implements IViewManager {
 			String region = dockingEvent.getRegion();
 			boolean isOverWindow = dockingEvent.isOverWindow();
 			
+			if (!isOverWindow) {
+				handleFloatingWindow(sourceView);
+				return;
+			} else {
+				sourceView.removeHierarchyBoundsListener(this);
+				ViewDockingInfo dockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(sourceView.getPersistentId());
+				if (dockingInfo != null) {
+					dockingInfo.setFloating(false);
+				}
+			}
+			
 			preserve(sourceView, dockingPort, region, isOverWindow);
 		}
-
+		
+		private boolean handleFloatingWindow(View sourceView) {
+			//if it is a floating window register as component listener
+			sourceView.addHierarchyBoundsListener(this);
+			Point locationOnScreen = sourceView.getLocationOnScreen();
+			Dimension dim = sourceView.getSize();
+			ViewDockingInfo viewDockingInfo = ViewDockingInfo.createFloatingDockingInfo(sourceView, locationOnScreen, dim);
+			m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
+			return true;
+		}
+		
 		private boolean preserve(View sourceView, DockingPort dockingPort, String region, boolean isOverWindow) {
 			Viewport viewPort = (Viewport) dockingPort;
 			if (!viewPort.getViewset().isEmpty()) {
 				for (Iterator it = viewPort.getViewset().iterator(); it.hasNext();) {
 					View childView = (View) it.next();
-
-					if (!isOverWindow) {
-						//if it is a floating window register as component listener
-						childView.addHierarchyBoundsListener(this);
-						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
-						float ratio = -1.0f;
-						if (ratioObject != null) {
-							ratio = ratioObject.floatValue();
-						} else {
-							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
-						}
-
-						ViewDockingInfo viewDockingInfo = new ViewDockingInfo(childView, region, ratio);
-						viewDockingInfo.setFloating(true);
-						Point locationOnScreen = sourceView.getLocationOnScreen();
-						Dimension dim = sourceView.getSize();
-						viewDockingInfo.setFloatingLocation(locationOnScreen);
-						viewDockingInfo.setFloatingWindowDimension(dim);
-						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
-						return true;
-					} else {
-						sourceView.removeHierarchyBoundsListener(this);
-						ViewDockingInfo dockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(sourceView.getPersistentId());
-						if (dockingInfo != null) {
-							dockingInfo.setFloating(false);
-						}
-					}
-					
 					if (!childView.equals(sourceView)) {
 						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
 						float ratio = -1.0f;
@@ -307,7 +348,7 @@ public class ViewManager implements IViewManager {
 						} else {
 							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
 						}
-						ViewDockingInfo viewDockingInfo = new ViewDockingInfo(childView, region, ratio);
+						ViewDockingInfo viewDockingInfo = ViewDockingInfo.createRelativeDockingInfo(childView, region, ratio);
 						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
 						return true;
 					}
@@ -315,7 +356,7 @@ public class ViewManager implements IViewManager {
 			}
 			return false;
 		}
-
+		
 		public void ancestorMoved(HierarchyEvent e) {
 			View sourceView = (View) e.getSource();
 			if (sourceView.isShowing()) {
@@ -329,7 +370,7 @@ public class ViewManager implements IViewManager {
 				handle(sourceView);
 			}
 		}
-
+		
 		private void handle(View sourceView) {
 			Dimension dimension = sourceView.getSize();
 			Point location = sourceView.getLocationOnScreen();
@@ -337,6 +378,24 @@ public class ViewManager implements IViewManager {
 			viewDockingInfo.setFloatingLocation(location);
 			viewDockingInfo.setFloatingWindowDimension(dimension);
 		}
+		
+		public void dockableCollapsed(DockbarEvent evt) {}
+		
+		public void dockableExpanded(DockbarEvent evt) {}
+		
+		public void dockableLocked(DockbarEvent evt) {}
+		
+		public void minimizeCompleted(DockbarEvent dockbarEvent) {
+			View view = (View) dockbarEvent.getSource();
+			int edge = dockbarEvent.getEdge();
+			ViewDockingInfo viewDockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(view.getPersistentId());
+			if (viewDockingInfo != null) {
+				viewDockingInfo.setMinimized(true);
+				viewDockingInfo.setDockbarEdge(edge);
+			}
+		}
+		
+		public void minimizeStarted(DockbarEvent evt) {}
 		
 	}
 	
