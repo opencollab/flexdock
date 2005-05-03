@@ -17,8 +17,6 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -91,8 +89,8 @@ public class ViewportDemo extends JFrame implements DockingConstants {
 
 	private View createView(String id, String text) {
 		View view = new View(id, text);
-		view.addAction(createAction(CLOSE_ACTION, "Close"));
-		view.addAction(createAction(PIN_ACTION, "Pin"));
+		view.addAction(CLOSE_ACTION);
+		view.addAction(PIN_ACTION);
 
 		JPanel p = new JPanel();
 		//		p.setBackground(Color.WHITE);
@@ -106,15 +104,6 @@ public class ViewportDemo extends JFrame implements DockingConstants {
 		return view;
 	}
 
-	private Action createAction(String name, String tooltip) {
-		Action a = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		a.putValue(Action.NAME, name);
-		a.putValue(Action.SHORT_DESCRIPTION, tooltip);
-		return a;
-	}
 	
 	private JDialog getSiblingTestDialog() {
 		if(siblingTestDialog==null) {
