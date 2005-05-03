@@ -75,7 +75,6 @@ public class DragGlasspane extends JComponent {
 		}
 
 		String region = null;
-
 		
 		// don't immediately redraw the rubberband when switching covers 
 		// or regions
@@ -83,7 +82,7 @@ public class DragGlasspane extends JComponent {
 
 		// now, assign the currentCover to the new one and repaint
 		currentDropTargets = dropTargets;
-		DockingPort port = (DockingPort)dropTargets.parent;
+		DockingPort port = dropTargets==null? null: (DockingPort)dropTargets.parent;
 		// this is the dockable we're currently hovered over, not the one
 		// being dragged
 		Dockable hover = getHoverDockable(dropTargets);
@@ -101,7 +100,7 @@ public class DragGlasspane extends JComponent {
 	}
 	
 	private Dockable getHoverDockable(ComponentNest nest) {
-		Component c = nest.child;
+		Component c = nest==null? null: nest.child;
 		if(c instanceof Dockable)
 			return (Dockable)c;
 		return DockingManager.getRegisteredDockable(c);
