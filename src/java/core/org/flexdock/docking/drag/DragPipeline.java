@@ -70,6 +70,7 @@ public class DragPipeline {
 			applyGlassPane(windows[i], createGlassPane());
 		}
 
+		token.start();
 		open = true;
 	}
 
