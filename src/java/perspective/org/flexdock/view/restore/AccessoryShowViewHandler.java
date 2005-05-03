@@ -41,6 +41,11 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 				viewFrame.setSize(dim);
 				viewFrame.setVisible(true);
 				return true;
+			} else if (accessoryDockingInfo.isMinimized()) {
+				DockingManager.setMinimized(sourceView, true, accessoryDockingInfo.getDockbarEdge());
+				if (sourceView.isMinimized()) {
+					return true;
+				}
 			}
 
 			String region = accessoryDockingInfo.getRegion();
@@ -57,10 +62,6 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 				docked = sourceView.dock(view, region, ratio);
 			}
 
-			if (docked && accessoryDockingInfo.isMinimized()) {
-				//System.out.println("Minimizing...");
-				DockingManager.setMinimized(sourceView, true, accessoryDockingInfo.getDockbarEdge());
-			}
 		}
 
 		return docked;
