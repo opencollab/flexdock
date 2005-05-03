@@ -8,7 +8,9 @@ import java.awt.Container;
 import java.awt.MenuComponent;
 import java.awt.PopupMenu;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -27,6 +29,7 @@ import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.view.floating.FloatingViewport;
 import org.flexdock.view.tracking.ViewListener;
@@ -43,6 +46,7 @@ public class View extends JComponent implements Dockable {
 	protected ArrayList dockingListeners;
 	protected boolean active;
 	protected ArrayList dragSources;
+	private transient HashSet blockedActions;
 	
 	static {
 		DockingManager.setDockingStrategy(View.class, ViewDockingStrategy.getInstance());
@@ -410,7 +414,9 @@ public class View extends JComponent implements Dockable {
 	}
 
 	public void dockingComplete(DockingEvent evt) {
-
+		setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
+		if(titlepane!=null)
+			titlepane.revalidate();
 	}
 
 	public void dragStarted(DockingEvent evt) {
@@ -443,6 +449,33 @@ public class View extends JComponent implements Dockable {
 			if(viewport.getViewset().size()<2)
 				evt.consume();
 		}
+	}
+	
+	public void setActionBlocked(String actionName, boolean blocked) {
+		if(actionName==null)
+			return;
+		
+		Set actions = getBlockedActions();
+		if(blocked)
+			actions.add(actionName);
+		else {
+			if(actions!=null)
+				actions.remove(actionName);
+		}
+	}
+	
+	public boolean isActionBlocked(String actionName) {
+		return actionName==null || blockedActions==null? false: blockedActions.contains(actionName);
+	}
+	
+	private HashSet getBlockedActions() {
+		if(blockedActions==null)
+			blockedActions = new HashSet(1);
+		return blockedActions;
+	}
+	
+	public boolean isFloating() {
+		return getDockingPort() instanceof FloatingViewport;
 	}
 	
 	/**

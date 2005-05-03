@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.TitlebarUI;
@@ -221,4 +222,8 @@ public class Titlebar extends JComponent {
     public void updateUI() {
     	setUI(PlafManager.getUI(this));
     }
+    
+	public View getView() {
+		return (View)SwingUtilities.getAncestorOfClass(View.class, this);
+	}
 }

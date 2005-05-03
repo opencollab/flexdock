@@ -26,6 +26,7 @@ import org.flexdock.plaf.icons.IconResourceFactory;
 import org.flexdock.plaf.resources.paint.Painter;
 import org.flexdock.view.Button;
 import org.flexdock.view.Titlebar;
+import org.flexdock.view.View;
 
 /**
  * @author Christopher Butler
@@ -191,14 +192,20 @@ public class TitlebarUI extends FlexViewComponentUI {
         int h = rectangle.height - 2 * margin;
         int x = rectangle.width - margin - h;
 
+        View view = titlebar.getView();
         Component[] c = titlebar.getComponents();
         for (int i = 0; i < c.length; i++) {
             if (!(c[i] instanceof Button))
                 continue;
 
             Button b = (Button) c[i];
-            b.setBounds(x, margin + rectangle.y, h, h);
-            x -= h;
+            if(view!=null && view.isActionBlocked(b.getActionName())) {
+            	b.setBounds(0, 0, 0, 0);
+            }
+            else {
+                b.setBounds(x, margin + rectangle.y, h, h);
+                x -= h;            	
+            }
         }
     }
 
