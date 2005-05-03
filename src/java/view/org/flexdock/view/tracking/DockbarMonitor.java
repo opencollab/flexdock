@@ -11,20 +11,12 @@ import org.flexdock.view.View;
 /**
  * @author Christopher Butler
  */
-public class DockbarMonitor implements DockbarListener {
+public class DockbarMonitor extends DockbarListener.Stub {
 
 	public void dockableLocked(DockbarEvent evt) {
 		View view = getView(evt);
 		if(view!=null)
 			ViewTracker.requestViewActivation(view);
-	}
-	
-	public void dockableCollapsed(DockbarEvent evt) {
-
-	}
-	
-	public void dockableExpanded(DockbarEvent evt) {
-
 	}
 	
 	private View getView(DockbarEvent evt) {
@@ -39,7 +31,4 @@ public class DockbarMonitor implements DockbarListener {
 			evt.consume();
 	}
 	
-	public void minimizeCompleted(DockbarEvent evt) {
-		
-	}
 }
