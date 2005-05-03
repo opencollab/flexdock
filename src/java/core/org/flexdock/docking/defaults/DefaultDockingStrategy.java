@@ -131,6 +131,9 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		if(!isDockingPossible(dockable, port, region, token))
 			return false;
 		
+		if(!dragThresholdElapsed(token))
+			return false;
+		
 		// cache the old parent
 		DockingPort oldPort = dockable.getDockingPort();
 
@@ -153,6 +156,16 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		EventDispatcher.notifyDockingMonitor(dockable, evt);
 		
 		return results.success; 
+	}
+	
+	protected boolean dragThresholdElapsed(DragToken token) {
+		if(token==null || token.isPseudoDrag() || token.getStartTime()==-1)
+			return true;
+		
+		long elapsed = System.currentTimeMillis() - token.getStartTime();
+		// make sure the elapsed time of the drag is at least over .2 seconds.
+		// otherwise, we'll probably be responding to inadvertent clicks (maybe double-clicks)
+		return elapsed > 200;
 	}
 	
 	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
