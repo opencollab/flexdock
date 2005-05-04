@@ -40,6 +40,8 @@ public interface DockableProps {
 	public static final String MINIMIZED = "Dockable.MINIMIZED";
 	public static final String MINIMIZED_EDGE = "Dockable.MINIMIZED_EDGE";
 	
+	public static final String FLOATING_GROUP = "Dockable.FLOATING_GROUP";
+	
 	public CursorProvider getCursorProvider();
 
 	public String getDockableDesc();
@@ -63,6 +65,8 @@ public interface DockableProps {
 	public Boolean isMinimized();
 	
 	public Integer getMinimizedEdge();
+	
+	public String getFloatingGroup();
 	
 	
 	
@@ -89,4 +93,6 @@ public interface DockableProps {
 	public void setMinimized(boolean minimized);
 	
 	public void setMinimizedEdge(int edge);
+	
+	public void setFloatingGroup(String group);
 }

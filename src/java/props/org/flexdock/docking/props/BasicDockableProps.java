@@ -136,6 +136,13 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 		return getInt(MINIMIZED_EDGE);
 	}
 	
+	public String getFloatingGroup() {
+		return getString(FLOATING_GROUP);
+	}
+	
+	
+	
+	
 	
 	
 	
@@ -203,5 +210,9 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 	
 	public void setMinimizedEdge(int edge) {
 		put(MINIMIZED_EDGE, edge);
+	}
+	
+	public void setFloatingGroup(String group) {
+		put(FLOATING_GROUP, group);
 	}
 }
