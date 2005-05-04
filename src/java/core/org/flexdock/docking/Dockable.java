@@ -20,6 +20,7 @@ package org.flexdock.docking;
 
 import java.awt.Component;
 import java.util.List;
+import java.util.Set;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
@@ -46,6 +47,8 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	 * as the Component returned by <code>getDockable()</code>.
 	 */
 	public List getDragSources();
+	
+	public Set getFrameDragSources();
 
 	/**
 	 * Returns a <code>String</code> identifier that is unique within a JVM instance, but persistent 

@@ -20,8 +20,10 @@ package org.flexdock.docking.defaults;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -43,6 +45,7 @@ public class DockableAdapter implements Dockable {
 	private ArrayList dockingListeners;
 	private ArrayList dragListeners;
 	private Hashtable clientProperties;
+	private HashSet frameDragSources;
 	
 	public DockableAdapter() {
 		this(null);
@@ -146,5 +149,11 @@ public class DockableAdapter implements Dockable {
 	
 	public Dockable getSibling(String region) {
 		return DefaultDockingStrategy.getSibling(this, region);
+	}
+	
+	public Set getFrameDragSources() {
+		if(frameDragSources==null)
+			frameDragSources = new HashSet();
+		return frameDragSources;
 	}
 }
