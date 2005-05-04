@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
@@ -26,7 +25,7 @@ public class Viewport extends DefaultDockingPort {
 	protected HashSet blockedRegions;
 	
 	static {
-		DockingManager.setDockingStrategy(Viewport.class, ViewDockingStrategy.getInstance());
+		DockingManager.setDockingStrategy(Viewport.class, View.VIEW_DOCKING_STRATEGY);
 	}
 
 	public Viewport() {
@@ -88,52 +87,17 @@ public class Viewport extends DefaultDockingPort {
 
     public Set getViewset() {
     	// return ALL views, recursing to maximum depth
-    	return getViewset(-1, 0);
+    	return getDockableSet(-1, 0, View.class);
     }
     
     public Set getViewset(int depth) {
     	// return all views, including subviews up to the specified depth
-    	return getViewset(depth, 0);
+    	return getDockableSet(depth, 0, View.class);
     }
     
-    protected Set getViewset(int depth, int level) {
-        Component c = getDockedComponent();
-        
-        if(c instanceof JTabbedPane) {
-            JTabbedPane tabs = (JTabbedPane)c;
-            int len = tabs.getTabCount();
-            HashSet set = new HashSet(len);
-            for(int i=0; i<len; i++) {
-                c = tabs.getComponentAt(i);
-                if(c instanceof View)
-                    set.add(c);
-            }
-            return set;
-        }
 
-        HashSet set = new HashSet(1);
-        
-        // if we have a split-layout, then we need to decide whether to get the child
-        // viewSets.  If 'depth' is less then zero, then it's implied we want to recurse
-        // to get ALL child viewsets no matter how deep.  If 'depth' is greater than or 
-        // equal to zero, we only want to go as deep as the specified depth.
-        if (c instanceof JSplitPane && (depth<0 || level <= depth)) {
-            JSplitPane pane = (JSplitPane) c;
-            Component sub1 = pane.getLeftComponent();
-            Component sub2 = pane.getRightComponent();
+    
 
-            if(sub1 instanceof Viewport)
-            	set.addAll(((Viewport)sub1).getViewset(depth, level+1));
-            
-            if(sub2 instanceof Viewport)
-            	set.addAll(((Viewport)sub2).getViewset(depth, level+1));
-        }
-       
-        if(c instanceof View) {
-            set.add(c);
-        }
-        return set;
-    }
 
 
 

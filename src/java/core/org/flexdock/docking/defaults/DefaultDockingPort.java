@@ -26,6 +26,7 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
@@ -920,6 +921,82 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		
 		return true;
 	}
+	
+	
+	
+	
+	
+	
+	public Set getDockables() {
+    	// return ALL dockables, recursing to maximum depth
+    	return getDockableSet(-1, 0, null);
+	}
+	
+	
+	
+    protected Set getDockableSet(int depth, int level, Class desiredClass) {
+        Component c = getDockedComponent();
+        
+        if(c instanceof JTabbedPane) {
+            JTabbedPane tabs = (JTabbedPane)c;
+            int len = tabs.getTabCount();
+            HashSet set = new HashSet(len);
+            for(int i=0; i<len; i++) {
+                c = tabs.getComponentAt(i);
+                if(isValidDockableChild(c, desiredClass)) {
+                	if(c instanceof Dockable)
+                		set.add(c);
+                	else
+                		set.add(DockingManager.getRegisteredDockable(c));
+                }
+            }
+            return set;
+        }
+
+        HashSet set = new HashSet(1);
+        
+        // if we have a split-layout, then we need to decide whether to get the child
+        // viewSets.  If 'depth' is less then zero, then it's implied we want to recurse
+        // to get ALL child viewsets no matter how deep.  If 'depth' is greater than or 
+        // equal to zero, we only want to go as deep as the specified depth.
+        if (c instanceof JSplitPane && (depth<0 || level <= depth)) {
+            JSplitPane pane = (JSplitPane) c;
+            Component sub1 = pane.getLeftComponent();
+            Component sub2 = pane.getRightComponent();
+
+            if(sub1 instanceof DefaultDockingPort)
+            	set.addAll(((DefaultDockingPort)sub1).getDockableSet(depth, level+1, desiredClass));
+            
+            if(sub2 instanceof DefaultDockingPort)
+            	set.addAll(((DefaultDockingPort)sub2).getDockableSet(depth, level+1, desiredClass));
+        }
+       
+        if(isValidDockableChild(c, desiredClass)) {
+        	if(c instanceof Dockable)
+        		set.add(c);
+        	else
+        		set.add(DockingManager.getRegisteredDockable(c));
+        }
+        return set;
+    }
+    
+    protected boolean isValidDockableChild(Component c, Class desiredClass) {
+    	return desiredClass==null? DockingManager.getRegisteredDockable(c)!=null:
+			desiredClass.isAssignableFrom(c.getClass());
+    }
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	public void addDockingListener(DockingListener listener) {
 		dockingListeners.add(listener);
