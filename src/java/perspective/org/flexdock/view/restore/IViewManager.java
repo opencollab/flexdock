@@ -1,7 +1,7 @@
 package org.flexdock.view.restore;
 
+import org.flexdock.docking.DockingPort;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
 
 /**
  * 
@@ -9,7 +9,7 @@ import org.flexdock.view.Viewport;
  */
 public interface IViewManager extends ViewStateMonitor {
 
-	void registerCenterViewport(Viewport viewport);
+	void registerCenterDockingPort(DockingPort dockingPort);
 	
 	//TODO should we get rid of it?
 	void registerTerritoralView(View view);

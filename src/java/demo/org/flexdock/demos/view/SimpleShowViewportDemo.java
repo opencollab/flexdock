@@ -76,7 +76,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		Viewport viewport = new Viewport();
-		ViewManager.getInstance().registerCenterViewport(viewport);
+		ViewManager.getInstance().registerCenterDockingPort(viewport);
 		panel.add(viewport, BorderLayout.CENTER);
 		
 		View startPage = createStartPage();

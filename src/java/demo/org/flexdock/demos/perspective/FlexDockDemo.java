@@ -36,7 +36,7 @@ import org.flexdock.view.restore.ViewManager;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FlexDockDemo.java,v 1.3 2005-05-03 12:29:35 winnetou25 Exp $
+ * @version $Id: FlexDockDemo.java,v 1.4 2005-05-04 02:12:01 marius Exp $
  */
 public class FlexDockDemo extends JFrame {
 
@@ -55,7 +55,7 @@ public class FlexDockDemo extends JFrame {
 		//tworzymy glowny view port do dokowania
 		Viewport viewport = new Viewport();
 		//rejestrujemy glowny view port
-		ViewManager.getInstance().registerCenterViewport(viewport);
+		ViewManager.getInstance().registerCenterDockingPort(viewport);
 		
 		//tworzymy glowny widok
 		View mainView = createMainView();
@@ -164,7 +164,7 @@ public class FlexDockDemo extends JFrame {
 	private IPerspective createPerspective1(Viewport viewport, View mainView) {
 		IPerspective perspective = new Perspective("p1", "Perspective1");
 		//ustawiamy glowny view port na perspektywie
-		perspective.setMainViewport(viewport);
+		perspective.setMainDockingPort(viewport);
 
 		View birdViewView = ViewManager.getInstance().getRegisteredView("bird.view");
 		View messageLogView = ViewManager.getInstance().getRegisteredView("message.log");
@@ -177,7 +177,7 @@ public class FlexDockDemo extends JFrame {
 		perspective.addView(problemView);
 		perspective.addView(consoleView);
 		
-		perspective.dockToCenterViewport("main.view", true); //tru here means that when we reset perspective it will be default
+		perspective.dockToCenterDockingPort("main.view", true); //tru here means that when we reset perspective it will be default
 		perspective.dock("main.view", "bird.view", DockingPort.EAST_REGION, .3f, true);
 		perspective.dock("main.view", "message.log", DockingPort.WEST_REGION, .3f, true);
 
@@ -190,7 +190,7 @@ public class FlexDockDemo extends JFrame {
 	private IPerspective createPerspective2(Viewport viewport, View mainView) {
 		IPerspective perspective = new Perspective("p2", "Perspective2");
 		//ustawiamy glowny view port na perspektywie
-		perspective.setMainViewport(viewport);
+		perspective.setMainDockingPort(viewport);
 
 		View birdViewView = ViewManager.getInstance().getRegisteredView("bird.view");
 		View messageLogView = ViewManager.getInstance().getRegisteredView("message.log");
@@ -204,7 +204,7 @@ public class FlexDockDemo extends JFrame {
 		perspective.addView(consoleView);
 		
 		//dokujemy main.view do glownego view portu
-		perspective.dockToCenterViewport("main.view", true);
+		perspective.dockToCenterDockingPort("main.view", true);
 		perspective.dock("main.view", "bird.view", DockingPort.WEST_REGION, .3f, true);
 		perspective.dock("bird.view", "message.log", DockingPort.SOUTH_REGION, .5f, true);
 		perspective.dock("message.log", "problem", true);
@@ -215,11 +215,11 @@ public class FlexDockDemo extends JFrame {
 
 	private IPerspective createPerspective3(Viewport viewport, View mainView) {
 		IPerspective perspective = new Perspective("p3", "Perspective3");
-		perspective.setMainViewport(viewport);
+		perspective.setMainDockingPort(viewport);
 
 		perspective.addView(mainView);
 
-		perspective.dockToCenterViewport("main.view", true);
+		perspective.dockToCenterDockingPort("main.view", true);
 		
 		return perspective;
 	}

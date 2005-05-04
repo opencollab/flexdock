@@ -9,7 +9,6 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
 import org.flexdock.view.restore.ViewManager;
 import org.flexdock.view.restore.ViewStateEvent;
 import org.flexdock.view.restore.ViewStateListener;
@@ -165,13 +164,13 @@ public class PerspectiveManager implements IPerspectiveManager {
 
 		clearPerspective(perspective);
 
-		Viewport mainViewPort = perspective.getMainViewport();
+		DockingPort mainDockingPort = perspective.getMainDockingPort();
 
 		String centerViewId = perspective.getCenterViewId();
 		boolean wasTerritoralDocked = false;
 		if (centerViewId != null) {
 			View centerView = (View) DockingManager.getRegisteredDockable(centerViewId);
-			wasTerritoralDocked = DockingManager.dock(centerView, mainViewPort, DockingPort.CENTER_REGION);
+			wasTerritoralDocked = DockingManager.dock(centerView, mainDockingPort, DockingPort.CENTER_REGION);
 		}
 
 		if (!wasTerritoralDocked) {
@@ -205,13 +204,13 @@ public class PerspectiveManager implements IPerspectiveManager {
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
 
 		clearPerspective(perspective);
-		Viewport mainViewPort = perspective.getMainViewport();
+		DockingPort mainDockingPort = perspective.getMainDockingPort();
 
 		String centerViewId = perspective.getCenterViewId();
 		boolean wasTerritoralDocked = false;
 		if (centerViewId != null) {
 			View centerView = (View) DockingManager.getRegisteredDockable(centerViewId);
-			wasTerritoralDocked = DockingManager.dock(centerView, mainViewPort, DockingPort.CENTER_REGION);
+			wasTerritoralDocked = DockingManager.dock(centerView, mainDockingPort, DockingPort.CENTER_REGION);
 		}
 
 		if (!wasTerritoralDocked) {
@@ -248,13 +247,13 @@ public class PerspectiveManager implements IPerspectiveManager {
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#undockAll(org.flexdock.view.perspective.IPerspective)
 	 */
 	public void clearPerspective(IPerspective perspective) {
-		Viewport mainViewPort = perspective.getMainViewport();
+		DockingPort mainDockingPort = perspective.getMainDockingPort();
 
-		Set viewSet = mainViewPort.getViewset();
-		for (Iterator it = viewSet.iterator(); it.hasNext();) {
-			View view = (View) it.next();
-			if (DockingManager.isDocked((Dockable)view)) {
-				DockingManager.undock(view);
+		Set dockables = mainDockingPort.getDockables();
+		for (Iterator it = dockables.iterator(); it.hasNext();) {
+			Dockable dockable = (Dockable) it.next();
+			if (DockingManager.isDocked(dockable)) {
+				DockingManager.undock(dockable);
 			}
 		}
 
@@ -280,9 +279,9 @@ public class PerspectiveManager implements IPerspectiveManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#createPerspective(org.flexdock.view.Viewport)
+	 * @see org.flexdock.view.perspective.IPerspectiveManager#createPerspective(org.flexdock.docking.DockingPort)
 	 */
-	public IPerspective createPerspective(String perspectiveName, Viewport centralViewport) {
+	public IPerspective createPerspective(String perspectiveName, DockingPort centralDockingPort) {
 //		if (perspectiveName == null) throw new IllegalArgumentException("perspectiveName cannot be null");
 //		if (centralViewport == null) throw new IllegalArgumentException("centralViewport cannot be null");
 //

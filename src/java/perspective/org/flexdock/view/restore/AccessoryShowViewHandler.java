@@ -1,13 +1,14 @@
 package org.flexdock.view.restore;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.Component;
 import java.util.Map;
 
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.floating.FloatManager;
+import org.flexdock.docking.floating.frames.DockingFrame;
+import org.flexdock.util.RootWindow;
 import org.flexdock.view.View;
-import org.flexdock.view.floating.ViewFrame;
+
 
 /**
  * @author Mateusz Szczap
@@ -26,6 +27,17 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 			View sourceView = (View) accessoryDockingInfo.getView();
 
 			if (accessoryDockingInfo.isFloating()) {
+				
+				// TODO: fix this code to keep track of the proper dialog owner
+				RootWindow[] windows = DockingManager.getDockingWindows();
+				if(windows.length==0)
+					return false;
+				
+				Component owner = windows[0].getRootContainer();
+				DockingFrame frame = FloatManager.getInstance().floatDockable(territoralView, owner);
+				frame.addDockable(view);
+				
+/*
 				ViewFrame viewFrame = ViewFrame.create(territoralView);
 				viewFrame.setLayout(new BorderLayout());
 				viewFrame.setResizable(true);
@@ -40,6 +52,7 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 				viewFrame.setLocation(locationOnScreen);
 				viewFrame.setSize(dim);
 				viewFrame.setVisible(true);
+				*/
 				return true;
 			} else if (accessoryDockingInfo.isMinimized()) {
 				DockingManager.setMinimized(sourceView, true, accessoryDockingInfo.getDockbarEdge());

@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.flexdock.docking.DockingPort;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
 
 /**
  * @author Mateusz Szczap
@@ -29,7 +28,7 @@ public class Perspective implements IPerspective {
 	private List m_defaultDockingInfosList = new ArrayList();
 	
 	private String m_centerViewId = null;
-	private Viewport m_centerViewport = null;
+	private DockingPort m_centerDockingPort = null;
 	
 	public Perspective(String persistentId, String perspectiveName) {
 		if (persistentId == null) throw new NullPointerException("perspectiveName cannot be null");
@@ -50,17 +49,17 @@ public class Perspective implements IPerspective {
 	}
 	
 	/**
-	 * @see org.flexdock.view.perspective.IPerspective#setMainViewport(org.flexdock.view.Viewport)
+	 * @see org.flexdock.view.perspective.IPerspective#setMainDockingPort(org.flexdock.docking.DockingPort)
 	 */
-	public void setMainViewport(Viewport viewport) {
-		m_centerViewport = viewport;
+	public void setMainDockingPort(DockingPort dockingPort) {
+		m_centerDockingPort = dockingPort;
 	}
 	
 	/**
-	 * @see org.flexdock.view.perspective.IPerspective#getMainViewport()
+	 * @see org.flexdock.view.perspective.IPerspective#getMainDockingPort()
 	 */
-	public Viewport getMainViewport() {
-		return m_centerViewport;
+	public DockingPort getMainDockingPort() {
+		return m_centerDockingPort;
 	}
 
 	/**
@@ -97,9 +96,9 @@ public class Perspective implements IPerspective {
 	}
 	
 	/**
-	 * @see org.flexdock.view.perspective.IPerspective#dockToCenterViewport(java.lang.String)
+	 * @see org.flexdock.view.perspective.IPerspective#dockToCenterDockingPort(java.lang.String)
 	 */
-	public void dockToCenterViewport(String viewId, boolean isDefault) {
+	public void dockToCenterDockingPort(String viewId, boolean isDefault) {
 		if (viewId == null) throw new IllegalArgumentException("viewId cannot be null");
 		m_centerViewId = viewId;
 	}

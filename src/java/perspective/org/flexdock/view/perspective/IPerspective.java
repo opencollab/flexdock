@@ -1,7 +1,7 @@
 package org.flexdock.view.perspective;
 
+import org.flexdock.docking.DockingPort;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
 
 /**
  * @author Mateusz Szczap
@@ -14,9 +14,9 @@ public interface IPerspective {
 	
 	String getCenterViewId();
 	
-	void setMainViewport(Viewport viewport);
+	void setMainDockingPort(DockingPort port);
 	
-	Viewport getMainViewport();
+	DockingPort getMainDockingPort();
 	
 	void addView(View view);
 
@@ -31,7 +31,7 @@ public interface IPerspective {
 	//can be used for reset perspective
 	Perspective.ViewDockingInfo[] getDefaultDockingInfoChain();
 
-	void dockToCenterViewport(String viewId, boolean isDefault);
+	void dockToCenterDockingPort(String viewId, boolean isDefault);
 
 	void dock(String view1Id, String view2Id, boolean isDefault);
 	

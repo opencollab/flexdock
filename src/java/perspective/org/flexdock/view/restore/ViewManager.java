@@ -9,17 +9,18 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarListener;
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
-import org.flexdock.view.Viewport;
 
 /**
  * @author Mateusz Szczap
@@ -34,7 +35,7 @@ public class ViewManager implements IViewManager {
 	
 	private HashSet m_viewStateListeners = new HashSet();
 	
-	private Viewport m_centerViewport = null;
+	private DockingPort m_centerDockingPort = null;
 	
 	private View m_territoralView = null;
 	
@@ -106,7 +107,7 @@ public class ViewManager implements IViewManager {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 		
 		if (view == m_territoralView) {
-			return m_centerViewport.dock(view);
+			return m_centerDockingPort.dock(view, DockingPort.CENTER_REGION);
 		}
 		
 		ViewDockingInfo mainDockingInfo = (ViewDockingInfo) m_mainDockingInfos.get(view.getPersistentId());
@@ -181,12 +182,12 @@ public class ViewManager implements IViewManager {
 	}
 	
 	/**
-	 * @see org.flexdock.view.restore.IViewManager#registerCenterViewport(org.flexdock.view.Viewport)
+	 * @see org.flexdock.view.restore.IViewManager#registerCenterDockingPort(org.flexdock.docking.DockingPort)
 	 */
-	public void registerCenterViewport(Viewport viewport) {
-		if (viewport == null) throw new IllegalArgumentException("viewPort cannot be null");
+	public void registerCenterDockingPort(DockingPort dockingPort) {
+		if (dockingPort == null) throw new IllegalArgumentException("dockingPort cannot be null");
 		
-		m_centerViewport = viewport;
+		m_centerDockingPort = dockingPort;
 	}
 	
 	/**
@@ -336,10 +337,14 @@ public class ViewManager implements IViewManager {
 		}
 		
 		private boolean preserve(View sourceView, DockingPort dockingPort, String region, boolean isOverWindow) {
-			Viewport viewPort = (Viewport) dockingPort;
-			if (!viewPort.getViewset().isEmpty()) {
-				for (Iterator it = viewPort.getViewset().iterator(); it.hasNext();) {
-					View childView = (View) it.next();
+			Set dockableSet = dockingPort.getDockables();
+			if (!dockableSet.isEmpty()) {
+				for (Iterator it = dockableSet.iterator(); it.hasNext();) {
+					Dockable childDockable = (Dockable) it.next();
+					if(!(childDockable instanceof View))
+						continue;
+					
+					View childView = (View)childDockable;
 					if (!childView.equals(sourceView)) {
 						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
 						float ratio = -1.0f;
