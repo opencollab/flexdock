@@ -509,12 +509,12 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		// if minimizing, send to the dockbar
 		if(minimizing) {
 			if(edge==DockbarManager.UNSPECIFIED_EDGE)
-				mgr.dock(dockable);
+				mgr.minimize(dockable);
 			else
-				mgr.dock(dockable, edge);
+				mgr.minimize(dockable, edge);
 		}
-		// otherwise, remove from the dockbar
+		// otherwise, restore from the dockbar
 		else
-			mgr.undock(dockable);
+			mgr.restore(dockable);
 	}
 }
