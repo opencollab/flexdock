@@ -91,16 +91,18 @@ public class FloatingDemo extends DockingWindow {
     }
 
     private class DockableImpl extends DockableAdapter {
+		private DockableImpl() {
+			super();
+			// the titlebar will the the 'hot' component that initiates dragging
+			getDragSources().add(mHeader);
+		}
+		
         public Component getDockable() {
             return FloatingDemo.this;
         }
 
         public Icon getIcon() {
             return ICON;
-        }
-
-        public Component getInitiator() {
-            return mHeader; // the titlebar will the the 'hot' component that initiates dragging
         }
 
         public void dockingCompleted(DockingPort port) {

@@ -22,14 +22,11 @@ public class DockableImpl extends DockableAdapter {
 			
 		panel = dockable;
 		dragInitiator = dragInit;
+		getDragSources().add(dragInit);
 		DockingManager.registerDockable(this);
 	}
 
 	public Component getDockable() {
 		return panel;
-	}
-
-	public Component getInitiator() {
-		return dragInitiator;
 	}
 }

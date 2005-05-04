@@ -37,12 +37,14 @@ public class DockablePanel extends JPanel {
 	}
 
 	private class DockableImpl extends DockableAdapter {
+		private DockableImpl() {
+			super();
+			// the titlebar will the the 'hot' component that initiates dragging
+			getDragSources().add(dragInit);
+		}
+		
 		public Component getDockable() {
 			return DockablePanel.this;
-		}
-
-		public Component getInitiator() {
-			return dragInit;
 		}
 	}
 }

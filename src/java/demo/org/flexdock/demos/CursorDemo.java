@@ -55,13 +55,14 @@ public class CursorDemo extends JPanel {
 	
 	
 	private class DockableImpl extends DockableAdapter {
+		private DockableImpl() {
+			super();
+			// the titlebar will the the 'hot' component that initiates dragging
+			getDragSources().add(titlebar);
+		}
+		
 		public Component getDockable() {
 			return CursorDemo.this;
-		}
-
-		public Component getInitiator() {
-			// the titlebar will the the 'hot' component that initiates dragging
-			return titlebar;
 		}
 	}
 	
