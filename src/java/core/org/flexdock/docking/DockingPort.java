@@ -20,6 +20,7 @@ package org.flexdock.docking;
 
 import java.awt.Component;
 import java.awt.Point;
+import java.util.Set;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
@@ -122,5 +123,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	public DockingStrategy getDockingStrategy();
 	
 	public boolean isTransient();
+	
+	public Set getDockables();
 	
 }
