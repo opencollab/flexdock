@@ -21,23 +21,26 @@ import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.floating.frames.FloatingDockingPort;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.view.floating.FloatingViewport;
 import org.flexdock.view.tracking.ViewListener;
+import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * @author Christopher Butler
  */
 public class View extends JComponent implements Dockable {
+	static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
 	protected static final float UNSPECIFIED_SIBLING_PREF = -1F;
 	protected String id;
 	protected Titlebar titlepane;
@@ -46,11 +49,20 @@ public class View extends JComponent implements Dockable {
 	protected ArrayList dockingListeners;
 	protected boolean active;
 	protected ArrayList dragSources;
+	protected HashSet frameDragSources;
 	private transient HashSet blockedActions;
 	
 	static {
-		DockingManager.setDockingStrategy(View.class, ViewDockingStrategy.getInstance());
+		DockingManager.setDockingStrategy(View.class, VIEW_DOCKING_STRATEGY);
 		DockingManager.setDockablePropertyManager(View.class, ViewProps.class);
+	}
+	
+	private static DockingStrategy createDockingStrategy() {
+		return new DefaultDockingStrategy() {
+			protected DockingPort createDockingPortImpl(DockingPort base) {
+				return new Viewport();
+			}
+		};
 	}
 	
 	public View(String name) {
@@ -71,6 +83,7 @@ public class View extends JComponent implements Dockable {
 			tabText = title;
 		
 		dragSources = new ArrayList(1);
+		frameDragSources = new HashSet(1);
 		dockingListeners = new ArrayList(1);
 		
 		id = name;
@@ -184,6 +197,7 @@ public class View extends JComponent implements Dockable {
 		if(titlebar!=null) {
 			addImpl(titlebar);
 			dragSources.add(titlebar);
+			frameDragSources.add(titlebar);
 			DockingManager.updateDragListeners(this);
 		}
 	}
@@ -192,6 +206,7 @@ public class View extends JComponent implements Dockable {
 		if(titlepane!=null) {
 			removeImpl(titlepane);
 			dragSources.remove(titlepane);
+			frameDragSources.remove(titlepane);
 			DockingManager.removeDragListeners(titlepane);
 		}
 	}
@@ -291,6 +306,10 @@ public class View extends JComponent implements Dockable {
 	
 	public List getDragSources() {
 		return dragSources;
+	}
+	
+	public Set getFrameDragSources() {
+		return frameDragSources;
 	}
 
 	public String getPersistentId() {
@@ -417,6 +436,10 @@ public class View extends JComponent implements Dockable {
 		setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
 		if(titlepane!=null)
 			titlepane.revalidate();
+		
+		DockingPort port = getDockingPort();
+		if(port instanceof Component && ((Component)port).isShowing())
+			ViewTracker.requestViewActivation(this);
 	}
 
 	public void dragStarted(DockingEvent evt) {
@@ -444,9 +467,9 @@ public class View extends JComponent implements Dockable {
 			return;
 		
 		DockingPort oldPort = evt.getOldDockingPort();
-		if(oldPort instanceof FloatingViewport) {
-			FloatingViewport viewport = (FloatingViewport)oldPort;
-			if(viewport.getViewset().size()<2)
+		if(oldPort instanceof FloatingDockingPort) {
+			FloatingDockingPort dockingPort = (FloatingDockingPort)oldPort;
+			if(dockingPort.getDockableCount()<2)
 				evt.consume();
 		}
 	}
@@ -475,7 +498,7 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public boolean isFloating() {
-		return getDockingPort() instanceof FloatingViewport;
+		return getDockingPort() instanceof FloatingDockingPort;
 	}
 	
 	/**

@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -21,9 +22,13 @@ import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.drag.DragToken;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.EventDispatcher;
+import org.flexdock.docking.floating.FloatManager;
+import org.flexdock.docking.floating.frames.DockingFrame;
+import org.flexdock.docking.floating.frames.FloatingDockingPort;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
+import org.flexdock.view.View;
 
 /**
  * @author Christopher Butler
@@ -169,6 +174,26 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	}
 	
 	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
+		// superclass blocks docking if the 'port' or 'region' are null.  If we've dragged outside
+		// the bounds of the parent frame, then both of these will be null.  This is expected here and
+		// we intend to float in this case.
+		if(isFloatable(dockable, token))
+			return true;
+		
+		
+		// check to see if we're already floating and we're trying to drop into the 
+		// same dialog.
+		DockingPort oldPort = DockingManager.getDockingPort(dockable);
+		if(oldPort instanceof FloatingDockingPort && oldPort==port) {
+			// only allow this situation if we're not the *last* dockable
+			// in the viewport.  if we're removing the last dockable, then
+			// the dialog will disappear before we redock, and we don't want this
+			// to happen.
+			FloatingDockingPort floatingDockingPort = (FloatingDockingPort)oldPort;
+			if(floatingDockingPort.getDockableCount()==1)
+				return false;
+		}
+		
 		if(dockable==null || dockable.getDockable()==null || port==null)
 			return false;
 		
@@ -202,8 +227,38 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		return true;
 	}
 	
+	
+	
+	
+	
+	
+	protected boolean isFloatable(Dockable dockable, DragToken token) {
+		// can't float null objects
+		if(dockable==null || dockable.getDockable()==null || token==null)
+			return false;
+		
+		// can't float on a fake drag operation 
+		if(token.isPseudoDrag() || !(dockable instanceof View))
+			return false;
+		
+		// TODO: break this check out into a separate DropPolicy class.
+		// should be any customizable criteria, not hardcoded to checking
+		// for being outside the bounds of a window
+		if(token.isOverWindow())
+			return false;
+		
+		return true;
+	}
+	
+	
+	
+	
+	
 
 	protected DockingResults dropComponent(Dockable dockable, DockingPort target, String region, DragToken token) {
+		if(isFloatable(dockable, token))
+			return floatComponent(dockable, target, token);
+		
 		DockingResults results = new DockingResults(target, false);
 		
 		if (DockingPort.UNKNOWN_REGION.equals(region) || target==null) {
@@ -241,6 +296,9 @@ public class DefaultDockingStrategy implements DockingStrategy {
 
 		String tabText = dockable.getDockingProperties().getDockableDesc();
 		results.success = target.dock(dockableCmp, tabText, region);
+		if(results.success) {
+			FloatManager.getInstance().removeFromGroup(dockable);
+		}
 		SwingUtility.revalidateComponent((Component) target);
 		return results;
 	}
@@ -285,6 +343,29 @@ public class DefaultDockingStrategy implements DockingStrategy {
 
 		return success;
 	}
+	
+	
+	protected DockingResults floatComponent(Dockable dockable, DockingPort target, DragToken token) {
+		// otherwise,  setup a new DockingFrame and retarget to the CENTER region
+		DockingResults results = new DockingResults(target, false);
+
+		// determine the bounds of the new frame
+		Point screenLoc = token.getCurrentMouse(true);
+		SwingUtility.add(screenLoc, token.getMouseOffset());
+		Rectangle screenBounds = dockable.getDockable().getBounds();
+		screenBounds.setLocation(screenLoc);
+		
+		// create the frame
+		DockingFrame frame = FloatManager.getInstance().floatDockable(dockable, dockable.getDockable(), screenBounds);
+		FloatManager.getInstance().addToGroup(dockable, frame.getGroupName());
+		
+		// grab a reference to the frame's dockingPort for posterity
+		results.dropTarget = frame.getDockingPort();
+
+		results.success = true;
+		return results;
+	}
+	
 	
 	protected static class DockingResults {
 		public DockingResults(DockingPort port, boolean status) {
