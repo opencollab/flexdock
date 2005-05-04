@@ -13,16 +13,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
-import org.flexdock.view.floating.ViewFrame;
 
 /**
  * @author Christopher Butler
  */
 public class ViewFrameDemo extends JFrame implements ActionListener, DockingConstants {
-	private ViewFrame viewframe;
+	private DockingFrame dockingFrame;
 	
 	public static void main(String[] args) {
 		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -43,21 +43,21 @@ public class ViewFrameDemo extends JFrame implements ActionListener, DockingCons
 		b.addActionListener(this);
 		c.add(b);
 		
-		viewframe = createViewframe();
+		dockingFrame = createDockingFrame();
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if(!viewframe.isVisible()) {
-			viewframe.setSize(300, 300);
-			SwingUtility.centerOnScreen(viewframe);
-			viewframe.setVisible(true);
+		if(!dockingFrame.isVisible()) {
+			dockingFrame.setSize(300, 300);
+			SwingUtility.centerOnScreen(dockingFrame);
+			dockingFrame.setVisible(true);
 		}
 	}
 	
-	private ViewFrame createViewframe() {
-		ViewFrame frame = new ViewFrame(this);
-		frame.addView(createView("solution.explorer", "Solution Explorer"));
-		frame.addView(createView("class.view", "Class View"));
+	private DockingFrame createDockingFrame() {
+		DockingFrame frame = new DockingFrame(this, "12345");
+		frame.addDockable(createView("solution.explorer", "Solution Explorer"));
+		frame.addDockable(createView("class.view", "Class View"));
 		return frame;
 	}
 	
