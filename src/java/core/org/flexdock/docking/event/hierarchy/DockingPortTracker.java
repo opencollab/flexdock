@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.WeakHashMap;
 
 import org.flexdock.docking.DockingPort;
@@ -95,4 +97,9 @@ public class DockingPortTracker implements HierarchyListener {
 			info.remove(port);
 	}
 
+	public static Set getDockingWindows() {
+		synchronized(TRACKERS_BY_WINDOW) {
+			return new HashSet(TRACKERS_BY_WINDOW.keySet());	
+		}
+	}
 }

@@ -41,6 +41,7 @@ import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.DockingUtility;
+import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 
 
@@ -443,7 +444,10 @@ public class DockingManager {
 		return strategy;
 	}
 	
-	
+	public static RootWindow[] getDockingWindows() {
+		Set windowSet = DockingPortTracker.getDockingWindows();
+		return windowSet==null? new RootWindow[0]: (RootWindow[])windowSet.toArray(new RootWindow[0]);
+	}
 	
 	public static DockingPort getMainDockingPort(Component comp) {
 		RootDockingPortInfo info = getRootDockingPortInfo(comp);
