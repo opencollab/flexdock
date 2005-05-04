@@ -119,7 +119,9 @@ public class TypedHashtable extends Hashtable {
 	
 	
 	
-	
+	public String getString(Object key) {
+		return (String)get(key);
+	}	
 	
 	public Boolean getBoolean(Object key) {
 		return (Boolean)get(key);
