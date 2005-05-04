@@ -14,6 +14,8 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.WeakHashMap;
 
 import javax.swing.JComponent;
@@ -57,6 +59,7 @@ public class DockbarManager implements DockingConstants {
 	private EventDispatcher eventDispatcher;
 	private DockbarLayout dockbarLayout;
 	private ActivationListener activationListener;
+	private HashSet dockables;
 
 	private int activeEdge = UNSPECIFIED_EDGE;
 	private String activeDockableId;
@@ -92,6 +95,20 @@ public class DockbarManager implements DockingConstants {
 		return mgr;		
 	}
 	
+	public static DockbarManager getCurrent(Dockable dockable) {
+		if(dockable==null)
+			return null;
+		
+		synchronized(MANAGERS_BY_WINDOW) {
+			for(Iterator it=MANAGERS_BY_WINDOW.values().iterator(); it.hasNext();) {
+				DockbarManager mgr = (DockbarManager)it.next();
+				if(mgr.contains(dockable))
+					return mgr;
+			}
+		}
+		return null;
+	}
+	
 	public static void windowChanged(Component newWindow) {
 		currentManager = getInstance(newWindow);
 	}
@@ -112,6 +129,7 @@ public class DockbarManager implements DockingConstants {
 		viewPane = new ViewPane(this);
 
 		windowRef = new WeakReference(window);
+		dockables = new HashSet();
 	}
 	
 	public RootWindow getWindow() {
@@ -344,7 +362,7 @@ public class DockbarManager implements DockingConstants {
 	
 	
 	
-	public void dock(Dockable dockable) {
+	public void minimize(Dockable dockable) {
 		if(dockable==null)
 			return;
 		
@@ -354,10 +372,10 @@ public class DockbarManager implements DockingConstants {
 			edge = findDockbarEdge(dockable);
 		}
 		
-		dock(dockable, edge);
+		minimize(dockable, edge);
 	}
 	
-	public void dock(Dockable dockable, int edge) {
+	public void minimize(Dockable dockable, int edge) {
 		if(dockable==null)
 			return;
 		
@@ -380,6 +398,9 @@ public class DockbarManager implements DockingConstants {
 		dockable.getDockingProperties().setMinimized(true);
 		revalidate();
 		
+		// store the dockable id
+		dockables.add(dockable.getPersistentId());
+		
 		// send event notification
 		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_COMPLETED, edge);
 		eventDispatcher.dispatch(evt);
@@ -392,7 +413,22 @@ public class DockbarManager implements DockingConstants {
 	}
 	
 	
-	public void undock(Dockable dockable) {
+	public void restore(Dockable dockable) {
+		if(dockable==null)
+			return;
+		
+		// remove the dockable from the dockbar
+		remove(dockable);
+		
+		// remove the dockable reference
+		dockables.remove(dockable.getPersistentId());
+		DockingPath.restore(dockable);
+	}
+	
+	public void remove(Dockable dockable) {
+		if(dockable==null)
+			return;
+		
 		if(getActiveDockable()==dockable)
 			setActiveDockable((Dockable)null);
 		
@@ -406,8 +442,6 @@ public class DockbarManager implements DockingConstants {
 			dockable.getDockingProperties().setMinimized(false);
 			revalidate();
 		}
-		
-		DockingPath.restore(dockable);
 	}
 	
 	
@@ -556,6 +590,10 @@ public class DockbarManager implements DockingConstants {
 	
 	public EventDispatcher getEventDispatcher() {
 		return eventDispatcher;
-	}	
+	}
+	
+	public boolean contains(Dockable dockable) {
+		return getDockbar(dockable)!=null;
+	}
 	
 }
