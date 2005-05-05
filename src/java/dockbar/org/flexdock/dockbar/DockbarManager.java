@@ -102,7 +102,7 @@ public class DockbarManager implements DockingConstants {
 		synchronized(MANAGERS_BY_WINDOW) {
 			for(Iterator it=MANAGERS_BY_WINDOW.values().iterator(); it.hasNext();) {
 				DockbarManager mgr = (DockbarManager)it.next();
-				if(mgr.contains(dockable))
+				if(mgr.isOwner(dockable))
 					return mgr;
 			}
 		}
@@ -116,6 +116,43 @@ public class DockbarManager implements DockingConstants {
 	public static DockbarManager getCurrent() {
 		return currentManager;
 	}
+	
+	
+	
+	public static void activate(String dockableId, boolean locked) {
+		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		activate(dockable, locked);
+	}
+	
+	public static void activate(Dockable dockable, boolean locked) {
+		if(dockable==null)
+			return;
+		
+		DockbarManager mgr = getCurrent(dockable);
+		if(mgr==null || !mgr.contains(dockable))
+			return;
+		
+		mgr.setActiveDockable(dockable);
+		if(locked)
+			mgr.getActivationListener().lockViewpane();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	private DockbarManager(RootWindow window) {
@@ -499,7 +536,6 @@ public class DockbarManager implements DockingConstants {
 	public boolean removeListener(DockbarListener listener) {
 		return eventDispatcher.removeListener(listener);
 	}
-
 	
 	public void setActiveDockable(String dockableId) {
 		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
@@ -579,8 +615,6 @@ public class DockbarManager implements DockingConstants {
 	public int getPreferredViewpaneSize() {
 		return dockbarLayout.getDesiredViewpaneSize();
 	}
-	
-
 
 
 	public boolean isAnimating() {
@@ -609,6 +643,10 @@ public class DockbarManager implements DockingConstants {
 	
 	public boolean contains(Dockable dockable) {
 		return getDockbar(dockable)!=null;
+	}
+	
+	private boolean isOwner(Dockable dockable) {
+		return dockable==null? false: dockables.containsKey(dockable.getPersistentId());
 	}
 	
 }
