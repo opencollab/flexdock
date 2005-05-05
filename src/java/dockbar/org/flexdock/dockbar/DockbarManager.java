@@ -14,7 +14,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.lang.ref.WeakReference;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
@@ -59,7 +59,7 @@ public class DockbarManager implements DockingConstants {
 	private EventDispatcher eventDispatcher;
 	private DockbarLayout dockbarLayout;
 	private ActivationListener activationListener;
-	private HashSet dockables;
+	private HashMap dockables;
 
 	private int activeEdge = UNSPECIFIED_EDGE;
 	private String activeDockableId;
@@ -129,7 +129,7 @@ public class DockbarManager implements DockingConstants {
 		viewPane = new ViewPane(this);
 
 		windowRef = new WeakReference(window);
-		dockables = new HashSet();
+		dockables = new HashMap();
 	}
 	
 	public RootWindow getWindow() {
@@ -382,11 +382,33 @@ public class DockbarManager implements DockingConstants {
 		if(isDockingCancelled(dockable, edge))
 			return;
 			
-		edge = Dockbar.getValidOrientation(edge);
-		Dockbar dockbar = getDockbar(edge);
-		
 		// cache the restoration path
 		DockingPath.setRestorePath(dockable);
+		
+		// install the dockable
+		edge = Dockbar.getValidOrientation(edge);
+		install(dockable, edge);
+		
+		// store the dockable id
+		dockables.put(dockable.getPersistentId(), new Integer(edge));
+		
+		// send event notification
+		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_COMPLETED, edge);
+		eventDispatcher.dispatch(evt);
+	}
+	
+	public void reAdd(Dockable dockable) {
+		// can't re-add if the dockable is null, or we already contain it
+		if(dockable==null || contains(dockable))
+			return;
+		
+		Integer edge = (Integer)dockables.get(dockable.getPersistentId());
+		if(edge!=null)
+			install(dockable, edge.intValue());
+	}
+	
+	private void install(Dockable dockable, int edge) {
+		Dockbar dockbar = getDockbar(edge);
 		
 		// undock the dockable 
 		DockingManager.undock(dockable);
@@ -397,13 +419,6 @@ public class DockbarManager implements DockingConstants {
 		// indicate that the dockable is minimized
 		dockable.getDockingProperties().setMinimized(true);
 		revalidate();
-		
-		// store the dockable id
-		dockables.add(dockable.getPersistentId());
-		
-		// send event notification
-		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_COMPLETED, edge);
-		eventDispatcher.dispatch(evt);
 	}
 	
 	private boolean isDockingCancelled(Dockable dockable, int edge) {
