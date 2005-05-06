@@ -24,7 +24,9 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.util.Map;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.drag.effects.DefaultPreview;
 
 
@@ -76,7 +78,7 @@ public class AlphaPreview extends DefaultPreview {
 			borderColor = color==null? DEFAULT_BORDER: color;
 	}
 	
-	public void drawPreview(Graphics2D g, Polygon p) {
+	public void drawPreview(Graphics2D g, Polygon p, Dockable dockable, Map dragInfo) {
 		Rectangle rect = p.getBounds();
 		
 		g.setColor(borderColor);

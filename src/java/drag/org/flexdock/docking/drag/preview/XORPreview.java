@@ -6,12 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Stroke;
+import java.util.Map;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.drag.effects.DefaultPreview;
 
 public class XORPreview extends DefaultPreview {
 	
-	public void drawPreview(Graphics2D g, Polygon p) {
+	public void drawPreview(Graphics2D g, Polygon p, Dockable dockable, Map dragInfo) {
 		float[] pattern = { 1.0f, 1.0f };
 		Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, pattern, 0f);
 		g.setStroke(stroke);

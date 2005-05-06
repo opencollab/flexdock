@@ -5,6 +5,7 @@ package org.flexdock.docking.drag.effects;
 
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.util.Map;
 import java.util.Properties;
 
 import org.flexdock.docking.Dockable;
@@ -53,7 +54,7 @@ public class EffectsFactory {
 			return preview;
 		// unable to load the preview class.  return a no-op preview delegate instead.
 		return new DefaultPreview() {
-			public void drawPreview(Graphics2D g, Polygon poly) {
+			public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {
 				// noop
 			}
 		};

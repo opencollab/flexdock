@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.util.Map;
 
 import javax.swing.JTabbedPane;
 
@@ -23,10 +24,10 @@ public abstract class DefaultPreview implements DragPreview {
 	public static final int DEFAULT_TAB_WIDTH = 50;
 	public static final int DEFAULT_TAB_HEIGHT = 20;
 	
-	public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget) {
+	public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo) {
 		if(dockable==null || port==null || targetRegion==null || paintingTarget==null)
 			return null;
-
+		
 		if(DockingPort.UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(targetRegion, dockable))
 			return null;
 		
@@ -175,5 +176,5 @@ public abstract class DefaultPreview implements DragPreview {
 			DockingPort.EAST_REGION.equals(region) || DockingPort.WEST_REGION.equals(region); 
 	}
 
-	public abstract void drawPreview(Graphics2D g, Polygon poly);
+	public abstract void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo);
 }
