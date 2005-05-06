@@ -21,9 +21,11 @@ package org.flexdock.docking.defaults;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -121,6 +123,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	private String persistentId;
 	private boolean tabsAsDragSource;
 	private boolean transientPort;
+	
+	private BufferedImage dragImage;
 
 	
 	/**
@@ -202,14 +206,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		if(!isParentDockingPort(c))
 			return true;
 
-		// we're already contain 'c', so we're either a tabbed-layout, or 
+		// we already contain 'c', so we're either a tabbed-layout, or 
 		// we contain 'c' directly.  If we contain 'c' directly, then we 
 		// cannot logically move 'c' to some other region within us, as it
 		// already fills up our entire space.
 		Component docked = getDockedComponent();
 		if(!(docked instanceof JTabbedPane))
 			// not a tabbed-layout, so we contain 'c' directly
-			return false;		
+			return false;
 		
 		JTabbedPane tabs = (JTabbedPane)docked;
 		// if there is only 1 tab, then we already fill up the entire 
@@ -1049,5 +1053,30 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	}
 	public void setTransient(boolean portTransient) {
 		this.transientPort = portTransient;
+	}
+	
+	public void setDragInProgress(boolean inProgress) {
+		if(inProgress && dragImage!=null)
+			return;
+		
+		if(!inProgress && dragImage==null)
+			return;
+		
+		if(inProgress) {
+			dragImage = SwingUtility.createImage(getDockedComponent());
+		}
+		else {
+			dragImage = null;
+		}
+		repaint();
+	}
+	
+	public void paint(Graphics g) {
+		if(dragImage==null) {
+			super.paint(g);
+			return;
+		}
+		
+		g.drawImage(dragImage, 0, 0, this);
 	}
 }
