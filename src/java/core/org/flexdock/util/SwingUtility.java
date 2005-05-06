@@ -17,6 +17,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 import javax.swing.JSplitPane;
@@ -327,4 +328,13 @@ public class SwingUtility {
 		return mgr.getActiveWindow();
 	}
 
+	public static BufferedImage createImage(Component comp) {
+		if(comp==null)
+			return null;
+		
+		BufferedImage image = (BufferedImage)comp.createImage(comp.getWidth(), comp.getHeight());
+		Graphics g = image.createGraphics();
+		comp.paintAll(g);
+		return image;
+	}
 }
