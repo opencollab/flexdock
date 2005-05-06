@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -26,7 +27,9 @@ public class DockingPath implements DockingConstants {
 	
 	private ArrayList nodes;
 	private String dockableId;
+	private String siblingId;
 	private DockingPort rootPort;
+	private boolean tabbed;
 	private transient String stringForm;
 	
 	public static DockingPath create(String dockableId) {
@@ -54,7 +57,7 @@ public class DockingPath implements DockingConstants {
 		if(isDockingRoot(parent))
 			path.setRootPort((DockingPort)parent);
 		
-		path.reverse();
+		path.initialize();
 		return path;
 	}
 	
@@ -76,6 +79,8 @@ public class DockingPath implements DockingConstants {
 		
 		return new SplitNode(orientation, region, percentage);
 	}
+	
+
 
 	private static boolean isDockingRoot(Container c) {
 		return c instanceof DockingPort && !((DockingPort)c).isTransient();
@@ -106,6 +111,8 @@ public class DockingPath implements DockingConstants {
 	
 	private DockingPath(Dockable dockable) {
 		dockableId = dockable.getPersistentId();
+		siblingId = findSiblingId(dockable);
+		tabbed = dockable.getDockable().getParent() instanceof JTabbedPane;
 		nodes = new ArrayList();
 	}
 
@@ -129,8 +136,22 @@ public class DockingPath implements DockingConstants {
 		nodes.add(node);
 	}
 	
-	private void reverse() {
+	private void initialize() {
 		Collections.reverse(nodes);
+	}
+	
+	private String findSiblingId(Dockable dockable) {
+		Component comp = dockable.getDockable();
+		JSplitPane split = comp.getParent() instanceof JSplitPane? (JSplitPane)comp.getParent(): null;
+		if(split==null)
+			return null;
+		
+		Component sibling = split.getLeftComponent();
+		if(comp==sibling)
+			sibling = split.getRightComponent();
+		
+		Dockable d = DockingManager.getRegisteredDockable(sibling);
+		return d==null? null: d.getPersistentId();
 	}
 	
 	public String toString() {
@@ -163,19 +184,13 @@ public class DockingPath implements DockingConstants {
 			Component comp = port.getDockedComponent();
 			region = getRegion(node, comp);
 			
-			// path was broken.  we don't have a JSplitPane to go with
-			// the current node.
-			if(!(comp instanceof JSplitPane)) {
+			JSplitPane splitPane = comp instanceof JSplitPane? (JSplitPane)comp: null;
+			// path was broken.  we have no SplitPane, or the SplitPane doesn't 
+			// match the orientation of the current node, meaning the path was 
+			// altered at this point.
+			if(splitPane==null || splitPane.getOrientation()!=node.getOrientation()) {
 				DockingManager.dock(dockable, port, region);
 				return;
-			}
-			
-			// path was broken.  SplitPane doesn't match the orientation
-			// of the current node, meaning the path was altered at this point.
-			JSplitPane splitPane = (JSplitPane)comp;
-			if(splitPane.getOrientation()!=node.getOrientation()) {
-				DockingManager.dock(dockable, port, region);
-				return;				
 			}
 			
 			// assume there is a transient sub-dockingPort in the split pane
@@ -185,7 +200,7 @@ public class DockingPath implements DockingConstants {
 			// move on to the next node
 		}
 		
-		DockingManager.dock(dockable, port, region);
+		DockingManager.dock(dockable, port, tabbed? DockingPort.CENTER_REGION: region);
 	}
 	
 	private String getRegion(SplitNode node, Component dockedComponent) {
