@@ -6,12 +6,17 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.util.EventListener;
+import java.util.HashMap;
 
 import javax.swing.SwingUtilities;
 
+import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 
 public class DragToken {
+	public static final String DRAG_IMAGE = "DragToken.DRAG_IMAGE";
+	
 	private Component dragSource;
 	private Component dockable;
 	private DockingPort parentDockingPort;
@@ -24,6 +29,9 @@ public class DragToken {
 	private boolean overWindow;
 	private boolean pseudoDrag;
 	private long started;
+	private HashMap dragInfo;
+	private Dockable dockableRef;
+	private DockingPort sourcePort;
 
 	
 	public DragToken(Component dockable, Point dragOrigin, MouseEvent evt) {
@@ -52,6 +60,8 @@ public class DragToken {
 		if(!fakeDrag)
 			parentDockingPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, dockable);
 		
+		sourcePort = DockingManager.getDockingPort(dockable);
+		dragInfo = new HashMap();
 		started = -1;
 	}
 	
@@ -69,6 +79,12 @@ public class DragToken {
 	
 	public Component getDockable() {
 		return dockable;
+	}
+	
+	public Dockable getDockableReference() {
+		if(dockableRef==null)
+			dockableRef = DockingManager.getRegisteredDockable(dockable);
+		return dockableRef;
 	}
 	
 	public Point getMouseOffset() {
@@ -169,5 +185,12 @@ public class DragToken {
 	
 	public long getStartTime() {
 		return started;
+	}
+	
+	public HashMap getDragInfo() {
+		return dragInfo;
+	}
+	public DockingPort getSourcePort() {
+		return sourcePort;
 	}
 }

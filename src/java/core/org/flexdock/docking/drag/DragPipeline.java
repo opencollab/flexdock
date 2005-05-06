@@ -8,6 +8,8 @@ import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
@@ -64,7 +66,10 @@ public class DragPipeline {
 	}
 	
 	private void openImpl(DragToken token) {
-		this.dragToken = token;	
+		this.dragToken = token;
+		
+		notifyDockingPort(token, true);
+		
 		windows = RootWindow.getVisibleWindows();
 		for(int i=0; i<windows.length; i++) {
 			applyGlassPane(windows[i], createGlassPane());
@@ -105,6 +110,8 @@ public class DragPipeline {
 				windows[i] = null;
 			}
 		}
+		
+		notifyDockingPort(dragToken, false);
 		open = false;
 	}
 
@@ -258,6 +265,13 @@ public class DragPipeline {
 	
 	public DragToken getDragToken() {
 		return dragToken;
+	}
+	
+	private void notifyDockingPort(DragToken token, boolean inProgress) {
+		DockingPort port = token.getSourcePort();
+		if(port instanceof DefaultDockingPort) {
+			((DefaultDockingPort)port).setDragInProgress(inProgress);
+		}
 	}
 
 }

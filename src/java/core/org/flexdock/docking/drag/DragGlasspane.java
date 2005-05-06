@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
+import java.util.Map;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -27,6 +28,7 @@ public class DragGlasspane extends JComponent {
 	private DragPreview previewDelegate;
 	private boolean previewInit;
 	private Polygon previewPoly;
+	private DragToken currentDragToken;
 	
 	public DragGlasspane() {
 		setLayout(null);
@@ -65,6 +67,7 @@ public class DragGlasspane extends JComponent {
 	
 	
 	public void processDragEvent(DragToken token) {
+		currentDragToken = token;
 		ComponentNest dropTargets = getDropTargets(token);
 		
 		// if there is no cover, and we're not transitioning away from one, 
@@ -110,8 +113,9 @@ public class DragGlasspane extends JComponent {
 		DragPreview preview = getPreviewDelegate(token.getDockable(), port);
 		if(preview==null)
 			previewPoly = null;
-		else
-			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this);
+		else {
+			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this, token.getDragInfo());
+		}
 	}
 	
 	public void clear() {
@@ -164,8 +168,12 @@ public class DragGlasspane extends JComponent {
 
 	
 	protected void paintComponent(Graphics g) {
-		if(previewDelegate!=null && previewPoly!=null) 
-			previewDelegate.drawPreview((Graphics2D)g, previewPoly);
+		if(currentDragToken!=null && previewDelegate!=null && previewPoly!=null) { 
+			Dockable dockable = currentDragToken.getDockableReference();
+			Map dragInfo = currentDragToken.getDragInfo();
+			previewDelegate.drawPreview((Graphics2D)g, previewPoly, dockable, dragInfo);
+		}
+			
 	}
 	
 	private boolean match(Object o1, Object o2) {
