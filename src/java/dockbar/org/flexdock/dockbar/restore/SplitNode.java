@@ -12,11 +12,13 @@ public class SplitNode implements DockingConstants {
 	private int orientation;
 	private int region;
 	private float percentage;
+	private String siblingId;
 	
-	public SplitNode(int orientation, int region, float percentage) {
+	public SplitNode(int orientation, int region, float percentage, String siblingId) {
 		this.orientation = orientation;
 		this.region = region;
 		this.percentage = percentage;
+		this.siblingId = siblingId;
 	}
 	
 	public int getOrientation() {
@@ -27,6 +29,10 @@ public class SplitNode implements DockingConstants {
 	}
 	public int getRegion() {
 		return region;
+	}
+
+	public String getSiblingId() {
+		return siblingId;
 	}
 	
 	public String toString() {

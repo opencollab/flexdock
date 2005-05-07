@@ -5,6 +5,7 @@ package org.flexdock.dockbar.restore;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -24,21 +26,21 @@ import org.flexdock.util.DockingUtility;
  */
 public class DockingPath implements DockingConstants {
 	public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY"; 
-	
+	private transient String stringForm;
+	private DockingPort rootPort;
 	private ArrayList nodes;
 	private String dockableId;
 	private String siblingId;
-	private DockingPort rootPort;
 	private boolean tabbed;
-	private transient String stringForm;
+
 	
 	public static DockingPath create(String dockableId) {
-		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		Dockable dockable = findDockable(dockableId);
 		return create(dockable);
 	}
 	
 	public static DockingPath create(Dockable dockable) {
-		if(dockable==null || !DockingManager.isDocked(dockable))
+		if(dockable==null || !isDocked(dockable))
 			return null;
 		
 		DockingPath path = new DockingPath(dockable);
@@ -66,18 +68,29 @@ public class DockingPath implements DockingConstants {
 		boolean topLeft = split.getLeftComponent()==port? true: false;
 		
 		int region = 0;
+		String siblingId = null;
 		if(topLeft) {
 			region = orientation==JSplitPane.VERTICAL_SPLIT? TOP: LEFT;
+			siblingId = getSiblingId(split.getRightComponent());
 		}
 		else {
 			region = orientation==JSplitPane.VERTICAL_SPLIT? BOTTOM: RIGHT;
+			siblingId = getSiblingId(split.getLeftComponent());
 		}
 		
 		int size = orientation==JSplitPane.VERTICAL_SPLIT? split.getHeight(): split.getWidth();
 		int divLoc = split.getDividerLocation();
 		float percentage = (float)divLoc / (float)size;
 		
-		return new SplitNode(orientation, region, percentage);
+		return new SplitNode(orientation, region, percentage, siblingId);
+	}
+	
+	private static String getSiblingId(Component c) {
+		if(c instanceof DockingPort)
+			c = ((DockingPort)c).getDockedComponent();
+		
+		Dockable dockable = findDockable(c);
+		return dockable==null? null: dockable.getPersistentId();
 	}
 	
 
@@ -150,7 +163,7 @@ public class DockingPath implements DockingConstants {
 		if(comp==sibling)
 			sibling = split.getRightComponent();
 		
-		Dockable d = DockingManager.getRegisteredDockable(sibling);
+		Dockable d = findDockable(sibling);
 		return d==null? null: d.getPersistentId();
 	}
 	
@@ -168,13 +181,13 @@ public class DockingPath implements DockingConstants {
 	}
 	
 	public void restore() {
-		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
-		if(dockable==null || DockingManager.isDocked(dockable))
+		Dockable dockable = findDockable(dockableId);
+		if(dockable==null || isDocked(dockable))
 			return;
 		
 		String region = DockingPort.CENTER_REGION;
 		if(nodes.size()==0) {
-			DockingManager.dock(dockable, rootPort, region);
+			dockFullPath(dockable, rootPort, region);
 			return;
 		}
 		
@@ -189,7 +202,7 @@ public class DockingPath implements DockingConstants {
 			// match the orientation of the current node, meaning the path was 
 			// altered at this point.
 			if(splitPane==null || splitPane.getOrientation()!=node.getOrientation()) {
-				DockingManager.dock(dockable, port, region);
+				dockBrokenPath(dockable, port, region, node);
 				return;
 			}
 			
@@ -200,12 +213,142 @@ public class DockingPath implements DockingConstants {
 			// move on to the next node
 		}
 		
-		DockingManager.dock(dockable, port, tabbed? DockingPort.CENTER_REGION: region);
+		dockFullPath(dockable, port, region);
 	}
+	
+	
+	
+	private void dockBrokenPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
+		Component current = port.getDockedComponent();
+		if(current instanceof JSplitPane) {
+			dockExtendedPath(dockable, port, region, ctrlNode);
+			return;
+		}
+		
+		if(current instanceof JTabbedPane) {
+			dock(dockable, port, DockingPort.CENTER_REGION, null);
+			return;
+		}
+		
+		Dockable embedded = findDockable(current);
+		if(embedded==null || tabbed) {
+			dock(dockable, port, DockingPort.CENTER_REGION, null);
+			return;
+		}
+		
+		String embedId = embedded.getPersistentId();
+		SplitNode lastNode = getLastNode();
+		if(embedId.equals(lastNode.getSiblingId())) {
+			region = getRegion(lastNode, current);
+			ctrlNode = lastNode;
+		}
+		
+		dock(dockable, port, region, ctrlNode);
+	}
+	
+	private void dockFullPath(Dockable dockable, DockingPort port, String region) {
+		// the docking layout was altered since the last time our dockable we embedded within
+		// it, and we were able to fill out the full docking path.  this means there is already
+		// something within the target dockingPort where we expect to dock our dockable.  
+		
+		// first, check to see if we need to use a tabbed layout
+		Component current = port.getDockedComponent();
+		if(current instanceof JTabbedPane) {
+			dock(dockable, port, DockingPort.CENTER_REGION, null);
+			return;
+		}
+
+		// check to see if we dock outside the current port or outside of it
+		Dockable docked = findDockable(current);
+		if(docked!=null) {
+			Component comp = dockable.getDockable();
+			if(port.isDockingAllowed(DockingPort.CENTER_REGION, comp)) {
+				dock(dockable, port, DockingPort.CENTER_REGION, null);
+			}
+			else {
+				DockingPort superPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)port);
+				if(superPort!=null)
+					port = superPort;
+				dock(dockable, port, region, getLastNode());
+			}
+			return;
+		}
+		
+		// if we were't able to dock above, then the path changes means our current path
+		// does not extend all the way down into to docking layout.  try to determine 
+		// an extended path and dock into it
+		dockExtendedPath(dockable, port, region, getLastNode());
+	}
+	
+	private void dockExtendedPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
+		Component docked = port.getDockedComponent();
+		// if 'docked' is not a split pane, then I don't know what it is.  let's print a
+		// stacktrace and see who sends in an error report.
+		if(!(docked instanceof JSplitPane)) {
+			new Throwable().printStackTrace();
+			return;
+		}
+		
+		dock(dockable, port, region, ctrlNode);
+	}
+	
+	
+
+	
+	
+	
 	
 	private String getRegion(SplitNode node, Component dockedComponent) {
 		if(dockedComponent==null)
 			return DockingPort.CENTER_REGION;
 		return DockingUtility.getRegion(node.getRegion());
+	}
+	
+	private SplitNode getLastNode() {
+		return nodes.size()==0? null: (SplitNode)nodes.get(nodes.size()-1);
+	}
+	
+	private void dock(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
+		DockingManager.dock(dockable, port, region);
+		if(tabbed || ctrlNode==null)
+			return;
+		
+		final float percent = ctrlNode.getPercentage();
+		final Component docked = dockable.getDockable();
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						resizeSplitPane(docked, percent);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+	}
+	
+	private void resizeSplitPane(Component comp, float percentage) {
+		Container parent = comp.getParent();
+		Container grandParent = parent==null? null: parent.getParent();
+		if(!(grandParent instanceof JSplitPane))
+			return;
+		
+		JSplitPane split = (JSplitPane)grandParent;
+//		int splitSize = split.getOrientation()==DockingConstants.VERTICAL? split.getHeight(): split.getWidth();
+//		int divLoc = (int)(percentage * (float)splitSize);
+		split.setDividerLocation(percentage);
+	}
+	
+	private static Dockable findDockable(Component c) {
+		return DockingManager.getRegisteredDockable(c);
+	}
+	
+	private static Dockable findDockable(String id) {
+		return DockingManager.getRegisteredDockable(id);
+	}
+	
+	private static boolean isDocked(Dockable dockable) {
+		return DockingManager.isDocked(dockable);
 	}
 }
