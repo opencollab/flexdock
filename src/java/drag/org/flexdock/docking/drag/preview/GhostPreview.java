@@ -75,4 +75,10 @@ public class GhostPreview extends DefaultPreview {
 		// now draw the preview image
 		g.drawImage(image, bounds.x, bounds.y, null);
 	}
+	
+	protected Rectangle createTabbedPaneRect(DockingPort port, Component hover) {
+		if(hover!=null)
+			return hover.getBounds();
+		return super.createTabbedPaneRect(port, hover);
+	}
 }

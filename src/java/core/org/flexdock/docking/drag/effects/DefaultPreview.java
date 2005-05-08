@@ -43,7 +43,7 @@ public abstract class DefaultPreview implements DragPreview {
 		if(isOuterRegion(targetRegion))
 			p = createPolyRect(port, srcAxes, targetRegion);
 		else {
-			p = createPolyTab(port);
+			p = createPolyTab(port, srcAxes);
 			srcAxes = (Component)port;
 		}
 
@@ -72,21 +72,17 @@ public abstract class DefaultPreview implements DragPreview {
 	}
 	
 	
-	protected Polygon createPolyTab(DockingPort port) {
+	protected Polygon createPolyTab(DockingPort port, Component hover) {
 		Component c = port.getDockedComponent();
-		
-		// get the bounds and reset location to (0, 0), since we'll be
-		// converting coordinates from the DockingPort, not its parent
-		Rectangle tabPaneRect = ((Component)port).getBounds();
-		tabPaneRect.setLocation(0, 0);
-		
+
+		Rectangle tabPaneRect = createTabbedPaneRect(port, hover);
 		// if no existing component and no singleTabs allowed, 
 		// return the entire pane bounds
 		if(c==null && port.getDockingProperties().isSingleTabsAllowed()==Boolean.FALSE) {
 			return createPolyRect(tabPaneRect);
 		}
 		
-		Rectangle tabRect = new Rectangle(0, 0, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
+		Rectangle tabRect = new Rectangle(tabPaneRect.x, tabPaneRect.y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
 		boolean tabsOnTop = port.getDockingProperties().getTabPlacement().intValue()==JTabbedPane.TOP;
 		// if 'c' is a JTabbedPane, then there is already a tab out there and 
 		// we can model our bounds off of it.
@@ -116,6 +112,14 @@ public abstract class DefaultPreview implements DragPreview {
 			return createPolyTabOnTop(tabPaneRect, tabRect);
 		else
 			return createPolyTabOnBottom(tabPaneRect, tabRect);
+	}
+	
+	protected Rectangle createTabbedPaneRect(DockingPort port, Component hover) {
+		// get the bounds and reset location to (0, 0), since we'll be
+		// converting coordinates from the DockingPort, not its parent
+		 Rectangle tabPaneRect = ((Component)port).getBounds();
+		 tabPaneRect.setLocation(0, 0);
+		 return tabPaneRect;
 	}
 	
 	protected Polygon createPolyTabOnTop(Rectangle tabPane, Rectangle tab) {
