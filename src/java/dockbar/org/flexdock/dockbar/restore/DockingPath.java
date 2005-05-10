@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -282,12 +283,29 @@ public class DockingPath implements DockingConstants {
 	
 	private void dockExtendedPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
 		Component docked = port.getDockedComponent();
+		
 		// if 'docked' is not a split pane, then I don't know what it is.  let's print a
 		// stacktrace and see who sends in an error report.
 		if(!(docked instanceof JSplitPane)) {
 			new Throwable().printStackTrace();
 			return;
 		}
+		
+		
+		SplitNode lastNode = getLastNode();
+		String lastSibling = lastNode==null? null: lastNode.getSiblingId();
+		
+		Set dockables = port.getDockables();
+		for(Iterator it=dockables.iterator(); lastSibling!=null && it.hasNext();) {
+			Dockable d = (Dockable)it.next();
+			if(d.getPersistentId().equals(lastSibling)) {
+				DockingPort embedPort = d.getDockingPort();
+				String embedRegion = getRegion(lastNode, d.getDockable());
+				dock(dockable, embedPort, embedRegion, ctrlNode);
+				return;
+			}
+		}
+		
 		
 		dock(dockable, port, region, ctrlNode);
 	}
