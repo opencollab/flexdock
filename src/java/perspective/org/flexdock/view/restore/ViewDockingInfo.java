@@ -109,6 +109,15 @@ public class ViewDockingInfo {
 		return viewDockingInfo;
 	}
 
+	public static ViewDockingInfo createMinimizedDockingInfo(View sourceView, int dockbarEdge) {
+	    ViewDockingInfo viewDockingInfo = new ViewDockingInfo();
+		viewDockingInfo.m_view = sourceView;
+		viewDockingInfo.m_isMinimized = true;
+		viewDockingInfo.m_dockbarEdge = dockbarEdge;
+
+		return viewDockingInfo;
+	}
+
 	public static ViewDockingInfo createFloatingDockingInfo(View sourceView, Point location, Dimension dimension) {
 		ViewDockingInfo viewDockingInfo = new ViewDockingInfo();
 		viewDockingInfo.m_view = sourceView;

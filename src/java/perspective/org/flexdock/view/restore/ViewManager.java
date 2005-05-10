@@ -2,8 +2,6 @@ package org.flexdock.view.restore;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.HierarchyBoundsListener;
-import java.awt.event.HierarchyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,8 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.flexdock.dockbar.DockbarManager;
-import org.flexdock.dockbar.event.DockbarEvent;
-import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -129,11 +125,6 @@ public class ViewManager implements IViewManager {
 		}
 		
 		if (docked) {
-			DockingHandler dockingHandler = (DockingHandler) m_registeredListeners.get(view.getPersistentId());
-			if (dockingHandler != null) {
-				DockbarManager.getInstance(view).removeListener(dockingHandler);
-				DockbarManager.getInstance(view).addListener(dockingHandler);
-			}
 			fireViewStateChanged(view, ViewStateEvent.VIEW_SHOWN);
 		}
 		
@@ -160,25 +151,41 @@ public class ViewManager implements IViewManager {
 	 */
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
+
 		if (view.isMinimized()) {
-			//it is fine since we are higher lever manager
-			DockingManager.setMinimized(view, false);
-		}
-		
-		if (m_registeredListeners.containsKey(view.getPersistentId())) {
-			DockingHandler dockingHandler = (DockingHandler) m_registeredListeners.get(view.getPersistentId());
-			if (dockingHandler != null) {
-				DockbarManager.getInstance(view).removeListener(dockingHandler);
+			DockbarManager mgr = DockbarManager.getCurrent(view);
+			if(mgr != null) {
+			    int edge = DockbarManager.getInstance(view).getEdge(view);
+			    ViewDockingInfo viewDockingInfo = ViewDockingInfo.createMinimizedDockingInfo(view, edge);
+			    m_accessoryDockingInfos.put(view.getPersistentId(), viewDockingInfo);
+			    mgr.remove(view);
+				fireViewStateChanged(view, ViewStateEvent.VIEW_HIDDEN);
+				return true;
+			}
+		} else if (view.isFloating()) {
+		    Point locationOnScreen = (Point) view.getLocationOnScreen();
+		    Dimension dimension = view.getSize();
+			ViewDockingInfo viewDockingInfo = ViewDockingInfo.createFloatingDockingInfo(view, locationOnScreen, dimension);
+			m_accessoryDockingInfos.put(view.getPersistentId(), viewDockingInfo); 
+
+			boolean isHidden = DockingManager.undock(view);
+			
+			if (isHidden) {
+				fireViewStateChanged(view, ViewStateEvent.VIEW_HIDDEN);
+				return isHidden;
+			}
+
+			return true;
+		} else { 
+			boolean isHidden = DockingManager.undock(view);
+			
+			if (isHidden) {
+				fireViewStateChanged(view, ViewStateEvent.VIEW_HIDDEN);
+				return isHidden;
 			}
 		}
 		
-		boolean isHidden = DockingManager.undock(view);
-		
-		if (isHidden) {
-			fireViewStateChanged(view, ViewStateEvent.VIEW_HIDDEN);
-		}
-		
-		return isHidden;
+		return true;
 	}
 	
 	/**
@@ -301,7 +308,7 @@ public class ViewManager implements IViewManager {
 		}
 	}
 	
-	private class DockingHandler extends DockingListener.Stub implements HierarchyBoundsListener, DockbarListener {
+	private class DockingHandler extends DockingListener.Stub {
 		
 		/**
 		 * @see org.flexdock.docking.event.DockingListener#dockingComplete(org.flexdock.docking.event.DockingEvent)
@@ -312,28 +319,7 @@ public class ViewManager implements IViewManager {
 			String region = dockingEvent.getRegion();
 			boolean isOverWindow = dockingEvent.isOverWindow();
 			
-			if (!isOverWindow) {
-				handleFloatingWindow(sourceView);
-				return;
-			} else {
-				sourceView.removeHierarchyBoundsListener(this);
-				ViewDockingInfo dockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(sourceView.getPersistentId());
-				if (dockingInfo != null) {
-					dockingInfo.setFloating(false);
-				}
-			}
-			
 			preserve(sourceView, dockingPort, region, isOverWindow);
-		}
-		
-		private boolean handleFloatingWindow(View sourceView) {
-			//if it is a floating window register as component listener
-			sourceView.addHierarchyBoundsListener(this);
-			Point locationOnScreen = sourceView.getLocationOnScreen();
-			Dimension dim = sourceView.getSize();
-			ViewDockingInfo viewDockingInfo = ViewDockingInfo.createFloatingDockingInfo(sourceView, locationOnScreen, dim);
-			m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
-			return true;
 		}
 		
 		private boolean preserve(View sourceView, DockingPort dockingPort, String region, boolean isOverWindow) {
@@ -344,7 +330,7 @@ public class ViewManager implements IViewManager {
 					if(!(childDockable instanceof View))
 						continue;
 					
-					View childView = (View)childDockable;
+					View childView = (View) childDockable;
 					if (!childView.equals(sourceView)) {
 						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
 						float ratio = -1.0f;
@@ -361,46 +347,6 @@ public class ViewManager implements IViewManager {
 			}
 			return false;
 		}
-		
-		public void ancestorMoved(HierarchyEvent e) {
-			View sourceView = (View) e.getSource();
-			if (sourceView.isShowing()) {
-				handle(sourceView);
-			}
-		}
-		
-		public void ancestorResized(HierarchyEvent e) {
-			View sourceView = (View) e.getSource();
-			if (sourceView.isShowing()) {
-				handle(sourceView);
-			}
-		}
-		
-		private void handle(View sourceView) {
-			Dimension dimension = sourceView.getSize();
-			Point location = sourceView.getLocationOnScreen();
-			ViewDockingInfo viewDockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(sourceView.getPersistentId());
-			viewDockingInfo.setFloatingLocation(location);
-			viewDockingInfo.setFloatingWindowDimension(dimension);
-		}
-		
-		public void dockableCollapsed(DockbarEvent evt) {}
-		
-		public void dockableExpanded(DockbarEvent evt) {}
-		
-		public void dockableLocked(DockbarEvent evt) {}
-		
-		public void minimizeCompleted(DockbarEvent dockbarEvent) {
-			View view = (View) dockbarEvent.getSource();
-			int edge = dockbarEvent.getEdge();
-			ViewDockingInfo viewDockingInfo = (ViewDockingInfo) m_accessoryDockingInfos.get(view.getPersistentId());
-			if (viewDockingInfo != null) {
-				viewDockingInfo.setMinimized(true);
-				viewDockingInfo.setDockbarEdge(edge);
-			}
-		}
-		
-		public void minimizeStarted(DockbarEvent evt) {}
 		
 	}
 	

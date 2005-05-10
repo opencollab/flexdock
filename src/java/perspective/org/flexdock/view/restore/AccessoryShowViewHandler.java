@@ -1,8 +1,12 @@
 package org.flexdock.view.restore;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.Map;
 
+import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.floating.FloatManager;
 import org.flexdock.docking.floating.frames.DockingFrame;
@@ -32,12 +36,14 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 				RootWindow[] windows = DockingManager.getDockingWindows();
 				if(windows.length==0)
 					return false;
-				
+
+				Point locationOnScreen = accessoryDockingInfo.getFloatingLocation();
+				Dimension dim = accessoryDockingInfo.getFloatingWindowDimension();
+
 				Component owner = windows[0].getRootContainer();
-				DockingFrame frame = FloatManager.getInstance().floatDockable(territoralView, owner);
-				frame.addDockable(view);
+				DockingFrame frame = FloatManager.getInstance().floatDockable(view, owner, new Rectangle(locationOnScreen, dim));
 				
-/*
+				/*
 				ViewFrame viewFrame = ViewFrame.create(territoralView);
 				viewFrame.setLayout(new BorderLayout());
 				viewFrame.setResizable(true);
@@ -55,6 +61,7 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 				*/
 				return true;
 			} else if (accessoryDockingInfo.isMinimized()) {
+				DockbarManager.activate(sourceView, true);
 				DockingManager.setMinimized(sourceView, true, accessoryDockingInfo.getDockbarEdge());
 				if (sourceView.isMinimized()) {
 					return true;

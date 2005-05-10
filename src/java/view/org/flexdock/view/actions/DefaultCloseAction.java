@@ -24,8 +24,7 @@ public class DefaultCloseAction extends ViewAction {
 		if(DockingManager.isDocked((Dockable)view)) {
 			DockingPath.setRestorePath(view);
 			DockingManager.undock(view);
-		}
-		else if (view.isMinimized()) {
+		} else if (view.isMinimized()) {
 			DockbarManager mgr = DockbarManager.getCurrent(view);
 			if(mgr!=null)
 				mgr.remove(view);
