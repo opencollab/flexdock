@@ -9,9 +9,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JSplitPane;
-
 import org.flexdock.dockbar.DockbarManager;
+import org.flexdock.dockbar.restore.DockingPath;
+import org.flexdock.dockbar.restore.SplitNode;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -154,6 +154,9 @@ public class ViewManager implements IViewManager {
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 
+		DockingPath dockingPath = DockingPath.create(view);
+		DockingPath.setRestorePath(view, dockingPath);
+		
 		if (view.isMinimized()) {
 			DockbarManager mgr = DockbarManager.getCurrent(view);
 			if(mgr != null) {
@@ -325,12 +328,6 @@ public class ViewManager implements IViewManager {
 		}
 		
 		private boolean preserve(View sourceView, DockingPort dockingPort, String region, boolean isOverWindow) {
-//		    float ratio = -1.0f;
-//		    if (dockingPort.getDockedComponent() instanceof JSplitPane) {
-//		        JSplitPane splitPane = (JSplitPane) dockingPort.getDockedComponent();
-//		        ViewUtils.getLeftOrTopRatio()
-//		    }
-		    
 		    Set dockableSet = dockingPort.getDockables();
 			if (!dockableSet.isEmpty()) {
 				for (Iterator it = dockableSet.iterator(); it.hasNext();) {
@@ -340,16 +337,30 @@ public class ViewManager implements IViewManager {
 					
 					View childView = (View) childDockable;
 					if (!childView.equals(sourceView)) {
-					    //childView.getd
-						Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
-						float ratio = -1.0f;
-						if (ratioObject != null) {
-							ratio = ratioObject.floatValue();
-						} else {
-							ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
+						Float ratioObject = null;
+						DockingPath dockingPath = DockingPath.getRestorePath(sourceView);
+						if (dockingPath != null) {
+							SplitNode splitNode = (SplitNode) dockingPath.getNodes().get(dockingPath.getNodes().size()-1);
+							if (splitNode.getOrientation() == SplitNode.HORIZONTAL) {
+								ratioObject = Float.valueOf(1.0f-splitNode.getPercentage());
+								//System.out.println(splitNode.getPercentage());
+							} else {
+							    ratioObject = Float.valueOf(splitNode.getPercentage());
+							}
 						}
+						float ratio = -1.0f;
+					    if (ratioObject == null) {
+							ratioObject = sourceView.getDockingProperties().getRegionInset(region);
+							if (ratioObject != null) {
+								ratio = ratioObject.floatValue();
+							} else {
+								ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
+							}
+					    } else {
+					        ratio = ratioObject.floatValue();
+					    }
 						ViewDockingInfo viewDockingInfo = ViewDockingInfo.createRelativeDockingInfo(childView, region, ratio);
-						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo); 
+						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo);
 						return true;
 					}
 				}
