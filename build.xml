@@ -90,6 +90,12 @@
 			<arg line='-mwindows -shared -o ${dll.dir}\RubberBand.dll ${dll.build.dir}\RubberBand.o ${c.dir}\RubberBand.def' />
 		</exec>
 	</target>
+	
+	<target name="compile.unix.lib">
+	<!--
+	gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux
+	-->
+	</target>
 
 	<!-- creates a source distribution -->
     <target name="jar-src" depends="init">
