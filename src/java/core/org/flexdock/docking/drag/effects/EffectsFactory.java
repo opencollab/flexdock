@@ -41,9 +41,14 @@ public class EffectsFactory {
 	
 	
 	private static RubberBand loadSystemRubberband() {
-		String osFamily = Utilities.OS_FAMILY;
-		String implClass = PROPERTIES.getProperty(osFamily);
-		RubberBand rb = createRubberBand(implClass);
+		RubberBand rb = null;
+		for(int i=0; rb==null && i<Utilities.OS_CHAIN.length; i++) {
+			String systemKey = Utilities.OS_CHAIN[i];
+			String implClass = PROPERTIES.getProperty(systemKey);
+			if(implClass!=null)
+				rb = createRubberBand(implClass);
+		}
+
 		return rb==null? new RubberBand(): rb;
 	}
 	

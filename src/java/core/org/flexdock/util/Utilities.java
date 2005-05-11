@@ -19,6 +19,7 @@ public class Utilities {
 	private static final String OS_KEY = "os";
 	private static final String NAME_KEY = "name";
 	public static final String OS_FAMILY = loadOSFamily();
+	public static final String[] OS_CHAIN = loadOSChain();
 	
 	public static void pause(long millis) {
 		try {
@@ -60,6 +61,16 @@ public class Utilities {
 			}
 		}
 		return UNKNOWN_FAMILY;
+	}
+	
+	private static String[] loadOSChain() {
+		String osName = System.getProperty("os.name");
+		String arch = System.getProperty("os.arch");
+		String fullName = osName + "." + arch;
+		
+		return new String[] {
+			fullName, osName, OS_FAMILY	
+		};
 	}
 	
 	public static Object createInstance(String className) {
