@@ -155,7 +155,7 @@ public class ViewManager implements IViewManager {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 
 		DockingPath dockingPath = DockingPath.create(view);
-		DockingPath.setRestorePath(view, dockingPath);
+		DockingPath.cacheRestorePath(view, dockingPath);
 		
 		if (view.isMinimized()) {
 			DockbarManager mgr = DockbarManager.getCurrent(view);
@@ -332,33 +332,14 @@ public class ViewManager implements IViewManager {
 			if (!dockableSet.isEmpty()) {
 				for (Iterator it = dockableSet.iterator(); it.hasNext();) {
 					Dockable childDockable = (Dockable) it.next();
+					// for the time being, we only want to handle Views.
+					// TODO Change this to handle raw Dockables in the future.
 					if(!(childDockable instanceof View))
 						continue;
 					
 					View childView = (View) childDockable;
 					if (!childView.equals(sourceView)) {
-						Float ratioObject = null;
-						DockingPath dockingPath = DockingPath.getRestorePath(sourceView);
-						if (dockingPath != null) {
-							SplitNode splitNode = (SplitNode) dockingPath.getNodes().get(dockingPath.getNodes().size()-1);
-							if (splitNode.getOrientation() == SplitNode.HORIZONTAL) {
-								ratioObject = Float.valueOf(1.0f-splitNode.getPercentage());
-								//System.out.println(splitNode.getPercentage());
-							} else {
-							    ratioObject = Float.valueOf(splitNode.getPercentage());
-							}
-						}
-						float ratio = -1.0f;
-					    if (ratioObject == null) {
-							ratioObject = sourceView.getDockingProperties().getRegionInset(region);
-							if (ratioObject != null) {
-								ratio = ratioObject.floatValue();
-							} else {
-								ratio = RegionChecker.DEFAULT_SIBLING_SIZE;
-							}
-					    } else {
-					        ratio = ratioObject.floatValue();
-					    }
+						float ratio = getSplitPaneRatio(sourceView, region);
 						ViewDockingInfo viewDockingInfo = ViewDockingInfo.createRelativeDockingInfo(childView, region, ratio);
 						m_accessoryDockingInfos.put(sourceView.getPersistentId(), viewDockingInfo);
 						return true;
@@ -366,6 +347,38 @@ public class ViewManager implements IViewManager {
 				}
 			}
 			return false;
+		}
+		
+		private float getSplitPaneRatio(View sourceView, String region) {
+			// getRestorePath() will return the cached restore path.  I'm not sure about the 
+			// call below.  It seems to me like we're trying to recalculate the restorePath
+			// based upon the new layout after docking, not recall a previously cached 
+			// restorePath.  To recalculate the restore path and cache it before
+			// returning from getRestorePath(), use the overloaded getRestorePath(srcView, true);
+			DockingPath dockingPath = DockingPath.getRestorePath(sourceView);
+			
+			// check to see if the dockable was in a split layout.  if so, get the deepest split
+			// node we can find so we can grab the split proportion percentage.
+			SplitNode lastSplitNode = dockingPath==null? null: dockingPath.getLastNode();
+			if (lastSplitNode != null) {
+				if (lastSplitNode.getOrientation() == SplitNode.HORIZONTAL) {
+					// i'm not sure the purpose of flipping around the percentage here for
+					// horizontal splitPanes.  maybe there is something i'm missing?
+					return 1.0f-lastSplitNode.getPercentage();
+					//System.out.println(splitNode.getPercentage());
+				}
+			    return lastSplitNode.getPercentage();
+			}
+				
+			// if we couldn't determine the splitPane ratio using the DockingPath above, then
+			// try the regionInsets
+			Float ratioObject = sourceView.getDockingProperties().getRegionInset(region);
+			if (ratioObject != null) {
+				return ratioObject.floatValue();
+			} 
+			// if we still can't find a specified splitPane percentage, then use
+			// the default value
+			return RegionChecker.DEFAULT_SIBLING_SIZE;
 		}
 		
 	}
