@@ -22,7 +22,7 @@ public class DefaultCloseAction extends ViewAction {
 	
 	public void actionPerformed(View view, ActionEvent evt) {
 		if(DockingManager.isDocked((Dockable)view)) {
-			DockingPath.setRestorePath(view);
+			DockingPath.recordRestorePath(view);
 			DockingManager.undock(view);
 		} else if (view.isMinimized()) {
 			DockbarManager mgr = DockbarManager.getCurrent(view);

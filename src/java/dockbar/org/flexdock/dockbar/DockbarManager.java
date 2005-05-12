@@ -420,7 +420,7 @@ public class DockbarManager implements DockingConstants {
 			return;
 			
 		// cache the restoration path
-		DockingPath.setRestorePath(dockable);
+		DockingPath.recordRestorePath(dockable);
 		
 		// install the dockable
 		edge = Dockbar.getValidOrientation(edge);

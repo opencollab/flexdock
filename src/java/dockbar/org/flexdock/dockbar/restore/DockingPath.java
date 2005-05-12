@@ -101,19 +101,26 @@ public class DockingPath implements DockingConstants {
 	}
 
 	public static DockingPath getRestorePath(Dockable dockable) {
+		return getRestorePath(dockable, false);
+	}
+	
+	public static DockingPath getRestorePath(Dockable dockable, boolean recalculate) {
+		if(recalculate)
+			recordRestorePath(dockable);
+		
 		Object obj = dockable==null? null: dockable.getClientProperty(RESTORE_PATH_KEY);
 		return obj instanceof DockingPath? (DockingPath)obj: null;
 	}
 	
-	public static void setRestorePath(Dockable dockable, DockingPath restorePath) {
+	public static void cacheRestorePath(Dockable dockable, DockingPath restorePath) {
 		if(dockable==null || restorePath==null)
 			return;
 		dockable.putClientProperty(RESTORE_PATH_KEY, restorePath);
 	}
 	
-	public static void setRestorePath(Dockable dockable) {
+	public static void recordRestorePath(Dockable dockable) {
 		DockingPath path  = create(dockable);
-		setRestorePath(dockable, path);
+		cacheRestorePath(dockable, path);
 	}	
 	
 	public static boolean restore(Dockable dockable) {
