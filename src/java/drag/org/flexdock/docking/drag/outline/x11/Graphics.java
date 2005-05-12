@@ -6,8 +6,11 @@ package org.flexdock.docking.drag.outline.x11;
 import java.awt.Rectangle;
 import java.io.IOException;
 
+import org.flexdock.docking.drag.effects.RubberBand;
+import org.flexdock.util.Utilities;
+
 /**
- * @author marius
+ * @author Christopher Butler
  */
 public class Graphics {
 	public static final char MOST_SIGNIFICANT_BIT_FIRST = 'B';
@@ -232,7 +235,12 @@ public class Graphics {
 	private static void setupShutdownHooks() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				cleanup();
+				try {
+					cleanup();
+				} catch(Throwable t) {
+					if(Utilities.sysTrue(RubberBand.DEBUG_OUTPUT))
+						t.printStackTrace();
+				}
 			}
 		});
 	}

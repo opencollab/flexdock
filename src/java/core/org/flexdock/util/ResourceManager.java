@@ -264,11 +264,22 @@ public class ResourceManager {
 	}
 	
 	public static Properties getProperties(String uri) {
+		return getProperties(uri, false);
+	}
+	
+	public static Properties getProperties(String uri, boolean failSilent) {
 		URL url = getResource(uri);
-		return getProperties(url);
+		return getProperties(url, failSilent); 
 	}
 	
 	public static Properties getProperties(URL url) {
+		return getProperties(url, false);
+	}
+	
+	public static Properties getProperties(URL url, boolean failSilent) {
+		if(failSilent && url==null)
+			return null;
+		
 		InputStream in = null;
 		try {
 			in = url.openStream();
@@ -276,7 +287,8 @@ public class ResourceManager {
 			p.load(in);
 			return p;
 		} catch(Exception e) {
-			e.printStackTrace();
+			if(!failSilent)
+				e.printStackTrace();
 			return null;
 		}
 		finally {

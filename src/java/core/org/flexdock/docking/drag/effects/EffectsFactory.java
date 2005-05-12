@@ -68,7 +68,8 @@ public class EffectsFactory {
 	
 	
 	private static RubberBand createRubberBand(String implClass) {
-		return (RubberBand)Utilities.createInstance(implClass, RubberBand.class);
+		boolean failSilent = !Utilities.sysTrue(RubberBand.DEBUG_OUTPUT);
+		return (RubberBand)Utilities.createInstance(implClass, RubberBand.class, failSilent);
 	}
 	
 	private static DragPreview createPreview(String implClass) {

@@ -56,6 +56,9 @@
 			<fileset dir="${resource.dir}/misc" />
 			<fileset dir="${resource.dir}/plaf" />
 		</copy>
+		
+		<!-- remove the dev properties set from the build output -->
+        <delete failonerror="false" file="${bin.dir}/org/flexdock/util/dev-props.properties" />
 	</target>
 
 	<target name="compile" depends="init, init.resources">

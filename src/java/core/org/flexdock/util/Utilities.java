@@ -107,4 +107,9 @@ public class Utilities {
 		
 		return !oldObj.equals(newObj);
 	}
+	
+	public static boolean sysTrue(String key) {
+		String value = key==null? null: System.getProperty(key);
+		return value==null? false: "true".equals(value);
+	}
 }

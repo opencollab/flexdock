@@ -24,6 +24,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -41,6 +42,7 @@ import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.DockingUtility;
+import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 
@@ -81,6 +83,7 @@ import org.flexdock.util.SwingUtility;
  * @author Chris Butler
  */
 public class DockingManager {
+	private static final String DEV_PROPS = "org/flexdock/util/dev-props.properties";
 	private static final DockingManager SINGLETON = new DockingManager();
 	private static final WeakHashMap DOCKABLES_BY_COMPONENT = new WeakHashMap();
 	private static final ClassMapping DOCKING_STRATEGIES = new ClassMapping(DefaultDockingStrategy.class, new DefaultDockingStrategy());
@@ -96,6 +99,11 @@ public class DockingManager {
 	
 
 	private static void init() {
+		// load the dev system properties
+		Properties p = ResourceManager.getProperties(DEV_PROPS, true);
+		if(p!=null)
+			System.getProperties().putAll(p);
+		
 		// prime the drag manager for use
 		DragManager.prime();
 	}

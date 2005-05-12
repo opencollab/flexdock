@@ -12,6 +12,8 @@ import java.awt.Rectangle;
  *
  */
 public class RubberBand {
+	public static final String DEBUG_OUTPUT = "rubberband.debug";
+	
 	public void paint(Graphics g, int x, int y, int width, int height) {
 		paint(g, new Rectangle(x, y, width, height));
 	}
