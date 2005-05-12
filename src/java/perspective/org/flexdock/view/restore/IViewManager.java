@@ -25,10 +25,12 @@ public interface IViewManager extends ViewStateMonitor {
 	void unregisterViewDockingInfo(String viewId);
 
 	void addShowViewHandler(ShowViewHandler showViewHandler);
-	
-	void maximizeView(View view);
 
-	void unmaximizeView(View view);
+	//TODO pushing after 0.5
+	//void maximizeView(View view);
+
+	//TODO pushing after 0.5
+	//void unmaximizeView(View view);
 	
 	void removeShowViewHandler(ShowViewHandler showViewHandler);
 	
