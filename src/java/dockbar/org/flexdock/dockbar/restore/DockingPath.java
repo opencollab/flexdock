@@ -311,7 +311,7 @@ public class DockingPath implements DockingConstants {
 		return DockingUtility.getRegion(node.getRegion());
 	}
 	
-	private SplitNode getLastNode() {
+	public SplitNode getLastNode() {
 		return nodes.size()==0? null: (SplitNode)nodes.get(nodes.size()-1);
 	}
 	
