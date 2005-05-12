@@ -259,6 +259,7 @@ public class ViewManager implements IViewManager {
 	public void initializeDefaultShowViewHandlers() {
 		addShowViewHandler(new ViewShownHandler());
 		addShowViewHandler(new AccessoryShowViewHandler());
+		addShowViewHandler(new DockPathHandler());
 		addShowViewHandler(new MainShowViewHandler());
 		addShowViewHandler(new LastResortShowViewHandler());
 	}

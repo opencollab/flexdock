@@ -21,7 +21,11 @@ public class DockPathHandler implements ShowViewHandler {
      * @see org.flexdock.view.restore.ShowViewHandler#showView(org.flexdock.view.View, java.util.Map)
      */
     public boolean showView(View view, Map context) {
-        return DockingPath.restore(view);
+        DockingPath dockingPath = DockingPath.getRestorePath(view);
+        if (dockingPath == null) {
+            return false;
+        }
+        return dockingPath.restore();
     }
 
 }
