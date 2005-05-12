@@ -116,10 +116,9 @@ public class DockingPath implements DockingConstants {
 		setRestorePath(dockable, path);
 	}	
 	
-	public static void restore(Dockable dockable) {
+	public static boolean restore(Dockable dockable) {
 		DockingPath path = getRestorePath(dockable);
-		if(path!=null)
-			path.restore();
+		return path==null? false: path.restore();
 	}
 	
 	
@@ -181,15 +180,14 @@ public class DockingPath implements DockingConstants {
 		return stringForm;
 	}
 	
-	public void restore() {
+	public boolean restore() {
 		Dockable dockable = findDockable(dockableId);
 		if(dockable==null || isDocked(dockable))
-			return;
+			return false;
 		
 		String region = DockingPort.CENTER_REGION;
 		if(nodes.size()==0) {
-			dockFullPath(dockable, rootPort, region);
-			return;
+			return dockFullPath(dockable, rootPort, region);
 		}
 		
 		DockingPort port = rootPort;
@@ -203,8 +201,7 @@ public class DockingPath implements DockingConstants {
 			// match the orientation of the current node, meaning the path was 
 			// altered at this point.
 			if(splitPane==null || splitPane.getOrientation()!=node.getOrientation()) {
-				dockBrokenPath(dockable, port, region, node);
-				return;
+				return dockBrokenPath(dockable, port, region, node);
 			}
 			
 			// assume there is a transient sub-dockingPort in the split pane
@@ -214,27 +211,24 @@ public class DockingPath implements DockingConstants {
 			// move on to the next node
 		}
 		
-		dockFullPath(dockable, port, region);
+		return dockFullPath(dockable, port, region);
 	}
 	
 	
 	
-	private void dockBrokenPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
+	private boolean dockBrokenPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
 		Component current = port.getDockedComponent();
 		if(current instanceof JSplitPane) {
-			dockExtendedPath(dockable, port, region, ctrlNode);
-			return;
+			return dockExtendedPath(dockable, port, region, ctrlNode);
 		}
 		
 		if(current instanceof JTabbedPane) {
-			dock(dockable, port, DockingPort.CENTER_REGION, null);
-			return;
+			return dock(dockable, port, DockingPort.CENTER_REGION, null);
 		}
 		
 		Dockable embedded = findDockable(current);
 		if(embedded==null || tabbed) {
-			dock(dockable, port, DockingPort.CENTER_REGION, null);
-			return;
+			return dock(dockable, port, DockingPort.CENTER_REGION, null);
 		}
 		
 		String embedId = embedded.getPersistentId();
@@ -244,10 +238,10 @@ public class DockingPath implements DockingConstants {
 			ctrlNode = lastNode;
 		}
 		
-		dock(dockable, port, region, ctrlNode);
+		return dock(dockable, port, region, ctrlNode);
 	}
 	
-	private void dockFullPath(Dockable dockable, DockingPort port, String region) {
+	private boolean dockFullPath(Dockable dockable, DockingPort port, String region) {
 		// the docking layout was altered since the last time our dockable we embedded within
 		// it, and we were able to fill out the full docking path.  this means there is already
 		// something within the target dockingPort where we expect to dock our dockable.  
@@ -255,8 +249,7 @@ public class DockingPath implements DockingConstants {
 		// first, check to see if we need to use a tabbed layout
 		Component current = port.getDockedComponent();
 		if(current instanceof JTabbedPane) {
-			dock(dockable, port, DockingPort.CENTER_REGION, null);
-			return;
+			return dock(dockable, port, DockingPort.CENTER_REGION, null);
 		}
 
 		// check to see if we dock outside the current port or outside of it
@@ -264,31 +257,28 @@ public class DockingPath implements DockingConstants {
 		if(docked!=null) {
 			Component comp = dockable.getDockable();
 			if(port.isDockingAllowed(DockingPort.CENTER_REGION, comp)) {
-				dock(dockable, port, DockingPort.CENTER_REGION, null);
+				return dock(dockable, port, DockingPort.CENTER_REGION, null);
 			}
-			else {
-				DockingPort superPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)port);
-				if(superPort!=null)
-					port = superPort;
-				dock(dockable, port, region, getLastNode());
-			}
-			return;
+			DockingPort superPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)port);
+			if(superPort!=null)
+				port = superPort;
+			return dock(dockable, port, region, getLastNode());
 		}
 		
 		// if we were't able to dock above, then the path changes means our current path
 		// does not extend all the way down into to docking layout.  try to determine 
 		// an extended path and dock into it
-		dockExtendedPath(dockable, port, region, getLastNode());
+		return dockExtendedPath(dockable, port, region, getLastNode());
 	}
 	
-	private void dockExtendedPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
+	private boolean dockExtendedPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
 		Component docked = port.getDockedComponent();
 		
 		// if 'docked' is not a split pane, then I don't know what it is.  let's print a
 		// stacktrace and see who sends in an error report.
 		if(!(docked instanceof JSplitPane)) {
 			new Throwable().printStackTrace();
-			return;
+			return false;
 		}
 		
 		
@@ -301,13 +291,12 @@ public class DockingPath implements DockingConstants {
 			if(d.getPersistentId().equals(lastSibling)) {
 				DockingPort embedPort = d.getDockingPort();
 				String embedRegion = getRegion(lastNode, d.getDockable());
-				dock(dockable, embedPort, embedRegion, ctrlNode);
-				return;
+				return dock(dockable, embedPort, embedRegion, ctrlNode);
 			}
 		}
 		
 		
-		dock(dockable, port, region, ctrlNode);
+		return dock(dockable, port, region, ctrlNode);
 	}
 	
 	
@@ -326,10 +315,10 @@ public class DockingPath implements DockingConstants {
 		return nodes.size()==0? null: (SplitNode)nodes.get(nodes.size()-1);
 	}
 	
-	private void dock(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
-		DockingManager.dock(dockable, port, region);
+	private boolean dock(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
+		boolean ret = DockingManager.dock(dockable, port, region);
 		if(tabbed || ctrlNode==null)
-			return;
+			return ret;
 		
 		final float percent = ctrlNode.getPercentage();
 		final Component docked = dockable.getDockable();
@@ -344,6 +333,7 @@ public class DockingPath implements DockingConstants {
 			}
 		};
 		t.start();
+		return ret;
 	}
 	
 	private void resizeSplitPane(Component comp, float percentage) {
