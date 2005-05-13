@@ -42,23 +42,7 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 
 				Component owner = windows[0].getRootContainer();
 				DockingFrame frame = FloatManager.getInstance().floatDockable(view, owner, new Rectangle(locationOnScreen, dim));
-				
-				/*
-				ViewFrame viewFrame = ViewFrame.create(territoralView);
-				viewFrame.setLayout(new BorderLayout());
-				viewFrame.setResizable(true);
-				
-				Point locationOnScreen = accessoryDockingInfo.getFloatingLocation();
-				Dimension dim = accessoryDockingInfo.getFloatingWindowDimension();
 
-				DockingManager.undock(sourceView);
-
-				viewFrame.addView(sourceView);
-				
-				viewFrame.setLocation(locationOnScreen);
-				viewFrame.setSize(dim);
-				viewFrame.setVisible(true);
-				*/
 				return true;
 			} else if (accessoryDockingInfo.isMinimized()) {
 				DockbarManager.activate(sourceView, true);
