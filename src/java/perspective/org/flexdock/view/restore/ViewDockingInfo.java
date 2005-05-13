@@ -2,6 +2,7 @@ package org.flexdock.view.restore;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.DockingPort;
@@ -68,6 +69,15 @@ public class ViewDockingInfo {
 
 	public Dimension getFloatingWindowDimension() {
 		return m_floatingWindowDimension;
+	}
+	
+	public Rectangle getFloatingBounds() {
+		Rectangle rect = new Rectangle();
+		if(m_floatingLocation!=null)
+			rect.setLocation(m_floatingLocation);
+		if(m_floatingWindowDimension!=null)
+			rect.setSize(m_floatingWindowDimension);
+		return rect;
 	}
 	
 	public void setMinimized(boolean isMinimized) {

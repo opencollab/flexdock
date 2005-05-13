@@ -1,8 +1,6 @@
 package org.flexdock.view.restore;
 
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.Map;
 
@@ -37,11 +35,10 @@ public class AccessoryShowViewHandler implements ShowViewHandler {
 				if(windows.length==0)
 					return false;
 
-				Point locationOnScreen = accessoryDockingInfo.getFloatingLocation();
-				Dimension dim = accessoryDockingInfo.getFloatingWindowDimension();
 
 				Component owner = windows[0].getRootContainer();
-				DockingFrame frame = FloatManager.getInstance().floatDockable(view, owner, new Rectangle(locationOnScreen, dim));
+				Rectangle floatingBounds = accessoryDockingInfo.getFloatingBounds();
+				DockingFrame frame = FloatManager.getInstance().floatDockable(view, owner, floatingBounds);
 
 				return true;
 			} else if (accessoryDockingInfo.isMinimized()) {
