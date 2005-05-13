@@ -1,6 +1,7 @@
 package org.flexdock.view.restore;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +11,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.flexdock.dockbar.DockbarManager;
-import org.flexdock.dockbar.restore.DockingPath;
-import org.flexdock.dockbar.restore.SplitNode;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
+import org.flexdock.docking.defaults.layout.DockingPath;
+import org.flexdock.docking.defaults.layout.SplitNode;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.view.View;
@@ -154,8 +155,7 @@ public class ViewManager implements IViewManager {
 	public boolean hideView(View view) {
 		if (view == null) throw new IllegalArgumentException("view cannot be null");
 
-		DockingPath dockingPath = DockingPath.create(view);
-		DockingPath.cacheRestorePath(view, dockingPath);
+		DockingPath dockingPath = DockingPath.updateRestorePath(view);
 		
 		if (view.isMinimized()) {
 			DockbarManager mgr = DockbarManager.getCurrent(view);
@@ -320,12 +320,23 @@ public class ViewManager implements IViewManager {
 		 * @see org.flexdock.docking.event.DockingListener#dockingComplete(org.flexdock.docking.event.DockingEvent)
 		 */
 		public void dockingComplete(DockingEvent dockingEvent) {
-			View sourceView = (View) dockingEvent.getSource();
-			DockingPort dockingPort = dockingEvent.getNewDockingPort();
-			String region = dockingEvent.getRegion();
-			boolean isOverWindow = dockingEvent.isOverWindow();
+			final View sourceView = (View) dockingEvent.getSource();
+			final DockingPort dockingPort = dockingEvent.getNewDockingPort();
+			final String region = dockingEvent.getRegion();
+			final boolean isOverWindow = dockingEvent.isOverWindow();
 			
-			preserve(sourceView, dockingPort, region, isOverWindow);
+			// invoke preserve() later, as we'll be attempting to calculate a splitPane
+			// ratio.  the new splitPane hasn't yet painted, so it's dimensions are 
+			// currently 0x0.  wait until after rendering before we preserve().
+			EventQueue.invokeLater(new Runnable() {
+				public void run() {
+					preserve(sourceView, dockingPort, region, isOverWindow);
+				}
+			});
+			// TODO: fix DockingEvent.  dockingComplete() has purposely been setup to execute
+			// "now" instead of having events deferred.  we should really get rid of 
+			// EventQueue.invokeLater() and precalculate the splitPane ratio, passing it
+			// in within the DockingEvent.
 		}
 		
 		private boolean preserve(View sourceView, DockingPort dockingPort, String region, boolean isOverWindow) {
@@ -351,20 +362,16 @@ public class ViewManager implements IViewManager {
 		}
 		
 		private float getSplitPaneRatio(View sourceView, String region) {
-			// getRestorePath() will return the cached restore path.  I'm not sure about the 
-			// call below.  It seems to me like we're trying to recalculate the restorePath
-			// based upon the new layout after docking, not recall a previously cached 
-			// restorePath.  To recalculate the restore path and cache it before
-			// returning from getRestorePath(), use the overloaded getRestorePath(srcView, true);
-			DockingPath dockingPath = DockingPath.getRestorePath(sourceView);
+			DockingPath dockingPath = DockingPath.create(sourceView);
 			
 			// check to see if the dockable was in a split layout.  if so, get the deepest split
 			// node we can find so we can grab the split proportion percentage.
 			SplitNode lastSplitNode = dockingPath==null? null: dockingPath.getLastNode();
 			if (lastSplitNode != null) {
 				if (lastSplitNode.getOrientation() == SplitNode.HORIZONTAL) {
-					// i'm not sure the purpose of flipping around the percentage here for
-					// horizontal splitPanes.  maybe there is something i'm missing?
+					// I'm not sure the purpose of flipping around the percentage here for
+					// horizontal splitPanes.  maybe there is something i'm missing? 
+					// - marius 
 					return 1.0f-lastSplitNode.getPercentage();
 					//System.out.println(splitNode.getPercentage());
 				}
