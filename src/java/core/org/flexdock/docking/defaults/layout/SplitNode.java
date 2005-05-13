@@ -1,7 +1,7 @@
 /*
  * Created on Apr 28, 2005
  */
-package org.flexdock.dockbar.restore;
+package org.flexdock.docking.defaults.layout;
 
 import org.flexdock.util.DockingConstants;
 

@@ -8,7 +8,7 @@ package org.flexdock.view.restore;
 
 import java.util.Map;
 
-import org.flexdock.dockbar.restore.DockingPath;
+import org.flexdock.docking.defaults.layout.DockingPath;
 import org.flexdock.view.View;
 
 /**

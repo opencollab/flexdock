@@ -1,7 +1,7 @@
 /*
  * Created on Apr 28, 2005
  */
-package org.flexdock.dockbar.restore;
+package org.flexdock.docking.defaults.layout;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -101,26 +101,23 @@ public class DockingPath implements DockingConstants {
 	}
 
 	public static DockingPath getRestorePath(Dockable dockable) {
-		return getRestorePath(dockable, false);
-	}
-	
-	public static DockingPath getRestorePath(Dockable dockable, boolean recalculate) {
-		if(recalculate)
-			recordRestorePath(dockable);
-		
 		Object obj = dockable==null? null: dockable.getClientProperty(RESTORE_PATH_KEY);
 		return obj instanceof DockingPath? (DockingPath)obj: null;
 	}
 	
-	public static void cacheRestorePath(Dockable dockable, DockingPath restorePath) {
+	public static DockingPath updateRestorePath(Dockable dockable, DockingPath restorePath) {
 		if(dockable==null || restorePath==null)
-			return;
+			return null;
 		dockable.putClientProperty(RESTORE_PATH_KEY, restorePath);
+		return restorePath;
 	}
 	
-	public static void recordRestorePath(Dockable dockable) {
-		DockingPath path  = create(dockable);
-		cacheRestorePath(dockable, path);
+	public static DockingPath updateRestorePath(Dockable dockable) {
+		if(DockingManager.isDocked(dockable)) {
+			DockingPath path  = create(dockable);
+			return updateRestorePath(dockable, path);			
+		}
+		return null;
 	}	
 	
 	public static boolean restore(Dockable dockable) {
