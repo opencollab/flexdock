@@ -34,6 +34,7 @@ import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
+import org.flexdock.docking.defaults.layout.DockingPath;
 import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
@@ -139,8 +140,12 @@ public class DockingManager {
 	 */
 	public static boolean undock(Dockable dockable) {
 		DockingStrategy strategy = findDockingStrategy(dockable);
-		if (strategy != null)
+		if (strategy != null) {
+			// cache the restoration path for future use
+			DockingPath.updateRestorePath(dockable);
+			// now undock
 			return strategy.undock(dockable);
+		}
 
 		return false; //TODO think of changing it to runtime exception I don't see a situation
 		//when there would be no default docker.
@@ -148,8 +153,12 @@ public class DockingManager {
 
 	public static boolean dock(Dockable dockable, DockingPort port, String region) {
 		DockingStrategy strategy = getDockingStrategy(port);
-		if (strategy != null)
-			return strategy.dock(dockable, port,  region);
+		if (strategy != null) {
+			boolean ret = strategy.dock(dockable, port,  region);
+			if(ret)
+				DockingPath.updateRestorePath(dockable);
+			return ret;
+		}
 	
 		return false; //TODO think of changing it to runtime exception I don't see a situation
 		//when there would be no docker.

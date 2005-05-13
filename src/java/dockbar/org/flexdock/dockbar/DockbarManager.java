@@ -30,9 +30,9 @@ import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.dockbar.event.DockbarTracker;
 import org.flexdock.dockbar.event.EventDispatcher;
-import org.flexdock.dockbar.restore.DockingPath;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.defaults.layout.DockingPath;
 import org.flexdock.plaf.common.border.CompoundEmptyBorder;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
@@ -419,9 +419,6 @@ public class DockbarManager implements DockingConstants {
 		if(isDockingCancelled(dockable, edge))
 			return;
 			
-		// cache the restoration path
-		DockingPath.recordRestorePath(dockable);
-		
 		// install the dockable
 		edge = Dockbar.getValidOrientation(edge);
 		install(dockable, edge);

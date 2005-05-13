@@ -6,7 +6,6 @@ package org.flexdock.view.actions;
 import java.awt.event.ActionEvent;
 
 import org.flexdock.dockbar.DockbarManager;
-import org.flexdock.dockbar.restore.DockingPath;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.view.View;
@@ -22,7 +21,6 @@ public class DefaultCloseAction extends ViewAction {
 	
 	public void actionPerformed(View view, ActionEvent evt) {
 		if(DockingManager.isDocked((Dockable)view)) {
-			DockingPath.recordRestorePath(view);
 			DockingManager.undock(view);
 		} else if (view.isMinimized()) {
 			DockbarManager mgr = DockbarManager.getCurrent(view);
