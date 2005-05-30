@@ -296,7 +296,7 @@ public class ResourceManager {
 		}
 	}
 	
-	private static void close(InputStream in) {
+	public static void close(InputStream in) {
 		try {
 			if(in!=null)
 				in.close();
@@ -305,7 +305,7 @@ public class ResourceManager {
 		}
 	}
 	
-	private static void close(OutputStream out) {
+	public static void close(OutputStream out) {
 		try {
 			if(out!=null)
 				out.close();

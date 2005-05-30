@@ -155,12 +155,12 @@ public class DefaultRegionChecker implements RegionChecker {
 	}
 	
 	public float getRegionSize(Component c, String region) {
-		Dockable d = DockingManager.getRegisteredDockable(c);
+		Dockable d = DockingManager.getDockable(c);
 		return getRegionPreference(d, region);
 	}
 	
 	public float getSiblingSize(Component c, String region) {
-		Dockable d = DockingManager.getRegisteredDockable(c);
+		Dockable d = DockingManager.getDockable(c);
 		return getSiblingPreference(d, region);
 
 	}

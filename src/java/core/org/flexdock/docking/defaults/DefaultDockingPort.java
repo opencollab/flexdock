@@ -21,12 +21,14 @@ package org.flexdock.docking.defaults;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -42,13 +44,16 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.docking.state.tree.DockableNode;
+import org.flexdock.docking.state.tree.DockingPortNode;
+import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.SwingUtility;
 
 
@@ -117,7 +122,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	
 	protected ArrayList dockingListeners;
 	private int borrowedTabIndex;
-	private int cachedSplitDividerSize;
 	private Component dockedComponent;
 	private BorderManager borderManager;
 	private String persistentId;
@@ -284,10 +288,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		if(docked instanceof JTabbedPane) {
 			JTabbedPane tabs = (JTabbedPane)docked;
 			Component c = tabs.getComponentAt(p.x, p.y);
-			return c instanceof Dockable? (Dockable)c: DockingManager.getRegisteredDockable(c);
+			return c instanceof Dockable? (Dockable)c: DockingManager.getDockable(c);
 		}
 
-		return DockingManager.getRegisteredDockable(docked);
+		return DockingManager.getDockable(docked);
 	}
 	
 	public Component getComponent(String region) {
@@ -340,28 +344,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	
 	public Dockable getDockable(String region) {
 		Component c = getComponent(region);
-		return DockingManager.getRegisteredDockable(c);
+		return DockingManager.getDockable(c);
 	}
-	
-	
-	
-	protected DockingPort createChildPort() {
-		DockingStrategy strategy = getDockingStrategy();
-		return strategy.createDockingPort(this);
-	}
-	
-	private JSplitPane createSplitPane(String region) {
-		DockingStrategy strategy = getDockingStrategy();
-		JSplitPane pane = strategy.createSplitPane(this, region);
 
-		int orient = JSplitPane.HORIZONTAL_SPLIT;
-		if(NORTH_REGION.equals(region) || SOUTH_REGION.equals(region))
-			orient = JSplitPane.VERTICAL_SPLIT;
-		pane.setOrientation(orient);
-		
-		cachedSplitDividerSize = pane.getDividerSize();
-		return pane;
-	}
 	
 	protected JTabbedPane createTabbedPane() {
 		JTabbedPane pane = new JTabbedPane();		
@@ -519,8 +504,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		remove(docked);
 		
 		// add the components to their new parents.
-		DockingPort oldContent = createChildPort();
-		DockingPort newContent = createChildPort();
+		DockingStrategy strategy = getDockingStrategy();
+		DockingPort oldContent = strategy.createDockingPort(this);
+		DockingPort newContent = strategy.createDockingPort(this);
 		addCmp(oldContent, docked);
 		dockCmp(newContent, comp, desc);
 		
@@ -528,7 +514,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		DockingPort[] ports = putPortsInOrder(oldContent, newContent, region);
 		setPreferredSize(ports[0], halfSize);
 		setPreferredSize(ports[1], halfSize);
-		JSplitPane newDockedContent = createSplitPane(region);
+		JSplitPane newDockedContent = strategy.createSplitPane(this, region);
 
 		if(ports[0] instanceof Component)
 			newDockedContent.setLeftComponent((Component)ports[0]);
@@ -543,8 +529,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		
 		// otherwise, we have unrealized components whose sizes cannot be determined until
 		// after we're visible.  cache the desired size values now for use later during rendering.
-		DockingStrategy strategy = getDockingStrategy();
-		
 		double proportion = strategy.getDividerProportion(this, newDockedContent, docked);
 		SwingUtility.putClientProperty((Component)oldContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(proportion));
 		SwingUtility.putClientProperty((Component)newContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(1f-proportion));
@@ -593,7 +577,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			id = String.valueOf(hashCode());
 		String oldId = persistentId;
 		persistentId = id;
-		ConfigurationManager.replaceDockingPort(oldId, persistentId, this);
+		DockingManager.replaceDockingPort(oldId, persistentId, this);
 	}
 	
 	private String getValidTabTitle(JTabbedPane tabs, Component comp) {
@@ -704,7 +688,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			c = ((JTabbedPane)c).getComponent(0);
 		}
 		// return the Dockable instance associated with this component
-		return DockingManager.getRegisteredDockable(c);
+		return DockingManager.getDockable(c);
 	}
 	
 	/**
@@ -951,7 +935,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
                 	if(c instanceof Dockable)
                 		set.add(c);
                 	else
-                		set.add(DockingManager.getRegisteredDockable(c));
+                		set.add(DockingManager.getDockable(c));
                 }
             }
             return set;
@@ -979,13 +963,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
         	if(c instanceof Dockable)
         		set.add(c);
         	else
-        		set.add(DockingManager.getRegisteredDockable(c));
+        		set.add(DockingManager.getDockable(c));
         }
         return set;
     }
     
     protected boolean isValidDockableChild(Component c, Class desiredClass) {
-    	return desiredClass==null? DockingManager.getRegisteredDockable(c)!=null:
+    	return desiredClass==null? DockingManager.getDockable(c)!=null:
 			desiredClass.isAssignableFrom(c.getClass());
     }
 	
@@ -1030,6 +1014,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	 * @see org.flexdock.docking.event.DockingListener#undockingComplete(org.flexdock.docking.event.DockingEvent)
 	 */
 	public void undockingComplete(DockingEvent evt) {
+	}
+	
+	public void undockingStarted(DockingEvent evt) {
 	}
 	
 	public DockingPortProps getDockingProperties() {
@@ -1079,4 +1066,97 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		
 		g.drawImage(dragImage, 0, 0, this);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	public LayoutNode exportLayout() {
+		return DockingManager.getLayoutManager().createLayout(this);
+	}	
+	
+	public void importLayout(LayoutNode node) {
+		if(!(node instanceof DockingPortNode))
+			return;
+		
+		node.setUserObject(this);
+		ArrayList splitPaneResizeList = new ArrayList();
+		constructLayout(node, splitPaneResizeList);
+		deferSplitPaneResize(splitPaneResizeList, 0);
+		revalidate();
+	}
+	
+	private void constructLayout(LayoutNode node, ArrayList splitPaneResizeList) {
+		// load the user object;
+		Object obj = node.getUserObject();
+		if(node instanceof SplitNode)
+			splitPaneResizeList.add(node);
+		
+		for(Enumeration en=node.children(); en.hasMoreElements();) {
+			LayoutNode child = (LayoutNode)en.nextElement();
+			constructLayout(child, splitPaneResizeList);
+		}
+		
+		if(node instanceof SplitNode)
+			reconstruct((SplitNode)node);
+		else if(node instanceof DockingPortNode)
+			reconstruct((DockingPortNode)node);
+	}
+	
+	private void reconstruct(DockingPortNode node) {
+		DefaultDockingPort port = (DefaultDockingPort)node.getDockingPort();
+		
+		if(node.isSplit()) {
+			SplitNode child = (SplitNode)node.getChildAt(0);
+			JSplitPane split = child.getSplitPane();
+			float percentage = child.getPercentage();
+			port.setComponent(split);
+			return;
+		}
+		
+		for(Enumeration en=node.children(); en.hasMoreElements();) {
+			LayoutNode child = (LayoutNode)en.nextElement();
+			if(child instanceof DockableNode) {
+				Dockable dockable = ((DockableNode)child).getDockable();
+				port.dock(dockable, DockingPort.CENTER_REGION);
+			}
+		}
+	}
+	
+	private void reconstruct(SplitNode node) {
+		JSplitPane split = node.getSplitPane();
+		Component left = node.getLeftComponent();
+		Component right = node.getRightComponent();
+		split.setLeftComponent(left);
+		split.setRightComponent(right);
+	}
+	
+	private void deferSplitPaneResize(final ArrayList splitNodes, final int startIndx) {
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						int len = splitNodes.size();
+						for(int i=startIndx; i<len; i++) {
+							SplitNode node = (SplitNode)splitNodes.get(i);
+							JSplitPane split = node.getSplitPane();
+							int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
+							float percent = node.getPercentage();
+							int divLoc = (int)((float)size * percent);
+							split.setDividerLocation(divLoc);
+							split.validate();
+						}
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+	}
+
+	
+
 }

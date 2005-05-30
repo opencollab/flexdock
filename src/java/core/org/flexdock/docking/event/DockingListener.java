@@ -52,6 +52,8 @@ public interface DockingListener extends EventListener {
 	
 	public void undockingComplete(DockingEvent evt);
 	
+	public void undockingStarted(DockingEvent evt);
+	
 	class Stub implements DockingListener {
 
 		public void dockingCanceled(DockingEvent evt) {}
@@ -63,6 +65,8 @@ public interface DockingListener extends EventListener {
 		public void dropStarted(DockingEvent evt) {}
 
 		public void undockingComplete(DockingEvent evt) {}
+		
+		public void undockingStarted(DockingEvent evt) {}
 		
 	}
 }

@@ -10,6 +10,9 @@ import javax.swing.SwingConstants;
  * @author Christopher Butler
  */
 public interface DockingConstants {
+	public static final float UNSPECIFIED_SIBLING_PREF = -1F;
+	public static final int UNINITIALIZED = -1;
+	
 	public static final String PERMANENT_FOCUS_OWNER = "permanentFocusOwner";
 	public static final String ACTIVE_WINDOW = "activeWindow";
 	public static final String MOUSE_PRESSED = "mousePressed";
@@ -25,5 +28,7 @@ public interface DockingConstants {
 	
 	public static final int HORIZONTAL = JSplitPane.HORIZONTAL_SPLIT;
 	public static final int VERTICAL = JSplitPane.VERTICAL_SPLIT;
+	
+	public static final String REGION = "region";
 	
 }

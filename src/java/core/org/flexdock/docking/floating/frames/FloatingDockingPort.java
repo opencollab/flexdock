@@ -84,7 +84,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
 	}
 
 	protected void toggleListeners(Component comp, boolean add) {
-		Dockable dockable = DockingManager.getRegisteredDockable(comp);
+		Dockable dockable = DockingManager.getDockable(comp);
 		if(add)
 			installListeners(dockable);
 		else

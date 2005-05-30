@@ -27,14 +27,15 @@ import org.flexdock.dockbar.activation.ActivationQueue;
 import org.flexdock.dockbar.activation.Animation;
 import org.flexdock.dockbar.event.ActivationListener;
 import org.flexdock.dockbar.event.DockbarEvent;
+import org.flexdock.dockbar.event.DockbarEventHandler;
 import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.dockbar.event.DockbarTracker;
-import org.flexdock.dockbar.event.EventDispatcher;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.defaults.layout.DockingPath;
+import org.flexdock.docking.state.DockingState;
+import org.flexdock.docking.state.MinimizationManager;
+import org.flexdock.event.EventDispatcher;
 import org.flexdock.plaf.common.border.CompoundEmptyBorder;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.Utilities;
 
@@ -42,11 +43,10 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  * @author Bobby Rosenberger
  */
-public class DockbarManager implements DockingConstants {
+public class DockbarManager {
 	private static final WeakHashMap MANAGERS_BY_WINDOW = new WeakHashMap();
 	public static final Integer DOCKBAR_LAYER = new Integer(JLayeredPane.PALETTE_LAYER.intValue()-5);
-	public static final int DEFAULT_EDGE = LEFT;
-	public static final int UNSPECIFIED_EDGE = -1;
+	public static final int DEFAULT_EDGE = MinimizationManager.LEFT;
 	
 	private static DockbarManager currentManager;
 
@@ -55,19 +55,19 @@ public class DockbarManager implements DockingConstants {
 	private Dockbar rightBar;
 	private Dockbar bottomBar;
 	private ViewPane viewPane;
-	
-	private EventDispatcher eventDispatcher;
+
 	private DockbarLayout dockbarLayout;
 	private ActivationListener activationListener;
 	private HashMap dockables;
 
-	private int activeEdge = UNSPECIFIED_EDGE;
+	private int activeEdge = MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
 	private String activeDockableId;
 	private boolean animating;
 	private boolean dragging;
 
 
 	static {
+		EventDispatcher.addHandler(new DockbarEventHandler());
 		DockbarTracker.register();
 	}
 	
@@ -117,10 +117,12 @@ public class DockbarManager implements DockingConstants {
 		return currentManager;
 	}
 	
-	
+	public static void addListener(DockbarListener listener) {
+		EventDispatcher.addListener(listener);
+	}
 	
 	public static void activate(String dockableId, boolean locked) {
-		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		Dockable dockable = DockingManager.getDockable(dockableId);
 		activate(dockable, locked);
 	}
 	
@@ -156,13 +158,12 @@ public class DockbarManager implements DockingConstants {
 	
 	
 	private DockbarManager(RootWindow window) {
-		eventDispatcher = new EventDispatcher();
 		dockbarLayout = new DockbarLayout(this);
 		activationListener = new ActivationListener(this);
 		
-		leftBar = new Dockbar(this, LEFT);
-		rightBar = new Dockbar(this, RIGHT);
-		bottomBar = new Dockbar(this, BOTTOM);
+		leftBar = new Dockbar(this, MinimizationManager.LEFT);
+		rightBar = new Dockbar(this, MinimizationManager.RIGHT);
+		bottomBar = new Dockbar(this, MinimizationManager.BOTTOM);
 		viewPane = new ViewPane(this);
 
 		windowRef = new WeakReference(window);
@@ -337,23 +338,23 @@ public class DockbarManager implements DockingConstants {
 		// center points.  whichever is the shortest, that is the edge the dockable is 
 		// 'closest' to and that will be the edge we'll return
 		double min = Math.abs(dockCenter.distance(leftCenter));
-		int edge = LEFT;
+		int edge = MinimizationManager.LEFT;
 		double delta = Math.abs(dockCenter.distance(rightCenter));
 		if(delta<min) {
 			min = delta;
-			edge = RIGHT;
+			edge = MinimizationManager.RIGHT;
 		}
 		delta = Math.abs(dockCenter.distance(bottomCenter));
 		if(delta<min) {
 			min = delta;
-			edge = BOTTOM;
+			edge = MinimizationManager.BOTTOM;
 		}
 
 		return edge;
 	}
 
 	public int getEdge(String dockableId) {
-		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		Dockable dockable = DockingManager.getDockable(dockableId);
 		return getEdge(dockable);
 	}
 	
@@ -361,12 +362,12 @@ public class DockbarManager implements DockingConstants {
 		Dockbar dockbar = getDockbar(dockable);
 
 		if(dockbar==leftBar)
-			return LEFT;
+			return MinimizationManager.LEFT;
 		if(dockbar==rightBar)
-			return RIGHT;
+			return MinimizationManager.RIGHT;
 		if(dockbar==bottomBar)
-			return BOTTOM;
-		return UNSPECIFIED_EDGE;
+			return MinimizationManager.BOTTOM;
+		return MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
 	}
 	
 	public Dockbar getDockbar(Dockable dockable) {
@@ -385,9 +386,9 @@ public class DockbarManager implements DockingConstants {
 	public Dockbar getDockbar(int edge) {
 		edge = Dockbar.getValidOrientation(edge);
 		switch(edge) {
-			case RIGHT:
+			case MinimizationManager.RIGHT:
 				return rightBar;
-			case BOTTOM:
+			case MinimizationManager.BOTTOM:
 				return bottomBar;
 			default:
 				return leftBar;
@@ -428,7 +429,7 @@ public class DockbarManager implements DockingConstants {
 		
 		// send event notification
 		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_COMPLETED, edge);
-		eventDispatcher.dispatch(evt);
+		EventDispatcher.dispatch(evt);
 	}
 	
 	public void reAdd(Dockable dockable) {
@@ -457,7 +458,7 @@ public class DockbarManager implements DockingConstants {
 	
 	private boolean isDockingCancelled(Dockable dockable, int edge) {
 		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_STARTED, edge);
-		eventDispatcher.dispatch(evt);
+		EventDispatcher.dispatch(evt);
 		return evt.isConsumed();
 	}
 	
@@ -471,26 +472,31 @@ public class DockbarManager implements DockingConstants {
 		
 		// remove the dockable reference
 		dockables.remove(dockable.getPersistentId());
-		DockingPath.restore(dockable);
+		
+		// now restore to the current layout
+		DockingState info = DockingManager.getDockingState(dockable);
+		info.getPath().restore(dockable);
 	}
 	
-	public void remove(Dockable dockable) {
+	public boolean remove(Dockable dockable) {
 		if(dockable==null)
-			return;
+			return false;
 		
 		if(getActiveDockable()==dockable)
 			setActiveDockable((Dockable)null);
 		
 		Dockbar dockbar = getDockbar(dockable);
-		if(dockbar!=null) {
-			dockbar.undock(dockable);
-			// restore drag capability to the dockable after removing
-			// from the dockbar
-			dockable.getDockingProperties().setDockingEnabled(true);
-			// indicate that the dockable is no longer minimized
-			dockable.getDockingProperties().setMinimized(false);
-			revalidate();
-		}
+		if(dockbar==null)
+			return false;
+
+		dockbar.undock(dockable);
+		// restore drag capability to the dockable after removing
+		// from the dockbar
+		dockable.getDockingProperties().setDockingEnabled(true);
+		// indicate that the dockable is no longer minimized
+		dockable.getDockingProperties().setMinimized(false);
+		revalidate();
+		return true;
 	}
 	
 	
@@ -501,9 +507,9 @@ public class DockbarManager implements DockingConstants {
 	private Dockbar getActiveDockbar() {
 		int edge = getActiveEdge();
 		switch(edge) {
-			case TOP:
+			case MinimizationManager.TOP:
 				return bottomBar;
-			case RIGHT:
+			case MinimizationManager.RIGHT:
 				return rightBar;
 			default:
 				return leftBar;
@@ -515,7 +521,7 @@ public class DockbarManager implements DockingConstants {
 	}
 	
 	public Dockable getActiveDockable() {
-		return DockingManager.getRegisteredDockable(activeDockableId);
+		return DockingManager.getDockable(activeDockableId);
 	}
 	
 	public Cursor getResizeCursor() {
@@ -526,16 +532,8 @@ public class DockbarManager implements DockingConstants {
 		return getActiveDockable()!=null;
 	}
 	
-	public void addListener(DockbarListener listener) {
-		eventDispatcher.addListener(listener);
-	}
-	
-	public boolean removeListener(DockbarListener listener) {
-		return eventDispatcher.removeListener(listener);
-	}
-	
 	public void setActiveDockable(String dockableId) {
-		Dockable dockable = DockingManager.getRegisteredDockable(dockableId);
+		Dockable dockable = DockingManager.getDockable(dockableId);
 		setActiveDockable(dockable);
 	}
 		
@@ -544,7 +542,7 @@ public class DockbarManager implements DockingConstants {
 		// we cannot activate the specified dockable.  instead, set the
 		// active dockable to null
 		final int newEdge = getEdge(dockable);
-		if(newEdge==UNSPECIFIED_EDGE)
+		if(newEdge==MinimizationManager.UNSPECIFIED_LAYOUT_EDGE)
 			dockable = null;
 
 		// check for dockable changes
@@ -559,12 +557,6 @@ public class DockbarManager implements DockingConstants {
 		if(changed) {
 			viewPane.setLocked(false);
 			startAnimation(oldDockable, dockable, newDockableId, newEdge);
-			
-			// exit here so we can test our animation.  after it's working, we can 
-			// re-add the event dispatching
-//			if(true)
-//				return;
-
 		}
 	}
 	
@@ -578,7 +570,7 @@ public class DockbarManager implements DockingConstants {
 		
 		if(newDockable!=null) {
 			DockbarEvent evt = new DockbarEvent(newDockable, evtType, getActiveEdge());
-			eventDispatcher.dispatch(evt);				
+			EventDispatcher.dispatch(evt);
 		}		
 	}
 	
@@ -632,10 +624,6 @@ public class DockbarManager implements DockingConstants {
 
 	public ActivationListener getActivationListener() {
 		return activationListener;
-	}
-	
-	public EventDispatcher getEventDispatcher() {
-		return eventDispatcher;
 	}
 	
 	public boolean contains(Dockable dockable) {

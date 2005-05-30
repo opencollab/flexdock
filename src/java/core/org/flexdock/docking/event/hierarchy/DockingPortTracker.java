@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -43,6 +44,34 @@ public class DockingPortTracker implements HierarchyListener {
 			}
 		}
 		return info;
+	}
+	
+	public static DockingPort findById(String portId) {
+		if(portId==null)
+			return null;
+		
+		synchronized(TRACKERS_BY_WINDOW) {
+			for(Iterator it=TRACKERS_BY_WINDOW.values().iterator(); it.hasNext();) {
+				RootDockingPortInfo info = (RootDockingPortInfo)it.next();
+				DockingPort port = info.getPort(portId);
+				if(port!=null)
+					return port;
+			}
+		}
+		return null;
+	}
+	
+	public static DockingPort findByWindow(Component comp) {
+		RootWindow window = RootWindow.getRootContainer(comp);
+		return findByWindow(window);
+	}
+	
+	public static DockingPort findByWindow(RootWindow window) {
+		RootDockingPortInfo info = getRootDockingPortInfo(window);
+		if(info==null)
+			return null;
+		
+		return info.getPort(0);
 	}
 	
 	

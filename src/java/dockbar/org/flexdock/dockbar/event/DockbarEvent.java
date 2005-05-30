@@ -3,14 +3,13 @@
  */
 package org.flexdock.dockbar.event;
 
-import java.util.EventObject;
-
 import org.flexdock.docking.Dockable;
+import org.flexdock.event.Event;
 
 /**
  * @author Christopher Butler
  */
-public class DockbarEvent extends EventObject {
+public class DockbarEvent extends Event {
 	public static final int EXPANDED = 0;
 	public static final int LOCKED = 1;
 	public static final int COLLAPSED = 2;
@@ -19,21 +18,15 @@ public class DockbarEvent extends EventObject {
 	public static final int MINIMIZE_COMPLETED = 11;
 	
 	private int edge;
-	private int type;
 	private boolean consumed;
 	
 	public DockbarEvent(Dockable dockable, int type, int edge) {
-		super(dockable);
-		this.type = type;
+		super(dockable, type);
 		this.edge = edge;
 	}
 
 	public int getEdge() {
 		return edge;
-	}
-	
-	public int getType() {
-		return type;
 	}
 
 	public boolean isConsumed() {

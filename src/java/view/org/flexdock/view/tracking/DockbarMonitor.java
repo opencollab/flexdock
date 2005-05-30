@@ -30,5 +30,4 @@ public class DockbarMonitor extends DockbarListener.Stub {
 		if(view!=null && view.isFloating())
 			evt.consume();
 	}
-	
 }

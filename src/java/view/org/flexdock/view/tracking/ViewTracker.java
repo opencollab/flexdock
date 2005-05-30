@@ -9,7 +9,7 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
-import org.flexdock.dockbar.DockbarManager;
+import org.flexdock.event.EventDispatcher;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
@@ -23,7 +23,16 @@ public class ViewTracker {
 	private static ViewTracker currentTracker;
 	private static final Object LOCK = new Object();
 	private View currentView;
-	private DockbarMonitor dockbarMonitor;
+	
+	
+	static {
+		initialize();
+	}
+	
+	
+	private static void initialize() {
+		EventDispatcher.addListener(new DockbarMonitor());
+	}
 	
 	
 	public static ViewTracker getTracker(Component component) {
@@ -46,9 +55,6 @@ public class ViewTracker {
 		
 		if(tracker==null) {
 			tracker = new ViewTracker();
-			
-			DockbarManager mgr = DockbarManager.getInstance(window);
-			mgr.addListener(tracker.dockbarMonitor);
 			
 			TRACKERS_BY_WINDOW.put(root, tracker);
 		}
@@ -105,7 +111,7 @@ public class ViewTracker {
 	}
 	
 	public ViewTracker() {
-		dockbarMonitor = new DockbarMonitor();
+
 	}
 	
 	public void setActive(boolean b) {

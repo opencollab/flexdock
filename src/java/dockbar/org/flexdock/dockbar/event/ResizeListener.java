@@ -18,13 +18,13 @@ import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockableProps;
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.util.RootWindow;
 
 /**
  * @author Christopher Butler
  */
-public class ResizeListener extends MouseAdapter implements MouseMotionListener, DockingConstants {
+public class ResizeListener extends MouseAdapter implements MouseMotionListener {
 	private DockbarManager manager;
 	private Dockable dockable;
 	
@@ -80,10 +80,10 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener,
 		p.y = Math.min(p.y, viewArea.height);
 		
 		int orientation = manager.getActiveEdge();
-		int loc = orientation==LEFT || orientation==RIGHT? p.x: p.y;
-		int dim = orientation==LEFT || orientation==RIGHT? viewArea.width: viewArea.height;
+		int loc = orientation==MinimizationManager.LEFT || orientation==MinimizationManager.RIGHT? p.x: p.y;
+		int dim = orientation==MinimizationManager.LEFT || orientation==MinimizationManager.RIGHT? viewArea.width: viewArea.height;
 		
-		if(orientation==RIGHT || orientation==BOTTOM)
+		if(orientation==MinimizationManager.RIGHT || orientation==MinimizationManager.BOTTOM)
 			loc = dim - loc;
 		
 		float percent = (float)loc/(float)dim;

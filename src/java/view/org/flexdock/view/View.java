@@ -17,21 +17,21 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
-import org.flexdock.docking.defaults.DefaultRegionChecker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingConstants;
+import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.view.tracking.ViewListener;
 import org.flexdock.view.tracking.ViewTracker;
@@ -41,7 +41,6 @@ import org.flexdock.view.tracking.ViewTracker;
  */
 public class View extends JComponent implements Dockable {
 	static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
-	protected static final float UNSPECIFIED_SIBLING_PREF = -1F;
 	protected String id;
 	protected Titlebar titlepane;
 	protected Container contentPane;
@@ -63,6 +62,11 @@ public class View extends JComponent implements Dockable {
 				return new Viewport();
 			}
 		};
+	}
+	
+	public static View getInstance(String viewId) {
+		Dockable view = DockingManager.getDockable(viewId);
+		return view instanceof View? (View)view: null;
 	}
 	
 	public View(String name) {
@@ -351,31 +355,11 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public boolean dock(Dockable dockable, String relativeRegion) {
-		return dock(dockable, relativeRegion, UNSPECIFIED_SIBLING_PREF);
+		return DockingUtility.dockRelative(this, dockable, relativeRegion);
 	}
 	
 	public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
-		if(dockable==null)
-			throw new IllegalArgumentException("Dockable cannot be null");
-		
-		if(!DockingManager.isValidDockingRegion(relativeRegion))
-			throw new IllegalArgumentException("'" + relativeRegion + "' is not a valid docking region.");
-
-		setSiblingPreference(relativeRegion, ratio);
-		
-		DockingPort port = getDockingPort();
-		if(port!=null)
-			return DockingManager.dock(dockable, port, relativeRegion);
-
-		return false;
-	}
-	
-	protected void setSiblingPreference(String region, float size) {
-		if(size==UNSPECIFIED_SIBLING_PREF || DockingPort.CENTER_REGION.equals(region) || !DockingManager.isValidDockingRegion(region))
-			return;
-		
-		size = DefaultRegionChecker.validateSiblingSize(size);
-		getDockingProperties().setSiblingSize(region, size);
+		return DockingUtility.dockRelative(this, dockable, relativeRegion, ratio);
 	}
 	
 	public void setActive(boolean b) {
@@ -398,12 +382,12 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public boolean isMinimized() {
-		return getViewProperties().isMinimized().booleanValue();
+		return DockingUtility.isMinimized(this);
 	}
 	
 	public int getMinimizedEdge() {
 		Integer edge = getViewProperties().getMinimizedEdge();
-		return edge==null? DockbarManager.UNSPECIFIED_EDGE: edge.intValue();
+		return edge==null? MinimizationManager.UNSPECIFIED_LAYOUT_EDGE: edge.intValue();
 	}
 	
 	public void setMinimizedEdge(int edge) {
@@ -447,6 +431,9 @@ public class View extends JComponent implements Dockable {
 	
 	public void undockingComplete(DockingEvent evt) {
 		clearButtonRollovers();
+	}
+	
+	public void undockingStarted(DockingEvent evt) {
 	}
 	
 	private void clearButtonRollovers() {

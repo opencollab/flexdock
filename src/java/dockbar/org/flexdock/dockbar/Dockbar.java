@@ -12,14 +12,14 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.plaf.common.border.SlideoutBorder;
-import org.flexdock.util.DockingConstants;
 
 
 /**
  * @author Christopher Butler
  */
-public class Dockbar extends JPanel implements DockingConstants {
+public class Dockbar extends JPanel {
 	private int orientation;
 	private DockbarManager manager;
 	private ArrayList mDocks = new ArrayList();
@@ -31,14 +31,14 @@ public class Dockbar extends JPanel implements DockingConstants {
 
 	public static int getValidOrientation(int orient) {
 		switch (orient) {
-			case LEFT:
-				return LEFT;
-			case RIGHT:
-				return RIGHT;
-			case BOTTOM:
-				return BOTTOM;
+			case MinimizationManager.LEFT:
+				return MinimizationManager.LEFT;
+			case MinimizationManager.RIGHT:
+				return MinimizationManager.RIGHT;
+			case MinimizationManager.BOTTOM:
+				return MinimizationManager.BOTTOM;
 			default:
-				return LEFT;
+				return MinimizationManager.LEFT;
 		}
 	}
 
@@ -105,7 +105,8 @@ public class Dockbar extends JPanel implements DockingConstants {
 		if(border instanceof SlideoutBorder)
 			((SlideoutBorder)border).setOrientation(orientation);
 		
-		int boxConstraint = orientation==TOP || orientation==BOTTOM? BoxLayout.LINE_AXIS: BoxLayout.PAGE_AXIS;
+		int boxConstraint = orientation==MinimizationManager.TOP || 
+			orientation==MinimizationManager.BOTTOM? BoxLayout.LINE_AXIS: BoxLayout.PAGE_AXIS;
 		setLayout(new BoxLayout(this, boxConstraint));
 	}
 	

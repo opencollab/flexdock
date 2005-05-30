@@ -3,10 +3,12 @@
  */
 package org.flexdock.dockbar.event;
 
+import java.util.EventListener;
+
 /**
  * @author Christopher Butler
  */
-public interface DockbarListener {
+public interface DockbarListener extends EventListener {
 	
 	//comment public is redundant in interfaces since all of the methods are by default public
 	

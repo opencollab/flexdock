@@ -221,7 +221,7 @@ public class ViewportDemo extends JFrame implements DockingConstants {
 			String viewId = (String)getDockableList().getSelectedItem();
 			String region = (String)getRegionList().getSelectedItem();
 			
-			Dockable dockable = DockingManager.getRegisteredDockable(viewId);
+			Dockable dockable = DockingManager.getDockable(viewId);
 			Dockable sibling = dockable.getSibling(region);
 			getSiblingLabel().setText(sibling==null? "null": sibling.toString());
 		}

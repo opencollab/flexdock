@@ -50,7 +50,7 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
 			return;
 		}
 
-		Dockable dockable = DockingManager.getRegisteredDockable(pane.getComponentAt(tabIndex));
+		Dockable dockable = DockingManager.getDockable(pane.getComponentAt(tabIndex));
 		dragListener = DockingManager.getDragListener(dockable);
 		if(dragListener!=null)
 			dragListener.mousePressed(me);

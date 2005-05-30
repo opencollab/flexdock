@@ -13,14 +13,14 @@ import javax.swing.border.Border;
 
 import org.flexdock.dockbar.event.ResizeListener;
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.plaf.common.border.SlideoutBorder;
 import org.flexdock.util.Adapters;
-import org.flexdock.util.DockingConstants;
 
 /**
  * @author Christopher Butler
  */
-public class ViewPane extends JPanel implements DockingConstants {
+public class ViewPane extends JPanel {
 	private static final Dimension RESIZE_DIMS = new Dimension(3, 3);
 	private static final Adapters.MouseEventAdapter EMPTY_MOUSE_LISTENER = new Adapters.MouseEventAdapter();
 	public static final int UNSPECIFIED_PREFERRED_SIZE = -1;
@@ -87,11 +87,11 @@ public class ViewPane extends JPanel implements DockingConstants {
 	private String getEdgeRegion() {
 		int orientation = manager.getActiveEdge();
 		switch(orientation) {
-			case TOP:
+			case MinimizationManager.TOP:
 				return BorderLayout.SOUTH;
-			case BOTTOM:
+			case MinimizationManager.BOTTOM:
 				return BorderLayout.NORTH;
-			case RIGHT:
+			case MinimizationManager.RIGHT:
 				return BorderLayout.WEST;
 			default:
 				return BorderLayout.EAST;
@@ -100,7 +100,10 @@ public class ViewPane extends JPanel implements DockingConstants {
 	
 	public Cursor getResizeCursor() {
 		int orientation = manager.getActiveEdge();
-		return orientation==LEFT || orientation==RIGHT? Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR): Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
+		return orientation==MinimizationManager.LEFT || 
+				orientation==MinimizationManager.RIGHT? 
+				Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR): 
+				Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR);
 	}
 	
 	public int getPrefSize() {

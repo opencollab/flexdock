@@ -4,26 +4,27 @@
 package org.flexdock.docking.event;
 
 import java.awt.AWTEvent;
-import java.util.EventObject;
+import java.awt.Component;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.event.Event;
 
 /**
  * @author Kevin Duffey
  * @author Christopher Butler
  */
-public class DockingEvent extends EventObject {
+public class DockingEvent extends Event {
 	public static final int DRAG_STARTED = 0;
 	public static final int DROP_STARTED = 1;
 	public static final int DOCKING_COMPLETE = 2;
 	public static final int DOCKING_CANCELED = 3;
 	public static final int UNDOCKING_COMPLETE = 4;
+	public static final int UNDOCKING_STARTED = 5;
 
 	private DockingPort oldPort;
 	private DockingPort newPort;
-	private int eventType;
 	private boolean consumed;
 	private AWTEvent trigger;
 	private String region;
@@ -44,10 +45,9 @@ public class DockingEvent extends EventObject {
 	 * the dock is completed or canceled.
 	 */
 	public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType, AWTEvent trigger) {
-		super(source);
+		super(source, eventType);
 		this.oldPort = oldPort;
 		this.newPort = newPort;
-		this.eventType = eventType;
 		this.trigger = trigger;
 		this.region = DockingPort.UNKNOWN_REGION;
 		setOverWindow(true);
@@ -71,17 +71,6 @@ public class DockingEvent extends EventObject {
 	 */
 	public DockingPort getNewDockingPort() {
 		return newPort;
-	}
-
-	/**
-	 * Returns the integer value of the type of event this DockingEvent
-	 * represents. One of DOCKING_COMPLETE or DOCKING_CANCELED should be
-	 * returned.
-	 * 
-	 * @return int the integer value of this event type.
-	 */
-	public int getEventType() {
-		return eventType;
 	}
 
 	public boolean isConsumed() {
@@ -120,5 +109,13 @@ public class DockingEvent extends EventObject {
 
 	public void setOverWindow(boolean overWindow) {
 		this.overWindow = overWindow;
+	}
+	
+	public Dockable getDockable() {
+		return (Dockable)getSource();
+	}
+	
+	public Component getComponent() {
+		return getDockable().getDockable();
 	}
 }

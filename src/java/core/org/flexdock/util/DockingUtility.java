@@ -13,6 +13,8 @@ import javax.swing.SwingUtilities;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.defaults.DefaultRegionChecker;
+import org.flexdock.docking.props.DockableProps;
 
 /**
  * @author Christopher Butler
@@ -89,6 +91,7 @@ public class DockingUtility implements DockingConstants {
 		
 		return DockingPort.EAST_REGION;
 	}
+
 	
 	public static boolean isAxisEquivalent(String region, String otherRegion) {
 		if(!DockingManager.isValidDockingRegion(region) || !DockingManager.isValidDockingRegion(otherRegion))
@@ -127,5 +130,49 @@ public class DockingUtility implements DockingConstants {
 			default:
 				return DockingPort.UNKNOWN_REGION;
 		}
+	}
+	
+	public static boolean isMinimized(Dockable dockable) {
+		if(dockable==null)
+			return false;
+		
+		DockableProps props = dockable.getDockingProperties();
+		return props.isMinimized().booleanValue();
+	}
+	
+
+	public static boolean dockRelative(Dockable parent, Dockable sibling, String relativeRegion) {
+		return dockRelative(parent, sibling, relativeRegion, UNSPECIFIED_SIBLING_PREF);
+	}
+	
+	public static boolean dockRelative(Dockable parent, Dockable sibling, String relativeRegion, float ratio) {
+		if(parent==null)
+			throw new IllegalArgumentException("'parent' cannot be null");
+		if(sibling==null)
+			throw new IllegalArgumentException("'sibling' cannot be null");
+		
+		if(!DockingManager.isValidDockingRegion(relativeRegion))
+			throw new IllegalArgumentException("'" + relativeRegion + "' is not a valid docking region.");
+
+		// set the sibling preference
+		setSiblingPreference(parent, relativeRegion, ratio);
+		
+		DockingPort port = parent.getDockingPort();
+		if(port!=null)
+			return DockingManager.dock(sibling, port, relativeRegion);
+
+		return false;
+	}
+	
+	private static void setSiblingPreference(Dockable src, String region, float size) {
+		if(size==UNSPECIFIED_SIBLING_PREF || DockingPort.CENTER_REGION.equals(region) || !DockingManager.isValidDockingRegion(region))
+			return;
+		
+		size = DefaultRegionChecker.validateSiblingSize(size);
+		src.getDockingProperties().setSiblingSize(region, size);
+	}
+	
+	public static boolean isFloating(Dockable dockable) {
+		return dockable.getDockingProperties().getFloatingGroup()!=null;
 	}
 }

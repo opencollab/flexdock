@@ -27,34 +27,30 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
-import org.flexdock.view.restore.ViewDockingInfo;
-import org.flexdock.view.restore.ViewManager;
-
-import com.l2fprod.gui.plaf.skin.Skin;
-import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
 
 /**
  * @author Christopher Butler
  * @author Mateusz Szczap
  */
 public class SimpleShowViewportDemo extends JFrame {
-
+	
 	private static View view1 = null;
 	private static View view2 = null;
 	private static View view3 = null;
 	private static View view4 = null;
 
 	public static void main(String[] args) throws Exception {
-		Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
-        SkinLookAndFeel.setSkin(theSkinToUse);
+//		Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
+//        SkinLookAndFeel.setSkin(theSkinToUse);
         
 //		http://dev.l2fprod.com/javadoc/com/l2fprod/gui/plaf/skin/SkinLookAndFeel.html
-		SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
-//		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+//		SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
+		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 //		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 //		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 		
@@ -76,7 +72,6 @@ public class SimpleShowViewportDemo extends JFrame {
 		panel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		
 		Viewport viewport = new Viewport();
-		ViewManager.getInstance().registerCenterDockingPort(viewport);
 		panel.add(viewport, BorderLayout.CENTER);
 		
 		View startPage = createStartPage();
@@ -85,13 +80,6 @@ public class SimpleShowViewportDemo extends JFrame {
 		view2 = createView("task.list", "Task List");
 		view3 = createView("class.view", "Class View");
 		view4 = createView("message.log", "Message Log");
-
-		ViewManager.getInstance().registerTerritoralView(startPage);
-
-		ViewManager.getInstance().registerViewDockingInfo(view1.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(startPage, DockingPort.WEST_REGION, .3f));
-		ViewManager.getInstance().registerViewDockingInfo(view2.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(startPage, DockingPort.SOUTH_REGION, .3f));
-		ViewManager.getInstance().registerViewDockingInfo(view3.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(view1, DockingPort.EAST_REGION, .3f));
-		ViewManager.getInstance().registerViewDockingInfo(view4.getPersistentId(), ViewDockingInfo.createRelativeDockingInfo(startPage, DockingPort.EAST_REGION, .3f));
 		
 		viewport.dock(startPage);
 		startPage.dock(view1, DockingPort.WEST_REGION, .3f);
@@ -104,7 +92,7 @@ public class SimpleShowViewportDemo extends JFrame {
 	
 	private View createView(String id, String text) {
 		View view = new View(id, text);
-		view.addAction(new CloseAction(view));
+		view.addAction(DockingConstants.CLOSE_ACTION);
 		view.addAction(new MaximizeViewAction(view));
 		view.addAction(new UnmaximizeViewAction(view));
 		
@@ -152,7 +140,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			ViewManager.getInstance().showView(m_commonView);
+//			PointHandler.restore(m_commonView, appFrame);
 		}
 
 	}
@@ -259,25 +247,6 @@ public class SimpleShowViewportDemo extends JFrame {
 		return view;
 	}
 
-	private class CloseAction extends AbstractAction {
-
-		private View m_view = null;
-		
-		private CloseAction(View view) {
-			m_view = view;
-			putValue(Action.NAME, "close");
-			putValue(Action.SHORT_DESCRIPTION, "Close");
-			putValue(Action.ACTION_COMMAND_KEY, "close");
-		}
-
-        /**
-         * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-         */
-        public void actionPerformed(ActionEvent e) {
-        	ViewManager.getInstance().hideView(m_view);
-        }
-		
-	}
 
 	private class MaximizeViewAction extends AbstractAction {
 
@@ -294,7 +263,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			ViewManager.getInstance().maximizeView(m_view);
+			
 		}
 		
 	}
@@ -314,7 +283,7 @@ public class SimpleShowViewportDemo extends JFrame {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			ViewManager.getInstance().unmaximizeView(m_view);
+			
 		}
 		
 	}

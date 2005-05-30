@@ -70,6 +70,9 @@ public interface DockableProps {
 	
 	
 	
+	
+	
+	
 	public void setCursorProvider(CursorProvider provider);
 
 	public void setDockableDesc(String desc);

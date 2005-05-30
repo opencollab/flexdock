@@ -37,14 +37,14 @@ import org.flexdock.dockbar.util.TextIcon;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.plaf.common.border.RoundedLineBorder;
-import org.flexdock.util.DockingConstants;
 
 /**
  * @author Andreas Ernst
  * @author Christopher Butler
  */
-public class DockbarLabel extends JLabel implements MouseListener, DockingConstants {
+public class DockbarLabel extends JLabel implements MouseListener {
 	private static final Insets[] INSETS = createInsets();
 	private static final int[] ROTATIONS = createRotations();
 	
@@ -61,21 +61,21 @@ public class DockbarLabel extends JLabel implements MouseListener, DockingConsta
 	
 	private static Insets[] createInsets() {
 		Insets[] insets = new Insets[5];
-		insets[DockingConstants.CENTER] = new Insets(1, 1, 1, 1);
-		insets[DockingConstants.LEFT] = new Insets(1, 1, 2, 1);
-		insets[DockingConstants.RIGHT] = new Insets(1, 1, 2, 1);
-		insets[DockingConstants.TOP] = new Insets(1, 1, 1, 2);
-		insets[DockingConstants.BOTTOM] = new Insets(1, 1, 1, 2);
+		insets[MinimizationManager.CENTER] = new Insets(1, 1, 1, 1);
+		insets[MinimizationManager.LEFT] = new Insets(1, 1, 2, 1);
+		insets[MinimizationManager.RIGHT] = new Insets(1, 1, 2, 1);
+		insets[MinimizationManager.TOP] = new Insets(1, 1, 1, 2);
+		insets[MinimizationManager.BOTTOM] = new Insets(1, 1, 1, 2);
 		return insets;
 	}
 	
 	private static int[] createRotations() {
 		int[] rotations = new int[5];
-		rotations[DockingConstants.CENTER] = TextIcon.ROTATE_NONE;
-		rotations[DockingConstants.LEFT] = TextIcon.ROTATE_LEFT;
-		rotations[DockingConstants.RIGHT] = TextIcon.ROTATE_RIGHT;
-		rotations[DockingConstants.TOP] = TextIcon.ROTATE_NONE;
-		rotations[DockingConstants.BOTTOM] = TextIcon.ROTATE_NONE;
+		rotations[MinimizationManager.CENTER] = TextIcon.ROTATE_NONE;
+		rotations[MinimizationManager.LEFT] = TextIcon.ROTATE_LEFT;
+		rotations[MinimizationManager.RIGHT] = TextIcon.ROTATE_RIGHT;
+		rotations[MinimizationManager.TOP] = TextIcon.ROTATE_NONE;
+		rotations[MinimizationManager.BOTTOM] = TextIcon.ROTATE_NONE;
 		return rotations;
 	}
 	
@@ -207,7 +207,7 @@ public class DockbarLabel extends JLabel implements MouseListener, DockingConsta
 	}
 	
 	public Dockable getDockable() {
-		return DockingManager.getRegisteredDockable(dockingId);
+		return DockingManager.getDockable(dockingId);
 	}
 	
 	public int getOrientation() {

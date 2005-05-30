@@ -1,0 +1,128 @@
+/*
+ * Created on Apr 28, 2005
+ */
+package org.flexdock.docking.state.tree;
+
+import java.awt.Component;
+
+import javax.swing.JSplitPane;
+
+import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.DockingStrategy;
+import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.util.DockingConstants;
+
+/**
+ * @author Christopher Butler
+ */
+public class SplitNode extends DockingNode implements DockingConstants {
+	private int orientation;
+	private int region;
+	private float percentage;
+	private String siblingId;
+	private String dockingRegion;
+	
+	public SplitNode(int orientation, int region, float percentage, String siblingId) {
+		this.orientation = orientation;
+		this.region = region;
+		this.percentage = percentage;
+		this.siblingId = siblingId;
+	}
+	
+	public int getOrientation() {
+		return orientation;
+	}
+	public float getPercentage() {
+		return percentage;
+	}
+	public int getRegion() {
+		return region;
+	}
+
+	public String getSiblingId() {
+		return siblingId;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer("SplitNode[");
+		sb.append("orient=").append(getOrientationDesc()).append("; ");
+		sb.append("region=").append(getRegionDesc()).append("; ");
+		sb.append("percent=").append(percentage).append("%;");
+		sb.append("]");
+		return sb.toString();
+	}
+	
+	private String getRegionDesc() {
+		switch(region) {
+			case TOP:
+				return "top";
+			case BOTTOM:
+				return "bottom";
+			case RIGHT:
+				return "right";
+			default:
+				return "left";
+		}
+	}
+	
+	private String getOrientationDesc() {
+		return orientation==VERTICAL? "vertical": "horizontal";
+	}
+	
+	public Object clone() {
+		return new SplitNode(orientation, region, percentage, siblingId);
+	}
+	
+	public String getDockingRegion() {
+		return dockingRegion;
+	}
+	public void setDockingRegion(String dockingRegion) {
+		this.dockingRegion = dockingRegion;
+	}
+	
+	public Object getDockingObject() {
+		if(dockingRegion==null)
+			return null;
+		
+		if(!(getParent() instanceof DockingPortNode))
+			return null;
+
+		DockingPortNode superNode = (DockingPortNode)getParent();
+		Object userObj = superNode.getUserObject();
+		if(!(userObj instanceof DockingPort))
+			return null;
+		
+		DockingPort superPort = (DockingPort)userObj;
+		DockingStrategy strategy = superPort.getDockingStrategy();
+		return strategy.createSplitPane(superPort, dockingRegion);
+	}
+
+	public JSplitPane getSplitPane() {
+		return (JSplitPane)getUserObject();
+	}
+	
+	public Component getLeftComponent() {
+		return getChildComponent(0);
+	}
+	
+	public Component getRightComponent() {
+		return getChildComponent(1);
+	}
+	
+	private Component getChildComponent(int indx) {
+		LayoutNode child = getChild(indx);
+		return child==null? null: (Component)child.getUserObject();
+	}
+	
+	private LayoutNode getChild(int indx) {
+		if(indx >= getChildCount())
+			return null;
+		return (LayoutNode)getChildAt(indx);
+	}
+	
+	protected DockingNode shallowClone() {
+		SplitNode clone = new SplitNode(orientation, region, percentage, siblingId);
+		clone.dockingRegion = dockingRegion;
+		return clone;
+	}
+}

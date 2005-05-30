@@ -23,6 +23,8 @@ import java.awt.Window;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
@@ -30,22 +32,27 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
-import org.flexdock.dockbar.DockbarManager;
-import org.flexdock.docking.config.ConfigurationManager;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
-import org.flexdock.docking.defaults.layout.DockingPath;
 import org.flexdock.docking.drag.DragManager;
+import org.flexdock.docking.event.DockingEventHandler;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.docking.state.DockingState;
+import org.flexdock.docking.state.FloatManager;
+import org.flexdock.docking.state.LayoutManager;
+import org.flexdock.docking.state.MinimizationManager;
+import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.RegistrationEvent;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
+import org.flexdock.util.Utilities;
 
 
 /**
@@ -84,13 +91,21 @@ import org.flexdock.util.SwingUtility;
  * @author Chris Butler
  */
 public class DockingManager {
+	public static final String MINIMIZE_MANAGER = "minimize.manager";
+	public static final String LAYOUT_MANAGER = "layout.manager";
 	private static final String DEV_PROPS = "org/flexdock/util/dev-props.properties";
+	private static final String CONFIG_PROPS = "org/flexdock/docking/flexdock-core.properties";
 	private static final DockingManager SINGLETON = new DockingManager();
+	private static final HashMap DOCKABLES_BY_ID = new HashMap();
 	private static final WeakHashMap DOCKABLES_BY_COMPONENT = new WeakHashMap();
+	private static final HashMap DOCKING_PORTS_BY_ID = new HashMap();
 	private static final ClassMapping DOCKING_STRATEGIES = new ClassMapping(DefaultDockingStrategy.class, new DefaultDockingStrategy());
 	private static Object persistentIdLock = new Object();
 	
 	private DockingStrategy defaultDocker;
+	private LayoutManager layoutManager;
+	private MinimizationManager minimizeManager;
+	private DockableBuilder dockableBuilder;
 	
 	static {
 		// call this method to preload any framework resources
@@ -107,6 +122,15 @@ public class DockingManager {
 		
 		// prime the drag manager for use
 		DragManager.prime();
+		
+		// make sure dockingEvents are properly intercepted
+		EventDispatcher.addHandler(new DockingEventHandler());
+		
+		Properties config = ResourceManager.getProperties(CONFIG_PROPS, true);
+		// set the minimization manager
+		setMinimizeManager(config.getProperty(MINIMIZE_MANAGER));
+		// set the layout manager
+		setLayoutManager(config.getProperty(LAYOUT_MANAGER));
 	}
 
 	private DockingManager() {
@@ -139,11 +163,11 @@ public class DockingManager {
 	 * @param dockable the <code>Dockable</code> we wish to undock
 	 */
 	public static boolean undock(Dockable dockable) {
+		if(dockable==null)
+			return false;
+		
 		DockingStrategy strategy = findDockingStrategy(dockable);
 		if (strategy != null) {
-			// cache the restoration path for future use
-			DockingPath.updateRestorePath(dockable);
-			// now undock
 			return strategy.undock(dockable);
 		}
 
@@ -152,12 +176,12 @@ public class DockingManager {
 	}
 
 	public static boolean dock(Dockable dockable, DockingPort port, String region) {
+		if(dockable==null)
+			return false;
+		
 		DockingStrategy strategy = getDockingStrategy(port);
 		if (strategy != null) {
-			boolean ret = strategy.dock(dockable, port,  region);
-			if(ret)
-				DockingPath.updateRestorePath(dockable);
-			return ret;
+			return strategy.dock(dockable, port,  region);
 		}
 	
 		return false; //TODO think of changing it to runtime exception I don't see a situation
@@ -244,6 +268,9 @@ public class DockingManager {
 		if (dockable == null || dockable.getDockable() == null || dockable.getDragSources()==null)
 			return null;
 		
+		if(dockable.getPersistentId()==null)
+			throw new IllegalArgumentException("Dockable must have a non-null persistent ID.");
+		
 		DOCKABLES_BY_COMPONENT.put(dockable.getDockable(), dockable);
 		
 		// flag the component as dockable, in case it doesn't 
@@ -260,29 +287,55 @@ public class DockingManager {
 		// make sure we have docking-properties initialized
 		DockableProps props = PropertyManager.getDockableProps(dockable);
 		
-		// allow the configuration manager to keep track of this dockable.  This 
-		// will allow docking configurations to survive JVM instances.
+		// cache the dockable by ID
+		DOCKABLES_BY_ID.put(dockable.getPersistentId(), dockable);
 		
-		//TODO this should fire event that the dockable was registered
-		//lets not mess up this with persistence so that persistence is decoupled.
-		//that is why listener design pattern was invented
-		//so that lower level does not have to know of higher level.
-		ConfigurationManager.registerDockable(dockable);
+		// dispatch a registration event
+		EventDispatcher.dispatch(new RegistrationEvent(dockable, DockingManager.SINGLETON, true));
 		
 		// return the dockable
 		return dockable;
 	}
 	
-	public static Dockable getRegisteredDockable(Component comp) {
+	public static Dockable getDockable(Component comp) {
 		return comp==null? null: (Dockable)DOCKABLES_BY_COMPONENT.get(comp);
 	}
 	
-	public static Dockable getRegisteredDockable(String id) {
-		return ConfigurationManager.getRegisteredDockable(id);
+	public static Dockable getDockable(String id) {
+		Dockable dockable = getDockableImpl(id);
+		if(dockable==null)
+			dockable = loadAndRegister(id);
+		return dockable;
+	}
+	
+	private static Dockable getDockableImpl(String id) {
+		return id==null? null: (Dockable)DOCKABLES_BY_ID.get(id);
 	}
 	
 	public static Set getDockableIds() {
-		return ConfigurationManager.getDockableIds();
+		synchronized(DOCKABLES_BY_ID) {
+			return new HashSet(DOCKABLES_BY_ID.keySet());
+		}
+	}
+	
+	private static Dockable loadAndRegister(String id) {
+		DockableBuilder builder = getDockingManager().dockableBuilder;
+		if(builder==null)
+			return null;
+		
+		// the createDockable() implementation may or may not
+		// automatically register the dockable before returning.
+		Dockable dockable = builder.createDockable(id);
+		if(dockable==null)
+			return null;
+		
+		// if the newly created dockable has not yet been registered, 
+		// then register it.
+		boolean registered = getDockableImpl(dockable.getPersistentId())!=null;
+		if(!registered) {
+			registerDockable(dockable);
+		}
+		return dockable;
 	}
 
 	private static Dockable getDragInitiator(Component c) {
@@ -293,7 +346,7 @@ public class DockingManager {
 		if (c == null)
 			return null;
 
-		Dockable dockable = getRegisteredDockable(c);
+		Dockable dockable = getDockable(c);
 		if (dockable == null) {
 			String persistentId = generatePersistentId(c);
 			dockable = DockableComponentWrapper.create(c, persistentId, desc);
@@ -432,12 +485,16 @@ public class DockingManager {
 		synchronized(persistentIdLock) {
 			String pId = desiredId==null? obj.getClass().getName(): desiredId;
 			StringBuffer baseId = new StringBuffer(pId);
-			for(int i=1; ConfigurationManager.hasRegisteredDockableId(pId); i++) {
+			for(int i=1; hasRegisteredDockableId(pId); i++) {
 				baseId.append("_").append(i);
 				pId = baseId.toString();
 			}
 			return pId;
 		}
+	}
+	
+	private static boolean hasRegisteredDockableId(String id) {
+		return DOCKABLES_BY_ID.containsKey(id);
 	}
 	
 	public static void setDockablePropertyManager(Class dockable, Class propType) {
@@ -481,7 +538,14 @@ public class DockingManager {
 		return DockingPortTracker.getRootDockingPortInfo(comp);
 	}
 	
+	public static DockingPort getRootDockingPort(Component comp) {
+		return DockingPortTracker.findByWindow(comp);
+	}
 	
+	public static DockingPort getRootDockingPort(String portId) {
+		
+		return DockingPortTracker.findById(portId);
+	}	
 	
 	
 	
@@ -502,7 +566,7 @@ public class DockingManager {
 	}
 	
 	public static void setMinimized(Dockable dockable, boolean minimized, Window window) {
-		setMinimized(dockable, minimized, window, DockbarManager.UNSPECIFIED_EDGE);
+		setMinimized(dockable, minimized, window, MinimizationManager.UNSPECIFIED_LAYOUT_EDGE);
 	}
 
 	public static void setMinimized(Dockable dockable, boolean minimizing, int edge) {
@@ -518,8 +582,81 @@ public class DockingManager {
 		if(window==null)
 			return;
 		
-		DockingStrategy strategy = getDockingStrategy(dockable);
-		strategy.setMinimized(dockable, minimizing, window, edge);
+		getMinimizeManager().setMinimized(dockable, minimizing, window, edge);
 	}
+	
+	public static void restore(Dockable dockable) {
+		getLayoutManager().restore(dockable);
+	}
+	
+	public static void restore(String dockable) {
+		getLayoutManager().restore(getDockable(dockable));
+	}
+	
 
+	public static LayoutManager getLayoutManager() {
+		return getDockingManager().layoutManager;
+	}
+	
+	public static void setLayoutManager(LayoutManager mgr) {
+		getDockingManager().layoutManager = mgr;
+	}
+	
+	public static void setLayoutManager(String mgrClass) {
+		Object instance = Utilities.getInstance(mgrClass);
+		setLayoutManager((LayoutManager)instance);
+	}
+	
+	public static MinimizationManager getMinimizeManager() {
+		MinimizationManager mgr = getDockingManager().minimizeManager;
+		return mgr==null? MinimizationManager.DEFAULT_STUB: mgr;
+	}
+	
+	public static void setMinimizeManager(MinimizationManager mgr) {
+		getDockingManager().minimizeManager = mgr;
+	}
+	
+	public static void setMinimizeManager(String mgrClass) {
+		Object instance = Utilities.getInstance(mgrClass);
+		setMinimizeManager((MinimizationManager)instance);
+	}
+	
+	public static FloatManager getFloatManager() {
+		return getLayoutManager().getFloatManager();
+	}
+	
+	public static DockingState getDockingState(String dockable) {
+		return getLayoutManager().getDockingState(dockable);
+	}
+	
+	public static DockingState getDockingState(Dockable dockable) {
+		return getLayoutManager().getDockingState(dockable);
+	}
+	
+	
+	public static DockableBuilder getDockableBuilder() {
+		return getDockingManager().dockableBuilder;
+	}
+	
+	public static void setDockableBuilder(DockableBuilder builder) {
+		getDockingManager().dockableBuilder = builder;
+	}
+	
+	public static boolean persistLayouts(String applicationKey) {
+		LayoutManager mgr = getLayoutManager();
+		return mgr==null? false: mgr.persist(applicationKey);
+	}
+	
+	public static boolean loadLayouts(String applicationKey) {
+		LayoutManager mgr = getLayoutManager();
+		return mgr==null? false: mgr.loadFromStorage(applicationKey);		
+	}
+	
+	public static void replaceDockingPort(String oldId, String newId, DockingPort port) {
+		if(DOCKING_PORTS_BY_ID.containsKey(oldId))
+			DOCKING_PORTS_BY_ID.remove(oldId);
+			
+		if(newId!=null && port!=null)
+			DOCKING_PORTS_BY_ID.put(newId, port);
+	}
 }

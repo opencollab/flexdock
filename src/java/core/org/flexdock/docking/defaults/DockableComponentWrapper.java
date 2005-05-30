@@ -164,6 +164,9 @@ public class DockableComponentWrapper implements Dockable {
 	public void undockingComplete(DockingEvent evt) {
 	}
 	
+	public void undockingStarted(DockingEvent evt) {
+	}
+	
 	public void dragStarted(DockingEvent evt) {
 	}
 	

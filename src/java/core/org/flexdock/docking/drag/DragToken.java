@@ -83,7 +83,7 @@ public class DragToken {
 	
 	public Dockable getDockableReference() {
 		if(dockableRef==null)
-			dockableRef = DockingManager.getRegisteredDockable(dockable);
+			dockableRef = DockingManager.getDockable(dockable);
 		return dockableRef;
 	}
 	

@@ -3,6 +3,8 @@
  */
 package org.flexdock.util;
 
+import java.lang.reflect.Method;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -73,6 +75,26 @@ public class Utilities {
 		};
 	}
 	
+	
+	public static Object getInstance(String className) {
+		return getInstance(className, false);
+	}
+	
+	public static Object getInstance(String className, boolean failSilent) {
+		if(className==null)
+			return null;
+		
+		try {
+			Class c = Class.forName(className);
+			Method m = c.getMethod("getInstance", new Class[0]);
+			return m.invoke(null, new Object[0]);
+		} catch(Throwable e) {
+			return createInstance(className, failSilent);
+		}
+	}
+	
+	
+	
 	public static Object createInstance(String className) {
 		return createInstance(className, null);
 	}
@@ -96,6 +118,10 @@ public class Utilities {
 				e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static boolean isEqual(Object oldObj, Object newObj) {
+		return !isChanged(oldObj, newObj);
 	}
 	
 	public static boolean isChanged(Object oldObj, Object newObj) {

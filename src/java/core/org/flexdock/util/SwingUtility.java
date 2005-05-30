@@ -331,4 +331,23 @@ public class SwingUtility {
 		comp.paintAll(g);
 		return image;
 	}
+	
+	public static float getDividerProportion(JSplitPane splitPane) {
+		if(splitPane==null)
+			return 0;
+		
+		int size = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? splitPane.getWidth(): splitPane.getHeight();
+		int divLoc = splitPane.getDividerLocation();
+		return size==0? 0: (float)divLoc/(float)size;
+	}
+	
+	public static Component getOtherComponent(JSplitPane split, Component current) {
+		if(split==null || current==null)
+			return null;
+		
+		Component other = split.getLeftComponent();
+		if(other==current)
+			other = split.getRightComponent();
+		return other;
+	}
 }

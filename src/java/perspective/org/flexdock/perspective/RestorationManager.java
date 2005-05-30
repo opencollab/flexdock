@@ -1,0 +1,94 @@
+/*
+ * Created on May 18, 2005
+ */
+package org.flexdock.perspective;
+
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
+
+import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.state.DockingState;
+import org.flexdock.event.EventDispatcher;
+import org.flexdock.perspective.event.RegistrationEvent;
+import org.flexdock.perspective.restore.handlers.AlreadyRestoredHandler;
+import org.flexdock.perspective.restore.handlers.DockPathHandler;
+import org.flexdock.perspective.restore.handlers.FloatingHandler;
+import org.flexdock.perspective.restore.handlers.MinimizedHandler;
+import org.flexdock.perspective.restore.handlers.PointHandler;
+import org.flexdock.perspective.restore.handlers.RelativeHandler;
+import org.flexdock.perspective.restore.handlers.RestorationHandler;
+import org.flexdock.util.RootWindow;
+
+/**
+ * @author Christopher Butler
+ */
+public class RestorationManager {
+	private static final RestorationManager SINGLETON = new RestorationManager();
+	private Vector restorationHandlers = new Vector();
+	
+	static {
+		getInstance().addHandler(new AlreadyRestoredHandler());
+		getInstance().addHandler(new FloatingHandler());
+		getInstance().addHandler(new MinimizedHandler());
+		getInstance().addHandler(new RelativeHandler());
+		getInstance().addHandler(new DockPathHandler());
+		getInstance().addHandler(new PointHandler());
+	}
+	
+	public static RestorationManager getInstance() {
+		return SINGLETON;
+	}
+	
+	private RestorationManager() {
+		
+	}
+	
+	public void addHandler(RestorationHandler handler) {
+		if(handler!=null) {
+			restorationHandlers.add(handler);
+			EventDispatcher.dispatch(new RegistrationEvent(handler, this, true));
+		}
+	}
+	
+	public boolean removeHandler(RestorationHandler handler) {
+		boolean ret = false;
+		if(handler!=null) {
+			ret = restorationHandlers.remove(handler);
+			if(ret)
+				EventDispatcher.dispatch(new RegistrationEvent(handler, this, false));
+		}
+		return ret;
+	}
+	
+	
+	public boolean restore(Dockable dockable) {
+		if(dockable==null)
+			return false;
+
+		DockingState info = PerspectiveManager.getInstance().getDockingState(dockable, true);
+		HashMap context = new HashMap();
+		for(Iterator it=restorationHandlers.iterator(); it.hasNext();) {
+			RestorationHandler handler = (RestorationHandler)it.next();
+			if(handler.restore(dockable, info, context))
+				return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	public static RootWindow getRestoreWindow(Dockable dockable) {
+		// TODO: fix this code to keep track of the proper dialog owner
+		RootWindow[] windows = DockingManager.getDockingWindows();
+		return windows.length==0? null: windows[0];
+	}
+
+	public static Component getRestoreContainer(Dockable dockable) {
+		RootWindow window = getRestoreWindow(dockable);
+		return window==null? null: window.getRootContainer();
+	}
+}

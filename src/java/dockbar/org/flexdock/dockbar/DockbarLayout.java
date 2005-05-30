@@ -11,13 +11,13 @@ import javax.swing.JLayeredPane;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockableProps;
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.util.RootWindow;
 
 /**
  * @author Christopher Butler
  */
-public class DockbarLayout implements DockingConstants {
+public class DockbarLayout {
 	public static final int MINIMUM_VIEW_SIZE = 20;
 	
 	private DockbarManager manager;
@@ -80,7 +80,7 @@ public class DockbarLayout implements DockingConstants {
 		// determine what percentage of the viewable area we want the viewpane to take up
 		float viewSize = props.getPreviewSize().floatValue();
 		int edge = manager.getActiveEdge();
-		if(edge==LEFT || edge==RIGHT) {
+		if(edge==MinimizationManager.LEFT || edge==MinimizationManager.RIGHT) {
 			return (int)(((float)rect.width)*viewSize);
 		}
 		return (int)(((float)rect.height)*viewSize);
@@ -100,14 +100,14 @@ public class DockbarLayout implements DockingConstants {
 			viewpaneSize = getDesiredViewpaneSize();
 		
 		Rectangle rect = getViewpaneArea();
-		if(edge==LEFT || edge==RIGHT) {
-			if(edge==RIGHT) {
+		if(edge==MinimizationManager.LEFT || edge==MinimizationManager.RIGHT) {
+			if(edge==MinimizationManager.RIGHT) {
 				rect.x = rect.x + rect.width - viewpaneSize;
 			}
 			rect.width = viewpaneSize;
 		}
 		else {
-			if(edge==BOTTOM) {
+			if(edge==MinimizationManager.BOTTOM) {
 				rect.y = rect.height - viewpaneSize;
 			}
 			rect.height = viewpaneSize;

@@ -16,7 +16,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.docking.event.DockingEvent;
-import org.flexdock.docking.event.EventDispatcher;
+import org.flexdock.event.EventDispatcher;
 import org.flexdock.util.DockingUtility;
 
 /**
@@ -108,13 +108,15 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 		DockingEvent evt = new DockingEvent(dockable, currentPort, targetPort, DockingEvent.DROP_STARTED, mouseEvt);
 		evt.setRegion(region);
 		evt.setOverWindow(token.isOverWindow());
-		EventDispatcher.notifyDockingMonitor(dockable, evt);
+//		EventDispatcher.notifyDockingMonitor(dockable, evt);
+		EventDispatcher.dispatch(evt, dockable);
+
 		
 		// attempt to complete the docking operation
 		if(!evt.isConsumed())
 			docker.dock(dockable, targetPort, region, token);
 	}
-	
+
 	
 	
 	
@@ -171,7 +173,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	private static boolean isDragCanceled(Dockable dockable, MouseEvent trigger) {
 		DockingPort port = DockingUtility.getParentDockingPort(dockable);
 		DockingEvent evt = new DockingEvent(dockable, port, null, DockingEvent.DRAG_STARTED, trigger);
-		EventDispatcher.notifyDockingMonitor(dockable, evt);
+		EventDispatcher.dispatch(evt, dockable);
 		return evt.isConsumed();
 	}
 }

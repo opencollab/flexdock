@@ -31,9 +31,9 @@ import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.floating.FloatManager;
-import org.flexdock.docking.floating.FloatingGroup;
+import org.flexdock.docking.state.FloatingGroup;
 
 /**
  * @author Andreas Ernst
@@ -114,7 +114,7 @@ public class DockingFrame extends JDialog {
 	}
 	
 	public FloatingGroup getGroup() {
-		return FloatManager.getInstance().getGroup(getGroupName());
+		return DockingManager.getFloatManager().getGroup(getGroupName());
 	}
 	
 	private static class BoundsMonitor implements ComponentListener {
