@@ -106,6 +106,8 @@ public class DockingManager {
 	private LayoutManager layoutManager;
 	private MinimizationManager minimizeManager;
 	private DockableBuilder dockableBuilder;
+	private String applicationKey;
+	private AutoPersist autoPersister;
 	
 	static {
 		// call this method to preload any framework resources
@@ -131,10 +133,14 @@ public class DockingManager {
 		setMinimizeManager(config.getProperty(MINIMIZE_MANAGER));
 		// set the layout manager
 		setLayoutManager(config.getProperty(LAYOUT_MANAGER));
+		
+		// setup auto-persistence
+		Runtime.getRuntime().addShutdownHook(getDockingManager().autoPersister);
 	}
 
 	private DockingManager() {
 		defaultDocker = new DefaultDockingStrategy();
+		autoPersister = new AutoPersist();
 	}
 	
 	
@@ -642,14 +648,24 @@ public class DockingManager {
 		getDockingManager().dockableBuilder = builder;
 	}
 	
+	public static boolean persistLayouts() {
+		String appKey = getApplicationKey();
+		return persistLayouts(appKey);
+	}
+	
 	public static boolean persistLayouts(String applicationKey) {
 		LayoutManager mgr = getLayoutManager();
-		return mgr==null? false: mgr.persist(applicationKey);
+		return mgr==null || applicationKey==null? false: mgr.persist(applicationKey);
+	}
+	
+	public static boolean loadLayouts() {
+		String appKey = getApplicationKey();
+		return loadLayouts(appKey);
 	}
 	
 	public static boolean loadLayouts(String applicationKey) {
 		LayoutManager mgr = getLayoutManager();
-		return mgr==null? false: mgr.loadFromStorage(applicationKey);		
+		return mgr==null || applicationKey==null? false: mgr.loadFromStorage(applicationKey);		
 	}
 	
 	public static void replaceDockingPort(String oldId, String newId, DockingPort port) {
@@ -658,5 +674,41 @@ public class DockingManager {
 			
 		if(newId!=null && port!=null)
 			DOCKING_PORTS_BY_ID.put(newId, port);
+	}
+	
+	
+	public static void setApplicationKey(String appKey) {
+		getDockingManager().applicationKey = appKey;
+	}
+	
+	public static String getApplicationKey() {
+		return getDockingManager().applicationKey;
+	}
+	
+	public static void setAutoPersist(boolean b) {
+		getDockingManager().autoPersister.setEnabled(b);
+	}
+	
+	
+	private static class AutoPersist extends Thread {
+		private boolean enabled;
+		
+		public void run() {
+			store();
+		}
+		
+		private synchronized void store() {
+			String key = getApplicationKey();
+			if(key!=null && isEnabled())
+				getLayoutManager().persist(key);
+		}
+		
+		public synchronized boolean isEnabled() {
+			return enabled;
+		}
+		
+		public synchronized void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
 	}
 }

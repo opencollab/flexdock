@@ -432,20 +432,4 @@ public class PerspectiveManager implements LayoutManager {
 		m_currentPerspective = info.getCurrentPerspective();
 		return true;
 	}
-	
-	private static boolean shutdownHookAdded;
-	
-	public static void addShutdownStorageHook(final String appKey) {
-		if(shutdownHookAdded)
-			return;
-		
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				DockingManager.persistLayouts(appKey);
-			}
-		});
-		
-		shutdownHookAdded = true;
-	}
-
 }
