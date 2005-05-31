@@ -36,9 +36,9 @@ import org.flexdock.view.Viewport;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FlexDockDemo.java,v 1.5 2005-05-30 22:25:57 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.1 2005-05-31 03:43:24 marius Exp $
  */
-public class FlexDockDemo extends JFrame {
+public class PerspectivesDemo extends JFrame {
 	public static final String APP_KEY = "PerspectiveDemo";
 	private static final String MAIN_VIEW = "main.view";
 	private static final String BIRD_VIEW = "bird.view";
@@ -50,7 +50,7 @@ public class FlexDockDemo extends JFrame {
 	private static final String P2 = "p2";
 	private static final String P3 = "p3";
 	
-	public FlexDockDemo() {
+	public PerspectivesDemo() {
 		super("FlexDock Demo");
 		setContentPane(createContentPane());
 		setJMenuBar(createApplicationMenuBar());
@@ -240,30 +240,38 @@ public class FlexDockDemo extends JFrame {
 	
 	
 	
-	private static void setupPerspectives() {
+	private static void configureDocking() {
+		// setup the DockingManager to work with our application
+		DockingManager.setApplicationKey(APP_KEY);
+		DockingManager.setDockableBuilder(new ViewBuilder());
+		
+		// configure the perspective manager
 		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());
 		PerspectiveManager mgr = PerspectiveManager.getInstance();
 		mgr.setDefaultPerspective(P3);
 		
-		// load on startup
-		DockingManager.loadLayouts(APP_KEY);
+		// load any previously persisted layouts
+		DockingManager.loadLayouts();
 		// remember to store on shutdown
-		PerspectiveManager.addShutdownStorageHook(APP_KEY);
+		DockingManager.setAutoPersist(true);
 	}
 	
 	
 	
 	public static void main(String[] args) {
 		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
-		DockingManager.setDockableBuilder(new ViewBuilder());
-		setupPerspectives();
+
+		// setup the flexdock configuration
+		configureDocking();
 		
-		FlexDockDemo flexDockDemo = new FlexDockDemo();
+		// create out application frame
+		PerspectivesDemo flexDockDemo = new PerspectivesDemo();
 		flexDockDemo.setSize(800, 600);
 		SwingUtility.centerOnScreen(flexDockDemo);
 		flexDockDemo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		flexDockDemo.setVisible(true);
 		
+		// load perspectives into the application frame
 		PerspectiveManager.getInstance().reload();
 	}
 
