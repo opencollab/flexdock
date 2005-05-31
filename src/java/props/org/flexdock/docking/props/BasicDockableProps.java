@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import org.flexdock.docking.CursorProvider;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.TypedHashtable;
 
@@ -84,9 +83,6 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 	
 	
 	
-	public CursorProvider getCursorProvider() {
-		return (CursorProvider)get(CURSOR_PROVIDER);
-	}
 	
 	public Icon getDockbarIcon() {
 		return (Icon)get(DOCKBAR_ICON);
@@ -148,9 +144,6 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps 
 	
 	
 	
-	public void setCursorProvider(CursorProvider cursorProvider) {
-		put(CURSOR_PROVIDER, cursorProvider);
-	}
 	
 	public void setDockbarIcon(Icon icon) {
 		put(DOCKBAR_ICON, icon);

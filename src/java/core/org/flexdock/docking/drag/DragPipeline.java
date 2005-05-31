@@ -67,13 +67,17 @@ public class DragPipeline {
 	
 	private void openImpl(DragToken token) {
 		this.dragToken = token;
-		
+
 		notifyDockingPort(token, true);
 		
 		windows = RootWindow.getVisibleWindows();
 		for(int i=0; i<windows.length; i++) {
 			applyGlassPane(windows[i], createGlassPane());
 		}
+		
+		// kill the rubberband if floating is not allowed
+		if(!DragManager.isFloatingAllowed(token.getDockableReference()))
+			rubberBand = null;
 
 		token.start();
 		open = true;
@@ -98,7 +102,7 @@ public class DragPipeline {
 		if(!open)
 			return;
 		
-		rubberBand.clear();
+		clearRubberBand();
 		for(int i=0; i<windows.length; i++) {
 			Component cmp = windows[i].getGlassPane();
 			if(cmp instanceof DragGlasspane) {
@@ -112,6 +116,7 @@ public class DragPipeline {
 		}
 		
 		notifyDockingPort(dragToken, false);
+
 		open = false;
 	}
 
@@ -143,7 +148,7 @@ public class DragPipeline {
 		me.consume();
 
 		// hide the rubber band
-		rubberBand.clear();
+		clearRubberBand();
 		
 		// track whether or not we're currently over a window
 		dragToken.setOverWindow(newGlassPane!=null);
@@ -246,7 +251,7 @@ public class DragPipeline {
 		t.start();
 	}
 	private void drawRubberBand(Rectangle rect) {
-		rubberBand.paint(rect);
+		paintRubberBand(rect);
 	}
 	
 	
@@ -273,5 +278,17 @@ public class DragPipeline {
 			((DefaultDockingPort)port).setDragInProgress(inProgress);
 		}
 	}
+
+	
+	private void clearRubberBand() {
+		if(rubberBand!=null)
+			rubberBand.clear();
+	}
+	
+	private void paintRubberBand(Rectangle rect) {
+		if(rubberBand!=null)
+			rubberBand.paint(rect);
+	}
+	
 
 }

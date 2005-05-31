@@ -1,7 +1,7 @@
 /*
  * Created on Mar 4, 2005
  */
-package org.flexdock.demos.view;
+package org.flexdock.test.dockbar;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -24,12 +24,11 @@ import org.flexdock.view.Viewport;
 /**
  * @author Christopher Butler
  */
-public class ViewDemo extends JFrame implements DockingConstants {
-	
+public class ComplexDockbarTest extends JFrame implements DockingConstants {
 	public static void main(String[] args) {
 		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-//		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+		//		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+		//		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				startup();
@@ -38,14 +37,14 @@ public class ViewDemo extends JFrame implements DockingConstants {
 	}
 	
 	private static void startup() {
-		JFrame f = new ViewDemo();
+		JFrame f = new ComplexDockbarTest();
 		f.setSize(800, 600);
 		SwingUtility.centerOnScreen(f);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
+		f.setVisible(true);		
 	}
 
-	public ViewDemo() {
+	public ComplexDockbarTest() {
 		super("Viewport Demo");
 		setContentPane(createContentPane());
 	}
@@ -91,10 +90,13 @@ public class ViewDemo extends JFrame implements DockingConstants {
 
 	private View createStartPage() {
 		String id = "startPage";
+
+		VSNetStartPage page = new VSNetStartPage();
 		View view = new View(id, null, null);
 		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
 		view.setTitlebar(null);
-		view.setContentPane(new VSNetStartPage());
+		view.setContentPane(page);
+
 		return view;
 	}
 

@@ -32,6 +32,7 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.util.Utilities;
 
 /**
  * Provides a default implementation of the <code>Dockable</code> interface.  This class may be extended
@@ -46,10 +47,6 @@ public class DockableAdapter implements Dockable {
 	private ArrayList dragListeners;
 	private Hashtable clientProperties;
 	private HashSet frameDragSources;
-	
-	public DockableAdapter() {
-		this(null);
-	}
 	
 	public DockableAdapter(String id) {
 		persistentId = id;
@@ -139,7 +136,7 @@ public class DockableAdapter implements Dockable {
 	}
 
 	public void putClientProperty(Object key, Object value) {
-		getClientProperties().put(key, value);
+		Utilities.put(getClientProperties(), key, value);
 	}
 
 	public DockableProps getDockingProperties() {
@@ -158,5 +155,13 @@ public class DockableAdapter implements Dockable {
 		if(frameDragSources==null)
 			frameDragSources = new HashSet();
 		return frameDragSources;
+	}
+	
+	public void setTabText(String tabText) {
+		getDockingProperties().setDockableDesc(tabText);
+	}
+	
+	public String getTabText() {
+		return getDockingProperties().getDockableDesc();
 	}
 }

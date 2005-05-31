@@ -5,6 +5,7 @@ package org.flexdock.docking.event;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
+import java.util.Map;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -29,14 +30,15 @@ public class DockingEvent extends Event {
 	private AWTEvent trigger;
 	private String region;
 	private boolean overWindow;
+	private Map dragContext;
 
 	/**
 	 * Constructor to create a DockingEvent object with the provided Dockable,
 	 * the originating docking part, the destination docking port and whether
 	 * the dock is completed or canceled.
 	 */
-	public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType) {
-		this(source, oldPort, newPort, eventType, null);
+	public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType, Map context) {
+		this(source, oldPort, newPort, eventType, null, context);
 	}
 
 	/**
@@ -44,12 +46,13 @@ public class DockingEvent extends Event {
 	 * the originating docking part, the destination docking port and whether
 	 * the dock is completed or canceled.
 	 */
-	public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType, AWTEvent trigger) {
+	public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType, AWTEvent trigger, Map context) {
 		super(source, eventType);
 		this.oldPort = oldPort;
 		this.newPort = newPort;
 		this.trigger = trigger;
 		this.region = DockingPort.UNKNOWN_REGION;
+		dragContext = context;
 		setOverWindow(true);
 	}
 
@@ -117,5 +120,9 @@ public class DockingEvent extends Event {
 	
 	public Component getComponent() {
 		return getDockable().getDockable();
+	}
+	
+	public Map getDragContext() {
+		return dragContext;
 	}
 }

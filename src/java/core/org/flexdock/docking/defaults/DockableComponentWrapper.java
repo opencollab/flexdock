@@ -32,6 +32,7 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.util.Utilities;
 
 /**
  * This class models a <code>Dockable</code> implementation for wrapping a <code>Component</code>.  It is 
@@ -178,7 +179,7 @@ public class DockableComponentWrapper implements Dockable {
 	}
 
 	public void putClientProperty(Object key, Object value) {
-		getClientProperties().put(key, value);
+		Utilities.put(getClientProperties(), key, value);
 	}
 
 	public DockableProps getDockingProperties() {

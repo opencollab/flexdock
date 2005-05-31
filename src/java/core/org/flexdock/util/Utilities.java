@@ -4,6 +4,7 @@
 package org.flexdock.util;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -137,5 +138,15 @@ public class Utilities {
 	public static boolean sysTrue(String key) {
 		String value = key==null? null: System.getProperty(key);
 		return value==null? false: "true".equals(value);
+	}
+	
+	public static void put(Map map, Object key, Object value) {
+		if(map==null || key==null)
+			return;
+		
+		if(value==null)
+			map.remove(key);
+		else
+			map.put(key, value);
 	}
 }

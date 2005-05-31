@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="src/java/demo"/>
 	<classpathentry kind="src" path="src/java/dockbar"/>
 	<classpathentry kind="src" path="src/java/drag"/>
-	<classpathentry kind="src" path="src/java/misc"/>
 	<classpathentry kind="src" path="src/java/perspective"/>
 	<classpathentry kind="src" path="src/java/plaf"/>
 	<classpathentry kind="src" path="src/java/props"/>
@@ -12,7 +11,6 @@
 	<classpathentry kind="src" path="src/java/view"/>
 	<classpathentry kind="src" path="resources/core"/>
 	<classpathentry kind="src" path="resources/demo"/>
-	<classpathentry kind="src" path="resources/misc"/>
 	<classpathentry kind="src" path="resources/plaf"/>
 	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
 	<classpathentry kind="lib" path="lib/skinlf.jar"/>

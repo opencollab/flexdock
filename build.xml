@@ -8,14 +8,13 @@
     <property name="java.src.demo" value="${java.src}/demo" />
     <property name="java.src.dockbar" value="${java.src}/dockbar" />
     <property name="java.src.drag" value="${java.src}/drag" />
-    <property name="java.src.misc" value="${java.src}/misc" />
     <property name="java.src.perspective" value="${java.src}/perspective" />
 	<property name="java.src.plaf" value="${java.src}/plaf" />
     <property name="java.src.props" value="${java.src}/props" />
     <property name="java.src.test" value="${java.src}/test" />
     <property name="java.src.view" value="${java.src}/view" />
 
-    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.dockbar};${java.src.drag};${java.src.misc};${java.src.perspective};${java.src.plaf};${java.src.props};${java.src.test};${java.src.view}" />
+    <property name="java.src.path" value="${java.src.core};${java.src.demo};${java.src.dockbar};${java.src.drag};${java.src.perspective};${java.src.plaf};${java.src.props};${java.src.test};${java.src.view}" />
 	<property name="lib.jars" value="${lib.dir}/skinlf.jar" />
     <property name="resource.dir" value="${basedir}/resources" />
 
@@ -53,7 +52,6 @@
 		<copy todir="${bin.dir}">
 			<fileset dir="${resource.dir}/core" />
 			<fileset dir="${resource.dir}/demo" />
-			<fileset dir="${resource.dir}/misc" />
 			<fileset dir="${resource.dir}/plaf" />
 		</copy>
 		
@@ -66,7 +64,6 @@
 		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.demo}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.dockbar}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.drag}" destdir="${bin.dir}"/>
-		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.misc}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.perspective}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.plaf}" destdir="${bin.dir}"/>
 		<javac sourcepath="${java.src.path}" classpath="${lib.jars}" srcdir="${java.src.props}" destdir="${bin.dir}"/>
@@ -107,7 +104,6 @@
             <fileset dir="${java.src.demo}"/>
             <fileset dir="${java.src.dockbar}"/>
             <fileset dir="${java.src.drag}"/>
-            <fileset dir="${java.src.misc}"/>
             <fileset dir="${java.src.perspective}"/>
             <fileset dir="${java.src.plaf}"/>
             <fileset dir="${java.src.props}"/>

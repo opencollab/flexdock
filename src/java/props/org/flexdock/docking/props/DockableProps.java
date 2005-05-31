@@ -5,13 +5,10 @@ package org.flexdock.docking.props;
 
 import javax.swing.Icon;
 
-import org.flexdock.docking.CursorProvider;
-
 /**
  * @author Christopher Butler
  */
 public interface DockableProps {
-	public static final String CURSOR_PROVIDER = "Dockable.CURSOR_PROVIDER";
 	public static final String DESCRIPTION = "Dockable.DESCRIPTION";
 	public static final String DOCKING_ENABLED = "Dockable.DOCKING_ENABLED";
 	public static final String MOUSE_MOTION_DRAG_BLOCK = "Dockable.MOUSE_MOTION_DRAG_BLOCK";
@@ -41,8 +38,7 @@ public interface DockableProps {
 	public static final String MINIMIZED_EDGE = "Dockable.MINIMIZED_EDGE";
 	
 	public static final String FLOATING_GROUP = "Dockable.FLOATING_GROUP";
-	
-	public CursorProvider getCursorProvider();
+
 
 	public String getDockableDesc();
 	
@@ -72,8 +68,6 @@ public interface DockableProps {
 	
 	
 	
-	
-	public void setCursorProvider(CursorProvider provider);
 
 	public void setDockableDesc(String desc);
 	

@@ -71,7 +71,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
 		boolean listenerEnabled = dockable.getFrameDragSources().contains(dragSrc);
 		dragListener.setEnabled(listenerEnabled);
 		if(listenerEnabled) {
-			evt.consume();	
+			evt.consume();
 		}
 	}
 

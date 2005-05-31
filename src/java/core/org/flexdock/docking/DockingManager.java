@@ -38,6 +38,7 @@ import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.event.DockingEventHandler;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
+import org.flexdock.docking.floating.policy.FloatPolicyManager;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.docking.props.PropertyManager;
@@ -127,6 +128,7 @@ public class DockingManager {
 		
 		// make sure dockingEvents are properly intercepted
 		EventDispatcher.addHandler(new DockingEventHandler());
+		EventDispatcher.addListener(FloatPolicyManager.getInstance());
 		
 		Properties config = ResourceManager.getProperties(CONFIG_PROPS, true);
 		// set the minimization manager

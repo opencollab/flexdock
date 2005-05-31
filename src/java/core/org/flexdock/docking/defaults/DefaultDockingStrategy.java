@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.Map;
 
 import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
@@ -18,6 +19,7 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.RegionChecker;
+import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.drag.DragToken;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.DockingFrame;
@@ -28,7 +30,6 @@ import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.view.View;
 
 /**
  * @author Christopher Butler
@@ -159,7 +160,8 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		// perform post-drag operations
 		DockingPort newPort = results.dropTarget;
 		int evtType = results.success? DockingEvent.DOCKING_COMPLETE: DockingEvent.DOCKING_CANCELED;
-		DockingEvent evt = new DockingEvent(dockable, oldPort, newPort, evtType);
+		Map dragContext = DragManager.getDragContext(dockable);
+		DockingEvent evt = new DockingEvent(dockable, oldPort, newPort, evtType, dragContext);
 		// populate DockingEvent status info 
 		evt.setRegion(region);
 		evt.setOverWindow(token==null? true: token.isOverWindow());
@@ -246,7 +248,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			return false;
 		
 		// can't float on a fake drag operation 
-		if(token.isPseudoDrag() || !(dockable instanceof View))
+		if(token.isPseudoDrag())
 			return false;
 		
 		// TODO: break this check out into a separate DropPolicy class.
@@ -328,7 +330,8 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		DockingPort dockingPort = DockingUtility.getParentDockingPort(dragSrc);
 		
 		// notify that we are about to undock
-		DockingEvent dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_STARTED);
+		Map dragContext = DragManager.getDragContext(dockable);
+		DockingEvent dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_STARTED, dragContext);
 		EventDispatcher.dispatch(dockingEvent);
 //		if(dockingEvent.isConsumed())
 //			return false;
@@ -349,7 +352,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	}
 	
 		if (success) {
-			dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_COMPLETE);
+			dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_COMPLETE, dragContext);
 			// notify the docking port and dockable
 			Object[] evtTargets = {dockingPort, dockable};
 			EventDispatcher.dispatch(dockingEvent, evtTargets);
@@ -425,7 +428,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	
 	public JSplitPane createSplitPane(DockingPort base, String region) {
 		JSplitPane split = createSplitPaneImpl(base, region);
-		split.putClientProperty(DockingConstants.REGION, region);
+		SwingUtility.putClientProperty(split, DockingConstants.REGION, region);
 		
 		// determine the orientation
 		int orientation = JSplitPane.HORIZONTAL_SPLIT;

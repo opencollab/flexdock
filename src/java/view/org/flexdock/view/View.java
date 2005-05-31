@@ -429,6 +429,9 @@ public class View extends JComponent implements Dockable {
 	public void dragStarted(DockingEvent evt) {
 	}
 	
+	public void dropStarted(DockingEvent evt) {
+	}
+	
 	public void undockingComplete(DockingEvent evt) {
 		clearButtonRollovers();
 	}
@@ -446,18 +449,6 @@ public class View extends JComponent implements Dockable {
 			if(button!=null) {
 				button.getModel().setRollover(false);
 			}
-		}
-	}
-	
-	public void dropStarted(DockingEvent evt) {
-		if(evt.isOverWindow())
-			return;
-		
-		DockingPort oldPort = evt.getOldDockingPort();
-		if(oldPort instanceof FloatingDockingPort) {
-			FloatingDockingPort dockingPort = (FloatingDockingPort)oldPort;
-			if(dockingPort.getDockableCount()<2)
-				evt.consume();
 		}
 	}
 	

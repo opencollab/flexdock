@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.flexdock.docking.CursorProvider;
-
 
 /**
  * @author Christopher Butler
@@ -58,11 +56,6 @@ public class ScopedDockableProps extends BasicDockableProps implements ScopedMap
 	
 	public Map getRoot() {
 		return ROOT_PROPS;
-	}
-	
-	
-	public CursorProvider getCursorProvider() {
-		return (CursorProvider)PropertyManager.getProperty(CURSOR_PROVIDER, this);
 	}
 
 	public String getDockableDesc() {

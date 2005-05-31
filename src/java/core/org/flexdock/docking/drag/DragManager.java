@@ -9,6 +9,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -16,6 +18,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.docking.event.DockingEvent;
+import org.flexdock.docking.floating.policy.FloatPolicyManager;
 import org.flexdock.event.EventDispatcher;
 import org.flexdock.util.DockingUtility;
 
@@ -24,10 +27,13 @@ import org.flexdock.util.DockingUtility;
  *
  */
 public class DragManager extends MouseAdapter implements MouseMotionListener {
+	private static final String DRAG_CONTEXT = "DragManager.DRAG_CONTEXT";
+	
 	private Dockable dockable;
 	private DragPipeline pipeline;
 	private boolean enabled;
 	private Point dragOrigin;
+	private HashMap dragContext;
 	
 	public static void prime() {
 		// execute static initializer to preload resources
@@ -41,8 +47,10 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	public void mousePressed(MouseEvent e) {
 		if(dockable==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE) 
 			enabled = false;
-		else
+		else {
+			toggleDragContext(true);
 			enabled = !isDragCanceled(dockable, e);
+		}
 	}
 	
 	public void mouseDragged(MouseEvent evt) {
@@ -90,6 +98,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 		finishDrag(dockable, pipeline.getDragToken(), e);				
 		if(pipeline!=null)
 			pipeline.close();
+		toggleDragContext(false);
 		dragOrigin = null;
 		pipeline = null;
 	}
@@ -105,7 +114,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 		restoreCachedListeners(token);
 		
 		// issue a DockingEvent to allow any listeners the chance to cancel the operation.
-		DockingEvent evt = new DockingEvent(dockable, currentPort, targetPort, DockingEvent.DROP_STARTED, mouseEvt);
+		DockingEvent evt = new DockingEvent(dockable, currentPort, targetPort, DockingEvent.DROP_STARTED, mouseEvt, getDragContext());
 		evt.setRegion(region);
 		evt.setOverWindow(token.isOverWindow());
 //		EventDispatcher.notifyDockingMonitor(dockable, evt);
@@ -116,6 +125,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 		if(!evt.isConsumed())
 			docker.dock(dockable, targetPort, region, token);
 	}
+
 
 	
 	
@@ -172,8 +182,38 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	
 	private static boolean isDragCanceled(Dockable dockable, MouseEvent trigger) {
 		DockingPort port = DockingUtility.getParentDockingPort(dockable);
-		DockingEvent evt = new DockingEvent(dockable, port, null, DockingEvent.DRAG_STARTED, trigger);
+		Map dragContext = getDragContext(dockable);
+		DockingEvent evt = new DockingEvent(dockable, port, null, DockingEvent.DRAG_STARTED, trigger, dragContext);
 		EventDispatcher.dispatch(evt, dockable);
 		return evt.isConsumed();
+	}
+	
+	public static Map getDragContext(Dockable dockable) {
+		Object obj = dockable==null? null: dockable.getClientProperty(DRAG_CONTEXT);
+		return obj instanceof Map? (Map)obj: null;
+	}
+	
+	private void toggleDragContext(boolean add) {
+		if(add) {
+			if(dragContext==null) {
+				dragContext = new HashMap();
+				dockable.putClientProperty(DRAG_CONTEXT, dragContext);
+			}
+		}
+		else {
+			if(dragContext!=null) {
+				dragContext.clear();
+				dragContext = null;
+			}
+			dockable.putClientProperty(DRAG_CONTEXT, null);
+		}
+	}
+
+	private Map getDragContext() {
+		return getDragContext(dockable);
+	}
+	
+	public static boolean isFloatingAllowed(Dockable dockable) {
+		return FloatPolicyManager.isFloatingAllowed(dockable);
 	}
 }

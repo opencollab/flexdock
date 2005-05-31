@@ -113,7 +113,8 @@ public class DragGlasspane extends JComponent {
 		if(preview==null)
 			previewPoly = null;
 		else {
-			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this, token.getDragInfo());
+			Map dragContext = getDragContext(token);
+			previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this, dragContext);
 		}
 	}
 	
@@ -169,15 +170,22 @@ public class DragGlasspane extends JComponent {
 	protected void paintComponent(Graphics g) {
 		if(currentDragToken!=null && previewDelegate!=null && previewPoly!=null) { 
 			Dockable dockable = currentDragToken.getDockableReference();
-			Map dragInfo = currentDragToken.getDragInfo();
+			Map dragInfo = getDragContext(currentDragToken);
 			previewDelegate.drawPreview((Graphics2D)g, previewPoly, dockable, dragInfo);
 		}
-			
 	}
 	
 	private boolean match(Object o1, Object o2) {
 		if(o1==o2)
 			return true;
 		return o1==null? false: o1.equals(o2);
+	}
+	
+	private Map getDragContext(DragToken token) {
+		if(token==null)
+			return null;
+		
+		Dockable dockable = token.getDockableReference();
+		return DragManager.getDragContext(dockable);
 	}
 }
