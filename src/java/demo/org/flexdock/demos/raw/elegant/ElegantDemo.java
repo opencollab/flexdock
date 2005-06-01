@@ -50,7 +50,7 @@ public class ElegantDemo extends JFrame {
 		
 		// setup 4 quadrants
 		// dock the editor into the root dockingport
-		DockingManager.dock(editorView, rootDockingPort, DockingPort.CENTER_REGION);
+		DockingManager.dock(editorView, rootDockingPort);
 		// dock the hierarchy-view to the west of the editor
 		DockingManager.dock(j2eeHierarchyView, editorView, DockingPort.WEST_REGION);
 		// dock the outline to the south of the hierarchy
@@ -59,13 +59,13 @@ public class ElegantDemo extends JFrame {
 		DockingManager.dock(tasksView, editorView, DockingPort.SOUTH_REGION);
 
 		// tab the nav-view onto the hierarchy view
-		DockingManager.dock(j2eeNavView, j2eeHierarchyView, DockingPort.CENTER_REGION);
+		DockingManager.dock(j2eeNavView, j2eeHierarchyView);
 		
 		// tab the rest of the views onto the task-view
-		DockingManager.dock(serversView, tasksView, DockingPort.CENTER_REGION);
-		DockingManager.dock(consoleView, tasksView, DockingPort.CENTER_REGION);
-		DockingManager.dock(searchView, tasksView, DockingPort.CENTER_REGION);
-		DockingManager.dock(synchronizeView, tasksView, DockingPort.CENTER_REGION);
+		DockingManager.dock(serversView, tasksView);
+		DockingManager.dock(consoleView, tasksView);
+		DockingManager.dock(searchView, tasksView);
+		DockingManager.dock(synchronizeView, tasksView);
 		
 		// resize the immediate splitPane child of the root dockingport
 		DockingManager.setSplitProportion(rootDockingPort, 0.3f);

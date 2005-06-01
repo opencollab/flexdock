@@ -183,6 +183,10 @@ public class DockingManager {
 		//when there would be no default docker.
 	}
 
+	public static boolean dock(Component dockable , DockingPort port) {
+		return dock(dockable, port, DockingPort.CENTER_REGION);
+	}
+	
 	public static boolean dock(Component dockable , DockingPort port, String region) {
 		Dockable d = getDockable(dockable);
 		return dock(d, port, region);
@@ -706,6 +710,14 @@ public class DockingManager {
 	
 	public static void setSplitProportion(DockingPort port, float proportion) {
 		DockingUtility.setSplitProportion(port, proportion);
+	}
+	
+	public static boolean dock(Component dockable, Component parent) {
+		return dock(getDockable(dockable), getDockable(parent));
+	}
+	
+	public static boolean dock(Dockable dockable, Dockable parent) {
+		return dock(dockable, parent, DockingPort.CENTER_REGION);
 	}
 	
 	public static boolean dock(Dockable dockable, Dockable parent, String region) {

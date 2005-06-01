@@ -5,9 +5,11 @@ package org.flexdock.util;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.awt.Point;
 
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
@@ -175,4 +177,59 @@ public class DockingUtility implements DockingConstants {
 	public static boolean isFloating(Dockable dockable) {
 		return dockable.getDockingProperties().getFloatingGroup()!=null;
 	}
+	
+	public static void resizeSplitPane(final JSplitPane split, float dividerProportion) {
+		if(split==null)
+			return;
+		
+		dividerProportion = Math.max(0f, dividerProportion);
+		final float percent = Math.min(1f, dividerProportion);
+		int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight(); 
+		
+		if(split.isVisible() && size>0 && EventQueue.isDispatchThread()) {
+			split.setDividerLocation(dividerProportion);
+			split.validate();
+			return;
+		}
+		
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						resizeSplitPane(split, percent);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+			
+	}
+
+	public static void setSplitProportion(DockingPort port, float proportion) {
+		if(port==null)
+			return;
+		
+		Component comp = port.getDockedComponent();
+		if(comp instanceof JSplitPane)
+			resizeSplitPane((JSplitPane)comp, proportion);
+	}
+	
+	public static void setSplitProportion(Dockable dockable, float proportion) {
+		if(dockable==null)
+			return;
+		
+		Component comp = dockable.getDockable();
+		Container parent = comp.getParent();
+		if(parent instanceof JTabbedPane) {
+			parent = parent.getParent();
+		}
+		if(!(parent instanceof DockingPort))
+			return;
+		
+		Container grandParent = parent.getParent();
+		if(grandParent instanceof JSplitPane)
+			resizeSplitPane((JSplitPane)grandParent, proportion);
+	}
+	
 }
