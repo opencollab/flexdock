@@ -38,6 +38,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -349,8 +350,28 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 
 	
 	protected JTabbedPane createTabbedPane() {
-		JTabbedPane pane = new JTabbedPane();		
-		pane.setTabPlacement(getInitTabPlacement());
+		int tabPlacement = getInitTabPlacement();
+		Insets insets = new Insets(0, 0, 0, 0);
+		switch(tabPlacement) {
+			case JTabbedPane.TOP:
+				insets.top = 1;
+				break;
+			case JTabbedPane.LEFT:
+				insets.left = 1;
+				break;
+			case JTabbedPane.BOTTOM:
+				insets.bottom = 1;
+				break;
+			case JTabbedPane.RIGHT:
+				insets.right = 1;
+				break;
+		}
+		
+		Insets oldInsets = UIManager.getInsets("TabbedPane.contentBorderInsets");
+		UIManager.put("TabbedPane.contentBorderInsets", insets); 
+		JTabbedPane pane = new JTabbedPane();
+		pane.setTabPlacement(tabPlacement);
+		UIManager.put("TabbedPane.contentBorderInsets", oldInsets);
 
 		TabbedDragListener tdl = new TabbedDragListener();
 		pane.addMouseListener(tdl);
