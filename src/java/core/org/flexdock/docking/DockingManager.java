@@ -183,6 +183,11 @@ public class DockingManager {
 		//when there would be no default docker.
 	}
 
+	public static boolean dock(Component dockable , DockingPort port, String region) {
+		Dockable d = getDockable(dockable);
+		return dock(d, port, region);
+	}
+	
 	public static boolean dock(Dockable dockable, DockingPort port, String region) {
 		if(dockable==null)
 			return false;
@@ -691,6 +696,36 @@ public class DockingManager {
 		getDockingManager().autoPersister.setEnabled(b);
 	}
 	
+	public static void setSplitProportion(Component dockable, float proportion) {
+		setSplitProportion(getDockable(dockable), proportion);
+	}
+	
+	public static void setSplitProportion(Dockable dockable, float proportion) {
+		DockingUtility.setSplitProportion(dockable, proportion);
+	}
+	
+	public static void setSplitProportion(DockingPort port, float proportion) {
+		DockingUtility.setSplitProportion(port, proportion);
+	}
+	
+	public static boolean dock(Dockable dockable, Dockable parent, String region) {
+		return dock(dockable, parent, region, 0.5f);
+	}
+	
+	public static boolean dock(Dockable dockable, Dockable parent, String region, float proportion) {
+		return DockingUtility.dockRelative(parent, dockable, region, proportion);
+	}
+	
+	public static boolean dock(Component dockable, Component parent, String region) {
+		return dock(dockable, parent, region, 0.5f);
+	}
+	
+	public static boolean dock(Component dockable, Component parent, String region, float proportion) {
+		Dockable newDockable = getDockable(dockable);
+		Dockable parentDockable = getDockable(parent);
+		
+		return DockingUtility.dockRelative(parentDockable, newDockable, region, proportion);
+	}
 	
 	private static class AutoPersist extends Thread {
 		private boolean enabled;

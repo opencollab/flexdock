@@ -1,16 +1,14 @@
 package org.flexdock.demos.raw.elegant;
 
+import java.awt.Container;
+
 import javax.swing.JFrame;
-import javax.swing.JSplitPane;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
+
+import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.DockingPort;
 
 
 public class ElegantDemo extends JFrame {
-	private JSplitPane horizontalSplit;
-	private JSplitPane vertSplitRight;
-	private JSplitPane vertSplitLeft;
-	
 	private ElegantPanel j2eeHierarchyView;
 	private ElegantPanel j2eeNavView;
 	private ElegantPanel consoleView;
@@ -21,10 +19,7 @@ public class ElegantDemo extends JFrame {
 	private ElegantPanel outlineView;
 	private ElegantPanel editorView;
 	
-	private ElegantDockingPort topLeft;
-	private ElegantDockingPort bottomLeft;
-	private ElegantDockingPort topRight;
-	private ElegantDockingPort bottomRight;
+	private DockingPort rootDockingPort;
 	
 	public ElegantDemo() {
 		super("Elegant Docking Demo");
@@ -33,15 +28,8 @@ public class ElegantDemo extends JFrame {
 
 	private void init() {
 		createViews();
-		horizontalSplit = createSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		vertSplitLeft = createSplitPane(JSplitPane.VERTICAL_SPLIT);
-		vertSplitRight = createSplitPane(JSplitPane.VERTICAL_SPLIT);
-		
-		horizontalSplit.setLeftComponent(vertSplitLeft);
-		horizontalSplit.setRightComponent(vertSplitRight);
-		initDockingPorts();
-		
-		setContentPane(horizontalSplit);
+		initLayout();
+		setContentPane((Container)rootDockingPort);
 	}
 	
 	private void createViews() {
@@ -57,65 +45,41 @@ public class ElegantDemo extends JFrame {
 	}
 	
 
-	private void initDockingPorts() {
-		topLeft = new ElegantDockingPort();
-		bottomLeft = new ElegantDockingPort();
-		topRight = new ElegantDockingPort();
-		bottomRight = new ElegantDockingPort();
+	private void initLayout() {
+		rootDockingPort = new ElegantDockingPort();
 		
-		topLeft.add(j2eeHierarchyView);
-		topLeft.add(j2eeNavView);
-		bottomLeft.add(outlineView);
-		topRight.add(editorView);
-		bottomRight.add(tasksView);
-		bottomRight.add(serversView);
-		bottomRight.add(consoleView);
-		bottomRight.add(searchView);
-		bottomRight.add(synchronizeView);		
+		// setup 4 quadrants
+		// dock the editor into the root dockingport
+		DockingManager.dock(editorView, rootDockingPort, DockingPort.CENTER_REGION);
+		// dock the hierarchy-view to the west of the editor
+		DockingManager.dock(j2eeHierarchyView, editorView, DockingPort.WEST_REGION);
+		// dock the outline to the south of the hierarchy
+		DockingManager.dock(outlineView, j2eeHierarchyView, DockingPort.SOUTH_REGION);
+		// dock the task-view to the south of the editor
+		DockingManager.dock(tasksView, editorView, DockingPort.SOUTH_REGION);
 
-		vertSplitLeft.setLeftComponent(topLeft);
-		vertSplitLeft.setRightComponent(bottomLeft);
-		vertSplitRight.setLeftComponent(topRight);
-		vertSplitRight.setRightComponent(bottomRight);
+		// tab the nav-view onto the hierarchy view
+		DockingManager.dock(j2eeNavView, j2eeHierarchyView, DockingPort.CENTER_REGION);
+		
+		// tab the rest of the views onto the task-view
+		DockingManager.dock(serversView, tasksView, DockingPort.CENTER_REGION);
+		DockingManager.dock(consoleView, tasksView, DockingPort.CENTER_REGION);
+		DockingManager.dock(searchView, tasksView, DockingPort.CENTER_REGION);
+		DockingManager.dock(synchronizeView, tasksView, DockingPort.CENTER_REGION);
+		
+		// resize the immediate splitPane child of the root dockingport
+		DockingManager.setSplitProportion(rootDockingPort, 0.3f);
+		// resize the splitPane containing the hierarchy-view
+		DockingManager.setSplitProportion(j2eeHierarchyView, 0.75f);
+		// resize the splitPane containing the editor
+		DockingManager.setSplitProportion(editorView, 0.75f);
 	}
 
-
-	private void postInit() {
-		horizontalSplit.setDividerLocation(0.3d);
-		vertSplitLeft.setDividerLocation(0.75d);
-		vertSplitRight.setDividerLocation(0.75d);
-	}
-
-	private static JSplitPane createSplitPane(int orientation) {
-		JSplitPane split = new JSplitPane(orientation);
-		// remove the border from the split pane
-		split.setBorder(null);
-         
-		// set the divider size for a more reasonable, less bulky look 
-		split.setDividerSize(3);
-
-		// check the UI.  If we can't work with the UI any further, then
-		// exit here.
-		if (!(split.getUI() instanceof BasicSplitPaneUI))
-		   return split;
-
-		//  grab the divider from the UI and remove the border from it
-		BasicSplitPaneDivider divider =
-					   ((BasicSplitPaneUI) split.getUI()).getDivider();
-		if (divider != null)
-		   divider.setBorder(null);
-
-		return split;
-	}
 	
 	public static void main(String[] args) {
 		ElegantDemo demo = new ElegantDemo();
 		demo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		demo.setSize(800, 600);
 		demo.setVisible(true);
-		
-		// now that we're visible and validated, move the split pane
-		// dividers to their proper locations.
-		demo.postInit();
 	}
 }
