@@ -3,6 +3,7 @@
  */
 package org.flexdock.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
@@ -148,5 +149,50 @@ public class Utilities {
 			map.remove(key);
 		else
 			map.put(key, value);
+	}
+	
+	public static boolean setValue(Object obj, String fieldName, Object value) {
+		if(obj==null || fieldName==null)
+			return false;
+		
+		try {
+			Class c = obj.getClass();
+			Field field = c.getDeclaredField(fieldName);
+			if(field.isAccessible()) {
+				field.set(obj, value);
+				return true;
+			}
+			
+			field.setAccessible(true);
+			field.set(obj, value);
+			field.setAccessible(false);
+			return true;
+		} catch(Throwable t) {
+			// don't report the error. the purpse of this method is to try to
+			// access the field, but fail silently if we can't.
+			return false;
+		}
+	}
+	
+	public static Object getValue(Object obj, String fieldName) throws IllegalAccessException {
+		if(obj==null || fieldName==null)
+			return null;
+		
+		try {
+			Class c = obj.getClass();
+			Field field = c.getDeclaredField(fieldName);
+			if(field.isAccessible()) {
+				return field.get(obj);
+			}
+			
+			field.setAccessible(true);
+			Object ret = field.get(obj);
+			field.setAccessible(false);
+			return obj;
+		} catch(Throwable t) {
+			throw t instanceof IllegalAccessException?
+					(IllegalAccessException)t: 
+					new IllegalAccessException(t.getMessage());
+		}
 	}
 }
