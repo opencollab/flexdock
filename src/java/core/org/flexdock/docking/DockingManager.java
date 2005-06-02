@@ -245,7 +245,16 @@ public class DockingManager {
 	}
 
 
-	
+	public static void close(Dockable dockable) {
+		if(dockable==null)
+			return;
+		
+		if(isDocked(dockable)) {
+			DockingManager.undock(dockable);
+		} else if (DockingUtility.isMinimized(dockable)) {
+			getMinimizeManager().close(dockable);
+		}
+	}
 	
 	
 	
