@@ -501,6 +501,8 @@ public class View extends JComponent implements Dockable, HierarchyListener {
 			return;
 		
 		DockingState info = DockingManager.getDockingState(this);
+		if(info==null)
+			return;
 		
 		Component[] comps = titlebar.getComponents();
 		for(int i=0; i<comps.length; i++) {
