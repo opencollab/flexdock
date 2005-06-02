@@ -6,6 +6,8 @@ import java.awt.Window;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JDialog;
+
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -297,7 +299,11 @@ public class PerspectiveManager implements LayoutManager {
 		if(windows.length==0)
 			return;
 		
-		load(perspectiveId, windows[0].getRootContainer(), reset);		
+		Component window = windows[0].getRootContainer();
+		if(window instanceof JDialog)
+			window = ((JDialog)window).getOwner();
+		
+		load(perspectiveId, window, reset);		
 	}
 	
 	public void load(String perspectiveId, Component window) {
@@ -327,12 +333,18 @@ public class PerspectiveManager implements LayoutManager {
 	private void loadPerspective(String perspectiveId, final DockingPort rootPort, boolean reset) {
 		if(perspectiveId==null)
 			return;
-		
+
+		Perspective current = getCurrentPerspective();
+		final Perspective perspective = getPerspective(perspectiveId);
+
 		// remember the current layout state so we'll be able to
 		// restore when we switch back
-		cacheLayoutState(getCurrentPerspective(), rootPort);
+		if(current!=null) {
+			cacheLayoutState(current, rootPort);
+			current.unload();
+		}
 		
-		final Perspective perspective = getPerspective(perspectiveId);
+		// if the new perspective isn't available, then we're done
 		if(perspective==null)
 			return;
 		
