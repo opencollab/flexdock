@@ -32,5 +32,4 @@ public class Button extends JToggleButton {
 			return null;
 		return (String)action.getValue(Action.NAME);
 	}
-
 }

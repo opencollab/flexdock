@@ -16,7 +16,8 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.state.DockingState;
+import org.flexdock.docking.state.MinimizationManager;
 
 /**
  * @author Christopher Butler
@@ -138,8 +139,18 @@ public class DockingUtility implements DockingConstants {
 		if(dockable==null)
 			return false;
 		
-		DockableProps props = dockable.getDockingProperties();
-		return props.isMinimized().booleanValue();
+		DockingState info = getDockingState(dockable);
+		return info==null? false: info.isMinimized();
+	}
+	
+	public static int getMinimizedEdge(Dockable dockable) {
+		int defaultEdge = MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+		DockingState info = getDockingState(dockable);
+		return info==null? defaultEdge: info.getDockbarEdge();
+	}
+	
+	private static DockingState getDockingState(Dockable dockable) {
+		return DockingManager.getLayoutManager().getDockingState(dockable);
 	}
 	
 
@@ -175,7 +186,12 @@ public class DockingUtility implements DockingConstants {
 	}
 	
 	public static boolean isFloating(Dockable dockable) {
-		return dockable.getDockingProperties().getFloatingGroup()!=null;
+		DockingState info = getDockingState(dockable);
+		return info==null? false: info.isFloating();
+	}
+	
+	public static boolean isEmbedded(Dockable dockable) {
+		return DockingManager.isDocked(dockable) && !isFloating(dockable);
 	}
 	
 	public static void resizeSplitPane(final JSplitPane split, float dividerProportion) {

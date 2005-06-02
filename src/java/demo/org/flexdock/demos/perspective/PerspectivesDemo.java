@@ -36,7 +36,7 @@ import org.flexdock.view.Viewport;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.1 2005-05-31 03:43:24 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.2 2005-06-02 01:07:37 marius Exp $
  */
 public class PerspectivesDemo extends JFrame {
 	public static final String APP_KEY = "PerspectiveDemo";
@@ -247,8 +247,9 @@ public class PerspectivesDemo extends JFrame {
 		
 		// configure the perspective manager
 		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());
+		PerspectiveManager.setRestoreFloatingOnLoad(true);
 		PerspectiveManager mgr = PerspectiveManager.getInstance();
-		mgr.setDefaultPerspective(P3);
+		mgr.setCurrentPerspective(P3, true);
 		
 		// load any previously persisted layouts
 		DockingManager.loadLayouts();

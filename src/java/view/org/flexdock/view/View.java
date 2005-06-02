@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.MenuComponent;
 import java.awt.PopupMenu;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -24,22 +26,22 @@ import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.docking.floating.frames.FloatingDockingPort;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
-import org.flexdock.docking.state.MinimizationManager;
+import org.flexdock.docking.state.DockingState;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
+import org.flexdock.view.actions.ViewAction;
 import org.flexdock.view.tracking.ViewListener;
 import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * @author Christopher Butler
  */
-public class View extends JComponent implements Dockable {
+public class View extends JComponent implements Dockable, HierarchyListener {
 	static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
 	protected String id;
 	protected Titlebar titlepane;
@@ -81,6 +83,8 @@ public class View extends JComponent implements Dockable {
 		if(name==null)
 			throw new IllegalArgumentException("The 'name' parameter cannot be null.");
 
+		addHierarchyListener(this);
+		
 		if(title==null)
 			title = "";
 		if(tabText==null)
@@ -291,6 +295,7 @@ public class View extends JComponent implements Dockable {
 	public void remove(int index) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The remove() method is may not be called directly.");
+		
 		super.remove(index);
 	}
 	public void removeAll() {
@@ -386,13 +391,12 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public int getMinimizedEdge() {
-		Integer edge = getViewProperties().getMinimizedEdge();
-		return edge==null? MinimizationManager.UNSPECIFIED_LAYOUT_EDGE: edge.intValue();
+		return DockingUtility.getMinimizedEdge(this);
 	}
 	
-	public void setMinimizedEdge(int edge) {
-		getViewProperties().setMinimizedEdge(edge);
-	}
+//	public void setMinimizedEdge(int edge) {
+//		getViewProperties().setMinimizedEdge(edge);
+//	}
 	
 	
 	
@@ -418,6 +422,7 @@ public class View extends JComponent implements Dockable {
 
 	public void dockingComplete(DockingEvent evt) {
 		setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
+		updateDockingState();
 		if(titlepane!=null)
 			titlepane.revalidate();
 		
@@ -476,7 +481,7 @@ public class View extends JComponent implements Dockable {
 	}
 	
 	public boolean isFloating() {
-		return getDockingPort() instanceof FloatingDockingPort;
+		return DockingUtility.isFloating(this);
 	}
 	
 	/**
@@ -486,4 +491,26 @@ public class View extends JComponent implements Dockable {
 		return "View[Id="+this.id+"]";
 	}
 
+	public void hierarchyChanged(HierarchyEvent e) {
+		clearButtonRollovers();
+	}
+	
+	public void updateDockingState() {
+		Titlebar titlebar = getTitlebar();
+		if(titlebar==null)
+			return;
+		
+		DockingState info = DockingManager.getDockingState(this);
+		
+		Component[] comps = titlebar.getComponents();
+		for(int i=0; i<comps.length; i++) {
+			Button button = comps[i] instanceof Button? (Button)comps[i]: null;
+			if(button==null)
+				continue;
+
+			Action action = button.getAction();
+			if(action instanceof ViewAction)
+				((ViewAction)action).updateState(this, info, button);
+		}
+	}
 }

@@ -38,6 +38,7 @@ public class PerspectiveManager implements LayoutManager {
 	private String m_defaultPerspective;
 	private String m_currentPerspective;
 	private Persister m_persister = new DefaultPersister();
+	private boolean restoreFloatingOnLoad;
 	
 	static {
 		initialize();
@@ -196,6 +197,17 @@ public class PerspectiveManager implements LayoutManager {
 	 */
 	public void setDefaultPerspective(String perspectiveId) {
 		m_defaultPerspective = perspectiveId;
+	}
+	
+	public void setCurrentPerspective(String perspectiveId) {
+		setCurrentPerspective(perspectiveId, false);
+	}
+	
+	public void setCurrentPerspective(String perspectiveId, boolean asDefault) {
+		perspectiveId = perspectiveId==null? m_defaultPerspective: perspectiveId;
+		m_currentPerspective = perspectiveId;
+		if(asDefault)
+			setDefaultPerspective(perspectiveId);
 	}
 	
 	/**
@@ -431,5 +443,13 @@ public class PerspectiveManager implements LayoutManager {
 		setDefaultPerspective(info.getDefaultPerspective());
 		m_currentPerspective = info.getCurrentPerspective();
 		return true;
+	}
+	
+	public static boolean isRestoreFloatingOnLoad() {
+		return getInstance().restoreFloatingOnLoad;
+	}
+	
+	public static void setRestoreFloatingOnLoad(boolean restoreFloatingOnLoad) {
+		getInstance().restoreFloatingOnLoad = restoreFloatingOnLoad;
 	}
 }

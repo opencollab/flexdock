@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.SwingUtilities;
 
+import org.flexdock.docking.state.DockingState;
+import org.flexdock.view.Button;
 import org.flexdock.view.View;
 
 /**
@@ -37,6 +39,6 @@ public abstract class ViewAction extends AbstractAction {
 		};
 	}
 	
-
-
+	public void updateState(View view, DockingState info, Button button) {
+	}
 }

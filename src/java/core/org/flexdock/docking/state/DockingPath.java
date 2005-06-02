@@ -6,6 +6,7 @@ package org.flexdock.docking.state;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.Window;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
+import org.flexdock.util.SwingUtility;
 
 /**
  * @author Christopher Butler
@@ -195,11 +197,20 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		return restore(DockingManager.getDockable(dockable));
 	}
 	
+	private DockingPort getRootDockingPort() {
+		DockingPort port = DockingManager.getRootDockingPort(rootPortId);
+		if(port!=null)
+			return port;
+		
+		Window activeWindow = SwingUtility.getActiveWindow();
+		return DockingManager.getRootDockingPort(activeWindow);
+	}
+	
 	public boolean restore(Dockable dockable) {
 		if(dockable==null || isDocked(dockable))
 			return false;
 		
-		DockingPort rootPort = DockingManager.getRootDockingPort(rootPortId);
+		DockingPort rootPort = getRootDockingPort();
 		String region = DockingPort.CENTER_REGION;
 		if(nodes.size()==0) {
 			return dockFullPath(dockable, rootPort, region);

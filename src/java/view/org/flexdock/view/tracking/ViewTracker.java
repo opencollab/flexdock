@@ -9,6 +9,7 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
+import org.flexdock.docking.DockingManager;
 import org.flexdock.event.EventDispatcher;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
@@ -31,6 +32,7 @@ public class ViewTracker {
 	
 	
 	private static void initialize() {
+		Class c = DockingManager.class;
 		EventDispatcher.addListener(new DockbarMonitor());
 	}
 	

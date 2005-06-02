@@ -19,8 +19,11 @@ import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
+import org.flexdock.docking.state.FloatManager;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
@@ -44,6 +47,24 @@ public class DockingStateListener extends DockingListener.Stub {
 	public void dockingComplete(final DockingEvent evt) {
 		if(!isEnabled())
 			return;
+		
+		Dockable dockable = evt.getDockable();
+		DockingState info = getDockingState(dockable);
+		// if docking has just completed, then we cannot be in a minimized state
+		info.setDockbarEdge(MinimizationManager.UNSPECIFIED_LAYOUT_EDGE);
+		
+		// update the floating state
+		RootWindow window = RootWindow.getRootContainer(dockable.getDockable());
+		FloatManager floatManager = DockingManager.getLayoutManager().getFloatManager(); 
+		if(window.getRootContainer() instanceof DockingFrame) {
+			String groupId = ((DockingFrame)window.getRootContainer()).getGroupName();
+			floatManager.addToGroup(dockable, groupId);
+		}
+		else {
+			floatManager.removeFromGroup(dockable);
+		}
+
+		
 		
 		Thread t = new Thread() {
 			public void run() {
@@ -74,12 +95,12 @@ public class DockingStateListener extends DockingListener.Stub {
 		if(dockable==null)
 			return;
 
-		if(!DockingUtility.isFloating(dockable)) {
-			updateNonFloating(dockable);
+		if(DockingUtility.isEmbedded(dockable)) {
+			updateEmbedded(dockable);
 		}
 	}
 	
-	private void updateNonFloating(Dockable dockable) {
+	private void updateEmbedded(Dockable dockable) {
 		if(!dockable.getDockable().isValid())
 			return;
 		

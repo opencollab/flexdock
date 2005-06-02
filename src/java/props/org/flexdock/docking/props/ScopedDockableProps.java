@@ -93,12 +93,4 @@ public class ScopedDockableProps extends BasicDockableProps implements ScopedMap
 	public Float getPreviewSize() {
 		return (Float)PropertyManager.getProperty(PREVIEW_SIZE, this);
 	}
-
-	public Boolean isMinimized() {
-		return (Boolean)PropertyManager.getProperty(MINIMIZED, this);
-	}
-	
-	public Integer getMinimizedEdge() {
-		return (Integer)PropertyManager.getProperty(MINIMIZED_EDGE, this);
-	}
 }

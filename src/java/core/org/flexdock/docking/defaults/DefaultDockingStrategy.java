@@ -306,9 +306,6 @@ public class DefaultDockingStrategy implements DockingStrategy {
 
 		String tabText = dockable.getDockingProperties().getDockableDesc();
 		results.success = target.dock(dockableCmp, tabText, region);
-		if(results.success) {
-			DockingManager.getFloatManager().removeFromGroup(dockable);
-		}
 		SwingUtility.revalidateComponent((Component) target);
 		return results;
 	}
@@ -375,7 +372,6 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		// create the frame
 		FloatManager mgr = DockingManager.getFloatManager();
 		DockingFrame frame = mgr.floatDockable(dockable, dockable.getDockable(), screenBounds);
-		mgr.addToGroup(dockable, frame.getGroupName());
 		
 		// grab a reference to the frame's dockingPort for posterity
 		results.dropTarget = frame.getDockingPort();
@@ -504,6 +500,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			RegionChecker rc = port.getDockingProperties().getRegionChecker();
 			float prefSize = rc.getSiblingSize(dockable.getDockable(), splitter.getRegion());
 			return splitter.isElderTopLeft()? 1f-prefSize: prefSize;
+//			return prefSize;
 		}
 
 		return RegionChecker.DEFAULT_SIBLING_SIZE;

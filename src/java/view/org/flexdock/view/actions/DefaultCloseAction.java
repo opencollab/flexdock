@@ -5,7 +5,6 @@ package org.flexdock.view.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.view.View;
 
@@ -19,10 +18,6 @@ public class DefaultCloseAction extends ViewAction {
 	}
 	
 	public void actionPerformed(View view, ActionEvent evt) {
-		if(DockingManager.isDocked((Dockable)view)) {
-			DockingManager.undock(view);
-		} else if (view.isMinimized()) {
-			DockingManager.getMinimizeManager().close(view);
-		}
+		DockingManager.close(view);
 	}
 }

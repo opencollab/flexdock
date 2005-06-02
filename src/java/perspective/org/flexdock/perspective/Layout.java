@@ -33,7 +33,7 @@ import org.flexdock.util.RootWindow;
  */
 public class Layout implements Cloneable, FloatManager, Serializable {
 	private HashMap dockingInfo;
-	private ArrayList layoutListeners;
+	private transient ArrayList layoutListeners;
 	private Hashtable floatingGroups;
 	private LayoutNode restorationLayout;
 	
@@ -47,24 +47,30 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		floatingGroups = floatGroups;
 	}
 	
+	private ArrayList getLayoutListeners() {
+		if(layoutListeners==null)
+			layoutListeners = new ArrayList();
+		return layoutListeners;
+	}
+	
 	public void addListener(LayoutListener listener) {
 		if(listener!=null) {
-			synchronized(layoutListeners) {
-				layoutListeners.add(listener);
+			synchronized(getLayoutListeners()) {
+				getLayoutListeners().add(listener);
 			}
 		}
 	}
 	
 	public void removeListener(LayoutListener listener) {
 		if(listener!=null) {
-			synchronized(layoutListeners) {
-				layoutListeners.remove(listener);
+			synchronized(getLayoutListeners()) {
+				getLayoutListeners().remove(listener);
 			}
 		}
 	}
 	
 	public LayoutListener[] getListeners() {
-		return (LayoutListener[])layoutListeners.toArray(new LayoutListener[0]);
+		return (LayoutListener[])getLayoutListeners().toArray(new LayoutListener[0]);
 	}
 	
 	
@@ -169,7 +175,8 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 				isMaintained(dockable);
 			}
 		}
-		return (DockingState)dockingInfo.get(dockableId);
+		Object obj = dockingInfo.get(dockableId);
+		return (DockingState)obj;
 	}
 
 	
@@ -192,6 +199,18 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		PerspectiveManager.setDockingStateListening(false);
 		dockingPort.importLayout(restorationLayout);
 		PerspectiveManager.setDockingStateListening(listening);
+		
+		Dockable[] dockables = getDockables();
+		boolean restoreFloatOnLoad = PerspectiveManager.isRestoreFloatingOnLoad();
+		for(int i=0; i<dockables.length; i++) {
+			Dockable d = dockables[i];
+			if(DockingUtility.isMinimized(d)) { 
+				RestorationManager.getInstance().restore(d);
+			}
+			else if(restoreFloatOnLoad && DockingUtility.isFloating(d)) {
+				RestorationManager.getInstance().restore(d);
+			}
+		}
 		
 		// send notification
 		LayoutEvent evt = new LayoutEvent(this, null, null, LayoutEvent.LAYOUT_APPLIED);
@@ -232,7 +251,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	
 	public Object clone() {
 		synchronized(this) {
-			ArrayList listeners = (ArrayList)layoutListeners.clone();
+			ArrayList listeners = (ArrayList)getLayoutListeners().clone();
 			HashMap infoMap = (HashMap)dockingInfo.clone();
 			for(Iterator it=dockingInfo.keySet().iterator(); it.hasNext();) {
 				String key = (String)it.next();
@@ -244,7 +263,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 			for(Iterator it=floatingGroups.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
 				FloatingGroup group = (FloatingGroup)floatingGroups.get(key);
-				infoMap.put(key, group.clone());
+				floatTable.put(key, group.clone());
 			}
 			
 			// note, we're using a shallow copy of the listener list.
@@ -266,10 +285,15 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	
 	
 	
+	
+	
+	
+	
+	
 	private DockingFrame getDockingFrame(Dockable dockable, Component frameOwner) {
 		FloatingGroup group = getGroup(dockable);
 		if(group==null)
-			group = new FloatingGroup(dockable.getDockingProperties().getFloatingGroup());
+			group = new FloatingGroup(getFloatingGroup(dockable));
 		
 		DockingFrame frame = group.getFrame();
 		if(frame==null) {
@@ -327,7 +351,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		if(dockable==null)
 			return null;
 		
-		String groupId = dockable.getDockingProperties().getFloatingGroup();
+		String groupId = getFloatingGroup(dockable);
 		return getGroup(groupId);
 	}
 	
@@ -342,7 +366,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		FloatingGroup group = getGroup(groupId);
 		if(dockable!=null && group!=null) {
 			group.addDockable(dockable.getPersistentId());
-			dockable.getDockingProperties().setFloatingGroup(groupId);
+			setFloatingGroup(dockable, group.getName());
 		}
 	}
 	
@@ -351,7 +375,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		if(dockable!=null) {
 			if(group!=null)
 				group.removeDockable(dockable.getPersistentId());
-			dockable.getDockingProperties().setFloatingGroup(null);
+			setFloatingGroup(dockable, null);
 		}
 		
 		// if the group is empty, dispose of it so we don't have 
@@ -362,10 +386,30 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		}
 	}
 	
+	
+	private String getFloatingGroup(Dockable dockable) {
+		DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
+		return info.getFloatingGroup();
+	}
+	
+	private void setFloatingGroup(Dockable dockable, String group) {
+		DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
+		info.setFloatingGroup(group);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public boolean isInitialized() {
 		return restorationLayout!=null;
 	}
-	
 	
 	public LayoutNode getRestorationLayout() {
 		return restorationLayout;

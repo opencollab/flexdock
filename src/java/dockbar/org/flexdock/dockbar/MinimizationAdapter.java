@@ -13,6 +13,10 @@ import org.flexdock.docking.state.MinimizationManager;
  */
 public class MinimizationAdapter implements MinimizationManager {
 	
+	static {
+		init();
+	}
+	
 	private static void init() {
 		// make sure DockbarManager is initialized
 		Class c = DockbarManager.class;

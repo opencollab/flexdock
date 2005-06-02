@@ -90,7 +90,7 @@ public class DragGlasspane extends JComponent {
 		Dockable hover = getHoverDockable(dropTargets);
 		
 		Point mousePoint = token.getCurrentMouse((Component)port);
-		region = port==null? DockingPort.UNKNOWN_REGION: port.getRegion(mousePoint);
+		region = findRegion(port, hover, mousePoint); 
 		// set the target dockable
 		token.setTarget(port, region);
 		
@@ -99,6 +99,25 @@ public class DragGlasspane extends JComponent {
 		
 		// repaint
 		repaint();
+	}
+	
+	private String findRegion(DockingPort hoverPort, Dockable hoverDockable, Point mousePoint) {
+		if(hoverPort==null)
+			return DockingPort.UNKNOWN_REGION;
+		
+		if(hoverDockable!=null)
+			return hoverPort.getRegion(mousePoint);
+		
+		// apparently, we're not hovered over a valid dockable.  either the dockingport
+		// is empty, or it already contains a non-dockable component.  if it's empty, then
+		// we can dock into it.  otherwise, we need to short-circuit the docking operation.
+		Component docked = hoverPort.getDockedComponent();
+		// if 'docked' is null, then the port is empty and we can dock
+		if(docked==null)
+			return hoverPort.getRegion(mousePoint);
+		
+		// the port contains a non-dockable component.  we can't dock
+		return DockingPort.UNKNOWN_REGION;
 	}
 	
 	private Dockable getHoverDockable(ComponentNest nest) {

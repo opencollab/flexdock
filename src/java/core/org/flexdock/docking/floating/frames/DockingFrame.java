@@ -22,18 +22,17 @@ package org.flexdock.docking.floating.frames;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
-import java.awt.Window;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
-import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.FloatingGroup;
+import org.flexdock.util.RootWindow;
 
 /**
  * @author Andreas Ernst
@@ -45,7 +44,8 @@ public class DockingFrame extends JDialog {
 	private String groupName;
 	
 	public static DockingFrame create(Component c, String groupName) {
-		Window window = c==null? null: SwingUtilities.getWindowAncestor(c);
+		RootWindow rootWin = RootWindow.getRootContainer(c);
+		Component window = rootWin.getRootContainer();
 		if(window instanceof DockingFrame) {
 			window = ((DockingFrame)window).getOwner();
 		}

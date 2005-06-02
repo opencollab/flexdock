@@ -67,6 +67,7 @@ public class DockbarManager {
 
 
 	static {
+		Class c = DockingManager.class;
 		EventDispatcher.addHandler(new DockbarEventHandler());
 		DockbarTracker.register();
 	}
@@ -452,7 +453,8 @@ public class DockbarManager {
 		// make sure they can't drag the dockable while it's in the dockbar
 		dockable.getDockingProperties().setDockingEnabled(false);
 		// indicate that the dockable is minimized
-		dockable.getDockingProperties().setMinimized(true);
+		DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
+		info.setDockbarEdge(edge);
 		revalidate();
 	}
 	
@@ -493,8 +495,6 @@ public class DockbarManager {
 		// restore drag capability to the dockable after removing
 		// from the dockbar
 		dockable.getDockingProperties().setDockingEnabled(true);
-		// indicate that the dockable is no longer minimized
-		dockable.getDockingProperties().setMinimized(false);
 		revalidate();
 		return true;
 	}
