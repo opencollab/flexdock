@@ -11,6 +11,7 @@ package org.flexdock.perspective;
 import java.io.Serializable;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.LayoutNode;
@@ -131,6 +132,13 @@ public class Perspective implements Cloneable, Serializable {
 			layout.apply(port);
 		else {
 			reset(port);
+		}
+	}
+	
+	public void unload() {
+		Dockable[] dockables = getLayout().getDockables();
+		for(int i=0; i<dockables.length; i++) {
+			DockingManager.close(dockables[i]);
 		}
 	}
 	
