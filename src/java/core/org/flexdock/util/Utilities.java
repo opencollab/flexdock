@@ -195,4 +195,12 @@ public class Utilities {
 					new IllegalAccessException(t.getMessage());
 		}
 	}
+	
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
