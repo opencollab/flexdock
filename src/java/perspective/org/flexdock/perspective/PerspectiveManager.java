@@ -299,7 +299,10 @@ public class PerspectiveManager implements LayoutManager {
 		if(windows.length==0)
 			return;
 		
+		// getDockingWindows() doesn't guarantee window ordering.  If we have floating
+		// dockables, then windows[0] might be a floating dialog.
 		Component window = windows[0].getRootContainer();
+		// retarget to the main application window if necessary
 		if(window instanceof JDialog)
 			window = ((JDialog)window).getOwner();
 		
