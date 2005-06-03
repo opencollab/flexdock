@@ -7,13 +7,11 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
-import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
  */
 public class DefaultFloatPolicy extends FloatPolicy.Stub {
-	public static final String FLOATING_BLOCKED =  "DefaultFloatPolicy.FLOATING_BLOCKED";
 	
 	private static final DefaultFloatPolicy SINGLETON = new DefaultFloatPolicy();
 	
@@ -36,7 +34,7 @@ public class DefaultFloatPolicy extends FloatPolicy.Stub {
 	}
 	
 	public boolean isFloatingAllowed(Dockable dockable) {
-		if(dockable==null || Utilities.sysTrue(FLOATING_BLOCKED))
+		if(dockable==null || FloatPolicyManager.isGlobalFloatingBlocked())
 			return false;
 		
 		if(dockable.getFrameDragSources().size()==0)

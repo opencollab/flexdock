@@ -748,6 +748,25 @@ public class DockingManager {
 		return DockingUtility.dockRelative(parentDockable, newDockable, region, proportion);
 	}
 	
+	
+	
+	public static boolean isFloatingSupported() {
+		return !FloatPolicyManager.isGlobalFloatingBlocked();
+	}
+	
+	public static void setFloatingSupported(boolean supported) {
+		boolean blocked = !supported;
+		FloatPolicyManager.setGlobalFloatingBlocked(blocked);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private static class AutoPersist extends Thread {
 		private boolean enabled;
 		
