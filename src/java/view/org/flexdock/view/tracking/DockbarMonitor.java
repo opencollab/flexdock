@@ -30,10 +30,4 @@ public class DockbarMonitor extends DockbarListener.Stub {
 		if(view!=null && view.isFloating())
 			evt.consume();
 	}
-	
-	public void minimizeCompleted(DockbarEvent evt) {
-		View view = getView(evt);
-		if(view!=null)
-			view.updateDockingState();
-	}
 }
