@@ -28,13 +28,11 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.props.PropertyManager;
-import org.flexdock.docking.state.DockingState;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.view.actions.ViewAction;
 import org.flexdock.view.tracking.ViewListener;
 import org.flexdock.view.tracking.ViewTracker;
 
@@ -422,7 +420,6 @@ public class View extends JComponent implements Dockable, HierarchyListener {
 
 	public void dockingComplete(DockingEvent evt) {
 		setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
-		updateDockingState();
 		if(titlepane!=null)
 			titlepane.revalidate();
 		
@@ -493,26 +490,5 @@ public class View extends JComponent implements Dockable, HierarchyListener {
 
 	public void hierarchyChanged(HierarchyEvent e) {
 		clearButtonRollovers();
-	}
-	
-	public void updateDockingState() {
-		Titlebar titlebar = getTitlebar();
-		if(titlebar==null)
-			return;
-		
-		DockingState info = DockingManager.getDockingState(this);
-		if(info==null)
-			return;
-		
-		Component[] comps = titlebar.getComponents();
-		for(int i=0; i<comps.length; i++) {
-			Button button = comps[i] instanceof Button? (Button)comps[i]: null;
-			if(button==null)
-				continue;
-
-			Action action = button.getAction();
-			if(action instanceof ViewAction)
-				((ViewAction)action).updateState(this, info, button);
-		}
 	}
 }

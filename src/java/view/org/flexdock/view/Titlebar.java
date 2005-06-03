@@ -3,18 +3,22 @@
  */
 package org.flexdock.view;
 
+import java.awt.Component;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Action;
+import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.TitlebarUI;
+import org.flexdock.view.actions.ViewAction;
+import org.flexdock.view.model.ViewButtonModel;
 
 /**
  * @author Christopher Butler
@@ -93,6 +97,7 @@ public class Titlebar extends JComponent {
 		// add the action to our list
 		actionList.add(action);
 		regenerateButtonList();
+		updateButtonModels();
 	}
 	
 	private void regenerateButtonList() {
@@ -161,6 +166,7 @@ public class Titlebar extends JComponent {
 		Action action = getAction(key);
 		actionList.remove(action);
 		regenerateButtonList();
+		updateButtonModels();
 	}
 	
 	protected synchronized void removeAllActions() {
@@ -204,6 +210,7 @@ public class Titlebar extends JComponent {
 	
 	protected void setParentView(View view) {
 		parentView = view;
+		updateButtonModels();
 	}
 	
 	
@@ -211,7 +218,30 @@ public class Titlebar extends JComponent {
 		Button button = new Button(action);
 		if(ui instanceof TitlebarUI)
 			((TitlebarUI)ui).configureAction(action);
+		
+		// sync up the button model
+		if(action instanceof ViewAction) {
+			ButtonModel model = ((ViewAction)action).createButtonModel();
+			if(model!=null)
+				button.setModel(model);
+		}
+			
 		return button;
+	}
+	
+	private void updateButtonModels() {
+		String viewId = parentView==null? null: parentView.getPersistentId();
+		Component[] comps = getComponents();
+		for(int i=0; i<comps.length; i++) {
+			Button button = comps[i] instanceof Button? (Button)comps[i]: null;
+			if(button==null)
+				continue;
+			
+			ButtonModel bm = button.getModel();
+			if(bm instanceof ViewButtonModel) {
+				((ViewButtonModel)bm).setViewId(viewId);
+			}
+		}
 	}
 	
 	public void doLayout() {
