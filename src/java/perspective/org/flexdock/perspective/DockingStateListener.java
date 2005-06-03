@@ -55,8 +55,9 @@ public class DockingStateListener extends DockingListener.Stub {
 		
 		// update the floating state
 		RootWindow window = RootWindow.getRootContainer(dockable.getDockable());
-		FloatManager floatManager = DockingManager.getLayoutManager().getFloatManager(); 
-		if(window.getRootContainer() instanceof DockingFrame) {
+		FloatManager floatManager = DockingManager.getLayoutManager().getFloatManager();
+		Component frame = window==null? null: window.getRootContainer();
+		if(frame instanceof DockingFrame) {
 			String groupId = ((DockingFrame)window.getRootContainer()).getGroupName();
 			floatManager.addToGroup(dockable, groupId);
 		}
@@ -78,7 +79,6 @@ public class DockingStateListener extends DockingListener.Stub {
 		};
 		t.start();
 	}
-	
 	
 	
 	public void undockingStarted(DockingEvent evt) {
