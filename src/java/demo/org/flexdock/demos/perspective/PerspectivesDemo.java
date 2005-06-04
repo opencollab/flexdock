@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -36,7 +37,7 @@ import org.flexdock.view.Viewport;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.2 2005-06-02 01:07:37 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.3 2005-06-04 00:16:41 marius Exp $
  */
 public class PerspectivesDemo extends JFrame {
 	public static final String APP_KEY = "PerspectiveDemo";
@@ -244,6 +245,7 @@ public class PerspectivesDemo extends JFrame {
 		// setup the DockingManager to work with our application
 		DockingManager.setApplicationKey(APP_KEY);
 		DockingManager.setDockableBuilder(new ViewBuilder());
+		DockingManager.setFloatingSupported(true);
 		
 		// configure the perspective manager
 		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());
@@ -252,7 +254,11 @@ public class PerspectivesDemo extends JFrame {
 		mgr.setCurrentPerspective(P3, true);
 		
 		// load any previously persisted layouts
-		DockingManager.loadLayouts();
+		try {
+			DockingManager.loadLayouts();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 		// remember to store on shutdown
 		DockingManager.setAutoPersist(true);
 	}

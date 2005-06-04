@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 import org.flexdock.demos.util.VSNetStartPage;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
@@ -38,6 +39,9 @@ public class ViewDemo extends JFrame implements DockingConstants {
 	}
 	
 	private static void startup() {
+		// turn on floating support
+		DockingManager.setFloatingSupported(true);
+		
 		JFrame f = new ViewDemo();
 		f.setSize(800, 600);
 		SwingUtility.centerOnScreen(f);

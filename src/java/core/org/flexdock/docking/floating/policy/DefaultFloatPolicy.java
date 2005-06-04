@@ -34,7 +34,7 @@ public class DefaultFloatPolicy extends FloatPolicy.Stub {
 	}
 	
 	public boolean isFloatingAllowed(Dockable dockable) {
-		if(dockable==null || FloatPolicyManager.isGlobalFloatingBlocked())
+		if(dockable==null || !FloatPolicyManager.isGlobalFloatingSupported())
 			return false;
 		
 		if(dockable.getFrameDragSources().size()==0)
