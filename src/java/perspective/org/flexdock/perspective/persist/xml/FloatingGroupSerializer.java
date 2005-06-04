@@ -18,6 +18,8 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import java.awt.Rectangle;
+
 import org.flexdock.docking.state.FloatingGroup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FloatingGroupSerializer.java,v 1.2 2005-06-04 14:00:29 winnetou25 Exp $
+ * @version $Id: FloatingGroupSerializer.java,v 1.3 2005-06-04 14:28:36 winnetou25 Exp $
  */
 public class FloatingGroupSerializer implements ISerializer {
 
@@ -38,6 +40,11 @@ public class FloatingGroupSerializer implements ISerializer {
         
         Element floatingGroupElement = document.createElement(PersistenceConstants.FLOATING_GROUP_ELEMENT_NAME);
         floatingGroupElement.setAttribute(PersistenceConstants.FLOATING_GROUP_ATTRIBUTE_NAME, floatingGroup.getName());
+        
+        ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
+        Element rectangleElement = rectangleSerializer.serialize(document, floatingGroup.getBounds());
+
+        floatingGroupElement.appendChild(rectangleElement);
         
         return floatingGroupElement;
     }
