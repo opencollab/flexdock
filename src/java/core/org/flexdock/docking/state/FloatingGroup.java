@@ -13,19 +13,21 @@ import org.flexdock.docking.floating.frames.DockingFrame;
  * @author Christopher Butler
  */
 public class FloatingGroup implements Cloneable, Serializable {
-	private String name;
+    
+    private String name;
 	private Rectangle windowBounds;
 	private transient DockingFrame frame;
 	private HashSet dockables; // contains String dockableIds
 	
 	public FloatingGroup(String groupName) {
-		name = groupName==null? String.valueOf(this.hashCode()): groupName;
+	    //TODO can we change that to GUID.generateID() ? this hashCode thing...
+	    name = groupName==null? String.valueOf(this.hashCode()): groupName;
 		dockables = new HashSet();
 	}
 	
 	private FloatingGroup(String groupName, HashSet dockableSet) {
 		name = groupName;
-		dockables = dockableSet;		
+		dockables = dockableSet;
 	}
 	
 	public Rectangle getBounds() {
@@ -81,4 +83,5 @@ public class FloatingGroup implements Cloneable, Serializable {
 		clone.windowBounds = (Rectangle)windowBounds.clone();
 		return clone;
 	}
+	
 }

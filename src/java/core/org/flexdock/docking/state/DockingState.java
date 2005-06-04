@@ -16,7 +16,7 @@ public class DockingState implements Cloneable, Serializable {
 	
 	private String m_dockableId;
 	
-	private String m_relativeParent;
+	private String m_relativeParentId;
 	
 	private String m_region = DockingPort.UNKNOWN_REGION;
 	
@@ -37,7 +37,6 @@ public class DockingState implements Cloneable, Serializable {
 	
 	private int centerY = DockingConstants.UNINITIALIZED;
 
-
 	public DockingState(String dockableId) {
 		this.m_dockableId = dockableId;
 	}
@@ -51,6 +50,10 @@ public class DockingState implements Cloneable, Serializable {
 		return DockingManager.getDockable(m_dockableId);
 	}
 
+	public String getDockableId() {
+	    return m_dockableId;
+	}
+	
 	public float getSplitRatio() {
 		return m_splitRatio;
 	}
@@ -66,8 +69,6 @@ public class DockingState implements Cloneable, Serializable {
 	public void setRegion(String m_region) {
 		this.m_region = m_region;
 	}
-	
-	
 	
 	public int getDockbarEdge() {
 		return m_dockbarEdge;
@@ -113,15 +114,20 @@ public class DockingState implements Cloneable, Serializable {
 	}
 	
 	public Dockable getRelativeParent() {
-		return DockingManager.getDockable(m_relativeParent);
+		return DockingManager.getDockable(m_relativeParentId);
 	}
-	
+
+	public String getRelativeParentId() {
+	    return m_relativeParentId;
+	}
+
 	public void setRelativeParent(Dockable parent) {
 		String parentId = parent==null? null: parent.getPersistentId();
 		setRelativeParent(parentId);
 	}
-	public void setRelativeParent(String parent) {
-		m_relativeParent = parent;
+
+	public void setRelativeParent(String relativeParentId) {
+		m_relativeParentId = relativeParentId;
 	}
 
 	public int getLayoutWeight() {
@@ -143,7 +149,7 @@ public class DockingState implements Cloneable, Serializable {
 	public String toString() {
 		return "DockingState[id=" + m_dockableId + 
 				"; center=[" + centerX + "%," + centerY + "%]" +   
-				"; parent=" + m_relativeParent + 
+				"; parent=" + m_relativeParentId + 
 				"; region=" + m_region + "; ratio=" + m_splitRatio + 
 				"; float=" + m_floatingGroup + "; edge=" + m_dockbarEdge + 
 				"; weight=" + m_layoutWeight + "; display=" + m_displayed + "; ]";
@@ -172,18 +178,19 @@ public class DockingState implements Cloneable, Serializable {
 	}
 	
 	public Object clone() {
-		DockingState clone = new DockingState(m_dockableId, m_layoutWeight);
+		DockingState dockingStateClone = new DockingState(m_dockableId, m_layoutWeight);
 
-		clone.m_relativeParent = m_relativeParent;
-		clone.m_region = m_region;
-		clone.m_splitRatio = m_splitRatio;
-		clone.m_floatingGroup = m_floatingGroup;
-		clone.m_dockbarEdge = m_dockbarEdge;
-		clone.m_dockingPath = m_dockingPath==null? null: (DockingPath)m_dockingPath.clone();
-		clone.m_displayed = m_displayed;
-		clone.centerX = centerX;
-		clone.centerY = centerY;
+		dockingStateClone.m_relativeParentId = m_relativeParentId;
+		dockingStateClone.m_region = m_region;
+		dockingStateClone.m_splitRatio = m_splitRatio;
+		dockingStateClone.m_floatingGroup = m_floatingGroup;
+		dockingStateClone.m_dockbarEdge = m_dockbarEdge;
+		dockingStateClone.m_dockingPath = m_dockingPath==null? null: (DockingPath)m_dockingPath.clone();
+		dockingStateClone.m_displayed = m_displayed;
+		dockingStateClone.centerX = centerX;
+		dockingStateClone.centerY = centerY;
 		
-		return clone;
+		return dockingStateClone;
 	}
+	
 }

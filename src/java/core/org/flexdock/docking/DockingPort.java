@@ -35,15 +35,17 @@ import org.flexdock.docking.state.LayoutNode;
  * @author Chris Butler
  */
 public interface DockingPort extends DockingListener, DockingMonitor {
-	public static final String CENTER_REGION = "CENTER";
-	public static final String EAST_REGION = "EAST";
-	public static final String EMPTY_REGION = "EMPTY";
-	public static final String NORTH_REGION = "NORTH";
-	public static final String SOUTH_REGION = "SOUTH";
-	public static final String UNKNOWN_REGION = "UNKNOWN";
-	public static final String WEST_REGION = "WEST";
-	public static final String INITIAL_TAB_POSITION = "DockingPort.init.tab.position";
-	
+
+    String CENTER_REGION = "CENTER";
+	String EAST_REGION = "EAST";
+	//TODO is this really necessary? empty region?
+	String EMPTY_REGION = "EMPTY";
+	String NORTH_REGION = "NORTH";
+	String SOUTH_REGION = "SOUTH";
+	String WEST_REGION = "WEST";
+	String UNKNOWN_REGION = "UNKNOWN";
+
+	String INITIAL_TAB_POSITION = "DockingPort.init.tab.position";
 	
 	/**
 	 * Returns a boolean indicating whether or not docking is allowed within the specified region.  Used
@@ -130,4 +132,5 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	public void importLayout(LayoutNode node);
 	
 	public LayoutNode exportLayout();
+	
 }
