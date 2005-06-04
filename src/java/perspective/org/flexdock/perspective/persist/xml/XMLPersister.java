@@ -6,6 +6,9 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -64,6 +67,9 @@ public class XMLPersister implements Persister {
         SerializerRegistry.registerSerializer(LayoutNode.class, new LayoutNodeSerializer());
         SerializerRegistry.registerSerializer(LayoutSequence.class, new LayoutSequenceSerializer());
         SerializerRegistry.registerSerializer(DockingState.class, new DockingStateSerializer());
+        SerializerRegistry.registerSerializer(Point.class, new PointSerializer());
+        SerializerRegistry.registerSerializer(Dimension.class, new DimensionSerializer());
+        SerializerRegistry.registerSerializer(Rectangle.class, new RectangleSerializer());
     }
     
 }
