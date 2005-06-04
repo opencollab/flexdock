@@ -22,7 +22,7 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.4 2005-06-04 14:42:37 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.5 2005-06-04 14:48:28 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
@@ -30,7 +30,9 @@ public interface PersistenceConstants {
     String PERSPECTIVE_INFO_ELEMENT_NAME = "perspective-info";
     String CURRENT_PERSPECTIVE_ELEMENT_NAME = "current-perspective";
     String DEFAULT_PERSPECTIVE_ELEMENT_NAME = "default-perspective";
-    
+
+    String PERSPECTIVES_ELEMENT_NAME = "perspectives";
+
     //perspective constants
     String PERSPECTIVE_ELEMENT_NAME = "perspective";
     String PERSPECTIVE_ATTRIBUTE_ID = "id";

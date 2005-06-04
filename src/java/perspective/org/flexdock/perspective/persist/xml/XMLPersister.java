@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.6 2005-06-04 14:42:37 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.7 2005-06-04 14:48:28 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -66,9 +66,18 @@ public class XMLPersister implements Persister {
             Element perspectiveElement2 = perspectiveSerializer.serialize(document, perspectiveInfo.getDefaultPerspective());
             defaultPerspectiveElement.appendChild(perspectiveElement2);
             
+            Element perspectivesElement = document.createElement(PersistenceConstants.PERSPECTIVES_ELEMENT_NAME);
+            Perspective[] perspectives = perspectiveInfo.getPerspectives();
+            for (int i = 0; i < perspectives.length; i++) {
+                Perspective perspective = perspectives[i];
+                Element perspectiveElement = perspectiveSerializer.serialize(document, perspective);
+                perspectivesElement.appendChild(perspectiveElement);
+            }
+            
             rootElement.appendChild(currentPerspectiveElement);
             rootElement.appendChild(defaultPerspectiveElement);
-
+            rootElement.appendChild(perspectivesElement);
+            
             document.appendChild(rootElement);
             
             return true;
