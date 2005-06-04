@@ -20,6 +20,7 @@ import org.flexdock.perspective.restore.handlers.MinimizedHandler;
 import org.flexdock.perspective.restore.handlers.PointHandler;
 import org.flexdock.perspective.restore.handlers.RelativeHandler;
 import org.flexdock.perspective.restore.handlers.RestorationHandler;
+import org.flexdock.perspective.restore.handlers.UnknownStateHandler;
 import org.flexdock.util.RootWindow;
 
 /**
@@ -36,6 +37,7 @@ public class RestorationManager {
 		getInstance().addHandler(new RelativeHandler());
 		getInstance().addHandler(new DockPathHandler());
 		getInstance().addHandler(new PointHandler());
+		getInstance().addHandler(new UnknownStateHandler());
 	}
 	
 	public static RestorationManager getInstance() {
