@@ -246,7 +246,7 @@ public class Titlebar extends JComponent {
 	
 	public void doLayout() {
 		if(ui instanceof TitlebarUI)
-			((TitlebarUI)ui).layoutButtons(this);
+			((TitlebarUI)ui).layoutComponents(this);
 	}
 	
     public void updateUI() {

@@ -186,7 +186,7 @@ public class TitlebarUI extends FlexViewComponentUI {
         }
     }
 
-    public void layoutButtons(Titlebar titlebar) {
+    public void layoutComponents(Titlebar titlebar) {
         Rectangle rectangle = getPaintRect(titlebar);
         int margin = getButtonMargin();
         int h = rectangle.height - 2 * margin;
@@ -195,17 +195,21 @@ public class TitlebarUI extends FlexViewComponentUI {
         View view = titlebar.getView();
         Component[] c = titlebar.getComponents();
         for (int i = 0; i < c.length; i++) {
-            if (!(c[i] instanceof Button))
-                continue;
-
-            Button b = (Button) c[i];
-            if(view!=null && view.isActionBlocked(b.getActionName())) {
-            	b.setBounds(0, 0, 0, 0);
+        	// start out with the preferred width
+        	int width = c[i].getPreferredSize().width;
+            if (c[i] instanceof Button) {
+            	// org.flexdock.view.Buttons will be rendered as squares
+            	width = h;
+            	// don't show the button if its corresponding action is blocked
+                if(view!=null && view.isActionBlocked(((Button) c[i]).getActionName())) {
+                	c[i].setBounds(0, 0, 0, 0);
+                	continue;
+                }
             }
-            else {
-                b.setBounds(x, margin + rectangle.y, h, h);
-                x -= h;            	
-            }
+            // layout the component over to the right
+            c[i].setBounds(x, margin + rectangle.y, width, h);
+            // move x to the left for the next component
+           	x -= width;
         }
     }
 
