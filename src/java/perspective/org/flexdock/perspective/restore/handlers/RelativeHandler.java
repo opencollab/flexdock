@@ -33,7 +33,12 @@ public class RelativeHandler implements RestorationHandler {
 		if(parentInfo==null || parentInfo.isFloating() || parentInfo.isMinimized())
 			return false;
 		
-		return DockingUtility.dockRelative(parent, dockable, info.getRegion(), info.getSplitRatio());
+		float ratio = info.getSplitRatio();
+		boolean ret = DockingUtility.dockRelative(parent, dockable, info.getRegion(), info.getSplitRatio());
+		if(ret) {
+			DockingUtility.setSplitProportion(dockable, ratio);
+		}
+		return ret;
     }
 
 }
