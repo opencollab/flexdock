@@ -24,10 +24,11 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.state.DockingState;
 
 /**
- * Created on 2005-06-03
+ * Created on 2005-04-15
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: RestorationHandler.java,v 1.2 2005-06-04 16:21:45 winnetou25 Exp $
+ * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
+ * @version $Id: RestorationHandler.java,v 1.3 2005-06-04 16:42:22 winnetou25 Exp $
  */
 public interface RestorationHandler {
 
