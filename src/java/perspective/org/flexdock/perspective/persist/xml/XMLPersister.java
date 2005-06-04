@@ -42,24 +42,36 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.5 2005-06-04 14:30:30 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.6 2005-06-04 14:42:37 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(String appKey, PerspectiveInfo info) throws IOException {
+    public boolean store(String appKey, PerspectiveInfo perspectiveInfo) throws IOException {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
-            Element rootElement = document.createElement("flex-dock-perspectives");
-            Element currentPerspectiveElement = document.createElement("current-perspective");
+            Element rootElement = document.createElement(PersistenceConstants.PERSPECTIVE_INFO_ELEMENT_NAME);
             
+            ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
+            
+            Element currentPerspectiveElement = document.createElement(PersistenceConstants.CURRENT_PERSPECTIVE_ELEMENT_NAME);
+            Element perspectiveElement1 = perspectiveSerializer.serialize(document, perspectiveInfo.getCurrentPerspective());
+            currentPerspectiveElement.appendChild(perspectiveElement1);
+            
+            Element defaultPerspectiveElement = document.createElement(PersistenceConstants.DEFAULT_PERSPECTIVE_ELEMENT_NAME);
+            Element perspectiveElement2 = perspectiveSerializer.serialize(document, perspectiveInfo.getDefaultPerspective());
+            defaultPerspectiveElement.appendChild(perspectiveElement2);
+            
+            rootElement.appendChild(currentPerspectiveElement);
+            rootElement.appendChild(defaultPerspectiveElement);
+
             document.appendChild(rootElement);
             
-            return false;
+            return true;
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
             return false;
