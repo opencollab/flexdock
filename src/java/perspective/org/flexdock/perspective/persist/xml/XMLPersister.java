@@ -15,6 +15,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.perspective.Layout;
+import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.persist.Persister;
 import org.flexdock.perspective.persist.PerspectiveInfo;
@@ -61,6 +62,7 @@ public class XMLPersister implements Persister {
         SerializerRegistry.registerSerializer(Perspective.class, new PerspectiveSerializer());
         SerializerRegistry.registerSerializer(Layout.class, new LayoutSerializer());
         SerializerRegistry.registerSerializer(LayoutNode.class, new LayoutNodeSerializer());
+        SerializerRegistry.registerSerializer(LayoutSequence.class, new LayoutSequenceSerializer());
         SerializerRegistry.registerSerializer(DockingState.class, new DockingStateSerializer());
     }
     

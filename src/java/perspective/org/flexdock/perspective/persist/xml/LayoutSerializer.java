@@ -39,10 +39,12 @@ public class LayoutSerializer implements ISerializer {
         }
         
         LayoutNode layoutNode = layout.getRestorationLayout();
-        
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
+        Element layoutNodeElement = layoutNodeSerializer.serialize(document, layoutNode);
+
+        layoutElement.appendChild(layoutNodeElement);
         
-        return null;
+        return layoutElement;
     }
 
 }
