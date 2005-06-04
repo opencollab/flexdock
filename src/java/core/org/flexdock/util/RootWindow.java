@@ -382,4 +382,14 @@ public class RootWindow {
 			return ((JDialog)root).isActive();
 		return false;
 	}
+	
+	public Window getOwner() {
+		if(root instanceof JFrame)
+			return ((JFrame)root).getOwner();
+		else if(root instanceof JWindow)
+			return ((JWindow)root).getOwner();
+		else if(root instanceof JDialog)
+			return ((JDialog)root).getOwner();
+		return null;		
+	}
 }
