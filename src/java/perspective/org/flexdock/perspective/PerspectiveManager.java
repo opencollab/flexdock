@@ -3,10 +3,9 @@ package org.flexdock.perspective;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Window;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.swing.JDialog;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -295,18 +294,11 @@ public class PerspectiveManager implements LayoutManager {
 	}
 	
 	public void load(String perspectiveId, boolean reset) {
-		RootWindow[] windows = DockingManager.getDockingWindows();
-		if(windows.length==0)
+		RootWindow window = getMainApplicationWindow();
+		if(window==null)
 			return;
 		
-		// getDockingWindows() doesn't guarantee window ordering.  If we have floating
-		// dockables, then windows[0] might be a floating dialog.
-		Component window = windows[0].getRootContainer();
-		// retarget to the main application window if necessary
-		if(window instanceof JDialog)
-			window = ((JDialog)window).getOwner();
-		
-		load(perspectiveId, window, reset);		
+		load(perspectiveId, window.getRootContainer(), reset);		
 	}
 	
 	public void load(String perspectiveId, Component window) {
@@ -424,7 +416,7 @@ public class PerspectiveManager implements LayoutManager {
 	}
 	
 	
-	public synchronized boolean persist(String appKey) {
+	public synchronized boolean persist(String appKey) throws IOException {
 		if(m_persister==null)
 			return false;
 
@@ -441,7 +433,7 @@ public class PerspectiveManager implements LayoutManager {
 		return m_persister.store(appKey, info);
 	}
 	
-	public synchronized boolean loadFromStorage(String appKey) {
+	public synchronized boolean loadFromStorage(String appKey) throws IOException {
 		if(m_persister==null)
 			return false;
 		
@@ -466,5 +458,22 @@ public class PerspectiveManager implements LayoutManager {
 	
 	public static void setRestoreFloatingOnLoad(boolean restoreFloatingOnLoad) {
 		getInstance().restoreFloatingOnLoad = restoreFloatingOnLoad;
+	}
+	
+	public static RootWindow getMainApplicationWindow() {
+		// TODO: fix this code to keep track of the proper dialog owner
+		RootWindow[] windows = DockingManager.getDockingWindows();
+		RootWindow window = null;
+		for(int i=0; i<windows.length; i++) {
+			window = windows[i];
+			if(window.getOwner()==null)
+				break;
+		}
+		return window;
+	}
+	
+	public static DockingPort getMainDockingPort() {
+		RootWindow window = getMainApplicationWindow();
+		return window==null? null: DockingManager.getRootDockingPort(window.getRootContainer());
 	}
 }
