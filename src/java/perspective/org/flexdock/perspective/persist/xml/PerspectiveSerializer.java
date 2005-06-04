@@ -7,6 +7,7 @@
 package org.flexdock.perspective.persist.xml;
 
 import org.flexdock.perspective.Layout;
+import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,9 +31,15 @@ public class PerspectiveSerializer implements ISerializer {
         perspectiveElement.setAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_NAME, perspective.getName());
         
         ISerializer layoutSerializer = SerializerRegistry.getSerializer(Layout.class);
-        layoutSerializer.serialize(document, perspective.getLayout());
+        Element layoutElement = layoutSerializer.serialize(document, perspective.getLayout());
         
-        return null;
+        ISerializer layoutSequenceSerializer = SerializerRegistry.getSerializer(LayoutSequence.class);
+        Element layoutSequenceElement = layoutSequenceSerializer.serialize(document, perspective.getInitialSequence());
+        
+        perspectiveElement.appendChild(layoutElement);
+        perspectiveElement.appendChild(layoutSequenceElement);
+        
+        return perspectiveElement;
     }
 
 }
