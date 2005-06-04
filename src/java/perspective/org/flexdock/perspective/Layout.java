@@ -32,9 +32,9 @@ import org.flexdock.util.RootWindow;
  * @author Christopher Butler
  */
 public class Layout implements Cloneable, FloatManager, Serializable {
-	private HashMap dockingInfo;
+	private HashMap dockingInfo;  // contains DockingState objects
 	private transient ArrayList layoutListeners;
-	private Hashtable floatingGroups;
+	private Hashtable floatingGroups;  // contains FloatingGroup objects
 	private LayoutNode restorationLayout;
 	
 	public Layout() {

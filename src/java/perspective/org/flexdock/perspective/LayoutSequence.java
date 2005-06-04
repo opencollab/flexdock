@@ -17,7 +17,7 @@ import org.flexdock.util.DockingUtility;
  * @author Christopher Butler
  */
 public class LayoutSequence implements Cloneable, Serializable {
-	private ArrayList sequence;
+	private ArrayList sequence;  // contains DockingState objects
 	
 	public LayoutSequence() {
 		sequence = new ArrayList();

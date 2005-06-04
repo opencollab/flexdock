@@ -33,7 +33,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY"; 
 	private transient String stringForm;
 	private String rootPortId;
-	private ArrayList nodes;
+	private ArrayList nodes; // contains SplitNode objects
 	private String siblingId;
 	private boolean tabbed;
 
