@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.2 2005-06-04 14:00:29 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.3 2005-06-04 15:17:07 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -35,13 +35,14 @@ public class DockingStateSerializer implements ISerializer {
      */
     public Element serialize(Document document, Object object) {
         DockingState dockingState = (DockingState) object;
-        
-        
-        String id;
-        float splitRatio;
-        String region;
 
-        return null;
+        Element dockingStateElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID, dockingState.getDockableId());
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion());
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_SPLIT_RATIO, String.valueOf(dockingState.getSplitRatio()));
+
+        return dockingStateElement;
     }
 
 }

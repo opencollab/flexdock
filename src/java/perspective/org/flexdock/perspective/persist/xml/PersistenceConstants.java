@@ -22,40 +22,47 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.5 2005-06-04 14:48:28 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.6 2005-06-04 15:17:07 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
     //perspective info constants
-    String PERSPECTIVE_INFO_ELEMENT_NAME = "perspective-info";
-    String CURRENT_PERSPECTIVE_ELEMENT_NAME = "current-perspective";
-    String DEFAULT_PERSPECTIVE_ELEMENT_NAME = "default-perspective";
+    String PERSPECTIVE_INFO_ELEMENT_NAME = "PerspectiveInfo";
+    String CURRENT_PERSPECTIVE_ELEMENT_NAME = "CurrentPerspective";
+    String DEFAULT_PERSPECTIVE_ELEMENT_NAME = "DefaultPerspective";
 
-    String PERSPECTIVES_ELEMENT_NAME = "perspectives";
+    String PERSPECTIVES_ELEMENT_NAME = "Perspectives";
 
     //perspective constants
-    String PERSPECTIVE_ELEMENT_NAME = "perspective";
+    String PERSPECTIVE_ELEMENT_NAME = "Perspective";
     String PERSPECTIVE_ATTRIBUTE_ID = "id";
     String PERSPECTIVE_ATTRIBUTE_NAME = "name";
 
     //layout constants
-    String LAYOUT_ELEMENT_NAME = "layout";
+    String LAYOUT_ELEMENT_NAME = "Layout";
 
     //floating group constants
-    String FLOATING_GROUP_ELEMENT_NAME = "floating-group";
+    String FLOATING_GROUP_ELEMENT_NAME = "FloatingGroup";
     String FLOATING_GROUP_ATTRIBUTE_NAME = "name";
 
     //rectangle constants
-    String RECTANGLE_ELEMENT_NAME = "rectangle";
+    String RECTANGLE_ELEMENT_NAME = "Rectangle";
     
     //point constants
-    String POINT_ELEMENT_NAME = "point";
+    String POINT_ELEMENT_NAME = "Point";
     String POINT_ATTRIBUTE_X = "x";
     String POINT_ATTRIBUTE_Y = "y";
 
     //dimension constants
-    String DIMENSION_ELEMENT_NAME = "dimension";
+    String DIMENSION_ELEMENT_NAME = "Dimension";
     String DIMENSION_ATTRIBUTE_WIDTH = "width";
     String DIMENSION_ATTRIBUTE_HEIGHT = "height";
     
+    //docking state constants
+    String DOCKING_STATE_ELEMENT_NAME = "DockingState";
+    String DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID = "dockableId";
+    String DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID = "relativeParentId";
+    String DOCKING_STATE_ATTRIBUTE_REGION = "dockingRegion";
+    String DOCKING_STATE_SPLIT_RATIO = "splitRatio";
+
 }
