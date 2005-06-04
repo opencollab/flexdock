@@ -10,14 +10,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import org.flexdock.util.ResourceManager;
-
 /**
  * @author Christopher Butler
  */
 public class DefaultPersister implements Persister {
-
-	public PerspectiveInfo load(String appKey) {
+	protected String perspectiveFilePath;
+	
+	public PerspectiveInfo load(String appKey) throws IOException {
 		if(appKey==null)
 			return null;
 		
@@ -29,45 +28,40 @@ public class DefaultPersister implements Persister {
 		try {
 			in = new ObjectInputStream(new FileInputStream(inFile));
 			return (PerspectiveInfo)in.readObject();
-		} catch(Exception e) {
-			e.printStackTrace();
-			return null;
+		} catch(ClassNotFoundException e) {
+			IOException ex = new IOException("Unable to unmarshall stored data.");
+			ex.initCause(e);
+			throw ex;
 		}
 		finally {
-			ResourceManager.close(in);
+			if(in!=null)
+				in.close();
 		}
 	}
 	
-	public boolean store(String appKey, PerspectiveInfo info) {
+	public boolean store(String appKey, PerspectiveInfo info) throws IOException {
 		if(appKey==null || info==null)
 			return false;
 		
 		File outFile = getPerspectiveFile(appKey);
 		if(!outFile.exists()) {
-			try {
-				outFile.createNewFile();
-			} catch(IOException e) {
-				e.printStackTrace();
-				return false;
-			}
+			outFile.createNewFile();
 		}
-		
+
 		ObjectOutputStream out = null;
 		try {
 			out = new ObjectOutputStream(new FileOutputStream(outFile));
 			out.writeObject(info);
 			return true;
-		} catch(Exception e) {
-			e.printStackTrace();
-			return false;
 		}
 		finally {
-			ResourceManager.close(out);
+			if(out!=null)
+				out.close();
 		}
 	}
 	
 	protected File getPerspectiveFile(String appKey) {
-		String dirPath = System.getProperty("user.home") + "/flexdock/perspectives";
+		String dirPath = getPerspectiveFilePath();
 		File dir = new File(dirPath);
 		if(!dir.exists())
 			dir.mkdirs();
@@ -78,5 +72,15 @@ public class DefaultPersister implements Persister {
 	
 	protected String getPerspectiveFilename(String appKey) {
 		return appKey + ".data";
+	}
+	
+	public String getPerspectiveFilePath() {
+		if(perspectiveFilePath==null)
+			perspectiveFilePath = System.getProperty("user.home") + "/flexdock/perspectives";
+		return perspectiveFilePath;
+	}
+	
+	public void setPerspectiveFilePath(String path) {
+		perspectiveFilePath = path;
 	}
 }

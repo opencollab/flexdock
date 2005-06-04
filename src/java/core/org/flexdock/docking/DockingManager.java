@@ -22,6 +22,7 @@ import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.io.IOException;
 import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -668,22 +669,22 @@ public class DockingManager {
 		getDockingManager().dockableBuilder = builder;
 	}
 	
-	public static boolean persistLayouts() {
+	public static boolean persistLayouts() throws IOException {
 		String appKey = getApplicationKey();
 		return persistLayouts(appKey);
 	}
 	
-	public static boolean persistLayouts(String applicationKey) {
+	public static boolean persistLayouts(String applicationKey) throws IOException {
 		LayoutManager mgr = getLayoutManager();
 		return mgr==null || applicationKey==null? false: mgr.persist(applicationKey);
 	}
 	
-	public static boolean loadLayouts() {
+	public static boolean loadLayouts() throws IOException {
 		String appKey = getApplicationKey();
 		return loadLayouts(appKey);
 	}
 	
-	public static boolean loadLayouts(String applicationKey) {
+	public static boolean loadLayouts(String applicationKey) throws IOException {
 		LayoutManager mgr = getLayoutManager();
 		return mgr==null || applicationKey==null? false: mgr.loadFromStorage(applicationKey);		
 	}
@@ -751,12 +752,11 @@ public class DockingManager {
 	
 	
 	public static boolean isFloatingSupported() {
-		return !FloatPolicyManager.isGlobalFloatingBlocked();
+		return FloatPolicyManager.isGlobalFloatingSupported();
 	}
 	
 	public static void setFloatingSupported(boolean supported) {
-		boolean blocked = !supported;
-		FloatPolicyManager.setGlobalFloatingBlocked(blocked);
+		FloatPolicyManager.setGlobalFloatingSupported(supported);
 	}
 	
 	
@@ -776,8 +776,12 @@ public class DockingManager {
 		
 		private synchronized void store() {
 			String key = getApplicationKey();
-			if(key!=null && isEnabled())
-				getLayoutManager().persist(key);
+			try {
+				if(key!=null && isEnabled())
+					getLayoutManager().persist(key);
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		public synchronized boolean isEnabled() {

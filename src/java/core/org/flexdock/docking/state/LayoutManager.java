@@ -3,6 +3,8 @@
  */
 package org.flexdock.docking.state;
 
+import java.io.IOException;
+
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 
@@ -16,6 +18,6 @@ public interface LayoutManager {
 	public LayoutNode createLayout(DockingPort port);
 	public boolean restore(Dockable dockable);
 	
-	public boolean persist(String applicationKey);
-	public boolean loadFromStorage(String applicationKey);
+	public boolean persist(String applicationKey) throws IOException;
+	public boolean loadFromStorage(String applicationKey) throws IOException;
 }
