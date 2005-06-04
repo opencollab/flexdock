@@ -1,7 +1,7 @@
 /*
  * Created on Mar 4, 2005
  */
-package org.flexdock.demos.view;
+package org.flexdock.test.perspective;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -30,7 +30,7 @@ import org.flexdock.view.Viewport;
  * @author Christopher Butler
  * @author Mateusz Szczap
  */
-public class ViewRestorationDemo extends JFrame {
+public class ViewRestorationTest extends JFrame {
 	
 	private static View view1 = null;
 	private static View view2 = null;
@@ -47,14 +47,14 @@ public class ViewRestorationDemo extends JFrame {
 //		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
 //		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 		
-		JFrame f = new ViewRestorationDemo();
+		JFrame f = new ViewRestorationTest();
 		f.setSize(800, 600);
 		SwingUtility.centerOnScreen(f);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
 	}
 	
-	public ViewRestorationDemo() {
+	public ViewRestorationTest() {
 		super("Simple Show Viewport Demo");
 		setContentPane(createContentPane());
 		setJMenuBar(createApplicationMenuBar());
