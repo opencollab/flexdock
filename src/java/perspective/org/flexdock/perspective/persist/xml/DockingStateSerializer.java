@@ -19,6 +19,7 @@
 package org.flexdock.perspective.persist.xml;
 
 import org.flexdock.docking.state.DockingState;
+import org.flexdock.docking.state.MinimizationManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,10 +27,15 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.3 2005-06-04 15:17:07 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.4 2005-06-04 15:55:40 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
+    private final static String OPENED_STATE = "opened";
+    private final static String CLOSED_STATE = "closed";
+    private final static String MINIMIZED_STATE = "minimized";
+    private final static String FLOATING_STATE = "floating";
+    
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
@@ -40,9 +46,37 @@ public class DockingStateSerializer implements ISerializer {
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID, dockingState.getDockableId());
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion());
-        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_SPLIT_RATIO, String.valueOf(dockingState.getSplitRatio()));
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO, String.valueOf(dockingState.getSplitRatio()));
 
+        handleDockingState(dockingStateElement, dockingState);
+        
         return dockingStateElement;
+    }
+    
+    private void handleDockingState(Element dockingStateElement, DockingState dockingState) {
+        if (dockingState.isMinimized()) {
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_STATE, MINIMIZED_STATE);
+        } else if (dockingState.isFloating()) {
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_STATE, FLOATING_STATE);
+        } else if (!dockingState.isDisplayed()) {
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_STATE, CLOSED_STATE);
+        } else {
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_STATE, OPENED_STATE);
+        }
+    }
+    
+    private String getPresentationDockbarEdge(int dockbarEdge) {
+        switch (dockbarEdge) {
+        
+        	case MinimizationManager.LEFT: return "left";
+        	case MinimizationManager.BOTTOM: return "bottom";
+        	case MinimizationManager.CENTER: return "center";
+        	case MinimizationManager.RIGHT: return "right";
+        	case MinimizationManager.TOP: return "top";
+        	case MinimizationManager.UNSPECIFIED_LAYOUT_EDGE: return "unspecified";
+        	
+        	default: throw new RuntimeException("Unknown dockbarEdge");
+        }
     }
 
 }
