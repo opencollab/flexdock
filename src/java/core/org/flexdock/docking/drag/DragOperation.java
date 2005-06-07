@@ -12,9 +12,10 @@ import javax.swing.SwingUtilities;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.DockingConstants;
 
-public class DragToken {
-	public static final String DRAG_IMAGE = "DragToken.DRAG_IMAGE";
+public class DragOperation implements DockingConstants {
+	public static final String DRAG_IMAGE = "DragOperation.DRAG_IMAGE";
 	
 	private Component dragSource;
 	private Component dockable;
@@ -32,7 +33,7 @@ public class DragToken {
 	private DockingPort sourcePort;
 
 	
-	public DragToken(Component dockable, Point dragOrigin, MouseEvent evt) {
+	public DragOperation(Component dockable, Point dragOrigin, MouseEvent evt) {
 		if(dockable==null)
 			throw new NullPointerException("'dockable' parameter cannot be null.");
 		if(evt==null)
@@ -45,7 +46,7 @@ public class DragToken {
 		init(dockable, (Component)evt.getSource(), dragOrigin, false);
 	}
 	
-	public DragToken(Component dockable, Component dragSource, Point currentMouse) {
+	public DragOperation(Component dockable, Component dragSource, Point currentMouse) {
 		init(dockable, dragSource, currentMouse, true);
 	}
 	
@@ -132,7 +133,7 @@ public class DragToken {
 	
 	public void setTarget(DockingPort port, String region) {
 		targetPort = port;
-		targetRegion = region==null? DockingPort.UNKNOWN_REGION: region;
+		targetRegion = region==null? UNKNOWN_REGION: region;
 	}
 	
 	public DockingPort getTargetPort() {
