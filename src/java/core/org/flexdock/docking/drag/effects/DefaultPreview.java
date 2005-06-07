@@ -28,7 +28,7 @@ public abstract class DefaultPreview implements DragPreview {
 		if(dockable==null || port==null || targetRegion==null || paintingTarget==null)
 			return null;
 		
-		if(DockingPort.UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(targetRegion, dockable))
+		if(UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(targetRegion, dockable))
 			return null;
 		
 		// if we're not hovering over another Dockable then the DockingPort we're over is empty.
@@ -39,7 +39,7 @@ public abstract class DefaultPreview implements DragPreview {
 		}
 		
 		Polygon p = null;
-		Component srcAxes = hover.getDockable();
+		Component srcAxes = hover.getComponent();
 		if(isOuterRegion(targetRegion))
 			p = createPolyRect(port, srcAxes, targetRegion);
 		else {
@@ -176,8 +176,8 @@ public abstract class DefaultPreview implements DragPreview {
 	}
 	
 	protected boolean isOuterRegion(String region) {
-		return DockingPort.NORTH_REGION.equals(region) || DockingPort.SOUTH_REGION.equals(region) || 
-			DockingPort.EAST_REGION.equals(region) || DockingPort.WEST_REGION.equals(region); 
+		return NORTH_REGION.equals(region) || SOUTH_REGION.equals(region) || 
+			EAST_REGION.equals(region) || WEST_REGION.equals(region); 
 	}
 
 	public abstract void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo);

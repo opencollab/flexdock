@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -17,7 +16,6 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.state.DockingState;
-import org.flexdock.docking.state.DockingStateComparator;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.docking.state.FloatingGroup;
 import org.flexdock.docking.state.LayoutNode;
@@ -165,12 +163,6 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		Object obj = dockingInfo.get(dockableId);
 		return (DockingState)obj;
 	}
-
-	private DockingState[] getApplySequence() {
-		ArrayList list = new ArrayList(dockingInfo.values());
-		Collections.sort(list, new DockingStateComparator());
-		return (DockingState[])list.toArray(new DockingState[0]);
-	}
 	
 	public void apply(DockingPort dockingPort) {
 		Component comp = (Component)dockingPort;
@@ -186,6 +178,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		dockingPort.importLayout(restorationLayout);
 		PerspectiveManager.setDockingStateListening(listening);
 		
+		// not restore floating and minimized layouts
 		Dockable[] dockables = getDockables();
 		boolean restoreFloatOnLoad = PerspectiveManager.isRestoreFloatingOnLoad();
 		for(int i=0; i<dockables.length; i++) {
@@ -300,8 +293,8 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		FloatingGroup group = getGroup(dockable);
 		Rectangle bounds = group==null? null: group.getBounds();
 		if(bounds==null) {
-			if(dockable.getDockable().isValid()) {
-				bounds = dockable.getDockable().getBounds();
+			if(dockable.getComponent().isValid()) {
+				bounds = dockable.getComponent().getBounds();
 			}
 			else
 				bounds = new Rectangle(0, 0, 200, 200);

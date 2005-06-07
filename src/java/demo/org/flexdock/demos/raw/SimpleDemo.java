@@ -9,10 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.util.DockingConstants;
 
-public class SimpleDemo extends JFrame {
+public class SimpleDemo extends JFrame implements DockingConstants {
 	public static void main(String[] args) {
 		JFrame f = new SimpleDemo();
 		f.setSize(600, 400);
@@ -46,7 +46,7 @@ public class SimpleDemo extends JFrame {
 		DockingManager.registerDockable(p, desc);
 		 
 		// dock the panel and return the DockingPort
-		port.dock(p, desc, DockingPort.CENTER_REGION);
+		port.dock(p, desc, CENTER_REGION);
 		return port;
 	}
 	

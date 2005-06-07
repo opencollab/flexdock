@@ -54,7 +54,7 @@ public class DockingStateListener extends DockingListener.Stub {
 		info.setDockbarEdge(MinimizationManager.UNSPECIFIED_LAYOUT_EDGE);
 		
 		// update the floating state
-		RootWindow window = RootWindow.getRootContainer(dockable.getDockable());
+		RootWindow window = RootWindow.getRootContainer(dockable.getComponent());
 		FloatManager floatManager = DockingManager.getLayoutManager().getFloatManager();
 		Component frame = window==null? null: window.getRootContainer();
 		if(frame instanceof DockingFrame) {
@@ -101,7 +101,7 @@ public class DockingStateListener extends DockingListener.Stub {
 	}
 	
 	private void updateEmbedded(Dockable dockable) {
-		if(!dockable.getDockable().isValid())
+		if(!dockable.getComponent().isValid())
 			return;
 		
 		updateCenterPoint(dockable);
@@ -130,7 +130,7 @@ public class DockingStateListener extends DockingListener.Stub {
 	
 	private void updateCenterPoint(Dockable dockable) {
 		// get the center point of the dockable
-		Component comp = dockable.getDockable();
+		Component comp = dockable.getComponent();
 		Point p = new Point(comp.getWidth()/2, comp.getHeight()/2);
 		
 		// convert it to a location on the rootPane
@@ -161,7 +161,7 @@ public class DockingStateListener extends DockingListener.Stub {
 		
 		// don't update relative info for tabbed layout, since we 
 		// technically have more than one relative.
-		if(port.getDockedComponent()!=dockable.getDockable())
+		if(port.getDockedComponent()!=dockable.getComponent())
 			return;
 		
 		Component comp = ((Component)port).getParent();
@@ -186,7 +186,7 @@ public class DockingStateListener extends DockingListener.Stub {
 		}
 		
 		// if we got here, then we are definitely sharing a split layout with another dockable.
-		String region = DefaultDockingStrategy.findRegion(dockable.getDockable());
+		String region = DefaultDockingStrategy.findRegion(dockable.getComponent());
 		float ratio = SwingUtility.getDividerProportion(splitPane);
 		
 		// set the relative docking info
@@ -204,7 +204,7 @@ public class DockingStateListener extends DockingListener.Stub {
 	private void setNullRelative(DockingState info) {
 		info.setRelativeParent((String)null);
 		info.setSplitRatio(DockingConstants.UNINITIALIZED);
-		info.setRegion(DockingPort.CENTER_REGION);		
+		info.setRegion(DockingConstants.CENTER_REGION);		
 	}
 	
 	private DockingState getDockingState(Dockable dockable) {

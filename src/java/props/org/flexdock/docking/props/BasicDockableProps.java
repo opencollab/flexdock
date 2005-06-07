@@ -7,48 +7,48 @@ import java.util.Map;
 
 import javax.swing.Icon;
 
-import org.flexdock.docking.DockingPort;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.TypedHashtable;
 
 /**
  * @author Christopher Butler
  */
-public class BasicDockableProps extends TypedHashtable implements DockableProps {
+public class BasicDockableProps extends TypedHashtable implements DockableProps, DockingConstants {
 
 	public static String getRegionInsetKey(String region) {
-		if(DockingPort.NORTH_REGION.equals(region))
+		if(NORTH_REGION.equals(region))
 			return REGION_SIZE_NORTH;
-		if(DockingPort.SOUTH_REGION.equals(region))
+		if(SOUTH_REGION.equals(region))
 			return REGION_SIZE_SOUTH;
-		if(DockingPort.EAST_REGION.equals(region))
+		if(EAST_REGION.equals(region))
 			return REGION_SIZE_EAST;
-		if(DockingPort.WEST_REGION.equals(region))
+		if(WEST_REGION.equals(region))
 			return REGION_SIZE_WEST;
 		return null;
 	}
 
 	public static String getSiblingSizeKey(String region) {
-		if(DockingPort.NORTH_REGION.equals(region))
+		if(NORTH_REGION.equals(region))
 			return SIBLING_SIZE_NORTH;
-		if(DockingPort.SOUTH_REGION.equals(region))
+		if(SOUTH_REGION.equals(region))
 			return SIBLING_SIZE_SOUTH;
-		if(DockingPort.EAST_REGION.equals(region))
+		if(EAST_REGION.equals(region))
 			return SIBLING_SIZE_EAST;
-		if(DockingPort.WEST_REGION.equals(region))
+		if(WEST_REGION.equals(region))
 			return SIBLING_SIZE_WEST;
 		return null;
 	}
 	
 	public static String getTerritoryBlockedKey(String region) {
-		if(DockingPort.NORTH_REGION.equals(region))
+		if(NORTH_REGION.equals(region))
 			return TERRITORY_BLOCKED_NORTH;
-		if(DockingPort.SOUTH_REGION.equals(region))
+		if(SOUTH_REGION.equals(region))
 			return TERRITORY_BLOCKED_SOUTH;
-		if(DockingPort.EAST_REGION.equals(region))
+		if(EAST_REGION.equals(region))
 			return TERRITORY_BLOCKED_EAST;
-		if(DockingPort.WEST_REGION.equals(region))
+		if(WEST_REGION.equals(region))
 			return TERRITORY_BLOCKED_WEST;
-		if(DockingPort.CENTER_REGION.equals(region))
+		if(CENTER_REGION.equals(region))
 			return TERRITORY_BLOCKED_CENTER;
 		return null;
 	}

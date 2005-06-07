@@ -6,10 +6,10 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.util.DockingConstants;
 
-public class BorderDemo extends JFrame {
+public class BorderDemo extends JFrame implements DockingConstants {
 	
 	public BorderDemo() {
 		super("Border Docking Demo");
@@ -34,7 +34,7 @@ public class BorderDemo extends JFrame {
 		DockablePanel panel = new DockablePanel(desc);
 
 		// dock the panel and return the DockingPort
-		port.dock(panel.getDockable(), DockingPort.CENTER_REGION);
+		port.dock(panel.getDockable(), CENTER_REGION);
 		return port;
 	}
 	

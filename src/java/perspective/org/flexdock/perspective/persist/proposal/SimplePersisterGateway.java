@@ -25,7 +25,7 @@ public class SimplePersisterGateway implements PersisterGateway {
     private String perspectiveFilePath;
     
     //TODO it would match, it is only proposal.
-    private Persister persister = PerspectiveManager.getPersister();
+    private Persister persister = null; //PerspectiveManager.getPersister();
     
     /**
      * @see org.flexdock.perspective.persist.proposal.PersisterGateway#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)

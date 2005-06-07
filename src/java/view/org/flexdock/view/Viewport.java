@@ -11,17 +11,17 @@ import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.docking.event.DockingEvent;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.view.tracking.ViewListener;
 import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * @author Christopher Butler
  */
-public class Viewport extends DefaultDockingPort {
+public class Viewport extends DefaultDockingPort implements DockingConstants {
 	protected HashSet blockedRegions;
 	
 	static {
@@ -60,7 +60,7 @@ public class Viewport extends DefaultDockingPort {
 			return false;
 		
 		// by default, allow docking in non-CENTER regions
-		if(!DockingPort.CENTER_REGION.equals(region))
+		if(!CENTER_REGION.equals(region))
 			return true;
 		
 		// allow docking in the CENTER if there's nothing already there,
@@ -75,7 +75,7 @@ public class Viewport extends DefaultDockingPort {
 	}
 	
 	public boolean dock(Dockable dockable) {
-		return dock(dockable, DockingPort.CENTER_REGION);
+		return dock(dockable, CENTER_REGION);
 	}
 	
 	protected JTabbedPane createTabbedPane() {

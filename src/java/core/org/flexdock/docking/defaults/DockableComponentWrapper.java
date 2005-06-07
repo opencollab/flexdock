@@ -97,7 +97,7 @@ public class DockableComponentWrapper implements Dockable {
 		
 		dockingListeners = new ArrayList(0);
 		dragListeners = new ArrayList(1);
-		dragListeners.add(getDockable());
+		dragListeners.add(getComponent());
 	}
 	
 	private Hashtable getClientProperties() {
@@ -107,9 +107,9 @@ public class DockableComponentWrapper implements Dockable {
 	}
 	
 	/**
-	 * @see org.flexdock.docking.Dockable#getDockable()
+	 * @see org.flexdock.docking.Dockable#getComponent()
 	 */
-	public Component getDockable() {
+	public Component getComponent() {
 		return dragSrc;
 	}
 

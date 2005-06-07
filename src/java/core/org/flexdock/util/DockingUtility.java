@@ -25,7 +25,7 @@ import org.flexdock.docking.state.MinimizationManager;
 public class DockingUtility implements DockingConstants {
 	
 	public static DockingPort getParentDockingPort(Dockable d) {
-		return d==null? null: getParentDockingPort(d.getDockable());
+		return d==null? null: getParentDockingPort(d.getComponent());
 	}
 
 	public static DockingPort getParentDockingPort(Component comp) {
@@ -65,34 +65,34 @@ public class DockingUtility implements DockingConstants {
 		
 		boolean horizontal = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT;
 		if(horizontal) {
-			if(DockingPort.NORTH_REGION.equals(region))
-				region = DockingPort.WEST_REGION;
-			else if(DockingPort.SOUTH_REGION.equals(region))
-				region = DockingPort.EAST_REGION;
+			if(NORTH_REGION.equals(region))
+				region = WEST_REGION;
+			else if(SOUTH_REGION.equals(region))
+				region = EAST_REGION;
 		}
 		else {
-			if(DockingPort.WEST_REGION.equals(region))
-				region = DockingPort.NORTH_REGION;
-			else if(DockingPort.EAST_REGION.equals(region))
-				region = DockingPort.SOUTH_REGION;
+			if(WEST_REGION.equals(region))
+				region = NORTH_REGION;
+			else if(EAST_REGION.equals(region))
+				region = SOUTH_REGION;
 		}
 		return region;
 	}
 	
 	public static String flipRegion(String region) {
-		if(!DockingManager.isValidDockingRegion(region) || DockingPort.CENTER_REGION.equals(region))
-			return DockingPort.CENTER_REGION;
+		if(!DockingManager.isValidDockingRegion(region) || CENTER_REGION.equals(region))
+			return CENTER_REGION;
 		
-		if(DockingPort.NORTH_REGION.equals(region))
-			return DockingPort.SOUTH_REGION;
+		if(NORTH_REGION.equals(region))
+			return SOUTH_REGION;
 		
-		if(DockingPort.SOUTH_REGION.equals(region))
-			return DockingPort.NORTH_REGION;
+		if(SOUTH_REGION.equals(region))
+			return NORTH_REGION;
 		
-		if(DockingPort.EAST_REGION.equals(region))
-			return DockingPort.WEST_REGION;
+		if(EAST_REGION.equals(region))
+			return WEST_REGION;
 		
-		return DockingPort.EAST_REGION;
+		return EAST_REGION;
 	}
 
 	
@@ -103,17 +103,17 @@ public class DockingUtility implements DockingConstants {
 		if(region.equals(otherRegion))
 			return true;
 		
-		if(DockingPort.CENTER_REGION.equals(region))
+		if(CENTER_REGION.equals(region))
 			return false;
 		
-		if(DockingPort.NORTH_REGION.equals(region))
-			return DockingPort.WEST_REGION.equals(otherRegion);
-		if(DockingPort.SOUTH_REGION.equals(region))
-			return DockingPort.EAST_REGION.equals(otherRegion);
-		if(DockingPort.EAST_REGION.equals(region))
-			return DockingPort.SOUTH_REGION.equals(otherRegion);
-		if(DockingPort.WEST_REGION.equals(region))
-			return DockingPort.NORTH_REGION.equals(otherRegion);
+		if(NORTH_REGION.equals(region))
+			return WEST_REGION.equals(otherRegion);
+		if(SOUTH_REGION.equals(region))
+			return EAST_REGION.equals(otherRegion);
+		if(EAST_REGION.equals(region))
+			return SOUTH_REGION.equals(otherRegion);
+		if(WEST_REGION.equals(region))
+			return NORTH_REGION.equals(otherRegion);
 		
 		return false;
 	}
@@ -121,17 +121,17 @@ public class DockingUtility implements DockingConstants {
 	public static String getRegion(int regionType) {
 		switch(regionType) {
 			case LEFT:
-				return DockingPort.WEST_REGION;
+				return WEST_REGION;
 			case RIGHT:
-				return DockingPort.EAST_REGION;
+				return EAST_REGION;
 			case TOP:
-				return DockingPort.NORTH_REGION;
+				return NORTH_REGION;
 			case BOTTOM:
-				return DockingPort.SOUTH_REGION;
+				return SOUTH_REGION;
 			case CENTER:
-				return DockingPort.CENTER_REGION;
+				return CENTER_REGION;
 			default:
-				return DockingPort.UNKNOWN_REGION;
+				return UNKNOWN_REGION;
 		}
 	}
 	
@@ -178,7 +178,7 @@ public class DockingUtility implements DockingConstants {
 	}
 	
 	private static void setSiblingPreference(Dockable src, String region, float size) {
-		if(size==UNSPECIFIED_SIBLING_PREF || DockingPort.CENTER_REGION.equals(region) || !DockingManager.isValidDockingRegion(region))
+		if(size==UNSPECIFIED_SIBLING_PREF || CENTER_REGION.equals(region) || !DockingManager.isValidDockingRegion(region))
 			return;
 		
 		size = DefaultRegionChecker.validateSiblingSize(size);
@@ -235,7 +235,7 @@ public class DockingUtility implements DockingConstants {
 		if(dockable==null)
 			return;
 		
-		Component comp = dockable.getDockable();
+		Component comp = dockable.getComponent();
 		Container parent = comp.getParent();
 		if(parent instanceof JTabbedPane) {
 			parent = parent.getParent();

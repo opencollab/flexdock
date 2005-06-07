@@ -29,18 +29,18 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.perspective.PerspectiveManager;
+import org.flexdock.util.DockingConstants;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: UnknownStateHandler.java,v 1.2 2005-06-04 16:42:21 winnetou25 Exp $
+ * @version $Id: UnknownStateHandler.java,v 1.3 2005-06-07 05:10:19 marius Exp $
  */
-public class UnknownStateHandler implements RestorationHandler {
+public class UnknownStateHandler implements RestorationHandler, DockingConstants {
 
     private static final String[] REGIONS = {
-		DockingPort.CENTER_REGION, DockingPort.WEST_REGION, DockingPort.EAST_REGION,
-		DockingPort.SOUTH_REGION, DockingPort.NORTH_REGION
+		CENTER_REGION, WEST_REGION, EAST_REGION, SOUTH_REGION, NORTH_REGION
 	};
 	
 	public boolean restore(Dockable dockable, DockingState info, Map context) {
@@ -84,7 +84,7 @@ public class UnknownStateHandler implements RestorationHandler {
 	private DockingInfo getDeepestWest(DockingPort port) {
 		Component comp = port.getDockedComponent();
 		if(comp instanceof JTabbedPane) {
-			Dockable d = port.getDockable(DockingPort.CENTER_REGION);
+			Dockable d = port.getDockable(CENTER_REGION);
 			return new DockingInfo(d, port);
 		}
 		

@@ -51,7 +51,7 @@ public class DockingEvent extends Event {
 		this.oldPort = oldPort;
 		this.newPort = newPort;
 		this.trigger = trigger;
-		this.region = DockingPort.UNKNOWN_REGION;
+		this.region = UNKNOWN_REGION;
 		dragContext = context;
 		setOverWindow(true);
 	}
@@ -102,7 +102,7 @@ public class DockingEvent extends Event {
 
 	public void setRegion(String region) {
 		if (!DockingManager.isValidDockingRegion(region))
-			region = DockingPort.UNKNOWN_REGION;
+			region = UNKNOWN_REGION;
 		this.region = region;
 	}
 
@@ -119,7 +119,7 @@ public class DockingEvent extends Event {
 	}
 	
 	public Component getComponent() {
-		return getDockable().getDockable();
+		return getDockable().getComponent();
 	}
 	
 	public Map getDragContext() {

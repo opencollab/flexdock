@@ -5,23 +5,23 @@ package org.flexdock.docking.props;
 
 import java.util.Map;
 
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.TypedHashtable;
 
 /**
  * @author Christopher Butler
  */
-public class BasicDockingPortProps extends TypedHashtable implements DockingPortProps {
+public class BasicDockingPortProps extends TypedHashtable implements DockingPortProps, DockingConstants {
 
 	public static String getRegionInsetKey(String region) {
-		if(DockingPort.NORTH_REGION.equals(region))
+		if(NORTH_REGION.equals(region))
 			return REGION_SIZE_NORTH;
-		if(DockingPort.SOUTH_REGION.equals(region))
+		if(SOUTH_REGION.equals(region))
 			return REGION_SIZE_SOUTH;
-		if(DockingPort.EAST_REGION.equals(region))
+		if(EAST_REGION.equals(region))
 			return REGION_SIZE_EAST;
-		if(DockingPort.WEST_REGION.equals(region))
+		if(WEST_REGION.equals(region))
 			return REGION_SIZE_WEST;
 		return null;
 	}

@@ -64,7 +64,7 @@ public class ViewPane extends JPanel {
 
 		// add the new component
 		Dockable d = manager.getActiveDockable();
-		Component c = d==null? null: d.getDockable();
+		Component c = d==null? null: d.getComponent();
 		if(c!=null)
 			add(c, BorderLayout.CENTER);
 	}

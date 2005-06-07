@@ -10,25 +10,32 @@ import javax.swing.SwingConstants;
  * @author Christopher Butler
  */
 public interface DockingConstants {
-	public static final float UNSPECIFIED_SIBLING_PREF = -1F;
-	public static final int UNINITIALIZED = -1;
+	float UNSPECIFIED_SIBLING_PREF = -1F;
+	int UNINITIALIZED = -1;
+	float UNINITIALIZED_RATIO = -1F;
 	
-	public static final String PERMANENT_FOCUS_OWNER = "permanentFocusOwner";
-	public static final String ACTIVE_WINDOW = "activeWindow";
-	public static final String MOUSE_PRESSED = "mousePressed";
+	String PERMANENT_FOCUS_OWNER = "permanentFocusOwner";
+	String ACTIVE_WINDOW = "activeWindow";
+	String MOUSE_PRESSED = "mousePressed";
 	
-	public static final String PIN_ACTION = "pin";
-	public static final String CLOSE_ACTION = "close";
+	String PIN_ACTION = "pin";
+	String CLOSE_ACTION = "close";
 	
-	public static final int TOP = SwingConstants.TOP;
-	public static final int LEFT = SwingConstants.LEFT;
-	public static final int BOTTOM = SwingConstants.BOTTOM;
-	public static final int RIGHT = SwingConstants.RIGHT;
-	public static final int CENTER = SwingConstants.CENTER;
+	int TOP = SwingConstants.TOP;
+	int LEFT = SwingConstants.LEFT;
+	int BOTTOM = SwingConstants.BOTTOM;
+	int RIGHT = SwingConstants.RIGHT;
+	int CENTER = SwingConstants.CENTER;
 	
-	public static final int HORIZONTAL = JSplitPane.HORIZONTAL_SPLIT;
-	public static final int VERTICAL = JSplitPane.VERTICAL_SPLIT;
+	int HORIZONTAL = JSplitPane.HORIZONTAL_SPLIT;
+	int VERTICAL = JSplitPane.VERTICAL_SPLIT;
 	
-	public static final String REGION = "region";
+	String REGION = "region";
+    String CENTER_REGION = "CENTER";
+	String EAST_REGION = "EAST";
+	String NORTH_REGION = "NORTH";
+	String SOUTH_REGION = "SOUTH";
+	String WEST_REGION = "WEST";
+	String UNKNOWN_REGION = "UNKNOWN";
 	
 }

@@ -10,11 +10,12 @@ import javax.swing.JSplitPane;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
+import org.flexdock.util.DockingConstants;
 
 /**
  * @author Christopher Butler
  */
-public class DockingSplitPane extends JSplitPane {
+public class DockingSplitPane extends JSplitPane implements DockingConstants {
 	protected DockingPort dockingPort;
 	protected String region;
 	protected boolean dividerLocDetermined;
@@ -26,7 +27,7 @@ public class DockingSplitPane extends JSplitPane {
 		this.dockingPort = port;
 		// the controlling item is in the topLeft if our new item (represented
 		// by the "region" string) is in the SOUTH or EAST.
-		controllerInTopLeft = DockingPort.SOUTH_REGION.equals(region) || DockingPort.EAST_REGION.equals(region);
+		controllerInTopLeft = SOUTH_REGION.equals(region) || EAST_REGION.equals(region);
 		
 		// set the proper resize weight
 		int weight = controllerInTopLeft? 1: 0;

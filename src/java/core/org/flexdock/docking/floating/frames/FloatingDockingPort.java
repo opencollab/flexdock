@@ -12,7 +12,6 @@ import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.event.DockingEvent;
 
@@ -49,7 +48,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
 	
 	public boolean dock(Component comp, String desc, String region) {
 		// only dock to the CENTER region
-		boolean ret = super.dock(comp, desc, DockingPort.CENTER_REGION);
+		boolean ret = super.dock(comp, desc, CENTER_REGION);
 		if(ret)
 			toggleListeners(comp, true);
 		return ret;

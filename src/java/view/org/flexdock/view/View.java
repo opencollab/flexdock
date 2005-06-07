@@ -39,7 +39,7 @@ import org.flexdock.view.tracking.ViewTracker;
 /**
  * @author Christopher Butler
  */
-public class View extends JComponent implements Dockable, HierarchyListener {
+public class View extends JComponent implements Dockable, DockingConstants, HierarchyListener {
 	static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
 	protected String id;
 	protected Titlebar titlepane;
@@ -307,7 +307,7 @@ public class View extends JComponent implements Dockable, HierarchyListener {
 		super.remove(popup);
 	}
 
-	public Component getDockable() {
+	public Component getComponent() {
 		return this;
 	}
 	
@@ -341,7 +341,7 @@ public class View extends JComponent implements Dockable, HierarchyListener {
 	}
 	
 	public boolean dock(Dockable dockable) {
-		return dock(dockable, Viewport.CENTER_REGION);
+		return dock(dockable, CENTER_REGION);
 	}
 	
 	public DockingPort getDockingPort() {

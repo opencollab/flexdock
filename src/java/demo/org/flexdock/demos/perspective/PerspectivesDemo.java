@@ -23,7 +23,6 @@ import javax.swing.border.LineBorder;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableBuilder;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.PerspectiveBuilder;
@@ -37,9 +36,9 @@ import org.flexdock.view.Viewport;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.3 2005-06-04 00:16:41 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.4 2005-06-07 05:10:11 marius Exp $
  */
-public class PerspectivesDemo extends JFrame {
+public class PerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String APP_KEY = "PerspectiveDemo";
 	private static final String MAIN_VIEW = "main.view";
 	private static final String BIRD_VIEW = "bird.view";
@@ -155,8 +154,8 @@ public class PerspectivesDemo extends JFrame {
 			LayoutSequence sequence = perspective.getInitialSequence(true);
 			
 			sequence.add("main.view");
-			sequence.add(BIRD_VIEW, "main.view", DockingPort.EAST_REGION, .3f);
-			sequence.add(MESSAGE_VIEW, "main.view", DockingPort.WEST_REGION, .3f);
+			sequence.add(BIRD_VIEW, "main.view", EAST_REGION, .3f);
+			sequence.add(MESSAGE_VIEW, "main.view", WEST_REGION, .3f);
 			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
 			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW);
 			
@@ -168,10 +167,10 @@ public class PerspectivesDemo extends JFrame {
 			LayoutSequence sequence = perspective.getInitialSequence(true);
 
 			sequence.add("main.view");
-			sequence.add(BIRD_VIEW, "main.view", DockingPort.WEST_REGION, .3f);
-			sequence.add(MESSAGE_VIEW, BIRD_VIEW, DockingPort.SOUTH_REGION, .5f);
+			sequence.add(BIRD_VIEW, "main.view", WEST_REGION, .3f);
+			sequence.add(MESSAGE_VIEW, BIRD_VIEW, SOUTH_REGION, .5f);
 			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
-			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, DockingPort.EAST_REGION, .5f);
+			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, EAST_REGION, .5f);
 			
 			return perspective;
 		}
@@ -228,7 +227,7 @@ public class PerspectivesDemo extends JFrame {
 			View mainView = new View(MAIN_VIEW, null, null);
 
 			//blokujemy mozliwosc dokowania do tego view w regionie CENTER
-			mainView.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
+			mainView.setTerritoryBlocked(CENTER_REGION, true);
 			//wylaczamy pasek tytulowy
 			mainView.setTitlebar(null);
 			//ustawiamy komponent GUI, ktory chcemy aby byl wyswietalny w tym view

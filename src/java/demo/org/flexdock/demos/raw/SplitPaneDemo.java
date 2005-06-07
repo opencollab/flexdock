@@ -13,12 +13,12 @@ import javax.swing.border.LineBorder;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.DockableAdapter;
 import org.flexdock.docking.props.DockingPortProps;
+import org.flexdock.util.DockingConstants;
 
-public class SplitPaneDemo extends JPanel {
+public class SplitPaneDemo extends JPanel implements DockingConstants {
 	private JLabel titlebar;
 	private Dockable dockableImpl;
 	
@@ -83,7 +83,7 @@ public class SplitPaneDemo extends JPanel {
 		DockingManager.registerDockable(spd.getDockable());
 
 		// dock the panel and return the DockingPort
-		port.dock(spd.getDockable(), DockingPort.CENTER_REGION);
+		port.dock(spd.getDockable(), CENTER_REGION);
 		return port;
 	}
 	

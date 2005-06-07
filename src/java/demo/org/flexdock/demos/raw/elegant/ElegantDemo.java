@@ -6,9 +6,10 @@ import javax.swing.JFrame;
 
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.DockingConstants;
 
 
-public class ElegantDemo extends JFrame {
+public class ElegantDemo extends JFrame implements DockingConstants {
 	private ElegantPanel j2eeHierarchyView;
 	private ElegantPanel j2eeNavView;
 	private ElegantPanel consoleView;
@@ -52,11 +53,11 @@ public class ElegantDemo extends JFrame {
 		// dock the editor into the root dockingport
 		DockingManager.dock(editorView, rootDockingPort);
 		// dock the hierarchy-view to the west of the editor
-		DockingManager.dock(j2eeHierarchyView, editorView, DockingPort.WEST_REGION);
+		DockingManager.dock(j2eeHierarchyView, editorView, WEST_REGION);
 		// dock the outline to the south of the hierarchy
-		DockingManager.dock(outlineView, j2eeHierarchyView, DockingPort.SOUTH_REGION);
+		DockingManager.dock(outlineView, j2eeHierarchyView, SOUTH_REGION);
 		// dock the task-view to the south of the editor
-		DockingManager.dock(tasksView, editorView, DockingPort.SOUTH_REGION);
+		DockingManager.dock(tasksView, editorView, SOUTH_REGION);
 
 		// tab the nav-view onto the hierarchy view
 		DockingManager.dock(j2eeNavView, j2eeHierarchyView);

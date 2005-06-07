@@ -36,18 +36,45 @@ import org.flexdock.docking.props.DockableProps;
  */
 public interface Dockable extends DockingListener, DockingMonitor {
 	public static final String DOCKABLE_INDICATOR = "Dockable.DOCKABLE_INDICATOR";
-	/**
-	 * Returns the Component that is to be dragged and docked.  This may or may not be the same as the 
-	 * Component returned by <code>getInitiator()</code>.
-	 */
-	public Component getDockable();
+	
+    /**
+     * Returns the value of the property with the specified key.  Only
+     * properties added with <code>putClientProperty</code> will return
+     * a non-<code>null</code> value.  
+     * 
+     * @param key the being queried
+     * @return the value of this property or <code>null</code>
+     * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
+     */
+	public Object getClientProperty(Object key);
 	
 	/**
-	 * Returns the Component that is the event source of drag operations.  This may or may not be the same 
-	 * as the Component returned by <code>getDockable()</code>.
+	 * Returns the Component that is to be dragged and docked.  This may or may not be included in
+	 * the list returned by <code>getDragSources()</code>.
+	 */
+	public Component getComponent();
+	
+	/**
+	 * Returns the DockingPort within which this Dockable is currently docked.  If not currently docked, 
+	 * this method will return null.
+	 */
+	public DockingPort getDockingPort();
+	
+	/**
+	 * Returns a <code>List</code> of the <code>Components</code> that are event sources for drag operations.  
+	 * The list may or may not include the Component returned by <code>getComponent()</code>.
 	 */
 	public List getDragSources();
-	
+
+	/**
+	 * Returns a <code>Set</code> of the <code>Components</code> that are used as frame drag sources.
+	 * When a <code>Dockable</code> is floated into an external frame, that frame may or may not have
+	 * a titlebar for repositioning.  The Components returned by this method will be setup with appropriate event 
+	 * listeners such that dragging them will serve to reposition the containing frame as if they were
+	 * the frame titlebar.  If a Component exists in both the Set returned by this method and the List
+	 * returned by <code>getDragSources()</code>, the "frame reposition" behavior will supercede any
+	 * "drag-to-dock" behavior while the Dockable is in a floating state.  
+	 */
 	public Set getFrameDragSources();
 
 	/**
@@ -61,17 +88,27 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	 */		
 	public String getPersistentId();
 	
-	public Object getClientProperty(Object key);
-	
+    /**
+     * Adds an arbitrary key/value "client property" to this <code>Dockable</code>.
+     * <code>null</code> values are allowed.
+     * @see javax.swing.JComponent#putClientProperty(java.lang.Object, java.lang.Object)
+     */
 	public void putClientProperty(Object key, Object value);
 	
+    /**
+     * Returns a <code>DockableProps</code> instance associated with this <code>Dockable</code>.
+     * Developers implementing the <code>Dockable</code> interface may or may not choose to 
+     * provide their own <code>DockableProps</code> implementation for use with this method.
+     * A default implementation is supplied by the framework and most <code>Dockable</code> 
+     * implementations, including all implementations provided by the framework, will return 
+     * the default <code>DockableProps</code> via a call to 
+     * <code>org.flexdock.docking.props.PropertyManager</code>.  Developers are encouraged to 
+     * take advantage of this by calling <code>PropertyManager.getDockableProps(this)</code>.
+     * 
+     * @return the <code>DockableProps</code> associated with this <code>Dockable</code>  This
+     * method may not return a <code>null</code> reference.
+     * @see org.flexdock.docking.props.DockableProps#
+     * @see org.flexdock.docking.props.PropertyManager#getDockableProps(Dockable)
+     */
 	public DockableProps getDockingProperties();
-	
-	/**
-	 * Returns the DockingPort within which this Dockable is currently docked.  If not currently docked, 
-	 * this method will return null.
-	 */
-	public DockingPort getDockingPort();
-	
-	public Dockable getSibling(String region);
 }

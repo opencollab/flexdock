@@ -50,6 +50,7 @@ import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventDispatcher;
 import org.flexdock.event.RegistrationEvent;
 import org.flexdock.util.ClassMapping;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
@@ -75,7 +76,7 @@ import org.flexdock.util.Utilities;
  * method dispatching to <code>startDrag()</code>, so explicitly initiating a drag in this manner, while
  * not prohibited, is typically not required.
  * <p>
- * During drag operations, an outline of the <code>Dockable.getDockable()</code> is displayed on the 
+ * During drag operations, an outline of the <code>Dockable.getComponent()</code> is displayed on the 
  * GlassPane and moves with the mouse cursor.  The <code>DockingManager</code> monitors the docking region 
  * underneath the mouse cursor for underlying <code>DockingPorts</code> and the mouse cursor icon will 
  * reflect this appropriately.  The image displayed by for the mouse cursor may be altered by returning a 
@@ -92,7 +93,7 @@ import org.flexdock.util.Utilities;
  * 
  * @author Chris Butler
  */
-public class DockingManager {
+public class DockingManager implements DockingConstants {
 	public static final String MINIMIZE_MANAGER = "minimize.manager";
 	public static final String LAYOUT_MANAGER = "layout.manager";
 	private static final String DEV_PROPS = "org/flexdock/util/dev-props.properties";
@@ -185,7 +186,7 @@ public class DockingManager {
 	}
 
 	public static boolean dock(Component dockable , DockingPort port) {
-		return dock(dockable, port, DockingPort.CENTER_REGION);
+		return dock(dockable, port, CENTER_REGION);
 	}
 	
 	public static boolean dock(Component dockable , DockingPort port, String region) {
@@ -217,16 +218,16 @@ public class DockingManager {
 	}
 
 	public static boolean isValidDockingRegion(String region) {
-		return DockingPort.CENTER_REGION.equals(region) || DockingPort.NORTH_REGION.equals(region) || 
-			DockingPort.SOUTH_REGION.equals(region) || DockingPort.EAST_REGION.equals(region) || 
-			DockingPort.WEST_REGION.equals(region); 
+		return CENTER_REGION.equals(region) || NORTH_REGION.equals(region) || 
+			SOUTH_REGION.equals(region) || EAST_REGION.equals(region) || 
+			WEST_REGION.equals(region); 
 	}
 
 	/**
 	 * Checks whether a supplied dockable is docked in a supplied dockingPort instance.
 	 */
 	public static boolean isDocked(DockingPort dockingPort, Dockable dockable) {
-		return dockingPort.isParentDockingPort(dockable.getDockable());
+		return dockingPort.isParentDockingPort(dockable.getComponent());
 	}
 	
 	public static boolean isDocked(Dockable dockable) {
@@ -292,17 +293,17 @@ public class DockingManager {
 	 * @param init the Dockable that is being initialized.
 	 */
 	public static Dockable registerDockable(Dockable dockable) {
-		if (dockable == null || dockable.getDockable() == null || dockable.getDragSources()==null)
+		if (dockable == null || dockable.getComponent() == null || dockable.getDragSources()==null)
 			return null;
 		
 		if(dockable.getPersistentId()==null)
 			throw new IllegalArgumentException("Dockable must have a non-null persistent ID.");
 		
-		DOCKABLES_BY_COMPONENT.put(dockable.getDockable(), dockable);
+		DOCKABLES_BY_COMPONENT.put(dockable.getComponent(), dockable);
 		
 		// flag the component as dockable, in case it doesn't 
 		// implement the interface directly
-		Component c = dockable.getDockable();
+		Component c = dockable.getComponent();
 		SwingUtility.putClientProperty(c, Dockable.DOCKABLE_INDICATOR, Boolean.TRUE);
 		
 		// add drag listeners
@@ -587,7 +588,7 @@ public class DockingManager {
 	}
 	
 	public static void setMinimized(Dockable dockable, boolean minimized) {
-		Component cmp = dockable==null? null: dockable.getDockable();
+		Component cmp = dockable==null? null: dockable.getComponent();
 		Window window = cmp==null? null: SwingUtilities.getWindowAncestor(cmp);
 		setMinimized(dockable, minimized, window);
 	}
@@ -727,7 +728,7 @@ public class DockingManager {
 	}
 	
 	public static boolean dock(Dockable dockable, Dockable parent) {
-		return dock(dockable, parent, DockingPort.CENTER_REGION);
+		return dock(dockable, parent, CENTER_REGION);
 	}
 	
 	public static boolean dock(Dockable dockable, Dockable parent, String region) {

@@ -76,9 +76,9 @@ public class DockableAdapter implements Dockable {
 
 	/**
 	 * Returns null.
-	 * @see org.flexdock.docking.Dockable#getDockable()
+	 * @see org.flexdock.docking.Dockable#getComponent()
 	 */
-	public Component getDockable() {
+	public Component getComponent() {
 		return null;
 	}
 

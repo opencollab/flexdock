@@ -93,7 +93,7 @@ public class DockingPortTracker implements HierarchyListener {
 		
 		// we don't want to work with sub-ports
 		DockingPort port = (DockingPort)evt.getSource();
-		if(port.isTransient())
+		if(!port.isRoot())
 			return;
 		
 		// only work with parent-change events

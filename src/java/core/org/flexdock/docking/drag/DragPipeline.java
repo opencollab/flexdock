@@ -22,7 +22,7 @@ public class DragPipeline {
 	private DragGlasspane newGlassPane;
 	
 	private boolean open;
-	private DragToken dragToken;
+	private DragOperation dragToken;
 	private RubberBand rubberBand;
 	
 	public DragPipeline() {
@@ -34,7 +34,7 @@ public class DragPipeline {
 		return open;
 	}
 	
-	public void open(DragToken token) {
+	public void open(DragOperation token) {
 		if(token==null)
 			throw new NullPointerException("'token' parameter cannot be null.");
 		
@@ -43,7 +43,7 @@ public class DragPipeline {
 			return;
 		}
 
-		final DragToken dToken = token;
+		final DragOperation dToken = token;
 		Thread t = new Thread() {
 			public void run() {
 				Runnable r = new Runnable() {
@@ -65,7 +65,7 @@ public class DragPipeline {
 		t.start();
 	}
 	
-	private void openImpl(DragToken token) {
+	private void openImpl(DragOperation token) {
 		this.dragToken = token;
 
 		notifyDockingPort(token, true);
@@ -268,11 +268,11 @@ public class DragPipeline {
 		}
 	}
 	
-	public DragToken getDragToken() {
+	public DragOperation getDragToken() {
 		return dragToken;
 	}
 	
-	private void notifyDockingPort(DragToken token, boolean inProgress) {
+	private void notifyDockingPort(DragOperation token, boolean inProgress) {
 		DockingPort port = token.getSourcePort();
 		if(port instanceof DefaultDockingPort) {
 			((DefaultDockingPort)port).setDragInProgress(inProgress);

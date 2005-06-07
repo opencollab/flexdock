@@ -315,12 +315,12 @@ public class DockbarManager {
 
 	
 	private int findDockbarEdge(Dockable dockable) {
-		RootWindow window = RootWindow.getRootContainer(dockable.getDockable());
+		RootWindow window = RootWindow.getRootContainer(dockable.getComponent());
 		if(window==null)
 			return DEFAULT_EDGE;
 			
 		// get the dockable component and it's containing content pane
-		Component cmp = dockable.getDockable();
+		Component cmp = dockable.getComponent();
 		Container contentPane = window.getContentPane();
 		
 		// get the bounds of the content pane and dockable, translating the dockable into the 

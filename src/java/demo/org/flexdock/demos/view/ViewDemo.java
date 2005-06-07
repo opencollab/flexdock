@@ -16,7 +16,6 @@ import javax.swing.border.LineBorder;
 
 import org.flexdock.demos.util.VSNetStartPage;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
@@ -68,10 +67,10 @@ public class ViewDemo extends JFrame implements DockingConstants {
 		View view4 = createView("message.log", "Message Log");
 
 		viewport.dock(startPage);
-		startPage.dock(view1, DockingPort.WEST_REGION, .3f);
-		startPage.dock(view2, DockingPort.SOUTH_REGION, .3f);
-		startPage.dock(view4, DockingPort.EAST_REGION, .3f);
-		view1.dock(view3, DockingPort.SOUTH_REGION, .3f);
+		startPage.dock(view1, WEST_REGION, .3f);
+		startPage.dock(view2, SOUTH_REGION, .3f);
+		startPage.dock(view4, EAST_REGION, .3f);
+		view1.dock(view3, SOUTH_REGION, .3f);
 
 		return p;
 	}
@@ -96,7 +95,7 @@ public class ViewDemo extends JFrame implements DockingConstants {
 	private View createStartPage() {
 		String id = "startPage";
 		View view = new View(id, null, null);
-		view.setTerritoryBlocked(DockingPort.CENTER_REGION, true);
+		view.setTerritoryBlocked(CENTER_REGION, true);
 		view.setTitlebar(null);
 		view.setContentPane(new VSNetStartPage());
 		return view;

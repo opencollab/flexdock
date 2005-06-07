@@ -55,6 +55,7 @@ import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 
 
@@ -118,7 +119,7 @@ import org.flexdock.util.SwingUtility;
  * @author Chris Butler
  *
  */
-public class DefaultDockingPort extends JPanel implements DockingPort {
+public class DefaultDockingPort extends JPanel implements DockingPort, DockingConstants {
 	private static final WeakHashMap COMPONENT_TITLES = new WeakHashMap();
 	
 	protected ArrayList dockingListeners;
@@ -127,7 +128,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	private BorderManager borderManager;
 	private String persistentId;
 	private boolean tabsAsDragSource;
-	private boolean transientPort;
+	private boolean rootPort;
 	
 	private BufferedImage dragImage;
 
@@ -152,6 +153,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		
 		// check container hierarchy to track root dockingports
 		addHierarchyListener(DockingPortTracker.getInstance());
+		
+		// start out as a root dockingport
+		rootPort = true;
 	}
 
 	/**
@@ -195,7 +199,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	}
 
 	private void dockCmp(DockingPort port, Component c, String desc) {
-		port.dock(c, desc, DockingPort.CENTER_REGION);
+		port.dock(c, desc, CENTER_REGION);
 	}	
 
 	
@@ -271,7 +275,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		Component regionTest = this;
 		
 		if(d!=null) {
-			regionTest = d.getDockable();
+			regionTest = d.getComponent();
 			p = SwingUtilities.convertPoint(this, p, regionTest);
 		}
 
@@ -407,7 +411,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			return false;
 		
 		String tabText = dockable.getDockingProperties().getDockableDesc();
-		return dock(dockable.getDockable(), tabText, region);
+		return dock(dockable.getComponent(), tabText, region);
 	}
 
 	/**
@@ -442,7 +446,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		// if there is nothing currently in the docking port, then we can only 
 		// dock into the CENTER region.
 		if(docked==null)
-			region = DockingPort.CENTER_REGION;
+			region = CENTER_REGION;
 		
 		COMPONENT_TITLES.put(comp, desc);
 		
@@ -453,7 +457,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			return true;
 		}
 		
-		boolean success = DockingPort.CENTER_REGION.equals(region)? 
+		boolean success = CENTER_REGION.equals(region)? 
 				dockInCenterRegion(comp): dockInOuterRegion(comp, region, desc);
 			
 		if(success) {
@@ -463,7 +467,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			// so we'll know any border modification that took place has already happened, 
 			// and we can be relatively safe about assumptions regarding our current 
 			// insets.
-			if(!DockingPort.CENTER_REGION.equals(region)) 
+			if(!CENTER_REGION.equals(region)) 
 				resolveSplitDividerLocation(docked);
 		}
 		return success;
@@ -725,7 +729,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 	}
 
 	private DockingPort[] putPortsInOrder(DockingPort oldPort, DockingPort newPort, String region) {
-		if(DockingPort.NORTH_REGION.equals(region) || DockingPort.WEST_REGION.equals(region))
+		if(NORTH_REGION.equals(region) || WEST_REGION.equals(region))
 			return new DockingPort[] {newPort, oldPort};
 		return new DockingPort[] {oldPort, newPort};
 	}
@@ -1056,11 +1060,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 		return getDockingProperties().getTabPlacement().intValue();
 	}
 
-	public boolean isTransient() {
-		return transientPort;
+	public boolean isRoot() {
+		return rootPort;
 	}
-	public void setTransient(boolean portTransient) {
-		this.transientPort = portTransient;
+	public void setRoot(boolean root) {
+		this.rootPort = root;
 	}
 	
 	public void setDragInProgress(boolean inProgress) {
@@ -1142,7 +1146,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort {
 			LayoutNode child = (LayoutNode)en.nextElement();
 			if(child instanceof DockableNode) {
 				Dockable dockable = ((DockableNode)child).getDockable();
-				port.dock(dockable, DockingPort.CENTER_REGION);
+				port.dock(dockable, CENTER_REGION);
 			}
 		}
 	}

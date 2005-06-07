@@ -12,16 +12,17 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.RegionChecker;
+import org.flexdock.util.DockingConstants;
 
 /**
  * @author Christopher Butler
  *
  */
-public class DefaultRegionChecker implements RegionChecker {
+public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	
 	public String getRegion(Component c, Point p) {
 		if(c==null || p==null)
-			return DockingPort.UNKNOWN_REGION;
+			return UNKNOWN_REGION;
 
 		// make sure the point is actually inside of the target dockingport
 		Rectangle targetArea = c.getBounds();
@@ -31,12 +32,12 @@ public class DefaultRegionChecker implements RegionChecker {
 		if(c instanceof DockingPort)
 			targetArea.setLocation(0, 0);
 		if(!targetArea.contains(p))
-			return DockingPort.UNKNOWN_REGION;
+			return UNKNOWN_REGION;
 		
 		// if our target component is the dockingport, then the dockingport is 
 		// currently empty and all points within it are in the CENTER
 		if(c instanceof DockingPort)
-			return DockingPort.CENTER_REGION;
+			return CENTER_REGION;
 		
 		// start with the north region
 		Rectangle north = getNorthRegion(c);
@@ -49,7 +50,7 @@ public class DefaultRegionChecker implements RegionChecker {
 				westPoly.addPoint(0, 0);
 				westPoly.addPoint(0, north.height);
 				westPoly.addPoint(west.width, north.height);
-				return westPoly.contains(p)? DockingPort.WEST_REGION: DockingPort.NORTH_REGION;
+				return westPoly.contains(p)? WEST_REGION: NORTH_REGION;
 			}
 			// check NORTH_EAST
 			Rectangle east = getEastRegion(c);
@@ -58,9 +59,9 @@ public class DefaultRegionChecker implements RegionChecker {
 				eastPoly.addPoint(rightX, 0);
 				eastPoly.addPoint(rightX, north.height);
 				eastPoly.addPoint(east.x, north.height);
-				return eastPoly.contains(p)? DockingPort.EAST_REGION: DockingPort.NORTH_REGION;
+				return eastPoly.contains(p)? EAST_REGION: NORTH_REGION;
 			}
-			return DockingPort.NORTH_REGION;
+			return NORTH_REGION;
 		}
 
 		// check with the south region
@@ -74,7 +75,7 @@ public class DefaultRegionChecker implements RegionChecker {
 				westPoly.addPoint(0, south.y);
 				westPoly.addPoint(west.width, south.y);
 				westPoly.addPoint(0, bottomY);
-				return westPoly.contains(p)? DockingPort.WEST_REGION: DockingPort.SOUTH_REGION;
+				return westPoly.contains(p)? WEST_REGION: SOUTH_REGION;
 			}
 			// check SOUTH_EAST
 			Rectangle east = getEastRegion(c);
@@ -83,38 +84,38 @@ public class DefaultRegionChecker implements RegionChecker {
 				eastPoly.addPoint(east.y, south.y);
 				eastPoly.addPoint(rightX, south.y);
 				eastPoly.addPoint(rightX, bottomY);
-				return eastPoly.contains(p)? DockingPort.EAST_REGION: DockingPort.SOUTH_REGION;
+				return eastPoly.contains(p)? EAST_REGION: SOUTH_REGION;
 			}
-			return DockingPort.SOUTH_REGION;
+			return SOUTH_REGION;
 		}
 		
 		// Now check EAST and WEST.  We've already checked NORTH and SOUTH, so we don't have to
 		// check for NE, SE, NW, and SW anymore.
 		Rectangle east = getEastRegion(c);
 		if(east.contains(p))
-			return DockingPort.EAST_REGION;
+			return EAST_REGION;
 		Rectangle west = getWestRegion(c);
 		if(west.contains(p))
-			return DockingPort.WEST_REGION;
+			return WEST_REGION;
 		
 		// not in any of the outer regions, so return CENTER.
-		return DockingPort.CENTER_REGION;
+		return CENTER_REGION;
 	}
 	
 	public Rectangle getNorthRegion(Component c) {
-		return getRegionBounds(c, DockingPort.NORTH_REGION);
+		return getRegionBounds(c, NORTH_REGION);
 	}
 	
 	public Rectangle getSouthRegion(Component c) {
-		return getRegionBounds(c, DockingPort.SOUTH_REGION);
+		return getRegionBounds(c, SOUTH_REGION);
 	}
 	
 	public Rectangle getEastRegion(Component c) {
-		return getRegionBounds(c, DockingPort.EAST_REGION);
+		return getRegionBounds(c, EAST_REGION);
 	}
 	
 	public Rectangle getWestRegion(Component c) {
-		return getRegionBounds(c, DockingPort.WEST_REGION);
+		return getRegionBounds(c, WEST_REGION);
 	}
 	
 	public Rectangle getRegionBounds(Component c, String region) {
@@ -139,15 +140,15 @@ public class DefaultRegionChecker implements RegionChecker {
 		
 		Rectangle bounds = c.getBounds();
 
-		if(DockingPort.NORTH_REGION.equals(region) || DockingPort.SOUTH_REGION.equals(region)) {
+		if(NORTH_REGION.equals(region) || SOUTH_REGION.equals(region)) {
 			int h = (int)((float)bounds.height * size);
-			int y = DockingPort.NORTH_REGION.equals(region)? 0: bounds.height-h;
+			int y = NORTH_REGION.equals(region)? 0: bounds.height-h;
 			return new Rectangle(0, y, bounds.width, h);
 		}
 
-		if(DockingPort.WEST_REGION.equals(region) || DockingPort.EAST_REGION.equals(region)) {
+		if(WEST_REGION.equals(region) || EAST_REGION.equals(region)) {
 			int w = (int)((float)bounds.width * size);
-			int x = DockingPort.WEST_REGION.equals(region)? 0: bounds.width-w;
+			int x = WEST_REGION.equals(region)? 0: bounds.width-w;
 			return new Rectangle(x, 0, w, bounds.height);
 		}
 		

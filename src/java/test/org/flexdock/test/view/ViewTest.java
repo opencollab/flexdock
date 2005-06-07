@@ -32,7 +32,6 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.EmptyBorder;
 
-import org.flexdock.docking.DockingPort;
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.Theme;
@@ -89,7 +88,7 @@ public class ViewTest implements DockingConstants {
 		View view2 = buildView("plafchooser.view", "Plaf Chooser", buidViewContentPane());
 
 		viewport.dock(view2);
-		view2.dock( view1, DockingPort.EAST_REGION, .2f);
+		view2.dock( view1, EAST_REGION, .2f);
 		
         return content;
     }

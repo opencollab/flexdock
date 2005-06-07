@@ -48,7 +48,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 			return null;
 		
 		DockingPath path = new DockingPath(dockable);
-		Component comp = dockable.getDockable();
+		Component comp = dockable.getComponent();
 
 		Container parent = comp.getParent();
 		while(!isDockingRoot(parent)) {
@@ -69,7 +69,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		if(dockable==null)
 			return null;
 
-		Container parent = dockable.getDockable().getParent();
+		Container parent = dockable.getComponent().getParent();
 		return parent instanceof DockingPort? createNode((DockingPort)parent): null;
 	}
 	
@@ -118,7 +118,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 
 
 	private static boolean isDockingRoot(Container c) {
-		return c instanceof DockingPort && !((DockingPort)c).isTransient();
+		return c instanceof DockingPort && ((DockingPort)c).isRoot();
 	}
 
 	public static DockingPath getRestorePath(Dockable dockable) {
@@ -136,7 +136,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	
 	private DockingPath(Dockable dockable) {
 		siblingId = findSiblingId(dockable);
-		tabbed = dockable.getDockable().getParent() instanceof JTabbedPane;
+		tabbed = dockable.getComponent().getParent() instanceof JTabbedPane;
 		nodes = new ArrayList();
 	}
 	
@@ -167,7 +167,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	}
 	
 	private String findSiblingId(Dockable dockable) {
-		Component comp = dockable.getDockable();
+		Component comp = dockable.getComponent();
 		JSplitPane split = comp.getParent() instanceof JSplitPane? (JSplitPane)comp.getParent(): null;
 		if(split==null)
 			return null;
@@ -211,7 +211,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 			return false;
 		
 		DockingPort rootPort = getRootDockingPort();
-		String region = DockingPort.CENTER_REGION;
+		String region = CENTER_REGION;
 		if(nodes.size()==0) {
 			return dockFullPath(dockable, rootPort, region);
 		}
@@ -249,12 +249,12 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		}
 		
 		if(current instanceof JTabbedPane) {
-			return dock(dockable, port, DockingPort.CENTER_REGION, null);
+			return dock(dockable, port, CENTER_REGION, null);
 		}
 		
 		Dockable embedded = findDockable(current);
 		if(embedded==null || tabbed) {
-			return dock(dockable, port, DockingPort.CENTER_REGION, null);
+			return dock(dockable, port, CENTER_REGION, null);
 		}
 		
 		String embedId = embedded.getPersistentId();
@@ -275,15 +275,15 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		// first, check to see if we need to use a tabbed layout
 		Component current = port.getDockedComponent();
 		if(current instanceof JTabbedPane) {
-			return dock(dockable, port, DockingPort.CENTER_REGION, null);
+			return dock(dockable, port, CENTER_REGION, null);
 		}
 
 		// check to see if we dock outside the current port or outside of it
 		Dockable docked = findDockable(current);
 		if(docked!=null) {
-			Component comp = dockable.getDockable();
-			if(port.isDockingAllowed(DockingPort.CENTER_REGION, comp)) {
-				return dock(dockable, port, DockingPort.CENTER_REGION, null);
+			Component comp = dockable.getComponent();
+			if(port.isDockingAllowed(CENTER_REGION, comp)) {
+				return dock(dockable, port, CENTER_REGION, null);
 			}
 			DockingPort superPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)port);
 			if(superPort!=null)
@@ -316,7 +316,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 			Dockable d = (Dockable)it.next();
 			if(d.getPersistentId().equals(lastSibling)) {
 				DockingPort embedPort = d.getDockingPort();
-				String embedRegion = getRegion(lastNode, d.getDockable());
+				String embedRegion = getRegion(lastNode, d.getComponent());
 				return dock(dockable, embedPort, embedRegion, ctrlNode);
 			}
 		}
@@ -333,7 +333,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	
 	private String getRegion(SplitNode node, Component dockedComponent) {
 		if(dockedComponent==null)
-			return DockingPort.CENTER_REGION;
+			return CENTER_REGION;
 		return DockingUtility.getRegion(node.getRegion());
 	}
 	
@@ -347,7 +347,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 			return ret;
 		
 		final float percent = ctrlNode.getPercentage();
-		final Component docked = dockable.getDockable();
+		final Component docked = dockable.getComponent();
 		Thread t = new Thread() {
 			public void run() {
 				Runnable r = new Runnable() {

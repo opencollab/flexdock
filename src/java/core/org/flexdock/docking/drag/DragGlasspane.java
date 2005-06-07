@@ -18,9 +18,10 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.drag.effects.DragPreview;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.util.ComponentNest;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
-public class DragGlasspane extends JComponent {
+public class DragGlasspane extends JComponent implements DockingConstants {
 	private ComponentNest currentDropTargets;
 	private Component cachedGlassPane;
 	private RootWindow rootWindow;
@@ -28,7 +29,7 @@ public class DragGlasspane extends JComponent {
 	private DragPreview previewDelegate;
 	private boolean previewInit;
 	private Polygon previewPoly;
-	private DragToken currentDragToken;
+	private DragOperation currentDragToken;
 	
 	public DragGlasspane() {
 		setLayout(null);
@@ -52,7 +53,7 @@ public class DragGlasspane extends JComponent {
 	
 	
 	
-	private ComponentNest getDropTargets(DragToken token) {
+	private ComponentNest getDropTargets(DragOperation token) {
 		Container c = rootWindow.getContentPane();
 		Point currMouse = token.getCurrentMouse(c);
 		Component deep = SwingUtilities.getDeepestComponentAt(c, currMouse.x, currMouse.y);
@@ -65,7 +66,7 @@ public class DragGlasspane extends JComponent {
 	
 	
 	
-	public void processDragEvent(DragToken token) {
+	public void processDragEvent(DragOperation token) {
 		currentDragToken = token;
 		ComponentNest dropTargets = getDropTargets(token);
 		
@@ -103,7 +104,7 @@ public class DragGlasspane extends JComponent {
 	
 	private String findRegion(DockingPort hoverPort, Dockable hoverDockable, Point mousePoint) {
 		if(hoverPort==null)
-			return DockingPort.UNKNOWN_REGION;
+			return UNKNOWN_REGION;
 		
 		if(hoverDockable!=null)
 			return hoverPort.getRegion(mousePoint);
@@ -117,7 +118,7 @@ public class DragGlasspane extends JComponent {
 			return hoverPort.getRegion(mousePoint);
 		
 		// the port contains a non-dockable component.  we can't dock
-		return DockingPort.UNKNOWN_REGION;
+		return UNKNOWN_REGION;
 	}
 	
 	private Dockable getHoverDockable(ComponentNest nest) {
@@ -127,7 +128,7 @@ public class DragGlasspane extends JComponent {
 		return DockingManager.getDockable(c);
 	}
 	
-	protected void createPreviewPolygon(DragToken token, DockingPort port, Dockable hover, String region) {
+	protected void createPreviewPolygon(DragOperation token, DockingPort port, Dockable hover, String region) {
 		DragPreview preview = getPreviewDelegate(token.getDockable(), port);
 		if(preview==null)
 			previewPoly = null;
@@ -200,7 +201,7 @@ public class DragGlasspane extends JComponent {
 		return o1==null? false: o1.equals(o2);
 	}
 	
-	private Map getDragContext(DragToken token) {
+	private Map getDragContext(DragOperation token) {
 		if(token==null)
 			return null;
 		

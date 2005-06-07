@@ -77,7 +77,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	}
 	
 	private void openPipeline(MouseEvent evt) {
-		DragToken token = new DragToken(dockable.getDockable(), dragOrigin, evt);
+		DragOperation token = new DragOperation(dockable.getComponent(), dragOrigin, evt);
 		token.setDragListener(this);
 		// initialize listeners on the drag-source
 		initializeListenerCaching(token);
@@ -104,7 +104,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	}
 
 
-	protected void finishDrag(Dockable dockable, DragToken token, MouseEvent mouseEvt) {
+	protected void finishDrag(Dockable dockable, DragOperation token, MouseEvent mouseEvt) {
 		DockingStrategy docker = DockingManager.getDockingStrategy(dockable);
 		DockingPort currentPort = DockingUtility.getParentDockingPort(dockable);
 		DockingPort targetPort = token.getTargetPort();
@@ -144,7 +144,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	
 	
 	
-	private static void initializeListenerCaching(DragToken token) {
+	private static void initializeListenerCaching(DragOperation token) {
 		// it's easier for us if we remove the MouseMostionListener associated with the dragSource 
 		// before dragging, so normally we'll try to do that.  However, if developers really want to
 		// keep them in there, then they can implement the Dockable interface for their dragSource and 
@@ -166,7 +166,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 			dragSrc.addMouseMotionListener(dragListener);
 	}
 	
-	private static void restoreCachedListeners(DragToken token) {
+	private static void restoreCachedListeners(DragOperation token) {
 		Component dragSrc = token.getDragSource();
 		EventListener[] cachedListeners = token.getCachedListeners();
 		DragManager dragListener = token.getDragListener();		

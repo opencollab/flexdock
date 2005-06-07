@@ -32,13 +32,14 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.FloatingGroup;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
 /**
  * @author Andreas Ernst
  * @author Christopher Butler
  */
-public class DockingFrame extends JDialog {
+public class DockingFrame extends JDialog implements DockingConstants {
 	private static final BoundsMonitor BOUNDS_MONITOR = new BoundsMonitor();
 	private FloatingDockingPort dockingPort;
 	private String groupName;
@@ -97,7 +98,7 @@ public class DockingFrame extends JDialog {
     	if(dockable==null)
     		return;
     	
-    	dockingPort.dock(dockable, DockingPort.CENTER_REGION);
+    	dockingPort.dock(dockable, CENTER_REGION);
     }
 	
 	public void destroy() {

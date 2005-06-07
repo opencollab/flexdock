@@ -5,10 +5,12 @@ package org.flexdock.event;
 
 import java.util.EventObject;
 
+import org.flexdock.util.DockingConstants;
+
 /**
  * @author Christopher Butler
  */
-public class Event extends EventObject {
+public class Event extends EventObject implements DockingConstants {
 	private int eventType;
 	private Object target;
 	

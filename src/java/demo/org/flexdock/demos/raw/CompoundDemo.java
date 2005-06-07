@@ -13,11 +13,11 @@ import javax.swing.border.LineBorder;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.DockableAdapter;
+import org.flexdock.util.DockingConstants;
 
-public class CompoundDemo extends JPanel {
+public class CompoundDemo extends JPanel implements DockingConstants {
 	private JLabel titlebar;
 	private Dockable dockableImpl;
 	
@@ -93,7 +93,7 @@ public class CompoundDemo extends JPanel {
 		DockingManager.registerDockable(cd.getDockable());
 
 		// dock the panel and return the DockingPort
-		port.dock(cd.getDockable(), DockingPort.CENTER_REGION);
+		port.dock(cd.getDockable(), CENTER_REGION);
 		return port;
 	}
 	

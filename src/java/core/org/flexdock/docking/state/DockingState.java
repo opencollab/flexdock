@@ -5,22 +5,21 @@ import java.io.Serializable;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.DockingPort;
 import org.flexdock.util.DockingConstants;
 
 /**
  * 
  * @author Mateusz Szczap
  */
-public class DockingState implements Cloneable, Serializable {
+public class DockingState implements Cloneable, Serializable, DockingConstants {
 	
 	private String m_dockableId;
 	
 	private String m_relativeParentId;
 	
-	private String m_region = DockingPort.UNKNOWN_REGION;
+	private String m_region = UNKNOWN_REGION;
 	
-	private float m_splitRatio = -1.0F;
+	private float m_splitRatio = UNINITIALIZED_RATIO;
 	
 	private String m_floatingGroup;
 

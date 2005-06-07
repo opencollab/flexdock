@@ -11,12 +11,13 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
+import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 
 /**
  * @author Christopher Butler
  */
-public class LayoutSequence implements Cloneable, Serializable {
+public class LayoutSequence implements Cloneable, Serializable, DockingConstants {
 	private ArrayList sequence;  // contains DockingState objects
 	
 	public LayoutSequence() {
@@ -36,11 +37,11 @@ public class LayoutSequence implements Cloneable, Serializable {
 	}
 	
 	public void add(Dockable dockable, Dockable relativeParent) {
-		add(dockable, relativeParent, DockingPort.CENTER_REGION, -1.0f);
+		add(dockable, relativeParent, CENTER_REGION, -1.0f);
 	}
 	
 	public void add(String dockable, String relativeParent) {
-		add(dockable, relativeParent, DockingPort.CENTER_REGION, -1.0f);
+		add(dockable, relativeParent, CENTER_REGION, -1.0f);
 	}
 	
 	public void add(Dockable dockable, Dockable relativeParent, String region, float ratio) {

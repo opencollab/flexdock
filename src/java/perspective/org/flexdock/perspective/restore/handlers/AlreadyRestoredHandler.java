@@ -31,7 +31,7 @@ import org.flexdock.view.tracking.ViewTracker;
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: AlreadyRestoredHandler.java,v 1.2 2005-06-04 16:42:21 winnetou25 Exp $
+ * @version $Id: AlreadyRestoredHandler.java,v 1.3 2005-06-07 05:10:19 marius Exp $
  */
 public class AlreadyRestoredHandler implements RestorationHandler {
 
@@ -39,8 +39,8 @@ public class AlreadyRestoredHandler implements RestorationHandler {
 		if (!DockingManager.isDocked(dockable))
 			return false;
 
-		ViewTracker.requestViewActivation(dockable.getDockable());
-		SwingUtility.focus(dockable.getDockable());
+		ViewTracker.requestViewActivation(dockable.getComponent());
+		SwingUtility.focus(dockable.getComponent());
 		
 		return true;
 	}

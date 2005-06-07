@@ -20,7 +20,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.drag.DragManager;
-import org.flexdock.docking.drag.DragToken;
+import org.flexdock.docking.drag.DragOperation;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
@@ -34,7 +34,7 @@ import org.flexdock.util.SwingUtility;
 /**
  * @author Christopher Butler
  */
-public class DefaultDockingStrategy implements DockingStrategy {
+public class DefaultDockingStrategy implements DockingStrategy, DockingConstants {
 	public static final String PREFERRED_PROPORTION = "DefaultDockingStrategy.PREFERRED_PROPORTION";
 	
 	public static Dockable getSibling(Dockable dockable) {
@@ -42,20 +42,20 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			return null;
 		
 		DockingPort port = dockable.getDockingPort();
-		String startRegion = findRegion(dockable.getDockable());
+		String startRegion = findRegion(dockable.getComponent());
 		String region = DockingUtility.flipRegion(startRegion);
-		Dockable sibling = findDockable(port, dockable.getDockable(), region, startRegion);
+		Dockable sibling = findDockable(port, dockable.getComponent(), region, startRegion);
 
 		return sibling;
 	}
 	
 	public static Dockable getSibling(Dockable dockable, String region) {
-		if(dockable==null || !DockingManager.isValidDockingRegion(region) || DockingPort.CENTER_REGION.equals(region))
+		if(dockable==null || !DockingManager.isValidDockingRegion(region) || CENTER_REGION.equals(region))
 			return null;
 		
 		DockingPort port = dockable.getDockingPort();
-		String startRegion = findRegion(dockable.getDockable());
-		Dockable sibling = findDockable(port, dockable.getDockable(), region, startRegion);
+		String startRegion = findRegion(dockable.getComponent());
+		Dockable sibling = findDockable(port, dockable.getComponent(), region, startRegion);
 
 		return sibling;
 	}
@@ -128,15 +128,15 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		}
 		
 		if(!(docked instanceof JSplitPane))
-			return DockingPort.CENTER_REGION;
+			return CENTER_REGION;
 		
 		JSplitPane split = (JSplitPane)docked;
 		boolean horiz = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT;
 		Component left = split.getLeftComponent();
 		if(left==port) {
-			return horiz? DockingPort.WEST_REGION: DockingPort.NORTH_REGION;
+			return horiz? WEST_REGION: NORTH_REGION;
 		}
-		return horiz? DockingPort.EAST_REGION: DockingPort.SOUTH_REGION;
+		return horiz? EAST_REGION: SOUTH_REGION;
 			
 	}
 	
@@ -144,7 +144,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		return dock(dockable, port, region, null);
 	}
 
-	public boolean dock(Dockable dockable, DockingPort port, String region, DragToken token) {
+	public boolean dock(Dockable dockable, DockingPort port, String region, DragOperation token) {
 		if(!isDockingPossible(dockable, port, region, token))
 			return false;
 		
@@ -173,7 +173,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		return results.success; 
 	}
 	
-	protected boolean dragThresholdElapsed(DragToken token) {
+	protected boolean dragThresholdElapsed(DragOperation token) {
 		if(token==null || token.isPseudoDrag() || token.getStartTime()==-1)
 			return true;
 		
@@ -183,7 +183,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		return elapsed > 200;
 	}
 	
-	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragToken token) {
+	protected boolean isDockingPossible(Dockable dockable, DockingPort port, String region, DragOperation token) {
 		// superclass blocks docking if the 'port' or 'region' are null.  If we've dragged outside
 		// the bounds of the parent frame, then both of these will be null.  This is expected here and
 		// we intend to float in this case.
@@ -204,7 +204,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 				return false;
 		}
 		
-		if(dockable==null || dockable.getDockable()==null || port==null)
+		if(dockable==null || dockable.getComponent()==null || port==null)
 			return false;
 		
 		if(!DockingManager.isValidDockingRegion(region))
@@ -220,7 +220,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		
 		// check to see if we're already docked into this region.
 		// get the parent dockingPort.
-		Container container = docked.getDockable().getParent();
+		Container container = docked.getComponent().getParent();
 		// now get the grandparent dockingport
 		DockingPort grandparent = DockingManager.getDockingPort(container);
 		
@@ -231,7 +231,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		
 		Component currentlyInRegion = grandparent.getComponent(region);
 		// block docking if we're already the component docked within the specified region
-		if(currentlyInRegion==dockable.getDockable())
+		if(currentlyInRegion==dockable.getComponent())
 			return false;
 		
 		return true;
@@ -242,9 +242,9 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	
 	
 	
-	protected boolean isFloatable(Dockable dockable, DragToken token) {
+	protected boolean isFloatable(Dockable dockable, DragOperation token) {
 		// can't float null objects
-		if(dockable==null || dockable.getDockable()==null || token==null)
+		if(dockable==null || dockable.getComponent()==null || token==null)
 			return false;
 		
 		// can't float on a fake drag operation 
@@ -265,18 +265,18 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	
 	
 
-	protected DockingResults dropComponent(Dockable dockable, DockingPort target, String region, DragToken token) {
+	protected DockingResults dropComponent(Dockable dockable, DockingPort target, String region, DragOperation token) {
 		if(isFloatable(dockable, token))
 			return floatComponent(dockable, target, token);
 		
 		DockingResults results = new DockingResults(target, false);
 		
-		if (DockingPort.UNKNOWN_REGION.equals(region) || target==null) {
+		if (UNKNOWN_REGION.equals(region) || target==null) {
 			return results;
 		}
 			
 		Component docked = target.getDockedComponent();
-		Component dockableCmp = dockable.getDockable();
+		Component dockableCmp = dockable.getComponent();
 		if (dockableCmp!=null && dockableCmp == docked) {
 			// don't allow docking the same component back into the same port
 			return results;
@@ -314,7 +314,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		if(dockable==null)
 			return false;
 		
-		Component dragSrc = dockable.getDockable();
+		Component dragSrc = dockable.getComponent();
 		Container parent = dragSrc.getParent();
 		RootWindow rootWin = RootWindow.getRootContainer(parent);
 		
@@ -359,19 +359,19 @@ public class DefaultDockingStrategy implements DockingStrategy {
 	}
 	
 	
-	protected DockingResults floatComponent(Dockable dockable, DockingPort target, DragToken token) {
+	protected DockingResults floatComponent(Dockable dockable, DockingPort target, DragOperation token) {
 		// otherwise,  setup a new DockingFrame and retarget to the CENTER region
 		DockingResults results = new DockingResults(target, false);
 
 		// determine the bounds of the new frame
 		Point screenLoc = token.getCurrentMouse(true);
 		SwingUtility.add(screenLoc, token.getMouseOffset());
-		Rectangle screenBounds = dockable.getDockable().getBounds();
+		Rectangle screenBounds = dockable.getComponent().getBounds();
 		screenBounds.setLocation(screenLoc);
 		
 		// create the frame
 		FloatManager mgr = DockingManager.getFloatManager();
-		DockingFrame frame = mgr.floatDockable(dockable, dockable.getDockable(), screenBounds);
+		DockingFrame frame = mgr.floatDockable(dockable, dockable.getComponent(), screenBounds);
 		
 		// grab a reference to the frame's dockingPort for posterity
 		results.dropTarget = frame.getDockingPort();
@@ -412,7 +412,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 			DefaultDockingPort ddp = (DefaultDockingPort)base;
 			newPort.setBorderManager(ddp.getBorderManager());
 			newPort.setTabsAsDragSource(ddp.isTabsAsDragSource());
-			newPort.setTransient(true);
+			newPort.setRoot(false);
 		}
 		return port;
 	}
@@ -428,7 +428,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		
 		// determine the orientation
 		int orientation = JSplitPane.HORIZONTAL_SPLIT;
-		if(DockingPort.NORTH_REGION.equals(region) || DockingPort.SOUTH_REGION.equals(region))
+		if(NORTH_REGION.equals(region) || SOUTH_REGION.equals(region))
 			orientation = JSplitPane.VERTICAL_SPLIT;
 		split.setOrientation(orientation);
 		
@@ -498,7 +498,7 @@ public class DefaultDockingStrategy implements DockingStrategy {
 		if(dockable!=null) {
 			DockingSplitPane splitter = (DockingSplitPane)splitPane;
 			RegionChecker rc = port.getDockingProperties().getRegionChecker();
-			float prefSize = rc.getSiblingSize(dockable.getDockable(), splitter.getRegion());
+			float prefSize = rc.getSiblingSize(dockable.getComponent(), splitter.getRegion());
 			return splitter.isElderTopLeft()? 1f-prefSize: prefSize;
 //			return prefSize;
 		}
