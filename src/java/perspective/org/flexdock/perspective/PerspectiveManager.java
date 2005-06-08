@@ -375,7 +375,7 @@ public class PerspectiveManager implements LayoutManager {
 		return LayoutBuilder.getInstance().createLayout(port);
 	}
 	
-	public boolean restore(Dockable dockable) {
+	public boolean display(Dockable dockable) {
 		return RestorationManager.getInstance().restore(dockable);
 	}
 

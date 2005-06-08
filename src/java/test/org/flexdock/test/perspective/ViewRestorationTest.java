@@ -130,7 +130,7 @@ public class ViewRestorationTest extends JFrame implements DockingConstants {
 		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 		 */
 		public void actionPerformed(ActionEvent e) {
-			DockingManager.restore(m_commonView);
+			DockingManager.display(m_commonView);
 		}
 
 	}
