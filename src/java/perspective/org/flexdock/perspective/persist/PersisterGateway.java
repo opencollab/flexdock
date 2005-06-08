@@ -19,35 +19,17 @@
 package org.flexdock.perspective.persist;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 /**
- * Created on 2005-03-30
+ * Created on 2005-06-03
  * 
- * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: Persister.java,v 1.4 2005-06-08 20:59:15 winnetou25 Exp $
+ * @version $Id: PersisterGateway.java,v 1.1 2005-06-08 20:59:14 winnetou25 Exp $
  */
-public interface Persister {
+public interface PersisterGateway {
     
-    /**
-     * Serializes <code>PerspectiveInfo</code> to the supplied data stream.
-     * 
-     * @param os <code>OutputStream</code> to persist perspectiveInfo to.
-     * @param perspectiveInfo data object to be persisted
-     * @return <code>true</code> when there was no problem with persisting the perspectiveInfo object.
-     * @throws IOException in case of input/output problem.
-     */
-    boolean store(OutputStream os, PerspectiveInfo perspectiveInfo) throws IOException;
-    
-    /**
-     * Deserializes <code>PerspectiveInfo</code> from the supplied data stream.
-     * 
-     * @param is <code>InputStream</code> to load perspectiveInfo from.
-     * @return <code>true</code> when there was no problem with persisting the perspectiveInfo object.
-     * @throws IOException in case of input/output problem.
-     */
-    PerspectiveInfo load(InputStream is) throws IOException;
+    boolean store(String appKey, PerspectiveInfo perspectiveInfo) throws IOException;
+
+    PerspectiveInfo load(String appKey) throws IOException;
 
 }

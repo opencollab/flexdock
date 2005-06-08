@@ -21,8 +21,9 @@ import org.flexdock.perspective.event.PerspectiveEventHandler;
 import org.flexdock.perspective.event.PerspectiveListener;
 import org.flexdock.perspective.event.RegistrationHandler;
 import org.flexdock.perspective.persist.DefaultPersister;
-import org.flexdock.perspective.persist.Persister;
+import org.flexdock.perspective.persist.PersisterGateway;
 import org.flexdock.perspective.persist.PerspectiveInfo;
+import org.flexdock.perspective.persist.SimplePersisterGateway;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 
@@ -38,7 +39,7 @@ public class PerspectiveManager implements LayoutManager {
 	private PerspectiveBuilder perspectiveBuilder;
 	private String m_defaultPerspective;
 	private String m_currentPerspective;
-	private Persister m_persister = new DefaultPersister();
+	private PersisterGateway m_persisterGateway = new SimplePersisterGateway(new DefaultPersister());
 	private boolean restoreFloatingOnLoad;
 	
 	static {
@@ -69,28 +70,18 @@ public class PerspectiveManager implements LayoutManager {
 		getInstance().perspectiveBuilder = builder;
 	}
 	
-	public static void setPersister(Persister persister) {
-		getInstance().m_persister = persister;
+	public static void setPersister(PersisterGateway persisterGateway) {
+		getInstance().m_persisterGateway = persisterGateway;
 	}
 	
-	public static Persister getPersister() {
-		return getInstance().m_persister;
+	public static PersisterGateway getPersisterGateway() {
+		return getInstance().m_persisterGateway;
 	}
 
-	
 	private PerspectiveManager() {
-		m_persister = new DefaultPersister();
 		m_defaultPerspective = EMPTY_PERSPECTIVE;
 		load(m_defaultPerspective, (DockingPort)null);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective)
@@ -166,11 +157,6 @@ public class PerspectiveManager implements LayoutManager {
 		}
 		
 	}
-	
-	
-	
-	
-	
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
@@ -417,8 +403,9 @@ public class PerspectiveManager implements LayoutManager {
 	
 	
 	public synchronized boolean persist(String appKey) throws IOException {
-		if(m_persister==null)
+		if(m_persisterGateway == null) {
 			return false;
+		}
 
 		Window window = SwingUtility.getActiveWindow();
 		DockingPort rootPort = DockingManager.getRootDockingPort(window);
@@ -430,14 +417,14 @@ public class PerspectiveManager implements LayoutManager {
 		}
 		
 		PerspectiveInfo info = new PerspectiveInfo(m_defaultPerspective, m_currentPerspective, items);
-		return m_persister.store(appKey, info);
+		return m_persisterGateway.store(appKey, info);
 	}
 	
 	public synchronized boolean loadFromStorage(String appKey) throws IOException {
-		if(m_persister==null)
+		if(m_persisterGateway == null)
 			return false;
 		
-		PerspectiveInfo info = m_persister.load(appKey);
+		PerspectiveInfo info = m_persisterGateway.load(appKey);
 		if(info==null)
 			return false;
 

@@ -64,7 +64,6 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		sequence.add(info);
 	}
 	
-	
 	public void apply(DockingPort port) {
 		if(port==null)
 			return;

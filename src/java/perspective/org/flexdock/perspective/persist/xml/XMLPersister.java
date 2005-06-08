@@ -22,6 +22,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,14 +44,14 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.7 2005-06-04 14:48:28 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.8 2005-06-08 20:59:16 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(String appKey, PerspectiveInfo perspectiveInfo) throws IOException {
+    public boolean store(OutputStream os, PerspectiveInfo perspectiveInfo) throws IOException {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -90,7 +92,7 @@ public class XMLPersister implements Persister {
     /**
      * @see org.flexdock.perspective.persist.Persister#load(java.lang.String)
      */
-    public PerspectiveInfo load(String appKey) throws IOException {
+    public PerspectiveInfo load(InputStream is) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }
