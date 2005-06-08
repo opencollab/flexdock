@@ -32,7 +32,7 @@ import org.flexdock.docking.props.DockableProps;
  * <code>DockingPort</code> for dealing with dockable components in a drag-n-drop fashion.  A
  * <code>Dockable</code> is the child component that is docked into a <code>DockingPort</code>.
  * 
- * @author Chris Butler
+ * @author Christopher Butler
  */
 public interface Dockable extends DockingListener, DockingMonitor {
 	public static final String DOCKABLE_INDICATOR = "Dockable.DOCKABLE_INDICATOR";
