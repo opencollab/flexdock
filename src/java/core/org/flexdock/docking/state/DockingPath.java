@@ -151,7 +151,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	}
 
 	public DockingPort getRootPort() {
-		return DockingManager.getRootDockingPort(rootPortId);
+		return DockingManager.getDockingPort(rootPortId);
 	}
 	
 	private void setRootPort(String portId) {
@@ -198,7 +198,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	}
 	
 	private DockingPort getRootDockingPort() {
-		DockingPort port = DockingManager.getRootDockingPort(rootPortId);
+		DockingPort port = DockingManager.getDockingPort(rootPortId);
 		if(port!=null)
 			return port;
 		
