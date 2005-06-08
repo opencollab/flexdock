@@ -61,6 +61,20 @@ public class DockingPortTracker implements HierarchyListener {
 		return null;
 	}
 	
+	private static RootDockingPortInfo findInfoByPort(DockingPort port) {
+		if(port==null)
+			return null;
+		
+		synchronized(TRACKERS_BY_WINDOW) {
+			for(Iterator it=TRACKERS_BY_WINDOW.values().iterator(); it.hasNext();) {
+				RootDockingPortInfo info = (RootDockingPortInfo)it.next();
+				if(info.contains(port))
+				return info;
+			}
+		}
+		return null;
+	}
+	
 	public static DockingPort findByWindow(Component comp) {
 		RootWindow window = RootWindow.getRootContainer(comp);
 		return findByWindow(window);
@@ -73,6 +87,19 @@ public class DockingPortTracker implements HierarchyListener {
 		
 		return info.getPort(0);
 	}
+	
+	
+	public static void updateIndex(DockingPort port) {
+		if(port==null)
+			return;
+		
+		RootDockingPortInfo info = findInfoByPort(port);
+		if(info!=null) {
+			info.remove(port);
+			info.add(port);
+		}
+	}
+	
 	
 	
 	private boolean isParentChange(HierarchyEvent evt) {

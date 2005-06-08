@@ -602,7 +602,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			id = String.valueOf(hashCode());
 		String oldId = persistentId;
 		persistentId = id;
-		DockingManager.replaceDockingPort(oldId, persistentId, this);
+		DockingPortTracker.updateIndex(this);
 	}
 	
 	private String getValidTabTitle(JTabbedPane tabs, Component comp) {
