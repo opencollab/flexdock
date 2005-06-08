@@ -19,10 +19,10 @@ import org.flexdock.util.Utilities;
 public class FloatPolicyManager extends DockingListener.Stub {
 	private static final FloatPolicyManager SINGLETON = new FloatPolicyManager();
 	public static final String FLOATING_ALLOWED = "FloatPolicyManager.FLOATING_ALLOWED";
-	public static final String GLOBAL_FLOATING_SUPPORTED =  "global.floating.supported";
+	public static final String GLOBAL_FLOATING_ENABLED =  "global.floating.enabled";
 	
 	private Vector policies;
-	private boolean globalFloatingSupported;
+	private boolean globalFloatingEnabled;
 	
 	public static FloatPolicyManager getInstance() {
 		return SINGLETON;
@@ -31,7 +31,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
 	private FloatPolicyManager() {
 		policies = new Vector();
 		addPolicy(DefaultFloatPolicy.getInstance());
-		globalFloatingSupported = Utilities.sysTrue(GLOBAL_FLOATING_SUPPORTED);
+		globalFloatingEnabled = Utilities.sysTrue(GLOBAL_FLOATING_ENABLED);
 	}
 	
 	public void dragStarted(DockingEvent evt) {
@@ -97,11 +97,11 @@ public class FloatPolicyManager extends DockingListener.Stub {
 	}
 	
 	
-	public static boolean isGlobalFloatingSupported() {
-		return getInstance().globalFloatingSupported;
+	public static boolean isGlobalFloatingEnabled() {
+		return getInstance().globalFloatingEnabled;
 	}
 	
-	public static void setGlobalFloatingSupported(boolean globalFloatingSupported) {
-		getInstance().globalFloatingSupported = globalFloatingSupported;
+	public static void setGlobalFloatingEnabled(boolean globalFloatingEnabled) {
+		getInstance().globalFloatingEnabled = globalFloatingEnabled;
 	}
 }

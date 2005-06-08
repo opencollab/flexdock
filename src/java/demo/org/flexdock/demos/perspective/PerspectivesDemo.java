@@ -36,7 +36,7 @@ import org.flexdock.view.Viewport;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.4 2005-06-07 05:10:11 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.5 2005-06-08 02:47:59 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String APP_KEY = "PerspectiveDemo";
@@ -114,7 +114,7 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 			m_view = view;
 		}
 		public void actionPerformed(ActionEvent e) {
-			DockingManager.restore(m_view);
+			DockingManager.display(m_view);
 		}
 
 	}
@@ -244,7 +244,7 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		// setup the DockingManager to work with our application
 		DockingManager.setApplicationKey(APP_KEY);
 		DockingManager.setDockableBuilder(new ViewBuilder());
-		DockingManager.setFloatingSupported(true);
+		DockingManager.setFloatingEnabled(true);
 		
 		// configure the perspective manager
 		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());

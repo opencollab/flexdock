@@ -16,7 +16,8 @@ public interface LayoutManager {
 	public DockingState getDockingState(Dockable dockable);
 	public FloatManager getFloatManager();
 	public LayoutNode createLayout(DockingPort port);
-	public boolean restore(Dockable dockable);
+	
+	public boolean display(Dockable dockable);
 	
 	public boolean persist(String applicationKey) throws IOException;
 	public boolean loadFromStorage(String applicationKey) throws IOException;

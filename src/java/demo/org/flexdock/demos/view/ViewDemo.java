@@ -39,7 +39,7 @@ public class ViewDemo extends JFrame implements DockingConstants {
 	
 	private static void startup() {
 		// turn on floating support
-		DockingManager.setFloatingSupported(true);
+		DockingManager.setFloatingEnabled(true);
 		
 		JFrame f = new ViewDemo();
 		f.setSize(800, 600);
