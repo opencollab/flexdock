@@ -6,6 +6,7 @@ package org.flexdock.docking.event.hierarchy;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.RootWindow;
@@ -29,12 +30,20 @@ public class RootDockingPortInfo {
 		return (RootWindow)windowRef.get();
 	}
 	
+	private boolean containsPortId(DockingPort port) {
+		return port==null? false: contains(port.getPersistentId());
+	}
+	
+	public boolean contains(String portId) {
+		return portId==null? false: portsById.containsKey(portId);
+	}
+	
 	public boolean contains(DockingPort port) {
-		return port==null? false: portsById.containsKey(port.getPersistentId());
+		return port==null? false: portsById.containsValue(port);
 	}
 	
 	public synchronized void add(DockingPort port) {
-		if(contains(port))
+		if(containsPortId(port))
 			return;
 		
 		portsById.put(port.getPersistentId(), port);
@@ -42,10 +51,24 @@ public class RootDockingPortInfo {
 	}
 	
 	public synchronized void remove(DockingPort port) {
-		if(!contains(port))
+		if(port==null)
 			return;
-			
-		portsById.remove(port.getPersistentId());
+		
+		String key = port.getPersistentId();
+		if(!contains(key)) {
+			key = null;
+			for(Iterator it=portsById.keySet().iterator(); it.hasNext();) {
+				String tmpKey = (String)it.next();
+				DockingPort tmp = (DockingPort)portsById.get(tmpKey);
+				if(tmp==port) {
+					key = tmpKey;
+					break;
+				}
+			}
+		}
+		
+		if(key!=null)
+			portsById.remove(key);
 		rootPorts.remove(port);
 	}
 	
@@ -73,4 +96,6 @@ public class RootDockingPortInfo {
 		return port;
 			
 	}
+	
+
 }
