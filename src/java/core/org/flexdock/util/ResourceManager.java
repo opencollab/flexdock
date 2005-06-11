@@ -223,7 +223,9 @@ public class ResourceManager {
 			}
 		} catch(IOException giveUp) {
 			// well, I guess we're screwed, aren't we?
-			throw new UnsatisfiedLinkError("Unable to extract resource to file: " + file.getAbsolutePath());
+			UnsatisfiedLinkError err = new UnsatisfiedLinkError("Unable to extract resource to file: " + file.getAbsolutePath());
+			err.initCause(giveUp);
+			throw err;
 		}
 		finally {
 			close(fileOut);

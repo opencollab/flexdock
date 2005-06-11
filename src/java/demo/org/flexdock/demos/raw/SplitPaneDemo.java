@@ -15,7 +15,6 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.DockableAdapter;
-import org.flexdock.docking.props.DockingPortProps;
 import org.flexdock.util.DockingConstants;
 
 public class SplitPaneDemo extends JPanel implements DockingConstants {
@@ -97,9 +96,8 @@ public class SplitPaneDemo extends JPanel implements DockingConstants {
 	}
 	
 	public static void main(String[] args) {
-		DockingPortProps root = DockingManager.getDockingPortRoot();
-		root.setSingleTabsAllowed(true);
-		
+		DockingManager.setSingleTabsAllowed(true);
+
 		JFrame f = new JFrame("Split Docking Demo");
 		f.setContentPane(createContentPane());
 		f.setSize(600, 400);

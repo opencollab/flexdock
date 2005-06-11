@@ -36,7 +36,7 @@ import org.flexdock.perspective.Layout;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.persist.Persister;
-import org.flexdock.perspective.persist.PerspectiveInfo;
+import org.flexdock.perspective.persist.PerspectiveModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -44,14 +44,14 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.8 2005-06-08 20:59:16 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.9 2005-06-11 16:14:50 marius Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(OutputStream os, PerspectiveInfo perspectiveInfo) throws IOException {
+    public boolean store(OutputStream os, PerspectiveModel perspectiveInfo) throws IOException {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -92,7 +92,7 @@ public class XMLPersister implements Persister {
     /**
      * @see org.flexdock.perspective.persist.Persister#load(java.lang.String)
      */
-    public PerspectiveInfo load(InputStream is) throws IOException {
+    public PerspectiveModel load(InputStream is) throws IOException {
         // TODO Auto-generated method stub
         return null;
     }

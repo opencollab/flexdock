@@ -27,7 +27,7 @@ import java.io.OutputStream;
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: Persister.java,v 1.4 2005-06-08 20:59:15 winnetou25 Exp $
+ * @version $Id: Persister.java,v 1.5 2005-06-11 16:14:47 marius Exp $
  */
 public interface Persister {
     
@@ -39,7 +39,7 @@ public interface Persister {
      * @return <code>true</code> when there was no problem with persisting the perspectiveInfo object.
      * @throws IOException in case of input/output problem.
      */
-    boolean store(OutputStream os, PerspectiveInfo perspectiveInfo) throws IOException;
+    boolean store(OutputStream os, PerspectiveModel perspectiveInfo) throws IOException;
     
     /**
      * Deserializes <code>PerspectiveInfo</code> from the supplied data stream.
@@ -48,6 +48,6 @@ public interface Persister {
      * @return <code>true</code> when there was no problem with persisting the perspectiveInfo object.
      * @throws IOException in case of input/output problem.
      */
-    PerspectiveInfo load(InputStream is) throws IOException;
+    PerspectiveModel load(InputStream is) throws IOException;
 
 }

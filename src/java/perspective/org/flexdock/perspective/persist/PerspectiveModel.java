@@ -27,15 +27,15 @@ import org.flexdock.perspective.Perspective;
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveInfo.java,v 1.2 2005-06-08 20:59:15 winnetou25 Exp $
+ * @version $Id: PerspectiveModel.java,v 1.1 2005-06-11 16:14:48 marius Exp $
  */
-public class PerspectiveInfo implements Serializable {
+public class PerspectiveModel implements Serializable {
 
     private String m_defaultPerspective;
 	private String m_currentPerspective;
 	private Perspective[] m_perspectives;
 	
-	public PerspectiveInfo(String defaultId, String current, Perspective[] perspectives) {
+	public PerspectiveModel(String defaultId, String current, Perspective[] perspectives) {
 		m_defaultPerspective = defaultId;
 		m_currentPerspective = current;
 		m_perspectives = perspectives;

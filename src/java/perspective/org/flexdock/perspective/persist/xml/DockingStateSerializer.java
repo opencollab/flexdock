@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.4 2005-06-04 15:55:40 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.5 2005-06-11 16:14:50 marius Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -73,7 +73,7 @@ public class DockingStateSerializer implements ISerializer {
         	case MinimizationManager.CENTER: return "center";
         	case MinimizationManager.RIGHT: return "right";
         	case MinimizationManager.TOP: return "top";
-        	case MinimizationManager.UNSPECIFIED_LAYOUT_EDGE: return "unspecified";
+        	case MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT: return "unspecified";
         	
         	default: throw new RuntimeException("Unknown dockbarEdge");
         }

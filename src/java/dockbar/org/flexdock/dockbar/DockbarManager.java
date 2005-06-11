@@ -60,7 +60,7 @@ public class DockbarManager {
 	private ActivationListener activationListener;
 	private HashMap dockables;
 
-	private int activeEdge = MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+	private int activeEdge = MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
 	private String activeDockableId;
 	private boolean animating;
 	private boolean dragging;
@@ -368,7 +368,7 @@ public class DockbarManager {
 			return MinimizationManager.RIGHT;
 		if(dockbar==bottomBar)
 			return MinimizationManager.BOTTOM;
-		return MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+		return MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
 	}
 	
 	public Dockbar getDockbar(Dockable dockable) {
@@ -454,7 +454,7 @@ public class DockbarManager {
 		dockable.getDockingProperties().setDockingEnabled(false);
 		// indicate that the dockable is minimized
 		DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
-		info.setDockbarEdge(edge);
+		info.setMinimizedConstraint(edge);
 		revalidate();
 	}
 	
@@ -542,7 +542,7 @@ public class DockbarManager {
 		// we cannot activate the specified dockable.  instead, set the
 		// active dockable to null
 		final int newEdge = getEdge(dockable);
-		if(newEdge==MinimizationManager.UNSPECIFIED_LAYOUT_EDGE)
+		if(newEdge==MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT)
 			dockable = null;
 
 		// check for dockable changes

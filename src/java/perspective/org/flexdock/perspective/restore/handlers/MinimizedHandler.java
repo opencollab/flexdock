@@ -30,7 +30,7 @@ import org.flexdock.util.DockingUtility;
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: MinimizedHandler.java,v 1.2 2005-06-04 16:42:21 winnetou25 Exp $
+ * @version $Id: MinimizedHandler.java,v 1.3 2005-06-11 16:14:51 marius Exp $
  */
 public class MinimizedHandler implements RestorationHandler {
 
@@ -40,7 +40,7 @@ public class MinimizedHandler implements RestorationHandler {
 		}
 		
 		DockingManager.getMinimizeManager().preview(dockable, true);
-		DockingManager.setMinimized(dockable, true, dockingState.getDockbarEdge());
+		DockingManager.setMinimized(dockable, true, dockingState.getMinimizedConstraint());
 
 		return DockingUtility.isMinimized(dockable);
     }

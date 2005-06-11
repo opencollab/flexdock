@@ -144,9 +144,9 @@ public class DockingUtility implements DockingConstants {
 	}
 	
 	public static int getMinimizedEdge(Dockable dockable) {
-		int defaultEdge = MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+		int defaultEdge = MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
 		DockingState info = getDockingState(dockable);
-		return info==null? defaultEdge: info.getDockbarEdge();
+		return info==null? defaultEdge: info.getMinimizedConstraint();
 	}
 	
 	private static DockingState getDockingState(Dockable dockable) {

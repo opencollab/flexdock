@@ -24,12 +24,14 @@ import java.io.IOException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersisterGateway.java,v 1.1 2005-06-08 20:59:14 winnetou25 Exp $
+ * @version $Id: PersistenceHandler.java,v 1.1 2005-06-11 16:14:48 marius Exp $
  */
-public interface PersisterGateway {
+public interface PersistenceHandler {
     
-    boolean store(String appKey, PerspectiveInfo perspectiveInfo) throws IOException;
+    boolean store(PerspectiveModel perspectiveInfo) throws IOException;
 
-    PerspectiveInfo load(String appKey) throws IOException;
+    PerspectiveModel load() throws IOException;
+    
+    Persister createDefaultPersister();
 
 }

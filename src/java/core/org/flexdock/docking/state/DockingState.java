@@ -24,7 +24,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	private String m_floatingGroup;
 
 	//if the view is minimized we store the dockbar edge to which it is minimized
-	private int m_dockbarEdge = MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+	private int m_minimizedConstraint = MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
 	
 	private DockingPath m_dockingPath;
 	
@@ -69,8 +69,8 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 		this.m_region = m_region;
 	}
 	
-	public int getDockbarEdge() {
-		return m_dockbarEdge;
+	public int getMinimizedConstraint() {
+		return m_minimizedConstraint;
 	}
 	
 	public String getFloatingGroup() {
@@ -82,7 +82,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	}
 	
 	public boolean isMinimized() {
-		return m_dockbarEdge!=MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+		return m_minimizedConstraint!=MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
 	}
 	
 	public boolean hasDockingPath() {
@@ -98,9 +98,9 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	}
 	 
 	
-	public void setDockbarEdge(int edge) {
-		m_dockbarEdge = edge;
-		if(edge!=MinimizationManager.UNSPECIFIED_LAYOUT_EDGE) {
+	public void setMinimizedConstraint(int constraint) {
+		m_minimizedConstraint = constraint;
+		if(constraint!=MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT) {
 			m_floatingGroup = null;
 		}
 	}
@@ -108,7 +108,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	public void setFloatingGroup(String group) {
 		m_floatingGroup = group;
 		if(group!=null) {
-			m_dockbarEdge = MinimizationManager.UNSPECIFIED_LAYOUT_EDGE;
+			m_minimizedConstraint = MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
 		}
 	}
 	
@@ -150,7 +150,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 				"; center=[" + centerX + "%," + centerY + "%]" +   
 				"; parent=" + m_relativeParentId + 
 				"; region=" + m_region + "; ratio=" + m_splitRatio + 
-				"; float=" + m_floatingGroup + "; edge=" + m_dockbarEdge + 
+				"; float=" + m_floatingGroup + "; minimization=" + m_minimizedConstraint + 
 				"; weight=" + m_layoutWeight + "; display=" + m_displayed + "; ]";
 	}
 
@@ -183,7 +183,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 		dockingStateClone.m_region = m_region;
 		dockingStateClone.m_splitRatio = m_splitRatio;
 		dockingStateClone.m_floatingGroup = m_floatingGroup;
-		dockingStateClone.m_dockbarEdge = m_dockbarEdge;
+		dockingStateClone.m_minimizedConstraint = m_minimizedConstraint;
 		dockingStateClone.m_dockingPath = m_dockingPath==null? null: (DockingPath)m_dockingPath.clone();
 		dockingStateClone.m_displayed = m_displayed;
 		dockingStateClone.centerX = centerX;

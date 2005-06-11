@@ -38,7 +38,7 @@ public class MinimizationAdapter implements MinimizationManager {
 
 		// if minimizing, send to the dockbar
 		if(minimizing) {
-			if(edge==MinimizationManager.UNSPECIFIED_LAYOUT_EDGE)
+			if(edge==MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT)
 				mgr.minimize(dockable);
 			else
 				mgr.minimize(dockable, edge);

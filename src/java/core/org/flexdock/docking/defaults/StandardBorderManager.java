@@ -160,7 +160,7 @@ public class StandardBorderManager implements BorderManager {
 		if(!(tabs.getUI() instanceof SimpleTabbedPaneUI))
 			tabs.setUI(new SimpleTabbedPaneUI());
 			
-		// remove any borders from the tabPane childrem
+		// remove any borders from the tabPane children
 		int tc = tabs.getTabCount();
 		Component cmp = null;
 		for(int i=0; i<tc; i++) {

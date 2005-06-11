@@ -17,10 +17,15 @@ import org.flexdock.view.View;
  */
 public abstract class ViewAction extends AbstractAction {
 	public static final ViewAction EMPTY_ACTION = createDefault();
+	protected String viewId;
 	
 	protected View getView(ActionEvent evt) {
-		Component c = (Component)evt.getSource();
-		return (View)SwingUtilities.getAncestorOfClass(View.class, c);
+		View view = viewId==null? null: View.getInstance(viewId);
+		if(view==null) {
+			Component c = (Component)evt.getSource();
+			view = (View)SwingUtilities.getAncestorOfClass(View.class, c);			
+		}
+		return view;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
@@ -40,5 +45,13 @@ public abstract class ViewAction extends AbstractAction {
 	
 	public ButtonModel createButtonModel() {
 		return null;
+	}
+	
+	public String getViewId() {
+		return viewId;
+	}
+	
+	public void setViewId(String viewId) {
+		this.viewId = viewId;
 	}
 }

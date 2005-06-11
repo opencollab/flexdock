@@ -51,7 +51,7 @@ public class DockingStateListener extends DockingListener.Stub {
 		Dockable dockable = evt.getDockable();
 		DockingState info = getDockingState(dockable);
 		// if docking has just completed, then we cannot be in a minimized state
-		info.setDockbarEdge(MinimizationManager.UNSPECIFIED_LAYOUT_EDGE);
+		info.setMinimizedConstraint(MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT);
 		
 		// update the floating state
 		RootWindow window = RootWindow.getRootContainer(dockable.getComponent());

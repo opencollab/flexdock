@@ -20,10 +20,8 @@ import org.flexdock.perspective.event.LayoutEventHandler;
 import org.flexdock.perspective.event.PerspectiveEventHandler;
 import org.flexdock.perspective.event.PerspectiveListener;
 import org.flexdock.perspective.event.RegistrationHandler;
-import org.flexdock.perspective.persist.DefaultPersister;
-import org.flexdock.perspective.persist.PersisterGateway;
-import org.flexdock.perspective.persist.PerspectiveInfo;
-import org.flexdock.perspective.persist.SimplePersisterGateway;
+import org.flexdock.perspective.persist.PersistenceHandler;
+import org.flexdock.perspective.persist.PerspectiveModel;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 
@@ -39,7 +37,7 @@ public class PerspectiveManager implements LayoutManager {
 	private PerspectiveBuilder perspectiveBuilder;
 	private String m_defaultPerspective;
 	private String m_currentPerspective;
-	private PersisterGateway m_persisterGateway = new SimplePersisterGateway(new DefaultPersister());
+	private PersistenceHandler m_persistHandler;
 	private boolean restoreFloatingOnLoad;
 	
 	static {
@@ -70,18 +68,27 @@ public class PerspectiveManager implements LayoutManager {
 		getInstance().perspectiveBuilder = builder;
 	}
 	
-	public static void setPersister(PersisterGateway persisterGateway) {
-		getInstance().m_persisterGateway = persisterGateway;
+	public static void setPersistenceHandler(PersistenceHandler handler) {
+		getInstance().m_persistHandler = handler;
 	}
 	
-	public static PersisterGateway getPersisterGateway() {
-		return getInstance().m_persisterGateway;
+	public static PersistenceHandler setPersistenceHandler() {
+		return getInstance().m_persistHandler;
 	}
 
+	
 	private PerspectiveManager() {
 		m_defaultPerspective = EMPTY_PERSPECTIVE;
-		load(m_defaultPerspective, (DockingPort)null);
+		loadPerspective(m_defaultPerspective, (DockingPort)null);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective)
@@ -157,6 +164,11 @@ public class PerspectiveManager implements LayoutManager {
 		}
 		
 	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
@@ -250,7 +262,7 @@ public class PerspectiveManager implements LayoutManager {
 	}
 	
 	public void reset(DockingPort rootPort) {
-		loadPerspective(m_currentPerspective, rootPort, true);
+		loadPerspectiveImpl(m_currentPerspective, rootPort, true);
 	}
 	
 
@@ -258,60 +270,60 @@ public class PerspectiveManager implements LayoutManager {
 	public void reload() {
 		String key = m_currentPerspective==null? m_defaultPerspective: m_currentPerspective;
 		m_currentPerspective = null;
-		load(key);
+		loadPerspective(key);
 	}
 
-	public void load() {
-		load(m_defaultPerspective);
+	public void loadPerspective() {
+		loadPerspective(m_defaultPerspective);
 	}
 	
-	public void loadAsDefault(String perspectiveId) {
-		loadAsDefault(perspectiveId, false);
+	public void loadPerspectiveAsDefault(String perspectiveId) {
+		loadPerspectiveAsDefault(perspectiveId, false);
 	}
 	
-	public void loadAsDefault(String perspectiveId, boolean reset) {
+	public void loadPerspectiveAsDefault(String perspectiveId, boolean reset) {
 		if(perspectiveId!=null)
 			setDefaultPerspective(perspectiveId);
-		load(perspectiveId, reset);
+		loadPerspective(perspectiveId, reset);
 	}
 	
-	public void load(String perspectiveId) {
-		load(perspectiveId, false);
+	public void loadPerspective(String perspectiveId) {
+		loadPerspective(perspectiveId, false);
 	}
 	
-	public void load(String perspectiveId, boolean reset) {
+	public void loadPerspective(String perspectiveId, boolean reset) {
 		RootWindow window = getMainApplicationWindow();
 		if(window==null)
 			return;
 		
-		load(perspectiveId, window.getRootContainer(), reset);		
+		loadPerspective(perspectiveId, window.getRootContainer(), reset);		
 	}
 	
-	public void load(String perspectiveId, Component window) {
-		load(perspectiveId, window, false);
+	public void loadPerspective(String perspectiveId, Component window) {
+		loadPerspective(perspectiveId, window, false);
 	}
 	
-	public void load(String perspectiveId, Component window, boolean reset) {
+	public void loadPerspective(String perspectiveId, Component window, boolean reset) {
 		if(window==null) {
-			load(perspectiveId, reset);
+			loadPerspective(perspectiveId, reset);
 			return;
 		}
 		
 		DockingPort port = DockingManager.getRootDockingPort(window);
-		load(perspectiveId, port, reset);		
+		loadPerspective(perspectiveId, port, reset);		
 	}
 	
-	public void load(String perspectiveId, DockingPort rootPort) {
-		load(perspectiveId, rootPort, false);
+	public void loadPerspective(String perspectiveId, DockingPort rootPort) {
+		loadPerspective(perspectiveId, rootPort, false);
 	}
 	
-	public void load(String perspectiveId, DockingPort rootPort, boolean reset) {
+	public void loadPerspective(String perspectiveId, DockingPort rootPort, boolean reset) {
 		if(perspectiveId==null || perspectiveId.equals(m_currentPerspective))
 			return;
-		loadPerspective(perspectiveId, rootPort, reset);
+		loadPerspectiveImpl(perspectiveId, rootPort, reset);
 	}
 	
-	private void loadPerspective(String perspectiveId, final DockingPort rootPort, boolean reset) {
+	private void loadPerspectiveImpl(String perspectiveId, final DockingPort rootPort, boolean reset) {
 		if(perspectiveId==null)
 			return;
 
@@ -402,10 +414,9 @@ public class PerspectiveManager implements LayoutManager {
 	}
 	
 	
-	public synchronized boolean persist(String appKey) throws IOException {
-		if(m_persisterGateway == null) {
+	public synchronized boolean store() throws IOException {
+		if(m_persistHandler==null)
 			return false;
-		}
 
 		Window window = SwingUtility.getActiveWindow();
 		DockingPort rootPort = DockingManager.getRootDockingPort(window);
@@ -416,15 +427,15 @@ public class PerspectiveManager implements LayoutManager {
 			items[i] = (Perspective)items[i].clone();
 		}
 		
-		PerspectiveInfo info = new PerspectiveInfo(m_defaultPerspective, m_currentPerspective, items);
-		return m_persisterGateway.store(appKey, info);
+		PerspectiveModel info = new PerspectiveModel(m_defaultPerspective, m_currentPerspective, items);
+		return m_persistHandler.store(info);
 	}
 	
-	public synchronized boolean loadFromStorage(String appKey) throws IOException {
-		if(m_persisterGateway == null)
+	public synchronized boolean load() throws IOException {
+		if(m_persistHandler==null)
 			return false;
 		
-		PerspectiveInfo info = m_persisterGateway.load(appKey);
+		PerspectiveModel info = m_persistHandler.load();
 		if(info==null)
 			return false;
 
@@ -462,5 +473,11 @@ public class PerspectiveManager implements LayoutManager {
 	public static DockingPort getMainDockingPort() {
 		RootWindow window = getMainApplicationWindow();
 		return window==null? null: DockingManager.getRootDockingPort(window.getRootContainer());
+	}
+	
+	public boolean restore(boolean loadFromStorage) throws IOException {
+		boolean loaded = loadFromStorage? load(): true;
+		reload();
+		return loaded;
 	}
 }

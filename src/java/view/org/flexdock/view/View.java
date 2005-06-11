@@ -53,7 +53,7 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 	
 	static {
 		DockingManager.setDockingStrategy(View.class, VIEW_DOCKING_STRATEGY);
-		DockingManager.setDockablePropertyManager(View.class, ViewProps.class);
+		PropertyManager.setDockablePropertyType(View.class, ViewProps.class);
 	}
 	
 	private static DockingStrategy createDockingStrategy() {

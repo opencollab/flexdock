@@ -51,6 +51,9 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	/**
 	 * Returns the Component that is to be dragged and docked.  This may or may not be included in
 	 * the list returned by <code>getDragSources()</code>.
+	 * <br/>
+	 * The framework performs indexing on the underlying <code>Component</code>.  Consequently, 
+	 * this method may <b>not</code> return a <code>null</code> reference.
 	 */
 	public Component getComponent();
 	
@@ -85,6 +88,9 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	 * there are no collisions with other <code>Dockable</code> instances, but it should also be 
 	 * consistent from JVM to JVM so that the association between a <code>Dockable</code> instance and
 	 * its ID can be remembered from session to session.
+	 * <br/>
+	 * The framework performs indexing on the persistent ID.  Consequently, this method may 
+	 * <b>not</code> return a <code>null</code> reference.
 	 */		
 	public String getPersistentId();
 	

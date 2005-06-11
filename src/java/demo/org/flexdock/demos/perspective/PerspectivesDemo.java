@@ -3,11 +3,9 @@ package org.flexdock.demos.perspective;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
+import java.awt.EventQueue;
 import java.io.IOException;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -27,19 +25,23 @@ import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.PerspectiveBuilder;
 import org.flexdock.perspective.PerspectiveManager;
+import org.flexdock.perspective.actions.OpenPerspectiveAction;
+import org.flexdock.perspective.persist.FilePersistenceHandler;
+import org.flexdock.perspective.persist.PersistenceHandler;
 import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
+import org.flexdock.view.actions.DefaultDisplayAction;
 
 /**
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.5 2005-06-08 02:47:59 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.6 2005-06-11 16:14:46 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
-	public static final String APP_KEY = "PerspectiveDemo";
+	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";
 	private static final String MAIN_VIEW = "main.view";
 	private static final String BIRD_VIEW = "bird.view";
 	private static final String MESSAGE_VIEW = "message.log";
@@ -49,6 +51,35 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 	private static final String P1 = "p1";
 	private static final String P2 = "p2";
 	private static final String P3 = "p3";
+	
+	
+	
+	public static void main(String[] args) {
+		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
+		
+		// setup the flexdock configuration
+		configureDocking();
+		
+		// create and show the GUI
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				runGUI();
+			}
+		});
+	}
+	
+	private static void runGUI() {
+		// create out application frame
+		PerspectivesDemo flexDockDemo = new PerspectivesDemo();
+		flexDockDemo.setSize(800, 600);
+		SwingUtility.centerOnScreen(flexDockDemo);
+		flexDockDemo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// load the current layout state into the application frame
+		DockingManager.restoreLayout();
+		// now show the frame
+		flexDockDemo.setVisible(true);
+	}
+	
 	
 	public PerspectivesDemo() {
 		super("FlexDock Demo");
@@ -75,16 +106,16 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 
 		JMenu showViewMenu = new JMenu("Show View");
 
-		showViewMenu.add(createShowViewActionFor(BIRD_VIEW));
-		showViewMenu.add(createShowViewActionFor(MESSAGE_VIEW));
-		showViewMenu.add(createShowViewActionFor(PROBLEM_VIEW));
-		showViewMenu.add(createShowViewActionFor(CONSOLE_VIEW));
+		showViewMenu.add(new DefaultDisplayAction(BIRD_VIEW));
+		showViewMenu.add(new DefaultDisplayAction(MESSAGE_VIEW));
+		showViewMenu.add(new DefaultDisplayAction(PROBLEM_VIEW));
+		showViewMenu.add(new DefaultDisplayAction(CONSOLE_VIEW));
 
 		JMenu perspectiveMenu = new JMenu("Perspective");
 		//pobieramy perspektywe nr 1
-		perspectiveMenu.add(createOpenPerspectiveActionFor(P1));
-		perspectiveMenu.add(createOpenPerspectiveActionFor(P2));
-		perspectiveMenu.add(createOpenPerspectiveActionFor(P3));
+		perspectiveMenu.add(new OpenPerspectiveAction(P1));
+		perspectiveMenu.add(new OpenPerspectiveAction(P2));
+		perspectiveMenu.add(new OpenPerspectiveAction(P3));
 		
 		menuBar.add(showViewMenu);
 		menuBar.add(perspectiveMenu);
@@ -92,51 +123,33 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		return menuBar;
 	}
 	
-	private Action createShowViewActionFor(String viewId) {
-		View commonView = View.getInstance(viewId);
-		ShowViewAction showViewAction = new ShowViewAction(commonView.getPersistentId());
-		showViewAction.putValue(Action.NAME, commonView.getTitle());
-		return showViewAction;
-	}
-
-	private Action createOpenPerspectiveActionFor(String perspectiveId) {
-		Perspective perspective = PerspectiveManager.getInstance().getPerspective(perspectiveId);
-		OpenPerspectiveAction openPerspectiveAction = new OpenPerspectiveAction(perspective.getPersistentId());
-		openPerspectiveAction.putValue(Action.NAME, perspective.getName());
-		return openPerspectiveAction;
-	}
-
-	private class ShowViewAction extends AbstractAction {
-		private String m_view = null;
+	private static void configureDocking() {
+		// setup the DockingManager to work with our application
+		DockingManager.setDockableBuilder(new ViewBuilder());
+		DockingManager.setFloatingEnabled(true);
 		
-		private ShowViewAction(String view) {
-			if (view == null) throw new IllegalArgumentException("view cannot be null");
-			m_view = view;
-		}
-		public void actionPerformed(ActionEvent e) {
-			DockingManager.display(m_view);
-		}
-
-	}
-	
-	private class OpenPerspectiveAction extends AbstractAction {
-		private String m_perspective;
+		// configure the perspective manager
+		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());
+		PerspectiveManager.setRestoreFloatingOnLoad(true);
+		PerspectiveManager mgr = PerspectiveManager.getInstance();
+		mgr.setCurrentPerspective(P3, true);
 		
-		private OpenPerspectiveAction(String perspectiveId) {
-			if (perspectiveId == null) throw new IllegalArgumentException("perspectiveId cannot be null");
-			m_perspective = perspectiveId;
+		// load any previously persisted layouts
+		PersistenceHandler persister = FilePersistenceHandler.createDefault(PERSPECTIVE_FILE);
+		PerspectiveManager.setPersistenceHandler(persister);
+		try {
+			DockingManager.loadLayoutModel();
+		} catch(IOException e) {
+			e.printStackTrace();
 		}
-		public void actionPerformed(ActionEvent e) {
-			if (m_perspective != null) {
-				PerspectiveManager.getInstance().load(m_perspective);
-			}
-		}
+		// remember to store on shutdown
+		DockingManager.setAutoPersist(true);
 	}
 	
-
-
 	
 	
+
+
 	private static class DemoPerspectiveBuilder implements PerspectiveBuilder {
 		
 		public Perspective createPerspective(String persistentId) {
@@ -237,48 +250,4 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		}
 	}
 	
-	
-	
-	
-	private static void configureDocking() {
-		// setup the DockingManager to work with our application
-		DockingManager.setApplicationKey(APP_KEY);
-		DockingManager.setDockableBuilder(new ViewBuilder());
-		DockingManager.setFloatingEnabled(true);
-		
-		// configure the perspective manager
-		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());
-		PerspectiveManager.setRestoreFloatingOnLoad(true);
-		PerspectiveManager mgr = PerspectiveManager.getInstance();
-		mgr.setCurrentPerspective(P3, true);
-		
-		// load any previously persisted layouts
-		try {
-			DockingManager.loadLayouts();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		// remember to store on shutdown
-		DockingManager.setAutoPersist(true);
-	}
-	
-	
-	
-	public static void main(String[] args) {
-		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
-
-		// setup the flexdock configuration
-		configureDocking();
-		
-		// create out application frame
-		PerspectivesDemo flexDockDemo = new PerspectivesDemo();
-		flexDockDemo.setSize(800, 600);
-		SwingUtility.centerOnScreen(flexDockDemo);
-		flexDockDemo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		flexDockDemo.setVisible(true);
-		
-		// load perspectives into the application frame
-		PerspectiveManager.getInstance().reload();
-	}
-
 }
