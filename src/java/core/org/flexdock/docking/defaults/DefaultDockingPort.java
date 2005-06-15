@@ -60,7 +60,7 @@ import org.flexdock.util.SwingUtility;
 
 
 /**
- * A <code>Container</code> that implements the <code>DockingPort</code> interface.  This class provides
+ * This is a <code>Container</code> that implements the <code>DockingPort</code> interface.  It provides
  * a default implementation of <code>DockingPort</code> to allow ease of development within docking-enabled
  * applications.  
  * <p>
