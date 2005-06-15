@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
@@ -55,7 +56,6 @@ import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 
 
@@ -64,25 +64,39 @@ import org.flexdock.util.SwingUtility;
  * a default implementation of <code>DockingPort</code> to allow ease of development within docking-enabled
  * applications.  
  * <p>
- * As <code>Dockable</code> instances are dragged over the <code>DefaultDockingPort</code>, 
- * the <code>DefaultDockingPort</code> reports to the <code>DockingManager</code> the current docking
- * region based upon its docking insets.  Upon docking, the currently docked component is checked.  If 
- * <code>null</code>, the newly docked component is placed in the CENTER region and is expanded to fill the 
- * entire container area.  If the currently docked component is not <code>null</code>, then docking is 
- * handled with respect to the specified docking region.
+ * The <code>DefaultDockingPort</code> handles docking in one of three ways.  If the port is empty, then
+ * all incoming <code>Dockables</code> are docked to the CENTER region.  If the port is not empty, then
+ * all incoming <code>Dockables</code> docked to the CENTER region are embedded within a 
+ * <code>JTabbedPane</code>.  All incoming <code>Dockables</code> docked to an outer region (NORTH, 
+ * SOUTH, EAST, and WEST) of a non-empty port are placed into a split layout using a 
+ * <code>JSplitPane</code>. 
  * <p>
- * Components that are docked in the CENTER region are embedded within a <code>JTabbedPane</code>, unless there
- * is only one component, in which case the component is a direct child of the <code>DockingPort</code> itself.
- * If no <code>JTabbedPane</code> is present, and one is required, then one is created and added, and all child 
- * components are added to the <code>JTabbedPane</code>.
+ * For centrally docked <code>Components</code>, the immediate child of the 
+ * <code>DefaultDockingPort</code> may or may not be a <code>JTabbedPane</code>.  If 
+ * <code>isSingleTabAllowed()</code> returns <code>true</code> for the current 
+ * <code>DefaultDockingPort</code>, then the immediate child returned by <code>getDockedComponent()</code>
+ * will return a <code>JTabbedPane</code> instance even if there is only one <code>Dockable</code>
+ * embedded within the port.  If there is a single <code>Dockable</code> in the port, but
+ * <code>isSingleTabAllowed()</code> returns <code>false</code>, then 
+ * <code>getDockedComponent()</code> will return the <code>Component</code> that backs the
+ * currently docked <code>Dockable</code>, returned by the <code>Dockable's</code>
+ * <code>getComponent()</code> method.  <code>isSingleTabAllowed()</code> is a scoped property
+ * that may apply to this port, all ports across the JVM, or all ports within a user defined scope.
+ * <code>getDockedComponent()</code> will return a <code>JTabbedPane</code> at all times if there
+ * is more than one centrally docked <code>Dockable</code> within the port, and all docked
+ * <code>Components</code> will reside within the tabbed pane.
  * <p>
  * Components that are docked in the NORTH, SOUTH, EAST, or WEST regions are placed in a 
  * <code>JSplitPane</code> splitting the layout of the <code>DockingPort</code> between child components.  
  * Each region of the <code>JSplitPane</code> contains a new <code>DefaultDockingPort</code>, 
- * which, in turn, contains the docked components.  Thus, a <code>DefaultDockingPort</code> has a maximum
- * of one child component, which may or may not be a wrapper for other child components.  Because
- * <code>JSplitPane</code> contains child <code>DefaultDockingPorts</code>, each of those 
- * <code>DefaultDockingPorts</code> is available for further sub-docking operations.
+ * which, in turn, contains the docked components.  In this situation, <code>getDockedComponent()</code>
+ * will return a <code>JSplitPane</code> reference.  
+ * <p>
+ * A key concept that drives the <code>DefaultDockingPort</code>, then, is the notion that this 
+ * <code>DockingPort</code> implementation may only ever have one single child component, which may 
+ * or may not be a wrapper for other child components.  Because <code>JSplitPane</code> contains 
+ * child <code>DefaultDockingPorts</code>, each of those <code>DefaultDockingPorts</code> is available 
+ * for further sub-docking operations.
  * <p>
  * Since a <code>DefaultDockingPort</code> may only contain one child component, there is a container 
  * hierarchy to manage tabbed interfaces, split layouts, and sub-docking.  As components are removed from 
@@ -94,29 +108,20 @@ import org.flexdock.util.SwingUtility;
  * that there is only one child left within the <code>JTabbedPane</code> removes the need for a tabbed 
  * interface to begin with.
  * <p>
- * When the <code>DockingManager</code> removes a component from a <code>DockingPort</code> it follows the 
- * removal with a call to <code>undock()</code>  <code>undock()</code> 
- * automatically handles the reevaluation of the container hierarchy to keep wrapper-container usage at
- * a minimum.  Since <code>DockingManager</code> makes this callback automatic, developers normally will not
+ * When the <code>DockingManager</code> removes a component from a <code>DockingPort</code> via
+ * <code>DockingManager.undock(Dockable dockable)</code> it uses a call to <code>undock()</code> on the 
+ * current <code>DockingPort</code>.  <code>undock()</code> automatically handles the reevaluation of 
+ * the container hierarchy to keep wrapper-container usage at a minimum.  Since 
+ * <code>DockingManager</code> makes this callback automatic, developers normally will not
  * need to call this method explicitly.  However, when removing a component from a 
  * <code>DefaultDockingPort</code> using application code, developers should keep in mind to use 
  * <code>undock()</code> instead of <code>remove()</code>.
- * 
- * While <code>DefaultDockingPort</code> provides default implementations for <code>JTabbedPane</code> and 
- * <code>JSplitPane</code> during docking operations, it is understood that the implemtations
- * provided will not necessarily be desired by application developers.  The <code>SubComponentProvider</code>
- * interface is provided as a means of customizing the behavior of the <code>DefaultDockingPort</code> 
- * during docking operations.  By implementing the <code>SubComponentProvider</code> interface, custom classes
- * may be plugged in via the <code>setComponentProvider(SubComponentProvider helper)</code> method.  When a
- * <code>SubComponentProvider</code> has been assigned to a <code>DefaultDockingPort</code>, 
- * container createion during docking will be delegated to the <code>SubComponentProvider</code>.  
- * Otherwise, default behavior is assumed.
  * 
  * Border management after docking and undocking operations are accomplished using a 
  * <code>BorderManager</code>.  <code>setBorderManager()</code> may be used to set the border manager
  * instance and customize border management. 
  * 
- * @author Chris Butler
+ * @author Christopher Butler
  *
  */
 public class DefaultDockingPort extends JPanel implements DockingPort, DockingConstants {
@@ -134,7 +139,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	
 	/**
-	 * Creates a new <code>DefaultDockingPort</code> with a <code>null</code> persistent ID.
+	 * Creates a new <code>DefaultDockingPort</code> with a persistent ID equal to the 
+	 * <code>String</code> value of this <code>Object's</code> hash code.
 	 */
 	public DefaultDockingPort() {
 		this(null);
@@ -142,6 +148,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	/**
 	 * Creates a new <code>DefaultDockingPort</code> with the specified persistent ID.
+	 * If <code>id</code> is <code>null</code>, then the <code>String</code> value of 
+	 * this <code>Object's</code> hash code is used.  The persistent ID will be the 
+	 * same value returned by invoking <code>getPersistentId()</code> for this 
+	 * <code>DefaultDockingPort</code>. 
+	 * 
+	 * @param id the persistent ID for the new <code>DefaultDockingPort</code> instance.
 	 */
 	public DefaultDockingPort(String id) {
 		setPersistentId(id);
@@ -160,6 +172,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to set the currently docked component.  Should not be called by application code.
+	 * 
+	 * @param comp the component to be added
 	 */
 	public Component add(Component comp) {
 		return setComponent(comp);
@@ -167,6 +181,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	/**
 	 * Overridden to set the currently docked component.  Should not be called by application code.
+	 * 
+	 * @param comp the component to be added
+	 * @param index the position at which to insert the component, 
+     * or <code>-1</code> to append the component to the end
 	 */
 	public Component add(Component comp, int index) {
 		return setComponent(comp);
@@ -174,6 +192,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to set the currently docked component.  Should not be called by application code.
+	 * 
+     * @param comp the component to be added
+     * @param  constraints an object expressing layout contraints for this component
 	 */
 	public void add(Component comp, Object constraints) {
 		setComponent(comp);
@@ -181,6 +202,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to set the currently docked component.  Should not be called by application code.
+	 * 
+     * @param comp the component to be added
+     * @param constraints an object expressing layout contraints for this
+     * @param index the position in the container's list at which to insert
+     * the component; <code>-1</code> means insert at the end
 	 */
 	public void add(Component comp, Object constraints, int index) {
 		setComponent(comp);
@@ -188,6 +214,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to set the currently docked component.  Should not be called by application code.
+	 * 
+	 * @param name the name of the <code>Component</code> to be added.
+	 * @param comp the <code>Component</code> to add.
 	 */
 	public Component add(String name, Component comp) {
 		return setComponent(comp);
@@ -204,20 +233,50 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	
 	/**
-	 * @see org.flexdock.docking.DockingPort#isDockingAllowed(java.lang.String)
+	 * Returns <code>true</code> if docking is allowed for the specified <code>Component</code> 
+	 * within the supplied <code>region</code>, <code>false</code> otherwise.  It is important
+	 * to note that success of a docking operation relies on many factors and a return value of 
+	 * <code>true</code> from this method does not necessarily guarantee that a call to 
+	 * <code>dock()</code> will succeed.  This method merely indicates that the current  
+	 * <code>DockingPort</code> does not have any outstanding reason to block a docking operation
+	 * with respect to the specified <code>Component</code> and <code>region</code>.
+	 * <br/>
+	 * If <code>comp</code> is <code>null</code> or <code>region</code> is 
+	 * invalid according to <code>DockingManager.isValidDockingRegion(String region)</code>, then
+	 * this method returns <code>false</code>.
+	 * <br/>
+	 * If this <code>DockingPort</code> is not already the parent <code>DockingPort</code>
+	 * for the specified <code>Component</code>, then this method returns <code>true</code>.
+	 * <br/>
+	 * If this <code>DockingPort</code> is already the parent <code>DockingPort</code> for the
+	 * specified <code>Component</code>, then a check is performed to see if there is a tabbed
+	 * layout.  Tabbed layouts may contain multiple <code>Dockables</code>, and thus the tab 
+	 * ordering may be rearranged, or shifted into a split layout.  If <code>comp</code> is 
+	 * the only docked <code>Component</code> within this <code>DockingPort</code>, then this 
+	 * method returns <code>false</code> since the layout cannot be rearranged.  Otherwise, this
+	 * method returns <code>true</code>.
+	 * 
+	 * @param comp the <code>Component</code> whose docking availability is to be checked
+	 * @param region the region to be checked for docking availability for the specified 
+	 * <code>Component</code>.
+	 * @return <code>true</code> if docking is allowed for the specified <code>Component</code> 
+	 * within the supplied <code>region</code>, <code>false</code> otherwise.
+	 * @see DockingPort#isDockingAllowed(Component, String)
+	 * @see DockingManager#isValidDockingRegion(String)
+	 * @see #isParentDockingPort(Component) 
 	 */
-	public boolean isDockingAllowed(String region, Component c) {
-		if(c==null || !isValidDockingRegion(region))
+	public boolean isDockingAllowed(Component comp, String region) {
+		if(comp==null || !isValidDockingRegion(region))
 			return false;
 		
 		// allow any valid region if we're not already the parent
 		// of the component we're checking
-		if(!isParentDockingPort(c))
+		if(!isParentDockingPort(comp))
 			return true;
 
-		// we already contain 'c', so we're either a tabbed-layout, or 
-		// we contain 'c' directly.  If we contain 'c' directly, then we 
-		// cannot logically move 'c' to some other region within us, as it
+		// we already contain 'comp', so we're either a tabbed-layout, or 
+		// we contain 'comp' directly.  If we contain 'comp' directly, then we 
+		// cannot logically move 'comp' to some other region within us, as it
 		// already fills up our entire space.
 		Component docked = getDockedComponent();
 		if(!(docked instanceof JTabbedPane))
@@ -230,7 +289,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		if(tabs.getTabCount()<2)
 			return false;
 		
-		// there are is than 1 tab present, so re-ordering is possible, 
+		// there is more than 1 tab present, so re-ordering is possible, 
 		// as well as changing regions
 		return true;
 	}
@@ -246,7 +305,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * <code>managePortSplitChild(DockingPort port)</code>
 	 * <code>managePortTabbedChild(DockingPort port)</code>
 	 */
-	public final void evaluateDockingBorderStatus() {
+	private final void evaluateDockingBorderStatus() {
 		if(borderManager==null)
 			return;
 			
@@ -398,7 +457,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Decomposes the supplied <code>Dockable</code> into constituent fields and dispatches to 
-	 * <code>dock(Component comp, String desc, String region, boolean resizable)</code>.  Passes as 
+	 * <code>dock(Component comp, String desc, String region)</code>.  Passes as 
 	 * arguments to the overloaded method the supplied <code>Dockable's getDockable()</code> and
 	 * <code>getDockableDesc()</code> values.  The specified
 	 * region is also passed.  If <code>dockable</code> is null, no action is taken and the method
@@ -416,20 +475,19 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Docks the specified component within the specified region.
-	 * If the <code>DockingPort</code> is currently empty, then <code>comp</code> will be docked within the
-	 * CENTER region, regardless of what has been passed into this method.  If the <code>DockingPort</code>
-	 * is not empty, then docking in the CENTER region will place <code>comp</code> in a JTabbedPane, using
-	 * <code>desc</code> as the tab title.  All other regions will result in a JSplitPane layout, where
-	 * <code>resizable</code> determines whether or not the split pane is resizable.  If <code>comp</code> 
-	 * is <code>null</code> or <code>isDockingAllowed(String region)</code> returns <code>false</code>, then 
-	 * this method will return <code>false</code> with no action taken. If this method is successful, 
-	 * <code>evaluateDockingBorderStatus()</code> will be called before returning <code>true</code> to allow the
-	 * assigned <code>SubComponentProvider</code> to handle container-state-related behavior.
+	 * If the <code>DockingPort</code> is currently empty, then <code>comp</code> will be docked within 
+	 * the CENTER region, regardless of the region that has been passed into this method.  If the 
+	 * <code>DockingPort</code> is not empty, then docking in the CENTER region will place 
+	 * <code>comp</code> in a JTabbedPane, using <code>desc</code> as the tab title.  All other regions 
+	 * will result in a <code>JSplitPane</code> layout.  If <code>comp</code> 
+	 * is <code>null</code> or <code>isDockingAllowed(String region)</code> returns <code>false</code>, 
+	 * then this method will return <code>false</code> with no action taken. If docking is 
+	 * successful, then this method returns <code>true</code>.
 	 * 
 	 * @see org.flexdock.docking.DockingPort#dock(Component comp, String desc, String region)
 	 */
 	public boolean dock(Component comp, String desc, String region) {
-		if(comp==null || !isDockingAllowed(region, comp))
+		if(comp==null || !isDockingAllowed(comp, region))
 			return false;
 		
 		desc = desc==null? "null": desc.trim();
@@ -468,20 +526,52 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			// and we can be relatively safe about assumptions regarding our current 
 			// insets.
 			if(!CENTER_REGION.equals(region)) 
-				resolveSplitDividerLocation(docked);
+				resetSplitDividerLocation();
 		}
 		return success;
 	}
 	
-	protected void resolveSplitDividerLocation(Component controller) {
+	private void resetSplitDividerLocation() {
 		Component c = getDockedComponent();
-		if(!(c instanceof JSplitPane))
+		if(c instanceof JSplitPane)
+			deferSplitDividerReset((JSplitPane)c);
+	}
+	
+	private void deferSplitDividerReset(final JSplitPane splitPane) {
+		// we don't need to defer split divider location reset until after
+		// a DockingSplitPane has rendered, since that class is able to figure out
+		// its proper divider location by itself.
+		if(splitPane instanceof DockingSplitPane)
 			return;
 		
-		JSplitPane split = (JSplitPane)c;
+		// check to see if we've rendered
+		int size = SwingUtility.getSplitPaneSize(splitPane);
+		if(splitPane.isVisible() && size>0 && EventQueue.isDispatchThread()) {
+			// if so, apply the split divider location and return
+			applySplitDividerLocation(splitPane);
+			splitPane.validate();
+			return;
+		}
+		
+		// otherwise, defer applying the divider location reset until
+		// the split pane is rendered.
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						deferSplitDividerReset(splitPane);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+	}
+	
+	private void applySplitDividerLocation(JSplitPane splitPane) {
 		DockingStrategy strategy = DockingManager.getDockingStrategy(this);
-		int loc = strategy.getInitialDividerLocation(this, split, controller);
-		split.setDividerLocation(loc);
+		int loc = strategy.getInitialDividerLocation(this, splitPane);
+		splitPane.setDividerLocation(loc);
 	}
 	
 	private boolean dockInCenterRegion(Component comp) {
@@ -554,7 +644,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		
 		// otherwise, we have unrealized components whose sizes cannot be determined until
 		// after we're visible.  cache the desired size values now for use later during rendering.
-		double proportion = strategy.getDividerProportion(this, newDockedContent, docked);
+		double proportion = strategy.getDividerProportion(this, newDockedContent);
 		SwingUtility.putClientProperty((Component)oldContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(proportion));
 		SwingUtility.putClientProperty((Component)newContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(1f-proportion));
 		
@@ -563,6 +653,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to expand the docked component to fill the entire available region, minus insets.
+	 * Since this method implements the layout directly, <code>setLayout(LayoutManager mgr)</code>
+	 * has been obviated and has been overridden to do nothing.
+	 * 
+	 * @see Container#doLayout()
+	 * @see #setLayout(LayoutManager)
 	 */
 	public void doLayout() {
 		Component docked = getDockedComponent();
@@ -582,25 +677,54 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return dockedComponent;
 	}
 	
-	protected JSplitPane getDockedSplitPane() {
+	private JSplitPane getDockedSplitPane() {
 		Component docked = getDockedComponent();
 		return docked instanceof JSplitPane? (JSplitPane)docked: null;
 	}
 	
 	/**
-	 * @see org.flexdock.docking.DockingPort#getPersistentId()
+	 * Returns a <code>String</code> identifier that is unique to <code>DockingPorts</code>
+	 * within a JVM instance, but persistent 
+	 * across JVM instances.  This is used for configuration mangement, allowing the JVM to recognize
+	 * a <code>DockingPort</code> instance within an application instance, persist the ID, and recall it
+	 * in later application instances.  The ID should be unique within an appliation instance so that
+	 * there are no collisions with other <code>DockingPort</code> instances, but it should also be 
+	 * consistent from JVM to JVM so that the association between a <code>DockingPort</code> instance and
+	 * its ID can be remembered from session to session.
+	 * <br/>
+	 * The value returned by this method will come from the most recent call to 
+	 * <code>setPersistentId(String id)</code>.  If <code>setPersistentId(String id)</code> was invoked
+	 * with a <code>null</code> argument, then the <code>String</code> verion of this 
+	 * <code>DockingPort's</code> hash code is used.  Therefore, this method will never return a 
+	 * <code>null</code> reference.
+	 * 
+	 * @return the persistent ID for this <code>DockingPort</code>
+	 * @see DockingPort#getPersistentId()
+	 * @see #setPersistentId(String)
+	 * @see DockingManager#getDockingPort(String)
 	 */
 	public String getPersistentId() {
 		return persistentId;
 	}
 	
 	/**
+	 * Sets the persisent ID to be used for this <code>DockingPort</code>.  If <code>id</code>
+	 * is <code>null</code>, then the <code>String</code> value of this <code>DockingPort's</code>
+	 * hash code is used.
+	 * <br/>
+	 * <code>DockingPorts</code> are tracked by persistent ID within <code>DockingManager</code>.
+	 * Whenever this method is called, the <code>DockingManager's</code> tracking mechanism is 
+	 * automatically upated for this <code>DockingPort</code>.
 	 * 
+	 * @param id the persistent ID to be used for this <code>DockingPort</code>
+	 * @see #getPersistentId()
+	 * @see DockingManager#getDockingPort(String)
+	 * @see DockingPortTracker#updateIndex(DockingPort)
 	 */
 	public void setPersistentId(String id) {
-		if(id==null)
+		if(id==null) {
 			id = String.valueOf(hashCode());
-		String oldId = persistentId;
+		}
 		persistentId = id;
 		DockingPortTracker.updateIndex(this);
 	}
@@ -629,8 +753,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 
 	
-	protected boolean isSingleTabAllowed() {
+	public boolean isSingleTabAllowed() {
 		return getDockingProperties().isSingleTabsAllowed().booleanValue();
+	}
+	
+	public void setSingleTabAllowed(boolean allowed) {
+		getDockingProperties().setSingleTabsAllowed(allowed);
 	}
 
 	
@@ -675,7 +803,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return DockingManager.isValidDockingRegion(region); 
 	}
 
-	protected boolean isSingleComponentDocked() {
+	private boolean isSingleComponentDocked() {
 		Component c = getDockedComponent();
 		// we have no docked component
 		if(c==null)
@@ -715,18 +843,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		// return the Dockable instance associated with this component
 		return DockingManager.getDockable(c);
 	}
-	
-	/**
-	 * @see org.flexdock.docking.DockingPort#lendDockedComponent()
-	 */
-	public Component lendDockedComponent() {
-		Component docked = getDockedComponent();
-		if(docked==null)
-			return null;
-			
-		super.remove(docked);
-		return docked;
-	}
 
 	private DockingPort[] putPortsInOrder(DockingPort oldPort, DockingPort newPort, String region) {
 		if(NORTH_REGION.equals(region) || WEST_REGION.equals(region))
@@ -735,13 +851,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 
 	/**
-	 * This method completes with a call to <code>evaluateDockingBorderStatus()</code> to allow the
-	 * assigned <code>SubComponentProvider</code> to handle container-state-related behavior.
+	 * This method completes with a call to <code>evaluateDockingBorderStatus()</code> to allow any
+	 * installed <code>DefaultDockingStrategy</code> to handle container-state-related behavior.
 	 */
-	public void reevaluateContainerTree() {
+	private void reevaluateContainerTree() {
 		reevaluateDockingWrapper();
 		reevaluateTabbedPane();
-
 
 		evaluateDockingBorderStatus();
 	}
@@ -841,6 +956,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to decorate superclass method, keeping track of internal docked-component reference.
+	 * 
+	 * @param the index of the component to be removed.
+	 * @see Container#remove(int)
 	 */
 	public void remove(int index) {
 		Component docked = getDockedComponent();
@@ -852,26 +970,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Overridden to decorate superclass method, keeping track of internal docked-component reference.
+	 * @see Container#removeAll()
 	 */
 	public void removeAll() {
 		super.removeAll();
 		dockedComponent = null;
-	}
-	
-	/**
-	 * @see org.flexdock.docking.DockingPort#retainDockedComponent()
-	 */
-	public void retainDockedComponent() {
-		Component docked = getDockedComponent();
-		if(docked==null)
-			return;
-			
-		Container tempParent = docked.getParent();
-		if(tempParent!=null)
-			tempParent.remove(docked);
-			
-		setComponent(docked);
-		revalidate();
 	}
 
 	/**
@@ -901,7 +1004,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 	
 	/**
-	 * Overridden to do nothing.
+	 * Overridden to do nothing.  <code>doLayout()</code> has been overridden in this class to 
+	 * implement the <code>DockingPort</code> layout directly, so this method has been obviated
+	 * on this class.
+	 * 
+	 * @param mgr the specified layout manager to set
+	 * @see #doLayout()
+	 * @see Container#setLayout(java.awt.LayoutManager)
 	 */
 	public void setLayout(LayoutManager mgr) {
 	}
@@ -913,13 +1022,28 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	/**
 	 * Undocks the specified <code>Component</code> and returns a boolean indicating the success of 
-	 * the operation. If successful, <code>evaluateDockingBorderStatus()</code> will be called before 
-	 * returning <code>true</code> to allow the assigned <code>SubComponentProvider</code> to handle 
-	 * container-state-related behavior.
+	 * the operation. 
+	 * <br/>
+	 * Since <code>DefaultDockingPort</code> may only contain one child component, there i
+	 * s a container hierarchy to manage tabbed interfaces, split layouts, and sub-docking.  As 
+	 * components are removed from this hierarchy, the hierarchy itself must be reevaluated.  
+	 * Removing a component from a child code>DefaultDockingPort</code> within a <code>JSplitPane</code> 
+	 * renders the child <code>DefaultDockingPort</code> unnecessary, which, in turn, renders the notion 
+	 * of splitting the layout with a <code>JSplitPane</code> unnecessary (since there are no longer two 
+	 * components to split the layout between).  Likewise, removing a child component from a 
+	 * <code>JTabbedPane</code> such that there is only one child left within the 
+	 * <code>JTabbedPane</code> removes the need for a tabbed interface to begin with.
+	 * <p>
+	 * This method automatically handles the reevaluation of the container hierarchy to keep 
+	 * wrapper-container usage at a minimum.  Since <code>DockingManager</code> makes this callback 
+	 * automatic, developers normally will not need to call this method explicitly.  However, when 
+	 * removing a component from a  <code>DefaultDockingPort</code> using application code, 
+	 * developers should keep in mind to use this method instead of <code>remove()</code>.
 	 * 
 	 * @param comp the <code>Component</code> to be undocked.
 	 * @return a boolean indicating the success of the operation
-	 * @see org.flexdock.docking.DockingPort#undock(Component comp)
+	 * @see DockingPort#undock(Component comp)
+	 * @see DockingManager#undock(Dockable)
 	 */
 	public boolean undock(Component comp) {
 		// can't undock a component that isn't already docked within us
@@ -1083,6 +1207,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		repaint();
 	}
 	
+	/**
+	 * Overridden to provide enhancements during drag operations.  Some <code>DragPreview</code>
+	 * implementations may by able to supply a <code>BufferedImage</code> for this 
+	 * <code>DockingPort</code> to use for painting operations.  This may be useful for cases in which
+	 * the dimensions of docked <code>Components</code> are altered in realtime during the drag
+	 * operation to provide a "ghost" image for the <code>DragPreview</code>.  In this case, 
+	 * visual feedback for altered subcomponents within this <code>DockingPort</code> may be blocked
+	 * in favor of a temporary <code>BufferedImage</code> for the life of the drag operation.
+	 * 
+	 * @param g  the <code>Graphics</code> context in which to paint
+	 * @see JComponent#paint(java.awt.Graphics)
+	 */
 	public void paint(Graphics g) {
 		if(dragImage==null) {
 			super.paint(g);

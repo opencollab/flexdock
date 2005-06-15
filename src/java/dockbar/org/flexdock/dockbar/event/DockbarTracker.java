@@ -18,7 +18,7 @@ import javax.swing.SwingUtilities;
 
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.util.SwingUtility;
 
 /**

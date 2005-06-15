@@ -1,7 +1,7 @@
 /*
  * Created on Apr 25, 2005
  */
-package org.flexdock.util;
+package org.flexdock.docking;
 
 import javax.swing.JSplitPane;
 import javax.swing.SwingConstants;

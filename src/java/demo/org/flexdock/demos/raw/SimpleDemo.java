@@ -8,9 +8,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
-import org.flexdock.util.DockingConstants;
 
 public class SimpleDemo extends JFrame implements DockingConstants {
 	public static void main(String[] args) {

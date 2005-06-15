@@ -25,17 +25,17 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.perspective.PerspectiveManager;
-import org.flexdock.util.DockingConstants;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: UnknownStateHandler.java,v 1.3 2005-06-07 05:10:19 marius Exp $
+ * @version $Id: UnknownStateHandler.java,v 1.4 2005-06-15 16:03:46 marius Exp $
  */
 public class UnknownStateHandler implements RestorationHandler, DockingConstants {
 

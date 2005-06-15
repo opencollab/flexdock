@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 
 /**

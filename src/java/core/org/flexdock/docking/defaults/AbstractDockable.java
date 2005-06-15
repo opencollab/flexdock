@@ -38,84 +38,30 @@ import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
 
 /**
- * This class models a <code>Dockable</code> implementation for wrapping a <code>Component</code>.  It is 
- * essentially the simplest means to turning a generic <code>Component</code> into a <code>Dockable</code>
- * instance.  Compound <code>Dockables</code> may have separate child components that are responsible for 
- * drag initiation, whereas another component is the actual drag source.  This is shown in the manner that a  
- * <code>JInternalFrame</code> would be a draggable component, while the frame's title pane is the actual drag 
- * initiator.
- * <p>
- * The class, conversely, deals with the <i>simple</i> case, where a <code>Component</code> itself must be 
- * docking-enabled.  <code>DockableComponentWrapper</code> wraps a <code>Component</code> and implements the
- * <code>Dockable</code> interface.  Since the <code>Component</code> itself is being docking-enabled, it
- * serves as both the drag source and drag initiator.  Thus, <code>getComponent()</code> will return a 
- * reference to <code>'this'</code> and <code>getDragSources()</code> return a <code>List</code> containing
- * the same self-reference <code>Component</code>.
- * <p>
- * This class may be used by application code to enable docking capabilities on a given <code>Component</code>.
- * However, it is recommended that 
- * <code>DockingManager.registerDockable(Component evtSrc, String desc)</code> 
- * be used as a more automated, less invasive means of enabling docking on a component.  
- * <code>DockingManager.registerDockable(Component evtSrc, String desc)</code>
- * will automatically create a <code>DockableComponentWrapper</code> instance and register the required
- * drag listeners.
- *
- * @author Chris Butler 
+ * Provides a default implementation of the <code>Dockable</code> interface.  This class should be
+ * extended by any application that wishes to make use of the <code>Dockable</code> interface without
+ * the need for writing out an implementation for every method that isn't explicitly used.
+ * 
+ * @author Christopher Butler
  */
-public class DockableComponentWrapper implements Dockable {
-	private Component dragSrc;
+public abstract class AbstractDockable implements Dockable {
 	private String persistentId;
 	private ArrayList dockingListeners;
 	private ArrayList dragListeners;
 	private Hashtable clientProperties;
 	private HashSet frameDragSources;
-
+	
 	/**
-	 * Creates a <code>DockableComponentWrapper</code> instance using the specified source component,
-	 * persistent ID, and docking description.  This method is used to create <code>Dockable</code> instances for 
-	 * simple <code>Components</code> where the drag source and drag initiator are the same 
-	 * <code>Component</code>.
-	 * <br/>
-	 * If <code>src</code> or <code>id</code> are <code>null</code>, then this method returns a
-	 * <code>null</code> reference.
-	 * <br/>
-	 * <code>src</code> will be the <code>Component</code> returned by invoking <code>getComponent()</code> on
-	 * the resulting <code>Dockable</code> and will be included in the <code>List</code> returned by
-	 * <code>getDragSources()</code>.  <code>id</code> will be the value returned by invoking
-	 * <code>getPersistentId()</code> on the resulting <code>Dockable</code>.  <code>desc</code>
-	 * may be used by the <code>Dockable</code> for descriptive purposes (such as tab-text in a 
-	 * tabbed layout).  It is not recommended to supply a <code>null</code> value for <code>desc</code>, 
-	 * but doing so is not illegal.
-	 *
-	 * @param src the source component
-	 * @param id the persistent ID for the Dockable instance
-	 * @param desc the docking description
-	 * @return a new <code>DockableComponentWrapper</code> instance
-	 * @see Dockable#getComponent()
-	 * @see Dockable#getDragSources()
+	 * Creates a new <code>AbstractDockable</code> instance.  This constructor is meant to be invoked
+	 * by subclasses as it initializes the <code>Dockable's</code> persistent ID and drag sources.
+	 * 
+	 * @param id the persistent ID of the resulting <code>Dockable</code>
 	 * @see Dockable#getPersistentId()
-	 * @see DockingManager#registerDockable(Component, String)
 	 */
-	public static DockableComponentWrapper create(Component src, String id, String desc) {
-		if(src==null || id==null)
-			return null;
-			
-		return new DockableComponentWrapper(src, id, desc);
-	}
-
-	/**
-	 * @param src
-	 * @param id
-	 * @param desc
-	 * @param resizable
-	 */
-	private DockableComponentWrapper(Component src, String id, String desc) {
-		dragSrc = src;
-		getDockingProperties().setDockableDesc(desc);
+	public AbstractDockable(String id) {
 		persistentId = id;
-		
-		dockingListeners = new ArrayList(0);
-		dragListeners = new ArrayList(1);
+		dockingListeners = new ArrayList(2);
+		dragListeners = new ArrayList();
 		dragListeners.add(getComponent());
 	}
 	
@@ -126,17 +72,12 @@ public class DockableComponentWrapper implements Dockable {
 	}
 	
 	/**
-	 * Returns the <code>Component</code> used to create this <code>DockableComponentWrapper</code>
-	 * instance.
+	 * Returns the <code>Component</code> used to back this <code>Dockable</code> instance.
 	 * 
-	 * @return the <code>Component</code> used to create this <code>DockableComponentWrapper</code>
-	 * instance.
+	 * @return the <code>Component</code> used to back this <code>Dockable</code> instance.
 	 * @see Dockable#getComponent()
-	 * @see #create(Component, String, String)
 	 */
-	public Component getComponent() {
-		return dragSrc;
-	}
+	public abstract Component getComponent();
 
 	/**
 	 * Returns a <code>List</code> of <code>Components</code> used to initiate drag-to-dock operation.
@@ -146,19 +87,18 @@ public class DockableComponentWrapper implements Dockable {
 	 * @return a <code>List</code> of <code>Components</code> used to initiate drag-to-dock operation.
 	 * @see Dockable#getDragSources()
 	 * @see #getComponent()
-	 * @see #create(Component, String, String)
 	 */
 	public List getDragSources() {
 		return dragListeners;
 	}
-	
+
 	/**
-	 * Returns the persistent ID of this <code>DockableComponentWrapper</code> instance provided 
-	 * when this object was instantiated.
+	 * Returns the persistent ID of this <code>Dockable</code> instance provided when this object 
+	 * was instantiated.
 	 * 
-	 * @return the persistent ID of this <code>DockableComponentWrapper</code>
+	 * @return the persistent ID of this <code>Dockable</code>
 	 * @see Dockable#getPersistentId()
-	 * @see #create(Component, String, String)
+	 * @see #AbstractDockable(String)
 	 */
 	public String getPersistentId() {
 		return persistentId;
@@ -179,6 +119,91 @@ public class DockableComponentWrapper implements Dockable {
 			frameDragSources = new HashSet();
 		return frameDragSources;
 	}
+	
+	/**
+	 * Sets the <code>String</code> to be used for tab labels when this <code>Dockable</code> is 
+	 * embedded within a tabbed layout.  <code>null</code> values are discouraged, but not illegal.
+	 * 
+	 * @param tabText the <code>String</code> to be used for tab labels when this <code>Dockable</code> is 
+	 * embedded within a tabbed layout.
+	 */
+	public void setTabText(String tabText) {
+		getDockingProperties().setDockableDesc(tabText);
+	}
+	
+	/**
+	 * Returns the <code>String</code> used for tab labels when this <code>Dockable</code> is 
+	 * embedded within a tabbed layout.  It is possible for this method to return a <code>null</code>
+	 * reference.
+	 * 
+	 * @return tabText the <code>String</code> used for tab labels when this <code>Dockable</code> is 
+	 * embedded within a tabbed layout.
+	 */
+	public String getTabText() {
+		return getDockingProperties().getDockableDesc();
+	}
+	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dockingCanceled(DockingEvent)
+	 */
+	public void dockingCanceled(DockingEvent evt) {
+	}
+
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dockingComplete(DockingEvent)
+	 */
+	public void dockingComplete(DockingEvent evt) {
+	}
+
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dragStarted(DockingEvent)
+	 */
+	public void dragStarted(DockingEvent evt) {
+	}
+	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dropStarted(DockingEvent)
+	 */
+	public void dropStarted(DockingEvent evt) {
+	}
+	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#undockingComplete(DockingEvent)
+	 */
+	public void undockingComplete(DockingEvent evt) {
+		
+	}
+	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#undockingStarted(DockingEvent)
+	 */
+	public void undockingStarted(DockingEvent evt) {
+	}
+	
 	
 	/**
 	 * Adds a <code>DockingListener</code> to observe docking events for this <code>Dockable</code>.
@@ -224,66 +249,7 @@ public class DockableComponentWrapper implements Dockable {
 			dockingListeners.remove(listener);
 	}
 	
-	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
-	 * 
-	 * @param evt the <code>DockingEvent</code> to respond to.
-	 * @see DockingListener#dockingCanceled(DockingEvent)
-	 */
-	public void dockingCanceled(DockingEvent evt) {
-	}
 
-	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
-	 * 
-	 * @param evt the <code>DockingEvent</code> to respond to.
-	 * @see DockingListener#dockingComplete(DockingEvent)
-	 */
-	public void dockingComplete(DockingEvent evt) {
-	}
-
-	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
-	 * 
-	 * @param evt the <code>DockingEvent</code> to respond to.
-	 * @see DockingListener#undockingComplete(DockingEvent)
-	 */
-	public void undockingComplete(DockingEvent evt) {
-	}
-	
-	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
-	 * 
-	 * @param evt the <code>DockingEvent</code> to respond to.
-	 * @see DockingListener#undockingStarted(DockingEvent)
-	 */
-	public void undockingStarted(DockingEvent evt) {
-	}
-	
-	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
-	 * 
-	 * @param evt the <code>DockingEvent</code> to respond to.
-	 * @see DockingListener#dragStarted(DockingEvent)
-	 */
-	public void dragStarted(DockingEvent evt) {
-	}
-	
-	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
-	 * 
-	 * @param evt the <code>DockingEvent</code> to respond to.
-	 * @see DockingListener#dropStarted(DockingEvent)
-	 */
-	public void dropStarted(DockingEvent evt) {
-	}
-	
     /**
      * Returns the value of the property with the specified key.  Only
      * properties added with <code>putClientProperty</code> will return
@@ -293,7 +259,7 @@ public class DockableComponentWrapper implements Dockable {
      * If the <code>Component</code> returned by <code>getComponent()</code> is an instance
      * of <code>JComponent</code>, then this method will dispatch to that <code>JComponent's</code>
      * <code>getClientProperty(Object, Object)</code> method.  Otherwise, this 
-     * <code>DockableComponentWrapper</code> will provide its own internal mapping of client properties.
+     * <code>Dockable</code> will provide its own internal mapping of client properties.
      * 
      * @param key the key that is being queried
      * @return the value of this property or <code>null</code>
@@ -319,7 +285,7 @@ public class DockableComponentWrapper implements Dockable {
      * If the <code>Component</code> returned by <code>getComponent()</code> is an instance
      * of <code>JComponent</code>, then this method will dispatch to that <code>JComponent's</code>
      * <code>putClientProperty(Object, Object)</code> method.  Otherwise, this 
-     * <code>DockableComponentWrapper</code> will provide its own internal mapping of client properties.
+     * <code>Dockable</code> will provide its own internal mapping of client properties.
      * 
      * @param key the new client property key
      * @param value the new client property value; if <code>null</code> this method will remove 
@@ -362,7 +328,9 @@ public class DockableComponentWrapper implements Dockable {
 	 * If not currently docked, this method will return <code>null</code>.
 	 * <br/>
 	 * This method defers processing to <code>getDockingPort(Dockable dockable)</code>, passing an 
-	 * argument of <code>this</code>.
+	 * argument of <code>this</code>.  This <code>DockingPort</code> returned is based upon the 
+	 * <code>Component</code> returned by this <code>Dockable's</code> abstract 
+	 * <code>getComponent()</code> method.
 	 * 
 	 * @return the <code>DockingPort</code> within which this <code>Dockable</code> is currently docked.
 	 * @see Dockable#getDockingPort()

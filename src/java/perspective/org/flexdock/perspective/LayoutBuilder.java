@@ -9,13 +9,13 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 
 /**

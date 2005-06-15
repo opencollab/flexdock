@@ -350,4 +350,12 @@ public class SwingUtility {
 			other = split.getRightComponent();
 		return other;
 	}
+
+	public static int getSplitPaneSize(JSplitPane splitPane) {
+		if(splitPane==null)
+			return 0;
+		
+		boolean horiz = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? true: false; 
+		return horiz? splitPane.getWidth(): splitPane.getHeight();
+	}
 }

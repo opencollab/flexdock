@@ -49,7 +49,6 @@ import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventDispatcher;
 import org.flexdock.event.RegistrationEvent;
 import org.flexdock.util.ClassMapping;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;

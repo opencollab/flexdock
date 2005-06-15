@@ -29,10 +29,10 @@ import javax.swing.JDialog;
 import javax.swing.JRootPane;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.FloatingGroup;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
 /**

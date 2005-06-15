@@ -9,7 +9,7 @@ import javax.swing.border.TitledBorder;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.defaults.DockableAdapter;
+import org.flexdock.docking.defaults.AbstractDockable;
 
 public class DockablePanel extends JPanel {
 	private String title;
@@ -40,7 +40,7 @@ public class DockablePanel extends JPanel {
 		return title==null? null: title.trim();
 	}
 
-	private class DockableImpl extends DockableAdapter {
+	private class DockableImpl extends AbstractDockable {
 		private DockableImpl() {
 			super("dockable." + getTitle());
 			// the titlebar will the the 'hot' component that initiates dragging
@@ -48,7 +48,7 @@ public class DockablePanel extends JPanel {
 			setTabText(getTitle());
 		}
 		
-		public Component getDockable() {
+		public Component getComponent() {
 			return DockablePanel.this;
 		}
 	}

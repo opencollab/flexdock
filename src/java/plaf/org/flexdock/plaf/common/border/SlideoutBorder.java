@@ -11,7 +11,7 @@ import java.awt.Point;
 
 import javax.swing.border.Border;
 
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.DockingConstants;
 
 /**
  * @author Christopher Butler

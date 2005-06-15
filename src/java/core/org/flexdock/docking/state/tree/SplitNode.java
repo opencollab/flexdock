@@ -7,10 +7,10 @@ import java.awt.Component;
 
 import javax.swing.JSplitPane;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.state.LayoutNode;
-import org.flexdock.util.DockingConstants;
 
 /**
  * @author Christopher Butler

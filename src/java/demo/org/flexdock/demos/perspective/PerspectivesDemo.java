@@ -20,6 +20,7 @@ import javax.swing.border.LineBorder;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableBuilder;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
@@ -28,7 +29,6 @@ import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.actions.OpenPerspectiveAction;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -38,7 +38,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.6 2005-06-11 16:14:46 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.7 2005-06-15 16:03:36 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";

@@ -21,7 +21,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 

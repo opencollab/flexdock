@@ -6,7 +6,7 @@ package org.flexdock.docking.state;
 import java.awt.Component;
 
 import org.flexdock.docking.Dockable;
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.DockingConstants;
 
 /**
  * @author Christopher Butler

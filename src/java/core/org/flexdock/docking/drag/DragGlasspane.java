@@ -13,12 +13,12 @@ import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.drag.effects.DragPreview;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.util.ComponentNest;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
 public class DragGlasspane extends JComponent implements DockingConstants {

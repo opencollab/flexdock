@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
@@ -118,6 +119,10 @@ public class DockingUtility implements DockingConstants {
 		return false;
 	}
 	
+	public static boolean isRegionTopLeft(String region) {
+		return NORTH_REGION.equals(region) || WEST_REGION.equals(region);
+	}
+	
 	public static String getRegion(int regionType) {
 		switch(regionType) {
 			case LEFT:
@@ -200,7 +205,7 @@ public class DockingUtility implements DockingConstants {
 		
 		dividerProportion = Math.max(0f, dividerProportion);
 		final float percent = Math.min(1f, dividerProportion);
-		int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight(); 
+		int size = SwingUtility.getSplitPaneSize(split); 
 		
 		if(split.isVisible() && size>0 && EventQueue.isDispatchThread()) {
 			split.setDividerLocation(dividerProportion);

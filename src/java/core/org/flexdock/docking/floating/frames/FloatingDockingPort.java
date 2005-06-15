@@ -39,7 +39,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
 		// only allow docking in CENTER
 		if(!CENTER_REGION.equals(region))
 			return false;
-		return super.isDockingAllowed(region, comp);
+		return super.isDockingAllowed(comp, region);
 	}
 
 

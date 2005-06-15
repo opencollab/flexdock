@@ -1,8 +1,8 @@
 package org.flexdock.demos.raw.elegant;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.StandardBorderManager;
-import org.flexdock.util.DockingConstants;
 
 
 public class ElegantDockingPort extends DefaultDockingPort implements DockingConstants {

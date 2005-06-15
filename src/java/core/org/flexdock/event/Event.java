@@ -5,7 +5,7 @@ package org.flexdock.event;
 
 import java.util.EventObject;
 
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.DockingConstants;
 
 /**
  * @author Christopher Butler

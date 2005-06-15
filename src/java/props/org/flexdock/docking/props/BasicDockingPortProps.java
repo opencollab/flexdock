@@ -5,8 +5,8 @@ package org.flexdock.docking.props;
 
 import java.util.Map;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.TypedHashtable;
 
 /**

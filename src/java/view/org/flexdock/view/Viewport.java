@@ -10,11 +10,11 @@ import java.util.Set;
 import javax.swing.JTabbedPane;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.docking.event.DockingEvent;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.view.tracking.ViewListener;
 import org.flexdock.view.tracking.ViewTracker;
 
@@ -48,10 +48,10 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
 		}
 	}
 	
-	public boolean isDockingAllowed(String region, Component comp) {
+	public boolean isDockingAllowed(Component comp, String region) {
 		// if we're already blocked, then no need to interrogate
 		// the components in this dockingport
-		boolean blocked = !super.isDockingAllowed(region, comp);
+		boolean blocked = !super.isDockingAllowed(comp, region);
 		if(blocked)
 			return false;
 		

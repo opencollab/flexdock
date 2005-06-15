@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.defaults.DefaultDockingPort;
-import org.flexdock.docking.defaults.DockableAdapter;
-import org.flexdock.util.DockingConstants;
+import org.flexdock.docking.defaults.AbstractDockable;
 
 public class CompoundDemo extends JPanel implements DockingConstants {
 	private JLabel titlebar;
@@ -51,7 +51,7 @@ public class CompoundDemo extends JPanel implements DockingConstants {
 		return dockableImpl;
 	}
 	
-	private class DockableImpl extends DockableAdapter {
+	private class DockableImpl extends AbstractDockable {
 		
 		private DockableImpl() {
 			super("dockable." + getTitle());
@@ -60,7 +60,7 @@ public class CompoundDemo extends JPanel implements DockingConstants {
 			setTabText(getTitle());
 		}
 		
-		public Component getDockable() {
+		public Component getComponent() {
 			return CompoundDemo.this;
 		}
 	}

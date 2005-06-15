@@ -4,9 +4,9 @@ import java.awt.Container;
 
 import javax.swing.JFrame;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.util.DockingConstants;
 
 
 public class ElegantDemo extends JFrame implements DockingConstants {

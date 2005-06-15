@@ -42,7 +42,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * properties added with <code>putClientProperty</code> will return
      * a non-<code>null</code> value.  
      * 
-     * @param key the being queried
+     * @param key the key that is being queried
      * @return the value of this property or <code>null</code>
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */

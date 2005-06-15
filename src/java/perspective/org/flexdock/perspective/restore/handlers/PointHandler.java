@@ -26,19 +26,19 @@ import java.util.Map;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.perspective.RestorationManager;
 import org.flexdock.util.ComponentNest;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.RootWindow;
 
 /**
  * Created on 2005-05-26
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: PointHandler.java,v 1.3 2005-06-07 05:10:19 marius Exp $
+ * @version $Id: PointHandler.java,v 1.4 2005-06-15 16:03:46 marius Exp $
  */
 public class PointHandler implements RestorationHandler, DockingConstants {
 

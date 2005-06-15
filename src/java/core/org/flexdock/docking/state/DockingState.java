@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.io.Serializable;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.util.DockingConstants;
 
 /**
  * 

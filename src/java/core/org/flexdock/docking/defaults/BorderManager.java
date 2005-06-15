@@ -22,7 +22,15 @@ import org.flexdock.docking.DockingPort;
 
 /**
  * This interface provides a set of methods used by the <code>DefaultDockingPort</code> class to manage  
- * border state after docking and undocking operations.
+ * border state after docking and undocking operations.  This class is necessary because 
+ * <code>DefaultDockingPort</code> is a <code>DockingPort</code> implementation that uses nested 
+ * <code>Components</code> to achieve a docking layout.  Particularly, <code>DefaultDockingPort</code>
+ * uses <code>JSplitPane</code> and <code>JTabbedPane</code>, each of which have their own 
+ * <code>Borders</code> provided by the currently installed PLAF.  Nesting these <code>Components</code>
+ * within one another without proper border management can result in a compound border effect that is 
+ * displeasing to the eye.  This class provides a means by which custom border management behavior
+ * may be plugged into the <code>DefaultDockingPort</code> in response to various different layout 
+ * conditions.
  * 
  * @author Chris Butler
  */
@@ -30,6 +38,8 @@ public interface BorderManager {
 	/**
 	 * Callback method allowing for customized behavior when the <code>DefaultDockingPort's</code>
 	 * docked component state has changed and there is no longer a component docked within the port. 
+	 * 
+	 * @param port the <code>DockingPort</code> whose layout borders are to be managed
 	 */
 	public void managePortNullChild(DockingPort port);
 	
@@ -38,6 +48,8 @@ public interface BorderManager {
 	 * docked component state has changed and there is a single generic component docked within
 	 * the port. The <code>Component</code> may be retrieved by calling 
 	 * <code>port.getDockedComponent()</code>.
+	 * 
+	 * @param port the <code>DockingPort</code> whose layout borders are to be managed
 	 */
 	public void managePortSimpleChild(DockingPort port);
 	
@@ -45,6 +57,8 @@ public interface BorderManager {
 	 * Callback method allowing for customized behavior when the <code>DefaultDockingPort's</code>
 	 * docked component state has changed and the port has been split between two components. The 
 	 * <code>JSPlitPane</code> may be retrieved by calling <code>port.getDockedComponent()</code>.
+	 * 
+	 * @param port the <code>DockingPort</code> whose layout borders are to be managed
 	 */
 	public void managePortSplitChild(DockingPort port);
 	
@@ -53,6 +67,8 @@ public interface BorderManager {
 	 * docked component state has changed and docked components within the <code>CENTER</code>
 	 * region are layed-out within a <code>JTabbedPane</code>.  The <code>JTabbedPane</code> may
 	 * be retrieved by calling <code>port.getDockedComponent()</code>.
+	 * 
+	 * @param port the <code>DockingPort</code> whose layout borders are to be managed
 	 */
 	public void managePortTabbedChild(DockingPort port);
 }

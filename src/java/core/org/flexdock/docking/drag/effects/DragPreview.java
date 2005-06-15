@@ -6,8 +6,8 @@ import java.awt.Polygon;
 import java.util.Map;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.util.DockingConstants;
 
 public interface DragPreview extends DockingConstants {
 	public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo);

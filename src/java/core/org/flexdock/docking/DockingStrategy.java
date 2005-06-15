@@ -3,8 +3,6 @@
  */
 package org.flexdock.docking;
 
-import java.awt.Component;
-
 import javax.swing.JSplitPane;
 
 import org.flexdock.docking.drag.DragOperation;
@@ -108,35 +106,25 @@ public interface DockingStrategy {
 	
 	/**
 	 * Returns the initial divider location to be used by the specified <code>JSplitPane</code>.
-	 * This method assumes that the <code>JSplitPane</code> parameter is, or will be embedded 
-	 * within the specified <code>DockingPort</code>.  it is further assumed that the 
-	 * <code>priority</code> parameter is, or will be embedded within the <code>JSplitPane</code>
-	 * and that the split pane's resize weight will somehow be based upon this <code>Component</code>.
-	 * This method does not assume that the <code>JSplitPane</code> has been validated and that
-	 * it's current dimensions are non-zero.
+	 * This method assumes that the <code>JSplitPane</code> parameter is embedded 
+	 * within the specified <code>DockingPort</code> and that is has been validated and its
+	 * current dimensions are non-zero.
 	 * 
 	 * @param port the <code>DockingPort</code> that contains, or will contain the specified <code>JSplitPane</code>.
 	 * @param splitPane the <code>JSplitPane</code> whose initial divider location is to be determined.
-	 * @param priority the <code>Component</code> within the <code>JSplitPane</code> that should control the
-	 * split pane's resize weight.
 	 * @return the desired divider location of the supplied <code>JSplitPane</code>.
 	 */
-	public int getInitialDividerLocation(DockingPort port, JSplitPane splitPane, Component priority);
+	public int getInitialDividerLocation(DockingPort port, JSplitPane splitPane);
 	
 	/**
 	 * Returns the desired divider proportion of the specified <code>JSplitPane</code> after
 	 * rendering.  This method assumes that the <code>JSplitPane</code> parameter is, or will be 
-	 * embedded within the specified <code>DockingPort</code>.  it is further assumed that the 
-	 * <code>priority</code> parameter is, or will be embedded within the <code>JSplitPane</code>
-	 * and that the split pane's resize weight will somehow be based upon this <code>Component</code>.
-	 * This method does not assume that the <code>JSplitPane</code> has been validated and that
-	 * it's current dimensions are non-zero.
+	 * embedded within the specified <code>DockingPort</code>.  This method does <b>not</b> assume that 
+	 * the <code>JSplitPane</code> has been validated and that it's current dimensions are non-zero.
 	 * 
 	 * @param port the <code>DockingPort</code> that contains, or will contain the specified <code>JSplitPane</code>.
 	 * @param splitPane the <code>JSplitPane</code> whose initial divider location is to be determined.
-	 * @param priority the <code>Component</code> within the <code>JSplitPane</code> that should control the
-	 * split pane's resize weight.
 	 * @return the desired divider proportion of the supplied <code>JSplitPane</code>.
 	 */
-	public double getDividerProportion(DockingPort port, JSplitPane splitPane, Component priority);
+	public double getDividerProportion(DockingPort port, JSplitPane splitPane);
 }

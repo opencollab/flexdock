@@ -5,9 +5,9 @@ import java.awt.Component;
 import javax.swing.JComponent;
 
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.defaults.DockableAdapter;
+import org.flexdock.docking.defaults.AbstractDockable;
 
-public class DockableImpl extends DockableAdapter {
+public class DockableImpl extends AbstractDockable {
 	private ElegantPanel panel;
 	private JComponent dragInitiator;
 	
@@ -28,7 +28,7 @@ public class DockableImpl extends DockableAdapter {
 		DockingManager.registerDockable(this);
 	}
 
-	public Component getDockable() {
+	public Component getComponent() {
 		return panel;
 	}
 }

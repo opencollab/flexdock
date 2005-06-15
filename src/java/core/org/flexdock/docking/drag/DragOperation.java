@@ -10,9 +10,9 @@ import java.util.EventListener;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.util.DockingConstants;
 
 public class DragOperation implements DockingConstants {
 	public static final String DRAG_IMAGE = "DragOperation.DRAG_IMAGE";

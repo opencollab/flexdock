@@ -28,7 +28,7 @@ public abstract class DefaultPreview implements DragPreview {
 		if(dockable==null || port==null || targetRegion==null || paintingTarget==null)
 			return null;
 		
-		if(UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(targetRegion, dockable))
+		if(UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(dockable, targetRegion))
 			return null;
 		
 		// if we're not hovering over another Dockable then the DockingPort we're over is empty.

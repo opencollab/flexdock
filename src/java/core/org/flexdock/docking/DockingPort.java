@@ -41,7 +41,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	 * Returns a boolean indicating whether or not docking is allowed within the specified region.  Used
 	 * by <code>DockingManager</code> during drag operations.
 	 */	
-	public boolean isDockingAllowed(String region, Component c);
+	public boolean isDockingAllowed(Component comp, String region);
 
 	/**
 	 * Removes all docked components from the <code>DockingPort</code>.

@@ -7,8 +7,8 @@ import java.util.Enumeration;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.state.LayoutNode;
-import org.flexdock.util.DockingConstants;
 
 /**
  * @author Christopher Butler

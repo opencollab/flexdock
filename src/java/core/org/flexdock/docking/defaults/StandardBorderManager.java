@@ -49,12 +49,12 @@ import org.flexdock.docking.DockingPort;
  * <code>DefaultDockingPort</code> has a <code>JTabbedPane</code> as its child, then a <code>null</code> 
  * border is set for the <code>JTabbedPane</code> and all of its child components, and the encapsulated
  * border is applied to the <code>DockingPort</code>.  This is accomplished by calling  
- * <code>managePortTabbedChild</code>.  Finally, <code>managePortSplitChild()</code> will manage the 
+ * <code>managePortTabbedChild()</code>.  Finally, <code>managePortSplitChild()</code> will manage the 
  * border for a <code>DefaultDockingPort</code> whose docked component is a <code>JSplitPane</code>.  This
  * method removes all borders from the <code>DefaultDockingPort</code> and the split pane divider and 
  * applies the encapsulated border to both left and right child components of the <code>JSplitPane</code>.
  * 
- * @author Chris Butler
+ * @author Christopher Butler
  */
 public class StandardBorderManager implements BorderManager {
 	private Border assignedBorder;
@@ -68,7 +68,7 @@ public class StandardBorderManager implements BorderManager {
 	/**
 	 * Creates a new <code>StandardBorderManager</code> with the specified assigned border.
 	 * 
-	 * @param border the currently assigend border.
+	 * @param border the currently assigned border.
 	 */	
 	public StandardBorderManager(Border border) {
 		setBorder(border);
@@ -96,7 +96,7 @@ public class StandardBorderManager implements BorderManager {
 	/**
 	 * Set the border on the supplied <code>DockingPort</code> to the currently assigned border.
 	 * 
-	 * @see org.flexdock.docking.defaults.BorderManager#managePortNullChild(net.eleritec.docking.DockingPort)
+	 * @see BorderManager#managePortNullChild(DockingPort)
 	 */
 	public void managePortNullChild(DockingPort port) {
 		setBorder(port, assignedBorder);
@@ -106,7 +106,7 @@ public class StandardBorderManager implements BorderManager {
 	 * Removes any border from the <code>DockingPort's</code> docked component and set the border on the 
 	 * <code>DockingPort</code> itself to the currently assigned border.
 	 * 
-	 * @see org.flexdock.docking.defaults.BorderManager#managePortSimpleChild(net.eleritec.docking.DockingPort)
+	 * @see BorderManager#managePortSimpleChild(DockingPort)
 	 */
 	public void managePortSimpleChild(DockingPort port) {
 		if(port!=null) {
@@ -119,7 +119,7 @@ public class StandardBorderManager implements BorderManager {
 	 * Removes any border from the <code>DockingPort</code> itself and places the currently 
 	 * assigned border on the two child components of the <code>DockingPort's</code JSplitPane</code>
 	 * child.
-	 * @see org.flexdock.docking.defaults.BorderManager#managePortSplitChild(net.eleritec.docking.DockingPort)
+	 * @see BorderManager#managePortSplitChild(DockingPort)
 	 */
 	public void managePortSplitChild(DockingPort port) {
 		if(port==null || !(port.getDockedComponent() instanceof JSplitPane))
@@ -146,7 +146,7 @@ public class StandardBorderManager implements BorderManager {
 	 * Removes any border from the <code>DockingPort's</code> docked <code>JTabbedPane</code> component and 
 	 * sets the border on the <code>DockingPort</code> itself to the currently assigned border.
 	 * 
-	 * @see org.flexdock.docking.defaults.BorderManager#managePortTabbedChild(net.eleritec.docking.DockingPort)
+	 * @see BorderManager#managePortTabbedChild(DockingPort)
 	 */
 	public void managePortTabbedChild(DockingPort port) {
 		managePortSimpleChild(port);

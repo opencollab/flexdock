@@ -19,10 +19,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.tree.SplitNode;
-import org.flexdock.util.DockingConstants;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.SwingUtility;
 
@@ -282,7 +282,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		Dockable docked = findDockable(current);
 		if(docked!=null) {
 			Component comp = dockable.getComponent();
-			if(port.isDockingAllowed(CENTER_REGION, comp)) {
+			if(port.isDockingAllowed(comp, CENTER_REGION)) {
 				return dock(dockable, port, CENTER_REGION, null);
 			}
 			DockingPort superPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)port);
