@@ -709,11 +709,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 	
 	private void deferSplitDividerReset(final JSplitPane splitPane) {
+		applySplitDividerLocation(splitPane);
 		// we don't need to defer split divider location reset until after
 		// a DockingSplitPane has rendered, since that class is able to figure out
 		// its proper divider location by itself.
 		if(splitPane instanceof DockingSplitPane) {
-			applySplitDividerLocation(splitPane);
 			return;
 		}
 		
