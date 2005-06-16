@@ -308,12 +308,12 @@ public abstract class AbstractDockable implements Dockable {
 
     /**
      * Returns a <code>DockableProps</code> instance associated with this <code>Dockable</code>.
-     * This method returns the default implementation is supplied by the framework by invoking
+     * This method returns the default implementation supplied by the framework by invoking
      * <code>getDockableProps(Dockable dockable)</code> on 
      * <code>org.flexdock.docking.props.PropertyManager</code> and supplying an argument of 
      * <code>this</code>.
      * 
-     * @return the <code>DockableProps</code> associated with this <code>Dockable</code>  This
+     * @return the <code>DockableProps</code> associated with this <code>Dockable</code>.  This
      * method will not return a <code>null</code> reference.
      * @see org.flexdock.docking.props.DockableProps#
      * @see Dockable#getDockingProperties()

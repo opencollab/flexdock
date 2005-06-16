@@ -325,21 +325,71 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			borderManager.managePortSimpleChild(this);
 	}
 
-	
-	public String getRegion(Point p) {
-		if(p==null)
+	/**
+	 * Returns the docking region within this <code>DockingPort</code> that contains the 
+	 * specified <code>Point</code>.  Valid return values are those regions defined in 
+	 * <code>DockingConstants</code> and include <code>NORTH_REGION</code>, 
+	 * <code>SOUTH_REGION</code>, <code>EAST_REGION</code>, <code>WEST_REGION</code>, 
+	 * <code>CENTER_REGION</code>, and <code>UNKNOWN_REGION</code>.  
+	 * <br/>
+	 * If <code>location</code> is <code>null</code>, then <code>UNKNOWN_REGION</code> is 
+	 * returned.
+	 * <br/>
+	 * This method gets the <code>RegionChecker</code> for this <code>DockingPort</code>
+	 * by calling <code>getRegionChecker()</code>.  It then attempts to locate the 
+	 * <code>Dockable</code> at the specified <code>location</code> by calling
+	 * <code>getDockableAt(Point location)</code>.
+	 * <br/>
+	 * This method defers processing to <code>getRegion(Component c, Point p)</code>
+	 * for the current <code>RegionChecker</code>.  If a <code>Dockable</code> was 
+	 * found at the specified <code>Point</code>, then the location of the <code>Point</code>
+	 * is translated to the coordinate system of the <code>Component</code> for the embedded 
+	 * <code>Dockable</code> and that <code>Component</code> and modified <code>Point</code>
+	 * are passed into <code>getRegion(Component c, Point p)</code></code> for the 
+	 * current <code>RegionChecker</code>.  If no <code>Dockable</code> was found, then
+	 * the specified <code>Point</code> is left unmodified and this <code>DockingPort</code>
+	 * and the supplied <code>Point</code> are passed to 
+	 * <code>getRegion(Component c, Point p)</code></code> for the current 
+	 * <code>RegionChecker</code>.
+	 * 
+	 * @param location the location within this <code>DockingPort</code> to examine for
+	 * a docking region.
+	 * @return the docking region within this <code>DockingPort</code> that contains the
+	 * specified <code>Point</code>
+	 * @see #getRegionChecker()
+	 * @see #getDockableAt(Point)
+	 * @see Dockable#getComponent()
+	 * @see RegionChecker#getRegion(Component, Point)
+	 */
+	public String getRegion(Point location) {
+		if(location==null)
 			return UNKNOWN_REGION;
 
-		RegionChecker regionChecker = getDockingProperties().getRegionChecker();
-		Dockable d = getDockableAt(p);
+		RegionChecker regionChecker = getRegionChecker();
+		Dockable d = getDockableAt(location);
 		Component regionTest = this;
 		
 		if(d!=null) {
 			regionTest = d.getComponent();
-			p = SwingUtilities.convertPoint(this, p, regionTest);
+			location = SwingUtilities.convertPoint(this, location, regionTest);
 		}
 
-		return regionChecker.getRegion(regionTest, p);
+		return regionChecker.getRegion(regionTest, location);
+	}
+	
+	/**
+	 * Returns the <code>RegionChecker</code> currently used by this <code>DockingPort</code>.
+	 * This method retrieves the <code>DockingPortProps</code> instance for this <code>
+	 * <code>DockingPort</code> by calling <code>getDockingProperties()</code>.  It then
+	 * returns by invoking <code>getRegionChecker()</code> on the resolved 
+	 * <code>DockingPortProps</code>.
+	 * 
+	 * @return the <code>RegionChecker</code> currently used by this <code>DockingPort</code>.
+	 * @see #getDockingProperties()
+	 * @see DockingPortProps#getRegionChecker() 
+	 */
+	public RegionChecker getRegionChecker() {
+		return getDockingProperties().getRegionChecker();
 	}
 	
 	/**
@@ -934,11 +984,74 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return title;
 	}
 
-	
+	/**
+	 * Returns <code>true</code> if single tabs are allowed within this <code>DockingPort</code>, 
+	 * <code>false</code> otherwise.  
+	 * <br/>
+	 * Generally the tabbed interface does not appear until two or
+	 * more <code>Dockables</code> are docked to the <code>CENTER_REGION</code> of the 
+	 * <code>DockingPort</code> and tabs are required to switch between them.  When there is only a
+	 * single <code>Dockable</code> within the <code>DockingPort</code>, the default behavior for
+	 * the dockable <code>Component</code> to take up all of the space within the 
+	 * <code>DockingPort</code>.
+	 * <br/>
+	 * If this method returns <code>true</code>, then a single <code>Dockable</code> within this
+	 * <code>DockingPort</code> will reside within a tabbed layout that contains only one tab.
+	 * <br/>
+	 * The value returned by this method is a scoped property.  This means there may be many different
+	 * "scopes" at which the single-tab property may be set.  For instance, a "global" setting may 
+	 * override the individual setting for this <code>DockingPort</code>, and this 
+	 * <code>DockingPort's</code> particular setting may override the global default setting.
+	 * <code>org.flexdock.docking.props.PropertyManager</code> 
+	 * should be referenced for further information on scoped properties.
+	 * 
+	 * @return <code>true</code> if single tabs are allowed within this <code>DockingPort</code>, 
+	 * <code>false</code> otherwise.  
+	 * @see #setSingleTabAllowed(boolean)
+	 * @see DockingManager#isSingleTabsAllowed()
+	 * @see DockingManager#setSingleTabsAllowed(boolean)
+	 * @see PropertyManager
+	 * @see DockingPortProps#isSingleTabsAllowed()
+	 * @see DockingPortProps#setSingleTabsAllowed(boolean)
+	 */
 	public boolean isSingleTabAllowed() {
 		return getDockingProperties().isSingleTabsAllowed().booleanValue();
 	}
 	
+	/**
+	 * Sets the "single tab" property for this  <code>DockingPort</code>, allowing or disallowing
+	 * a single <code>Dockable</code> within the <code>DockingPort</code> to appear within a
+	 * tabbed layout.
+	 * <br/>
+	 * Generally the tabbed interface does not appear until two or
+	 * more <code>Dockables</code> are docked to the <code>CENTER_REGION</code> of the 
+	 * <code>DockingPort</code> and tabs are required to switch between them.  When there is only a
+	 * single <code>Dockable</code> within the <code>DockingPort</code>, the default behavior for
+	 * the dockable <code>Component</code> to take up all of the space within the 
+	 * <code>DockingPort</code>.
+	 * <br/>
+	 * If the single tab property is set to <code>true</code>, then a single <code>Dockable</code> 
+	 * within this <code>DockingPort</code> will reside within a tabbed layout that contains only 
+	 * one tab.
+	 * <br/>
+	 * The single tab property is a scoped property.  This means there may be many different
+	 * "scopes" at which the single-tab property may be set.  For instance, a "global" setting may 
+	 * override the individual setting for this <code>DockingPort</code>, and this 
+	 * <code>DockingPort's</code> particular setting may override the global default setting.
+	 * <b>This method applied a value only to the  local scope for this particular 
+	 * <code>DockingPort</code>.</b>
+	 * <code>org.flexdock.docking.props.PropertyManager</code>
+	 * should be referenced for further information on scoped properties.
+	 * 
+	 * @param allowed <code>true</code> if a single-tabbed layout should be allowed, 
+	 * <code>false</code> otherwise
+	 * @see #isSingleTabAllowed()
+	 * @see DockingManager#setSingleTabsAllowed(boolean)
+	 * @see DockingManager#isSingleTabsAllowed()
+	 * @see PropertyManager
+	 * @see DockingPortProps#setSingleTabsAllowed(boolean)
+	 * @see DockingPortProps#isSingleTabsAllowed()
+	 */
 	public void setSingleTabAllowed(boolean allowed) {
 		getDockingProperties().setSingleTabsAllowed(allowed);
 	}
@@ -1336,48 +1449,159 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	
 	
-
+	/**
+	 * Adds a <code>DockingListener</code> to observe docking events for this 
+	 * <code>DockingPort</code>.
+	 * <code>null</code> arguments are ignored.
+	 * 
+	 * @param listener the <code>DockingListener</code> to add to this <code>DockingPort</code>.
+	 * @see DockingMonitor#addDockingListener(DockingListener)
+	 * @see #getDockingListeners()
+	 * @see #removeDockingListener(DockingListener)
+	 */
 	public void addDockingListener(DockingListener listener) {
-		dockingListeners.add(listener);
+		if(listener!=null)
+			dockingListeners.add(listener);
 	}
 
+	/**
+	 * Returns an array of all <code>DockingListeners</code> added to this 
+	 * <code>DockingPort</code>.
+	 * If there are no listeners present for this <code>DockingPort</code>, then a zero-length
+	 * array is returned.
+	 * 
+	 * @return an array of all <code>DockingListeners</code> added to this <code>DockingPort</code>.
+	 * @see DockingMonitor#getDockingListeners()
+	 * @see #addDockingListener(DockingListener)
+	 * @see #removeDockingListener(DockingListener)
+	 */
 	public DockingListener[] getDockingListeners() {
 		return (DockingListener[])dockingListeners.toArray(new DockingListener[0]);
 	}
 
+	/**
+	 * Removes the specified <code>DockingListener</code> from this <code>DockingPort</code>.
+	 * If the specified <code>DockingListener</code> is <code>null</code>, or the listener
+	 * has not previously been added to this <code>DockingPort</code>, then no <code>Exception</code>
+	 * is thrown and no action is taken.
+	 * 
+	 * @param the <code>DockingListener</code> to remove from this <code>DockingPort</code>
+	 * @see DockingMonitor#removeDockingListener(DockingListener)
+	 * @see #addDockingListener(DockingListener)
+	 * @see #getDockingListeners()
+	 */
 	public void removeDockingListener(DockingListener listener) {
-		dockingListeners.remove(listener);
+		if(listener!=null)
+			dockingListeners.remove(listener);
 	}
 	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dockingCanceled(DockingEvent)
+	 */
 	public void dockingCanceled(DockingEvent evt) {
 	}
-
+	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dockingComplete(DockingEvent)
+	 */
 	public void dockingComplete(DockingEvent evt) {
 	}
 
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dragStarted(DockingEvent)
+	 */
 	public void dragStarted(DockingEvent evt) {
 	}
 	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#dropStarted(DockingEvent)
+	 */
 	public void dropStarted(DockingEvent evt) {
 	}
 	
 	/**
-	 * @see org.flexdock.docking.event.DockingListener#undockingComplete(org.flexdock.docking.event.DockingEvent)
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#undockingComplete(DockingEvent)
 	 */
 	public void undockingComplete(DockingEvent evt) {
 	}
 	
+	/**
+	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
+	 * contract.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to respond to.
+	 * @see DockingListener#undockingStarted(DockingEvent)
+	 */
 	public void undockingStarted(DockingEvent evt) {
 	}
 	
+    /**
+     * Returns a <code>DockingPortProps</code> instance associated with this 
+     * <code>DockingPort</code>.  This method returns the default implementation 
+     * supplied by the framework by invoking <code>getDockingPortProps(DockingPort port)</code> 
+     * on <code>org.flexdock.docking.props.PropertyManager</code> and supplying an argument of 
+     * <code>this</code>.
+     * 
+     * @return the <code>DockingPortProps</code> associated with this <code>DockingPort</code>.
+     * This method will not return a <code>null</code> reference.
+     * @see DockingPortProps
+     * @see DockingPort#getDockingProperties()
+     * @see org.flexdock.docking.props.PropertyManager#getDockingPortProps(DockingPort)
+     */
 	public DockingPortProps getDockingProperties() {
 		return PropertyManager.getDockingPortProps(this);
 	}
 
-	public void setTabsAsDragSource(boolean b) {
-		tabsAsDragSource = b;
+	/**
+	 * Enables or disables drag support for docking operations on the tabs used within an
+	 * embedded tabbed layout.  If tab-drag-source is enabled, then the tab that corresponds to
+	 * a <code>Dockable</code> within an embedded tabbed layout will respond to drag events as
+	 * if the tab were a component included within the <code>List</code> returned by calling
+	 * <code>getDragSources()</code> on the <code>Dockable</code>.  This allows dragging a
+	 * tab to initiate drag-to-dock operations.
+	 * 
+	 * @param enabled <code>true</code> if drag-to-dock support should be enabled for tabs and
+	 * their associated <code>Dockables</code>, <code>false</code> otherwise.
+	 * @see #isTabsAsDragSource()
+	 * @see Dockable#getDragSources() 
+	 */
+	public void setTabsAsDragSource(boolean enabled) {
+		tabsAsDragSource = enabled;
 	}
 	
+	/**
+	 * Returns <code>true</code> if drag-to-dock support is enabled for tabs and
+	 * their associated <code>Dockables</code>, <code>false</code> otherwise.  If tab-drag-source 
+	 * is enabled, then the tab that corresponds to a <code>Dockable</code> within an embedded 
+	 * tabbed layout will respond to drag events as if the tab were a component included within 
+	 * the <code>List</code> returned by calling <code>getDragSources()</code> on the 
+	 * <code>Dockable</code>.  This allows dragging a tab to initiate drag-to-dock operations.
+	 * 
+	 * @return <code>true</code> if drag-to-dock support is enabled for tabs and
+	 * their associated <code>Dockables</code>, <code>false</code> otherwise.
+	 * @see #setTabsAsDragSource(boolean)
+	 * @see Dockable#getDragSources() 
+	 */
 	public boolean isTabsAsDragSource() {
 		return tabsAsDragSource;
 	}
@@ -1386,13 +1610,47 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return getDockingProperties().getTabPlacement().intValue();
 	}
 
+	/**
+	 * Returns a boolean indicating whether or not this <code>DockingPort</code> is nested within
+	 * another <code>DockingPort</code>.  If there are no other <code>DockingPorts</code> within
+	 * this <code>DockingPort's</code> container ancestor hierarchy, then this method will return
+	 * <code>true</code>.  Otherwise, this method will return <code>false</code>.  If the this 
+	 * <code>DockingPort</code> is not validated and/or is not part of a container hierarchy, this
+	 * method should return <code>true</code>. 
+	 * 
+	 * @return <code>false</code> if this <code>DockingPort</code> is nested within
+	 * another <code>DockingPort</code>, <code>true</code> otherwise.
+	 * @see DockingPort#isRoot()
+	 */
 	public boolean isRoot() {
 		return rootPort;
 	}
+
+	/**
+	 * This method is used internally by the framework to notify <code>DefaultDockingPorts</code> 
+	 * whether they are "root" <code>DockingPorts</code> according to the rules specified by 
+	 * <code>isRoot()</code> on the <code>DockingPort</code> interface.  <b>This method should not
+	 * be called by application-level developers.</b>  It will most likely be removed in future
+	 * versions and the logic contained herein will be managed by some type of change listener.
+	 * 
+	 * @param root <code>true</code> if this is a "root" <code>DockingPort</code>, 
+	 * <code>false</code> otherwise.
+	 * @see #isRoot()
+	 * @see DockingPort#isRoot()
+	 */
 	public void setRoot(boolean root) {
 		this.rootPort = root;
 	}
 	
+	/**
+	 * This method is used internally by the framework to notify <code>DefaultDockingPorts</code> 
+	 * whether a drag operation is or is not currently in progress and should not
+	 * be called by application-level developers.  It will most likely be removed in future
+	 * versions and the logic contained herein will be managed by some type of change listener.
+	 * 
+	 * @param inProgress <code>true</code> if a drag operation involving this <code>DockingPort</code>
+	 * is currently in progress, <code>false</code> otherwise. 
+	 */
 	public void setDragInProgress(boolean inProgress) {
 		if(inProgress && dragImage!=null)
 			return;
@@ -1436,11 +1694,54 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	
 	
-	
+	/**
+	 * Returns a <code>LayoutNode</code> containing metadata that describes the current layout
+	 * contained within this <code>DefaultDockingPort</code>.  The <code>LayoutNode</code>
+	 * returned by this method will be a <code>DockingPortNode</code> that constitutes the 
+	 * root of a tree structure containing various <code>DockingNode</code> implementations; 
+	 * specifically <code>SplitNode</code>, <code>DockableNode</code>, and 
+	 * <code>DockingPortNode</code>.  Each of these nodes is <code>Serializable</code>, implying
+	 * the <code>LayoutNode</code> itself may be written to external storage and later reloaded 
+	 * into this <code>DockingPort</code> via <code>importLayout(LayoutNode node)</code>.
+	 * 
+	 * @return a <code>LayoutNode</code> representing the current layout state within this 
+	 * <code>DockingPort</code>
+	 * @see DockingPort#importLayout(LayoutNode)
+	 * @see #importLayout(LayoutNode)
+	 * @see org.flexdock.docking.state.LayoutManager#createLayout(DockingPort)
+	 * @see LayoutNode
+	 * @see org.flexdock.docking.state.tree.DockingNode
+	 * @see DockingPortNode
+	 * @see SplitNode
+	 * @see DockableNode
+	 */
 	public LayoutNode exportLayout() {
 		return DockingManager.getLayoutManager().createLayout(this);
-	}	
+	}
 	
+	/**
+	 * Clears out the existing layout within this <code>DockingPort</code> and reconstructs
+	 * a new layout based upon the specified <code>LayoutNode</code>.  
+	 * <br>
+	 * At present, this method can only handle <code>LayoutNodes</code> that have been generated by  
+	 * <code>DefaultDockingPort's</code> <code>exportLayout()</code> method.  If the specified
+	 * <code>LayoutNode</code> is <code>null</code> or is otherwise <i>not</i> an instance of
+	 * <code>DockingPortNode</code>, then this method returns immediately with no action taken.
+	 * <br/>
+	 * Otherwise, the necessary <code>Dockables</code> are docked within this <code>DockingPort</code>
+	 * and all subsequently generated sub-<code>DockingPorts</code> in a visual configuration
+	 * mandated by the tree structure modeled by the specified <code>LayoutNode</code>.
+	 * 
+	 * @param node the <code>LayoutNode</code> whose layout is to be instantiated within this
+	 * <code>DockingPort</code>
+	 * @see DockingPort#importLayout(LayoutNode)
+	 * @see #exportLayout()
+	 * @see LayoutNode
+	 * @see org.flexdock.docking.state.tree.DockingNode
+	 * @see DockingPortNode
+	 * @see SplitNode
+	 * @see DockableNode
+	 */
 	public void importLayout(LayoutNode node) {
 		if(!(node instanceof DockingPortNode))
 			return;
