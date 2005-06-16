@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="src/java/drag"/>
 	<classpathentry kind="src" path="src/java/perspective"/>
 	<classpathentry kind="src" path="src/java/plaf"/>
-	<classpathentry kind="src" path="src/java/props"/>
 	<classpathentry kind="src" path="src/java/test"/>
 	<classpathentry kind="src" path="src/java/view"/>
 	<classpathentry kind="src" path="resources/core"/>
