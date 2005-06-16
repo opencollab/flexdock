@@ -442,7 +442,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 		}
 
 		results.success = target.dock(dockableCmp, region);
-		SwingUtility.revalidateComponent((Component) target);
+		SwingUtility.revalidate((Component) target);
 		return results;
 	}
 	
@@ -490,7 +490,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 		}
 		
 		if(rootWin != null) {
-			SwingUtility.revalidateComponent(rootWin.getContentPane());
+			SwingUtility.revalidate(rootWin.getContentPane());
 	}
 	
 		if (success) {
