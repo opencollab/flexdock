@@ -28,6 +28,8 @@ import org.flexdock.util.DockingUtility;
  */
 public class DragManager extends MouseAdapter implements MouseMotionListener {
 	private static final String DRAG_CONTEXT = "DragManager.DRAG_CONTEXT";
+	private static final Object LOCK = new Object();
+	private static DragOperation currentDragOperation;
 	
 	private Dockable dockable;
 	private DragPipeline pipeline;
@@ -216,4 +218,18 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	public static boolean isFloatingAllowed(Dockable dockable) {
 		return FloatPolicyManager.isFloatingAllowed(dockable);
 	}
+	
+	public static DragOperation getCurrentDragOperation() {
+		synchronized(LOCK) {
+			return currentDragOperation;
+		}
+	}
+	
+	static void setCurrentDragOperation(DragOperation operation) {
+		synchronized(LOCK) {
+			currentDragOperation = operation;
+		}		
+	}
+	
+	
 }

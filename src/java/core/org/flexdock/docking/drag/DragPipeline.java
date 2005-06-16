@@ -13,6 +13,7 @@ import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
+import org.flexdock.util.SwingUtility;
 
 public class DragPipeline {
 	private GlassPaneMonitor paneMonitor;
@@ -65,10 +66,11 @@ public class DragPipeline {
 		t.start();
 	}
 	
-	private void openImpl(DragOperation token) {
-		this.dragToken = token;
+	private void openImpl(DragOperation operation) {
+		this.dragToken = operation;
 
-		notifyDockingPort(token, true);
+		// turn the current drag operation on
+		setCurrentDragOperation(operation);
 		
 		windows = RootWindow.getVisibleWindows();
 		for(int i=0; i<windows.length; i++) {
@@ -76,10 +78,10 @@ public class DragPipeline {
 		}
 		
 		// kill the rubberband if floating is not allowed
-		if(!DragManager.isFloatingAllowed(token.getDockableReference()))
+		if(!DragManager.isFloatingAllowed(operation.getDockableReference()))
 			rubberBand = null;
 
-		token.start();
+		operation.start();
 		open = true;
 	}
 
@@ -115,8 +117,8 @@ public class DragPipeline {
 			}
 		}
 		
-		notifyDockingPort(dragToken, false);
-
+		// turn the current drag operation off
+		setCurrentDragOperation(null);
 		open = false;
 	}
 
@@ -272,14 +274,6 @@ public class DragPipeline {
 		return dragToken;
 	}
 	
-	private void notifyDockingPort(DragOperation token, boolean inProgress) {
-		DockingPort port = token.getSourcePort();
-		if(port instanceof DefaultDockingPort) {
-			((DefaultDockingPort)port).setDragInProgress(inProgress);
-		}
-	}
-
-	
 	private void clearRubberBand() {
 		if(rubberBand!=null)
 			rubberBand.clear();
@@ -289,6 +283,29 @@ public class DragPipeline {
 		if(rubberBand!=null)
 			rubberBand.paint(rect);
 	}
+	
+	private void setCurrentDragOperation(DragOperation operation) {
+		DragOperation current = DragManager.getCurrentDragOperation();
+		if(operation==current)
+			return;
+		
+		DockingPort srcPort = operation==null? current.getSourcePort(): operation.getSourcePort();
+		DragManager.setCurrentDragOperation(operation);
+		if(srcPort instanceof Component)
+			SwingUtility.repaint((Component)srcPort);
+		
+		// TODO: We want to get rid of this code in the future.  I don't like
+		// having a public setDragInProgress() method on the default docking port
+		// and having to know to call it at this level.  If the default docking port
+		// is interested in whether a drag is currently in progress, it should 
+		// register some type of listener and handle its personal business internally
+		// with its own code. 
+		if(srcPort instanceof DefaultDockingPort) {
+			DefaultDockingPort port = (DefaultDockingPort)srcPort;
+			port.setDragInProgress(operation!=null);
+		}
+	}
+		
 	
 
 }
