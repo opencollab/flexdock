@@ -34,9 +34,14 @@ public class SwingUtility {
 		return obj instanceof Component? (Component)obj: null;
 	}
 	
-	public static void revalidateComponent(Component comp) {
+	public static void revalidate(Component comp) {
 		if (comp instanceof JComponent)
 			 ((JComponent) comp).revalidate();
+	}
+	
+	public static void repaint(Component comp) {
+		if(comp instanceof JComponent)
+			((JComponent)comp).repaint();
 	}
 	
 	public static void drawRect(Graphics g, Rectangle r) {
