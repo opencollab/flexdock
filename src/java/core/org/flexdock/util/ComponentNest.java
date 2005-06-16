@@ -5,7 +5,6 @@ package org.flexdock.util;
 
 import java.awt.Component;
 
-import javax.swing.JComponent;
 import javax.swing.JRootPane;
 
 import org.flexdock.docking.Dockable;
@@ -52,8 +51,8 @@ public class ComponentNest {
    			return true;
    		
    		// special case
-   		if(clazz==Dockable.class && obj instanceof JComponent) {
-   			return ((JComponent)obj).getClientProperty(Dockable.DOCKABLE_INDICATOR)==Boolean.TRUE;
+   		if(clazz==Dockable.class) {
+   			return DockingUtility.isDockable(obj);
    		}
    		
    		return false;

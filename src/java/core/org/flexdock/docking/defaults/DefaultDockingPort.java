@@ -56,6 +56,7 @@ import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
+import org.flexdock.util.DockingUtility;
 import org.flexdock.util.SwingUtility;
 
 
@@ -227,8 +228,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			((Container)port).add(c);
 	}
 
-	private void dockCmp(DockingPort port, Component c, String desc) {
-		port.dock(c, desc, CENTER_REGION);
+	private void dockCmp(DockingPort port, Component c) {
+		port.dock(c, CENTER_REGION);
 	}	
 
 	
@@ -341,25 +342,90 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return regionChecker.getRegion(regionTest, p);
 	}
 	
-	public Dockable getDockableAt(Point p) {
-		if(p==null)
+	/**
+	 * Returns the direct child <code>Dockable</code> located at the specified <code>Point</code>.
+	 * If <code>location<code> is <code>null</code>, or this <code>DockingPort</code> is empty, 
+	 * then a <code>null</code> reference is returned.  
+	 * <br/>
+	 * If this <code>DockingPort</code> contains a split layout, then any nested
+	 * <code>Dockables</code> will be within a sub-<code>DockingPort</code> and not a direct
+	 * child of this <code>DockingPort</code>.  Therefore, if <code>getDockedComponent()</code>
+	 * returns a <code>JSplitPane</code>, then this method will return a <code>null</code>
+	 * reference.
+	 * <br/>
+	 * If this <code>DockingPort</code> contains a tabbed layout, then the <code>JTabbedPane</code>
+	 * returned by <code>getDockedComponent()</code> will be checked for a <code>Dockable</code>
+	 * at the specified <code>Point</code>.
+	 * 
+	 * @param location the location within the <code>DockingPort</code> to test for a 
+	 * <code>Dockable</code>.
+	 * @return the direct child <code>Dockable</code> located at the specified <code>Point</code>.
+	 * @see #getDockedComponent()
+	 * @see DockingManager#getDockable(Component)
+	 * @see JTabbedPane#getComponentAt(int x, int y)
+	 */
+	public Dockable getDockableAt(Point location) {
+		if(location==null)
 			return null;
 
 		Component docked = getDockedComponent();
-		if(docked instanceof JSplitPane)
+		if(docked==null || docked instanceof JSplitPane)
 			return null;
 		
 		if(docked instanceof JTabbedPane) {
 			JTabbedPane tabs = (JTabbedPane)docked;
-			Component c = tabs.getComponentAt(p.x, p.y);
+			Component c = tabs.getComponentAt(location.x, location.y);
 			return c instanceof Dockable? (Dockable)c: DockingManager.getDockable(c);
 		}
 
 		return DockingManager.getDockable(docked);
 	}
 	
+	/**
+	 * Returns the <code>Component</code> currently docked within the specified 
+	 * <code>region</code>.  
+	 * <br/>
+	 * If this <code>DockingPort</code> has either a single
+	 * child <code>Dockable</code> or a tabbed layout, then the supplied region 
+	 * must be <code>CENTER_REGION</code> or this method will return a <code>null</code>
+	 * reference.  If there is a single child <code>Dockable</code>, then this method
+	 * will return the same <code>Component</code> as returned by 
+	 * <code>getDockedComponent()</code>.  If there is a tabbed layout, then this method
+	 * will return the <code>Component</code> in the currently selected tab.
+	 * <br/>
+	 * If this <code>DockingPort</code> has a split layout, then a check for 
+	 * <code>CENTER_REGION</code> will return a <code>null</code> reference.  For outer 
+	 * regions (<code>NORTH_REGION</code>, <code>SOUTH_REGION</code>, <code>EAST_REGION</code>, 
+	 * or <code>WEST_REGION</code>), the supplied region parameter must match the orientation
+	 * of the embedded <code>JSplitPane</code>.  Thus for a vertically oriented split pane, 
+	 * checks for <code>EAST_REGION</code> and <code>WEST_REGION</code> will return a 
+	 * <code>null</code> reference.  Likewise, for a horizontally oriented split pane, 
+	 * checks for <code>NORTH_REGION</code> and <code>SOUTH_REGION</code> will return a 
+	 * <code>null</code> reference.
+	 * <br/>
+	 * Outer regions are mapped to corresponding split pane regions.  <code>NORTH_REGION</code>
+	 * maps to the split pane's top component, <code>SOUTH_REGION</code> maps to the bottom, 
+	 * <code>EAST_REGION</code> maps to the right, and <code>WEST_REGION</code> maps to the left.
+	 * The sub-<code>DockingPort</code> for the split pane region that corresponds to the
+	 * specified <code>region</code> parameter will be resolved and this method will return
+	 * that <code>Component</code> retrieved by calling its <code>getDockedComponent()</code>
+	 * method. <i>Note that the <code>getDockedComponent()</code> call to a sub-
+	 * <code>DockingPort</code> implies that the <code>JTabbedPane</code> or 
+	 * <code>JSplitPane</code> for the sub-port may be returned if the sub-port contains
+	 * multiple <code>Dockables</code>.</i>
+	 * <br/>
+	 * If this <code>DockingPort</code> is empty, then this method returns a <code>null</code>
+	 * reference.
+	 * 
+	 * @param region the region to be checked for a docked <code>Component</code>
+	 * @return the <code>Component</code> docked within the specified region.
+	 * @see DockingPort#getComponent(String)
+	 * @see #getDockedComponent() 
+	 */
 	public Component getComponent(String region) {
 		Component docked = getDockedComponent();
+		if(docked==null)
+			return null;
 	
 		if(docked instanceof JTabbedPane) {
 			// they can only get tabbed dockables if they were checking the CENTER region.
@@ -406,6 +472,27 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return CENTER_REGION.equals(region)? docked: null;
 	}
 	
+	/**
+	 * Returns the <code>Dockable</code> currently docked within the specified <code>region</code>.
+	 * This method dispatches to <code>getComponent(String region)</code> to retrieve the 
+	 * <code>Component</code> docked within the specified region and returns its associated
+	 * <code>Dockable</code> via <code>DockingManager.getDockable(Component comp)</code>.
+	 * <br/>
+	 * There are somewhat strict semantics associated with retrieving the <code>Component</code>
+	 * in a particular docking region.  API documentation for 
+	 * <code>getComponent(String region)</code> should be referenced for a listing of the rule set.
+	 * If <code>region</code> is invalid according to 
+	 * <code>DockingManager.isValidDockingRegion(String region)</code>, then this method returns
+	 * a <code>null</code> reference.
+	 * 
+	 * @param region the region to be checked for a docked <code>Dockable</code>
+	 * @return the <code>Dockable</code> docked within the specified region.
+	 * @see DockingPort#getDockable(String)
+	 * @see #getComponent(String)
+	 * @see #getDockedComponent()
+	 * @see DockingManager#getDockable(Component)
+	 * @see DockingManager#isValidDockingRegion(String)
+	 */
 	public Dockable getDockable(String region) {
 		Component c = getComponent(region);
 		return DockingManager.getDockable(c);
@@ -442,58 +529,139 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return pane;
 	}
 	
+	/**
+	 * Returns the <code>DockingStrategy</code> used by this <code>DockingPort</code>.
+	 * This method dispatches to <code>getDockingStrategy(Object obj)</code>, passing
+	 * <code>this</code> as an argument.  By default, <code>DefaultDockingStrategy</code>
+	 * is used unless a different <code>DockingStrategy</code> has been assigned by the
+	 * end user for <code>DefaultDockingPort</code>.
+	 * 
+	 * @return the <code>DockingStrategy</code> used by this <code>DockingPort</code>.
+	 * @see DockingPort#getDockingStrategy()
+	 * @see DockingManager#getDockingStrategy(Object)
+	 */
 	public DockingStrategy getDockingStrategy() {
 		return DockingManager.getDockingStrategy(this);
 	}
 
 	
 	/**
-	 * Dispatches to <code>removeAll()</code>.
-	 * @see org.flexdock.docking.DockingPort#clear()
+	 * Removes all <code>Dockables</code> from this <code>DockingPort</code>.  Internally, 
+	 * this method dispatches to <code>removeAll()</code>.  This ensures that not only 
+	 * docked <code>Components</code> are removed, that that all wrapper containers such as
+	 * <code>JTabbedPanes</code>, <code>JSplitPanes</code>, and sub-<code>DockingPorts</code>
+	 * are removed as well.
+	 * @see DockingPort#clear()
+	 * @see #removeAll()
 	 */
 	public void clear() {
 		removeAll();
 	}
 
 	/**
-	 * Decomposes the supplied <code>Dockable</code> into constituent fields and dispatches to 
-	 * <code>dock(Component comp, String desc, String region)</code>.  Passes as 
-	 * arguments to the overloaded method the supplied <code>Dockable's getDockable()</code> and
-	 * <code>getDockableDesc()</code> values.  The specified
-	 * region is also passed.  If <code>dockable</code> is null, no action is taken and the method
-	 * returns <code>false</code>.
+	 * Docks the specified component within the specified region.  This method attempts to resolve
+	 * the <code>Dockable</code> associated with the specified <code>Component</code> by 
+	 * invoking <code>DockingManager.getDockable(Component comp)</code>.  Processing is then
+	 * dispatched to <code>dock(Dockable dockable, String region)</code>.
+	 * <br/>
+	 * If no <code>Dockable</code> is resolved for the specified <code>Component</code>, then 
+	 * this method attempts to register the <code>Component</code> as a <code>Dockable</code> 
+	 * automatically by calling <code>DockingManager.registerDockable(Component comp)</code>.
+	 * <br/>
+	 * If either <code>comp</code> or <code>region</code> region are <code>, then this method
+	 * returns <code>false</code>.  Otherwise, this method returns a boolean indicating the
+	 * success of the docking operation based upon 
+	 * <code>dock(Dockable dockable, String region)</code>.
 	 * 
-	 * @see org.flexdock.docking.DockingPort#dock(Component comp, String desc, String region)
+	 * @param comp the <code>Component</code> to be docked within this <code>DockingPort</code>
+	 * @param region the region within this <code>DockingPort</code> to dock the specified
+	 * <code>Component</code>
+	 * @return <code>true</code> if the docking operation was successful, <code>false</code> otherwise.
+	 * @see DockingPort#dock(Component, String) 
+	 * @see #dock(Dockable, String)
+	 * @see DockingManager#getDockable(Component)
+	 * @see DockingManager#registerDockable(Component)
+	 */
+	public boolean dock(Component comp, String region) {
+		if(comp==null || region==null)
+			return false;
+		
+		Dockable dockable = DockingManager.getDockable(comp);
+		if(dockable==null)
+			dockable = DockingManager.registerDockable(comp);
+		
+		return dock(dockable, region);
+	}
+	
+	/**
+	 * Docks the specified <code>Dockable</code> within the specified region.  The 
+	 * <code>Component</code> used for docking is returned by calling <code>getComponent()</code>
+	 * on the specified <code>Dockable</code>.  This method returns <code>false</code> 
+	 * immediately if the specified <code>Dockable</code> is <code>null</code> or if
+	 * <code>isDockingAllowed(Component comp, String region)</code> returns <code>false</code>.
+	 * <br/>
+	 * If this <code>DockingPort</code> is currently empty, then the <code>Dockable</code> is 
+	 * docked into the <code>CENTER_REGION</code>, regardless of the supplied <code>region</code>
+	 * parameter's value.
+	 * <br/>
+	 * If <code>isSingleTabAllowed()</code> returns <code>false</code> and the 
+	 * <code>DockingPort</code> is emtpy, then the <code>Dockable</code> will be added 
+	 * directly to the <code>DockingPort</code> and will take up all available space within 
+	 * the <code>DockingPort</code>.  In this case, subsequent calls to 
+	 * <code>getDockedComponent()</code> will return the dockable <code>Component</code>.
+	 * <br/>
+	 * If <code>isSingleTabAllowed()</code> returns <code>true</code> and the 
+	 * <code>DockingPort</code> is emtpy, then a <code>JTabbedPane</code> will be added 
+	 * directly to the <code>DockingPort</code> and will take up all available space within 
+	 * the <code>DockingPort</code>.  The dockable <code>Component</code> will be added as a 
+	 * tab within the tabbed pane.  In this case, subsequent calls to 
+	 * <code>getDockedComponent()</code> will return the <code>JTabbedPane</code>.
+	 * <br/>
+	 * If the <code>DockingPort</code> is <b>not</code> empty, and the specified region is
+	 * <code>CENTER_REGION</code>, then the dockable <code>Component</code> will be added to the
+	 * <code>JTabbedPane</code> returned by <code>getDockedComponent()</code>.  If this 
+	 * <code>DockingPort</code> only contained a single dockable <code>Component</code> without
+	 * a tabbed pane, then the currently docked <code>Component</code> is removed, a 
+	 * <code>JTabbedPane</code> is created and added, and both the old <code>Component</code> and
+	 * the new one are added to the <code>JTabbedPane</code>.  In this case, subsequent calls to 
+	 * <code>getDockedComponent()</code> will return the <code>JTabbedPane</code>.
+	 * <br/>
+	 * If the <code>DockingPort</code> is <b>not</code> empty, and the specified region is
+	 * <code>NORTH_REGION</code>, <code>SOUTH_REGION</code>, <code>EAST_REGION</code>, or 
+	 * <code>WEST_REGION</code>, then the currently docked <code>Component</code> is removed and
+	 * replaced with a <code>JSplitPane</code>.  Two new <code>DefaultDockingPorts</code> are 
+	 * created as sub-ports and are added to each side of the <code>JSplitPane</code>.  The 
+	 * previously docked <code>Component</code> is docked to the CENTER_REGION of one of the 
+	 * sub-ports and the new <code>Component</code> is added to the other.  In this case, 
+	 * subsequent calls to <code>getDockedComponent()</code> will return the 
+	 * <code>JSplitPane</code>.  In this fasion, the sub-ports will now be capable of handling
+	 * further sub-docking within the layout.
+	 * <br/>
+	 * <code>JSplitPane</code> and sub-<code>DockingPort</code> creation are delegated to the 
+	 * <code>DockingStrategy</code> returned by <code>getDockingStrategy()</code>.  Initial
+	 * splitpane divider location is also controlled by this <code>DockingStrategy</code>.
+	 *
+	 * @param dockable the <code>Dockable</code> to be docked within this <code>DockingPort</code>
+	 * @param region the region within this <code>DockingPort</code> to dock the specified
+	 * <code>Dockable</code>
+	 * @return <code>true</code> if the docking operation was successful, <code>false</code> otherwise. 
+	 * @see DockingPort#dock(Dockable, String)
+	 * @see #isDockingAllowed(Component, String)
+	 * @see #getDockedComponent()
+	 * @see #getDockingStrategy()
+	 * @see DockingStrategy#createDockingPort(DockingPort)
+	 * @see DockingStrategy#createSplitPane(DockingPort, String)
+	 * @see DockingStrategy#getInitialDividerLocation(DockingPort, JSplitPane)
+	 * @see DockingStrategy#getDividerProportion(DockingPort, JSplitPane)
 	 */
 	public boolean dock(Dockable dockable, String region) {
 		if(dockable==null)
 			return false;
 		
-		String tabText = dockable.getDockingProperties().getDockableDesc();
-		return dock(dockable.getComponent(), tabText, region);
-	}
-
-	/**
-	 * Docks the specified component within the specified region.
-	 * If the <code>DockingPort</code> is currently empty, then <code>comp</code> will be docked within 
-	 * the CENTER region, regardless of the region that has been passed into this method.  If the 
-	 * <code>DockingPort</code> is not empty, then docking in the CENTER region will place 
-	 * <code>comp</code> in a JTabbedPane, using <code>desc</code> as the tab title.  All other regions 
-	 * will result in a <code>JSplitPane</code> layout.  If <code>comp</code> 
-	 * is <code>null</code> or <code>isDockingAllowed(String region)</code> returns <code>false</code>, 
-	 * then this method will return <code>false</code> with no action taken. If docking is 
-	 * successful, then this method returns <code>true</code>.
-	 * 
-	 * @see org.flexdock.docking.DockingPort#dock(Component comp, String desc, String region)
-	 */
-	public boolean dock(Component comp, String desc, String region) {
+		Component comp = dockable.getComponent();
 		if(comp==null || !isDockingAllowed(comp, region))
 			return false;
 		
-		desc = desc==null? "null": desc.trim();
-		if(desc.length()==0)
-			desc = "null";
-			
 		// can't dock the same component twice.  This will also keep them from
 		// moving CENTER to NORTH and that sort of thing, which would just be a 
 		// headache to manage anyway.
@@ -506,7 +674,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		if(docked==null)
 			region = CENTER_REGION;
 		
-		COMPONENT_TITLES.put(comp, desc);
+		String tabTitle = DockingUtility.getTabText(dockable);
+		COMPONENT_TITLES.put(comp, tabTitle);
 		
 
 		if(!isSingleTabAllowed() && docked==null) {
@@ -516,7 +685,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		}
 		
 		boolean success = CENTER_REGION.equals(region)? 
-				dockInCenterRegion(comp): dockInOuterRegion(comp, region, desc);
+				dockInCenterRegion(comp): dockInOuterRegion(comp, region);
 			
 		if(success) {
 			evaluateDockingBorderStatus();
@@ -530,6 +699,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		}
 		return success;
 	}
+
+
 	
 	private void resetSplitDividerLocation() {
 		Component c = getDockedComponent();
@@ -608,7 +779,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return true;
 	}
 	
-	private boolean dockInOuterRegion(Component comp, String region, String desc) {
+	private boolean dockInOuterRegion(Component comp, String region) {
 		// cache the current size and cut it in half for later in the method.
 		Dimension halfSize = getSize();
 		halfSize.width /= 2;
@@ -623,7 +794,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		DockingPort oldContent = strategy.createDockingPort(this);
 		DockingPort newContent = strategy.createDockingPort(this);
 		addCmp(oldContent, docked);
-		dockCmp(newContent, comp, desc);
+		dockCmp(newContent, comp);
 		
 		// put the ports in the correct order and add them to a new wrapper panel
 		DockingPort[] ports = putPortsInOrder(oldContent, newContent, region);
@@ -671,7 +842,16 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 	
 	/**
-	 * @see org.flexdock.docking.DockingPort#getDockedComponent()
+	 * Returns the child <code>Component</code> currently embedded within with 
+	 * <code>DockingPort</code>.  If the <code>DockingPort</code> is empty, then
+	 * this method returns a <code>null</code> reference.  If there is a single 
+	 * <code>Dockable</code> docked within it with no tabbed layout, then the 
+	 * <code>Component</code> for that <code>Dockable</code> is returned per its
+	 * <code>getComponent()</code> method.  If there is a tabbed layout present, then
+	 * a <code>JTabbedPane</code> is returned.  If there is a split layout present, 
+	 * then a <code>JSplitPane</code> is returned. 
+	 * 
+	 * @see DockingPort#getDockedComponent()
 	 */
 	public Component getDockedComponent() {
 		return dockedComponent;
@@ -764,39 +944,36 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	/** 
 	 * Indicates whether or not the specified component is docked somewhere within this 
-	 * <code>DefaultDockingPort</code>.  This method returns true if the specified component is a direct
-	 * child of the <code>DefaultDockingPort</code> or is a direct child of a <code>JTabbedPane</code>
-	 * that is currently the <code>DefaultDockingPort's</code> docked component.  Otherwise, this method
-	 * returns false.
+	 * <code>DefaultDockingPort</code>.  This method returns <code>true</code> if the specified 
+	 * <code>Component</code> is a direct child of the <code>DefaultDockingPort</code> or is a 
+	 * direct child of a <code>JTabbedPane</code> or <code>JSplitPane</code>that is currently 
+	 * the <code>DefaultDockingPort's</code>docked component.  Otherwise, this method returns 
+	 * <code>false</code>.  If <code>comp</code> is <code>null</code>, then then this method 
+	 * return <code>false</code>
 	 * 
 	 * @param comp the Component to be tested.
 	 * @return a boolean indicating whether or not the specified component is docked somewhere within this 
 	 * <code>DefaultDockingPort</code>.
-	 * @see org.flexdock.docking.DockingPort#isParentDockingPort(java.awt.Component)
+	 * @see DockingPort#isParentDockingPort(java.awt.Component)
+	 * @see Component#getParent()
+	 * @see #getDockedComponent()
 	 */
 	public boolean isParentDockingPort(Component comp) {
 		if(comp==null)
 			return false;
 			
 		Container parent = comp.getParent();
+		// if the component has no parent, then it can't be docked within us
 		if(parent==null)
 			return false;
+		
+		// if we're the direct parent of this component, then we're the parent docking port
+		if(parent==this)
+			return true;
 			
-		// if the component is inside a tabbed or split pane, check to see of the tab/split
-		// is embedded within us.  if not, then 'comp' is not a child docked within us.
-		if(parent instanceof JTabbedPane || parent instanceof JSplitPane) {
-			Container grandParent = parent.getParent();
-			if(grandParent!=this)
-				return false;
-		}
-		else {
-			// not a tabbed or split child, so make sure 'comp' is a direct child of 'this'
-			if(parent!=this)
-				return false;
-		}
-
-		// we passed all the 'false' checks, so 'comp' is in fact docked within us
-		return true;
+		// if the component is directly inside our docked component, then we're also
+		// considered its parent dockingPort
+		return parent==getDockedComponent();
 	}
 
 	protected boolean isValidDockingRegion(String region) {
@@ -978,18 +1155,31 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 
 	/**
-	 * Allows customization of border managment following docking and undocking operations.  Any call to 
-	 * <code>dock()</code> or a call to <code>reevaluateComponentTree()</code> resulting in a change of 
-	 * internal component configuration will end with a check against the assigned <code>BorderManager</code>.
-	 * If none exists, then no action is taken.  Otherwise, one of the four methods on the assigned 
-	 * <code>BorderManager</code> will be invoked.
+	 * Sets the currently installed <code>BorderManager/code>.  This method provides a means of 
+	 * customizing border managment following any successful call to 
+	 * <code>dock(Dockable dockable, String region)</code> or <code>undock(Component comp)</code>, 
+	 * allowing cleanup of borders for nested  <code>Components</code> within the docking layout.
+	 * <code>null</code> values are allowed.
 	 * 
 	 * @param mgr the <code>BorderManager</code> assigned to to manage docked component borders.
+	 * @see #getBorderManager()
+	 * @see BorderManager
 	 */	
 	public void setBorderManager(BorderManager mgr) {
 		borderManager = mgr;
 	}
 	
+	/**
+	 * Returns the currently intalled <code>BorderManager</code>.  The <code>BorderManager</code>
+	 * is used any time a successful call to <code>dock(Dockable dockable, String region)</code>
+	 * or <code>undock(Component comp)</code> has been issued to clean up borders for nested 
+	 * <code>Components</code> within the docking layout.  This method will return a 
+	 * <code>null</code> reference if there is no <code>BorderManager</code> installed.
+	 * 
+	 * @return the currently installed <code>BorderManager</code>.
+	 * @see #setBorderManager(BorderManager)
+	 * @see BorderManager
+	 */
 	public BorderManager getBorderManager() {
 		return borderManager;
 	}
@@ -1063,7 +1253,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	
 	
-	
+	/**
+	 * Returns all <code>Dockables</code> docked within this <code>DockingPort</code> and all
+	 * sub-<code>DockingPorts</code>.  The returned <code>Set</code> will contain
+	 * <code>Dockable</code> instances.  If there are no <code>Dockables</code> present, an
+	 * empty <code>Set</code> will be returned.  This method will never return a 
+	 * <code>null</code> reference.
+	 * 
+	 * @return all <code>Dockables</code> docked within this <code>DockingPort</code> and all
+	 * sub-<code>DockingPorts</code>.
+	 * @see DockingPort#getDockables()
+	 */
 	public Set getDockables() {
     	// return ALL dockables, recursing to maximum depth
     	return getDockableSet(-1, 0, null);

@@ -46,9 +46,9 @@ public class FloatingDockingPort extends DefaultDockingPort {
 	
 
 	
-	public boolean dock(Component comp, String desc, String region) {
+	public boolean dock(Component comp, String region) {
 		// only dock to the CENTER region
-		boolean ret = super.dock(comp, desc, CENTER_REGION);
+		boolean ret = super.dock(comp, CENTER_REGION);
 		if(ret)
 			toggleListeners(comp, true);
 		return ret;

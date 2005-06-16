@@ -441,8 +441,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 			target = results.dropTarget;
 		}
 
-		String tabText = dockable.getDockingProperties().getDockableDesc();
-		results.success = target.dock(dockableCmp, tabText, region);
+		results.success = target.dock(dockableCmp, region);
 		SwingUtility.revalidateComponent((Component) target);
 		return results;
 	}

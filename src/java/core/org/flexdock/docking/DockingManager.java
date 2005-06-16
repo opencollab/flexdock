@@ -630,23 +630,53 @@ public class DockingManager implements DockingConstants {
 	
 	
 	
-	
+	/**
+	 * Creates, registers, and returns a <code>Dockable</code> for the specified <code>Component</code>.
+	 * If the specified <code>Component</code> implements the <code>Dockable</code> interface, 
+	 * then this method dispatches to <code>registerDockable(Dockable dockable)</code>.  Otherwise,
+	 * this method dispatches to <code>registerDockable(Component comp, String tabText)</code>.
+	 * <br/>
+	 * This method attempts to resolve an appropriate value for <code>tabText</code> by calling
+	 * <code>getName()</code> on the specified <code>Component</code>.  If the resolved value
+	 * is <code>null</code> or empty, then the value <code>"null"</code> is used.
+	 * <br/>
+	 * If <code>comp</code> is <code>null</code>, no exception is thrown and no action is performed.
+	 *
+	 * @param comp the target component for the <code>Dockable</code>.
+	 * @return the <code>Dockable</code> that has been registered for the supplied <code>Component</code>
+	 * @see #registerDockable(Dockable)
+	 * @see #registerDockable(Component, String)
+	 */
+	public static Dockable registerDockable(Component comp) {
+		if (comp == null)
+			return null;
+
+		if(comp instanceof Dockable)
+			return registerDockable((Dockable)comp);
+		
+		String name = comp.getName();
+		name = name==null? "null": name.trim();
+		if(name.length()==0)
+			name = "null";
+		
+		return registerDockable(comp, name);
+	}	
 	
 	/**
-	 * Creates a Dockable for the specified component and dispatches to 
-	 * <code>registerDockable(Dockable init)</code>. If evtSrc is null, no exception is 
-	 * thrown and no action is performed.
+	 * Creates a <code>Dockable</code> for the specified <code>Component</code> and dispatches to 
+	 * <code>registerDockable(Dockable init)</code>. If <code>comp</code> is <code>null</code>, 
+	 * no exception is thrown and no action is performed.
 	 *
-	 * @param evtSrc   the target component for the Dockable, both drag-starter and docking source
-	 * @param desc     the description of the docking source.  Used as the tab-title of docked in a tabbed pane
+	 * @param comp the target component for the Dockable, both drag-starter and docking source
+	 * @param tabText the description of the docking source.  Used as the tab-title of docked in a tabbed pane
 	 * @return the <code>Dockable</code> that has been registered for the supplied <code>Component</code>
 	 * @see #registerDockable(Dockable)
 	 */
-	public static Dockable registerDockable(Component evtSrc, String desc) {
-		if (evtSrc == null)
+	public static Dockable registerDockable(Component comp, String tabText) {
+		if (comp == null)
 			return null;
 
-		Dockable dockable = getDockableForComponent(evtSrc, desc);
+		Dockable dockable = getDockableForComponent(comp, tabText);
 		return registerDockable(dockable);
 	}
 

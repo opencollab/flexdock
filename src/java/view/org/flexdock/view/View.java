@@ -100,7 +100,7 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		setContentPane(createContentPane());
 		updateUI();
 		
-		DockingManager.registerDockable(this);
+		DockingManager.registerDockable((Dockable)this);
 		ViewListener.prime();
 	}
 	

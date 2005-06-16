@@ -55,11 +55,10 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	public boolean dock(Dockable dockable, String region);
 	
 	/**
-	 * Docks the specified Component in the specified region.  <code>desc</code> is used as a 
-	 * tab-title description in the event the specified component is docked into a tabbed pane.
+	 * Docks the specified Component in the specified region.
 	 * Returns <code>true</code> for success and <code>false</code> for failure.
 	 */	
-	public boolean dock(Component comp, String desc, String region);
+	public boolean dock(Component comp, String region);
 
 	/**
 	 * Returns a reference to the currently docked component.

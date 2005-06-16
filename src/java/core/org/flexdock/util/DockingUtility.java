@@ -17,6 +17,7 @@ import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
+import org.flexdock.docking.props.DockableProps;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 
@@ -253,4 +254,22 @@ public class DockingUtility implements DockingConstants {
 			resizeSplitPane((JSplitPane)grandParent, proportion);
 	}
 	
+	public static String getTabText(Dockable dockable) {
+		DockableProps props = dockable==null? null: dockable.getDockingProperties();
+		return props==null? null: props.getDockableDesc();
+	}
+	
+	public static boolean isDockable(Object obj) {
+		if(obj==null)
+			return false;
+		
+		if(obj instanceof Dockable)
+			return true;
+		
+		if(obj instanceof Component) {
+			Component comp = (Component)obj;
+			return SwingUtility.getClientProperty(comp, Dockable.DOCKABLE_INDICATOR)==Boolean.TRUE;
+		}
+		return false;
+	}
 }
