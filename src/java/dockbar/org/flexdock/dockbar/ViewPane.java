@@ -10,19 +10,19 @@ import java.awt.Dimension;
 
 import javax.swing.JPanel;
 import javax.swing.border.Border;
+import javax.swing.event.MouseInputAdapter;
 
 import org.flexdock.dockbar.event.ResizeListener;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.plaf.common.border.SlideoutBorder;
-import org.flexdock.util.Adapters;
 
 /**
  * @author Christopher Butler
  */
 public class ViewPane extends JPanel {
 	private static final Dimension RESIZE_DIMS = new Dimension(3, 3);
-	private static final Adapters.MouseEventAdapter EMPTY_MOUSE_LISTENER = new Adapters.MouseEventAdapter();
+	private static final MouseInputAdapter EMPTY_MOUSE_LISTENER = new MouseInputAdapter() {};
 	public static final int UNSPECIFIED_PREFERRED_SIZE = -1;
 	private DockbarManager manager;
 	private JPanel dragEdge;
