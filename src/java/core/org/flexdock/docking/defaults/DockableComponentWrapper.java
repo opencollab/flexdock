@@ -371,4 +371,56 @@ public class DockableComponentWrapper implements Dockable {
 	public DockingPort getDockingPort() {
 		return DockingManager.getDockingPort(this);
 	}
+	
+	/**
+	 * Provides the default <code>Dockable</code> implementation of 
+	 * <code>dock(Dockable dockable)</code> by calling and returning
+	 * <code>DockingManager.dock(Dockable dockable, Dockable parent)</code>.
+	 * <code>'this'</code> is passed as the <code>parent</code> parameter.
+	 * 
+     * @param dockable the <code>Dockable</code> to dock relative to this <code>Dockable</code>
+     * @return <code>true</code> if the docking operation was successful; <code>false</code>
+     * otherwise.
+     * @see Dockable#dock(Dockable)
+     * @see DockingManager#dock(Dockable, Dockable) 
+	 */
+	public boolean dock(Dockable dockable) {
+		return DockingManager.dock(dockable, this);
+	}
+	
+	/**
+	 * Provides the default <code>Dockable</code> implementation of 
+	 * <code>dock(Dockable dockable, String relativeRegion)</code> by calling and returning
+	 * <code>DockingManager.dock(Dockable dockable, Dockable parent, String region)</code>.
+	 * <code>'this'</code> is passed as the <code>parent</code> parameter.
+	 * 
+     * @param dockable the <code>Dockable</code> to dock relative to this <code>Dockable</code>
+     * @param relativeRegion the docking region into which to dock the specified <code>Dockable</code>
+     * @return <code>true</code> if the docking operation was successful; <code>false</code>
+     * otherwise.
+     * @see Dockable#dock(Dockable, String)
+     * @see DockingManager#dock(Dockable, Dockable, String) 
+	 */
+	public boolean dock(Dockable dockable, String relativeRegion) {
+		return DockingManager.dock(dockable, this, relativeRegion);
+	}
+	
+	/**
+	 * Provides the default <code>Dockable</code> implementation of 
+	 * <code>dock(Dockable dockable, String relativeRegion, float ratio)</code> by calling 
+	 * and returning 
+	 * <code>DockingManager.dock(Dockable dockable, Dockable parent, String region, float proportion)</code>.
+	 * <code>'this'</code> is passed as the <code>parent</code> parameter.
+	 * 
+     * @param dockable the <code>Dockable</code> to dock relative to this <code>Dockable</code>
+     * @param relativeRegion the docking region into which to dock the specified <code>Dockable</code>
+     * @param ratio the proportion of available space in the resulting layout to allot to the
+     * new sibling <code>Dockable</code>.
+     * @return <code>true</code> if the docking operation was successful; <code>false</code>
+     * otherwise.
+     * @see DockingManager#dock(Dockable, Dockable, String, float) 
+	 */
+	public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
+		return DockingManager.dock(dockable, this, relativeRegion, ratio);
+	}
 }

@@ -358,11 +358,11 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 	}
 	
 	public boolean dock(Dockable dockable, String relativeRegion) {
-		return DockingUtility.dockRelative(this, dockable, relativeRegion);
+		return DockingManager.dock(dockable, this, relativeRegion);
 	}
 	
 	public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
-		return DockingUtility.dockRelative(this, dockable, relativeRegion, ratio);
+		return DockingManager.dock(dockable, this, relativeRegion, ratio);
 	}
 	
 	public void setActive(boolean b) {
@@ -388,13 +388,10 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		return DockingUtility.isMinimized(this);
 	}
 	
-	public int getMinimizedEdge() {
-		return DockingUtility.getMinimizedEdge(this);
+	public int getMinimizedConstraint() {
+		return DockingUtility.getMinimizedConstraint(this);
 	}
-	
-//	public void setMinimizedEdge(int edge) {
-//		getViewProperties().setMinimizedEdge(edge);
-//	}
+
 	
 	
 	

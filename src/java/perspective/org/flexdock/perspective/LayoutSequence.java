@@ -87,7 +87,7 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 			
 			Dockable parent = info.getRelativeParent();
 			float ratio = info.getSplitRatio();
-			DockingUtility.dockRelative(parent, dockable, region, ratio);
+			DockingUtility.dockRelative(dockable, parent, region, ratio);
 		}
 		
 		PerspectiveManager.setDockingStateListening(listen);

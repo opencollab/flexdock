@@ -53,20 +53,20 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 		// dock the editor into the root dockingport
 		DockingManager.dock(editorView, rootDockingPort);
 		// dock the hierarchy-view to the west of the editor
-		DockingManager.dock(j2eeHierarchyView, editorView, WEST_REGION);
+		editorView.dock(j2eeHierarchyView, WEST_REGION);
 		// dock the outline to the south of the hierarchy
-		DockingManager.dock(outlineView, j2eeHierarchyView, SOUTH_REGION);
+		j2eeHierarchyView.dock(outlineView, SOUTH_REGION);
 		// dock the task-view to the south of the editor
-		DockingManager.dock(tasksView, editorView, SOUTH_REGION);
+		editorView.dock(tasksView, SOUTH_REGION);
 
 		// tab the nav-view onto the hierarchy view
-		DockingManager.dock(j2eeNavView, j2eeHierarchyView);
+		j2eeHierarchyView.dock(j2eeNavView);
 		
 		// tab the rest of the views onto the task-view
-		DockingManager.dock(serversView, tasksView);
-		DockingManager.dock(consoleView, tasksView);
-		DockingManager.dock(searchView, tasksView);
-		DockingManager.dock(synchronizeView, tasksView);
+		tasksView.dock(serversView);
+		tasksView.dock(consoleView);
+		tasksView.dock(searchView);
+		tasksView.dock(synchronizeView);
 		
 		// resize the immediate splitPane child of the root dockingport
 		DockingManager.setSplitProportion(rootDockingPort, 0.3f);
@@ -75,7 +75,6 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 		// resize the splitPane containing the editor
 		DockingManager.setSplitProportion(editorView, 0.75f);
 	}
-
 	
 	public static void main(String[] args) {
 		ElegantDemo demo = new ElegantDemo();

@@ -7,6 +7,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
@@ -362,5 +363,56 @@ public class SwingUtility {
 		
 		boolean horiz = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? true: false; 
 		return horiz? splitPane.getWidth(): splitPane.getHeight();
+	}
+	
+	/**
+	 * Moves the supplied <code>JSplitPane</code> divider to the specified <code>proportion</code>.
+	 * Valid values for <code>proportion</code> range from <code>0.0F<code>
+	 * to <code>1.0F</code>.  For example, a <code>proportion</code> of <code>0.3F</code> will move the 
+	 * divider to 30% of the "size" (<i>width</i> for horizontal split, <i>height</i> for vertical split) of the 
+	 * split container that contains the specified <code>Dockable</code>.  If a <code>proportion</code> of less 
+	 * than <code>0.0F</code> is supplied, the value </code>0.0F</code> is used.  If a <code>proportion</code> 
+	 * greater than <code>1.0F</code> is supplied, the value </code>1.0F</code> is used.
+	 * <br/>
+	 * This method should be effective regardless of whether the split layout in question has been fully realized
+	 * and is currently visible on the screen.  This should alleviate common problems associated with setting
+	 * percentages of unrealized <code>Component</code> dimensions, which are initially <code>0x0</code> before
+	 * the <code>Component</code> has been rendered to the screen.
+	 * <br/>
+	 * If the specified <code>JSplitPane</code> is <code>null</code>, then this method returns with no action
+	 * taken.
+	 * 
+	 * @param split the <code>JSplitPane</code> whose divider location is to be set.
+	 * @param proportion a double-precision floating point value that specifies a percentage, 
+	 * from zero (top/left) to 1.0 (bottom/right)
+	 * @see #getSplitPaneSize(JSplitPane)
+	 * @see JSplitPane#setDividerLocation(double)
+	 */
+	public static void setSplitDivider(final JSplitPane split, float proportion) {
+		if(split==null)
+			return;
+		
+		proportion = Math.max(0f, proportion);
+		final float percent = Math.min(1f, proportion);
+		int size = getSplitPaneSize(split); 
+		
+		if(split.isVisible() && size>0 && EventQueue.isDispatchThread()) {
+			split.setDividerLocation(proportion);
+			split.validate();
+			return;
+		}
+		
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						setSplitDivider(split, percent);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+			
 	}
 }

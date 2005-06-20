@@ -95,4 +95,19 @@ public class ElegantPanel extends JPanel {
 	public Component getTitlebar() {
 		return getTitleLabel();
 	}
+	
+	public void dock(ElegantPanel otherPanel) {
+		if(otherPanel!=null)
+			getDockable().dock(otherPanel.getDockable());		
+	}
+	
+	public void dock(ElegantPanel otherPanel, String region) {
+		if(otherPanel!=null)
+			getDockable().dock(otherPanel.getDockable(), region);		
+	}
+	
+	public void dock(ElegantPanel otherPanel, String region, float ratio) {
+		if(otherPanel!=null)
+			getDockable().dock(otherPanel.getDockable(), region, ratio);
+	}
 }

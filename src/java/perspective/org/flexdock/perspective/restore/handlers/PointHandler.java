@@ -31,14 +31,14 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.perspective.RestorationManager;
-import org.flexdock.util.ComponentNest;
+import org.flexdock.util.NestedComponents;
 import org.flexdock.util.RootWindow;
 
 /**
  * Created on 2005-05-26
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: PointHandler.java,v 1.4 2005-06-15 16:03:46 marius Exp $
+ * @version $Id: PointHandler.java,v 1.5 2005-06-20 23:55:48 marius Exp $
  */
 public class PointHandler implements RestorationHandler, DockingConstants {
 
@@ -60,7 +60,7 @@ public class PointHandler implements RestorationHandler, DockingConstants {
 			return false;
 		
 		Component deep = SwingUtilities.getDeepestComponentAt(contentPane, dropPoint.x, dropPoint.y);
-		ComponentNest dropTargets = ComponentNest.find(deep, Dockable.class, DockingPort.class);	
+		NestedComponents dropTargets = NestedComponents.find(deep, Dockable.class, DockingPort.class);	
 		
 		DockingPort port = dropTargets==null? null: (DockingPort)dropTargets.parent;
 		Point mousePoint = port==null? null: SwingUtilities.convertPoint(contentPane, dropPoint, (Component)port);

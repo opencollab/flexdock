@@ -443,7 +443,7 @@ public class DockingManager implements DockingConstants {
 	 * @return <code>true</code> if the docking operation was successful; <code>false</code> otherwise.
 	 */
 	public static boolean dock(Dockable dockable, Dockable parent, String region, float proportion) {
-		return DockingUtility.dockRelative(parent, dockable, region, proportion);
+		return DockingUtility.dockRelative(dockable, parent, region, proportion);
 	}
 	
 

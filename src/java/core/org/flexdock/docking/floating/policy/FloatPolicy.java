@@ -7,16 +7,60 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.event.DockingEvent;
 
 /**
+ * This interface describes a set of method used to determine how floating events should
+ * be handled.  Classes implementing this interface should be plugged into to the 
+ * <code>FloatPolicyManager</code> to affect floating behavior of the framework at runtime.
  * @author Christopher Butler
  */
 public interface FloatPolicy {
+	/**
+	 * Returns <code>true</code> if floating should be allowed for the specified 
+	 * <code>Dockable</code>.  This method will be invoked by the 
+	 * <code>FloatPolicyManager</code> at the beginning of a drag operation to determine
+	 * whether or not floating support will be enabled for the <code>Dockable</code>
+	 * as a result of the drag.  If this method returns <code>false</code>, floating
+	 * will not be allowed for the drag operation against the specified <code>Dockable</code>.
+	 * 
+	 * @param dockable the <code>Dockable</code> to be checked for floating support
+	 * @return <code>true</code> if floating should be allowed for the specified 
+	 * <code>Dockable</code>; <code>false</code> otherwise.
+	 */
 	public boolean isFloatingAllowed(Dockable dockable);
+	
+	/**
+	 * Indicates whether floating should be allowed for the specified <code>DockingEvent</code>
+	 * at the end of a drag operation.  The <code>FloatPolicyManager</code> will catch all 
+	 * attempts to float a <code>Dockable</code> at the end of a drag operation and invoke
+	 * this method on all installed <code>FloatPolicies</code>.  If any of them returns 
+	 * <code>false</code>, the docking operation will be canceled.
+	 * 
+	 * @param evt the <code>DockingEvent</code> to be checked for drop-to-float support
+	 * @return <code>true</code> if floating should be allowed for the specified 
+	 * <code>DockingEvent</code>; <code>false</code> otherwise.
+	 */
 	public boolean isFloatDropAllowed(DockingEvent evt);
 	
+	/**
+	 * Provides a default implementation of the FloatPolicy interface. 
+	 * @author Christopher Butler
+	 */
 	public static class Stub implements FloatPolicy {
+		/**
+		 * Returns <code>true</code>.
+		 * 
+		 * @return <code>true</code>
+		 * @see FloatPolicy#isFloatingAllowed(Dockable)
+		 */
 		public boolean isFloatingAllowed(Dockable dockable) {
 			return true;
 		}
+		
+		/**
+		 * Returns <code>true</code>
+		 * 
+		 * @return <code>true</code>
+		 * @see FloatPolicy#isFloatDropAllowed(DockingEvent)
+		 */
 		public boolean isFloatDropAllowed(DockingEvent evt) {
 			return true;
 		}

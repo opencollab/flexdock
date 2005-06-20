@@ -117,4 +117,74 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * @see org.flexdock.docking.props.PropertyManager#getDockableProps(Dockable)
      */
 	public DockableProps getDockingProperties();
+
+	/**
+	 * Implements the semantics for docking an external <code>Dockable</code> to this 
+	 * <code>Dockable</code> and returns a <code>boolean</code> indicating whether or not 
+	 * the docking operation was successful.
+	 * <br/>
+	 * The framework already provides a default implementation for this method through 
+	 * <code>DockingManager.dock(Dockable dockable, Dockable parent)</code>.
+	 * While users are free to provide their own implementation for this method, the
+	 * recommended approach is to use the default implementation with the following line:
+	 * <br/>
+	 * <code>return DockingManager.dock(dockable, this);</code>
+	 *
+     * @param dockable the <code>Dockable</code> to dock relative to this <code>Dockable</code>
+     * @return <code>true</code> if the docking operation was successful; <code>false</code>
+     * otherwise.
+     * @see #dock(Dockable, String)
+     * @see #dock(Dockable, String, float)
+     * @see DockingManager#dock(Dockable, Dockable)
+	 */
+	public boolean dock(Dockable dockable);
+	
+	/**
+	 * Implements the semantics for docking an external <code>Dockable</code> to the 
+	 * specified region of this <code>Dockable</code> and returns a 
+	 * <code>boolean</code> indicating whether or not the docking operation was 
+	 * successful.  If the docking operation results in a split layout, this method
+	 * should determine an appropriate ratio of available space to allot to the
+	 * new sibling <code>Dockable</code>.
+	 * <br/>
+	 * The framework already provides a default implementation for this method through 
+	 * <code>DockingManager.dock(Dockable dockable, Dockable parent, String region)</code>.
+	 * While users are free to provide their own implementation for this method, the
+	 * recommended approach is to use the default implementation with the following line:
+	 * <br/>
+	 * <code>return DockingManager.dock(dockable, this, relativeRegion);</code>
+	 *
+     * @param dockable the <code>Dockable</code> to dock relative to this <code>Dockable</code>
+     * @param relativeRegion the docking region into which to dock the specified <code>Dockable</code>
+     * @return <code>true</code> if the docking operation was successful; <code>false</code>
+     * otherwise.
+     * @see #dock(Dockable, String, float)
+     * @see DockingManager#dock(Dockable, Dockable, String)
+	 */
+	public boolean dock(Dockable dockable, String relativeRegion);
+	
+	/**
+	 * Implements the semantics for docking an external <code>Dockable</code> to the 
+	 * specified region of this <code>Dockable</code> with the specified layout ratio, 
+	 * returning a <code>boolean</code> indicating whether or not the docking operation 
+	 * was successful.  If the docking operation results in a split layout, this method
+	 * should use the specified <code>ratio</code> to determine the amount of available 
+	 * space to allot to the new sibling <code>Dockable</code>.
+	 * <br/>
+	 * The framework already provides a default implementation for this method through 
+	 * <code>DockingManager.dock(Dockable dockable, Dockable parent, String region, float proportion)</code>.
+	 * While users are free to provide their own implementation for this method, the
+	 * recommended approach is to use the default implementation with the following line:
+	 * <br/>
+	 * <code>return DockingManager.dock(dockable, this, relativeRegion, ratio);</code>
+	 *
+     * @param dockable the <code>Dockable</code> to dock relative to this <code>Dockable</code>
+     * @param relativeRegion the docking region into which to dock the specified <code>Dockable</code>
+     * @param ratio the proportion of available space in the resulting layout to allot to the
+     * new sibling <code>Dockable</code>.
+     * @return <code>true</code> if the docking operation was successful; <code>false</code>
+     * otherwise.
+     * @see DockingManager#dock(Dockable, Dockable, String, float)
+	 */
+	public boolean dock(Dockable dockable, String relativeRegion, float ratio);
 }

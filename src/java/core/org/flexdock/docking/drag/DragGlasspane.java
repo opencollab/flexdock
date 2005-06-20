@@ -18,11 +18,11 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.drag.effects.DragPreview;
 import org.flexdock.docking.drag.effects.EffectsFactory;
-import org.flexdock.util.ComponentNest;
+import org.flexdock.util.NestedComponents;
 import org.flexdock.util.RootWindow;
 
 public class DragGlasspane extends JComponent implements DockingConstants {
-	private ComponentNest currentDropTargets;
+	private NestedComponents currentDropTargets;
 	private Component cachedGlassPane;
 	private RootWindow rootWindow;
 	private Runnable postPainter;
@@ -53,11 +53,11 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 	
 	
 	
-	private ComponentNest getDropTargets(DragOperation token) {
+	private NestedComponents getDropTargets(DragOperation token) {
 		Container c = rootWindow.getContentPane();
 		Point currMouse = token.getCurrentMouse(c);
 		Component deep = SwingUtilities.getDeepestComponentAt(c, currMouse.x, currMouse.y);
-		return ComponentNest.find(deep, Dockable.class, DockingPort.class);
+		return NestedComponents.find(deep, Dockable.class, DockingPort.class);
 	}
 	
 	
@@ -68,7 +68,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 	
 	public void processDragEvent(DragOperation token) {
 		currentDragToken = token;
-		ComponentNest dropTargets = getDropTargets(token);
+		NestedComponents dropTargets = getDropTargets(token);
 		
 		// if there is no cover, and we're not transitioning away from one, 
 		// then invoke postPaint() and return
@@ -121,7 +121,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 		return UNKNOWN_REGION;
 	}
 	
-	private Dockable getHoverDockable(ComponentNest nest) {
+	private Dockable getHoverDockable(NestedComponents nest) {
 		Component c = nest==null? null: nest.child;
 		if(c instanceof Dockable)
 			return (Dockable)c;

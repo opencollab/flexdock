@@ -45,12 +45,20 @@ import org.xml.sax.SAXException;
  * @author Chris Butler
  */
 public class ResourceManager {
+	/**
+	 * Defines the file extension used by native shared libraries on the current system.
+	 */
 	public static final String LIBRARY_EXTENSION = getLibraryExtension();
 	
 	private static String getLibraryExtension() {
 		return isWindowsPlatform()? ".dll": ".so";
 	}
 	
+	/**
+	 * Returns <code>true</code> if the JVM is currently running on <code>Windows</code>; <code>false</code> otherwise.
+	 * 
+	 * @return <code>true</code> if the JVM is currently running on <code>Windows</code>; <code>false</code> otherwise.
+	 */
 	public static boolean isWindowsPlatform() {
 		String osName = System.getProperty("os.name").toLowerCase();
 		return osName.indexOf("windows")!=-1 || osName.endsWith(" nt");
@@ -173,12 +181,66 @@ public class ResourceManager {
 		return c;
 	}
 	
+	/**
+	 * Attempts to load the specified native <code>library</code>, using <code>classpathResource</code>
+	 * and the filesystem to implement several fallback mechanisms in the event the library cannot
+	 * be loaded.  This method should provide seamless installation and loading of native libraries
+	 * from within the classpath so that native libraries may be packaged within the relavant library
+	 * JAR, rather than requiring separate user installation of the native libraries into the system
+	 * <code>$PATH</code>.
+	 * <br/>
+	 * If the specified <code>library</code> is <code>null</code>, then this method returns with no action taken.
+	 * <br/>
+	 * This method will first attempt to call <code>System.loadLibrary(library)</code>.  If this call
+	 * is successful, then the method will exit here.  If an <code>UnsatisfiedLinkError</code> is 
+	 * encountered, then this method attempts to locate a FlexDock-specific filesystem resource for the 
+	 * native library, called the "FlexDock Library". 
+	 * <br/>
+	 * The FlexDock Library will reside on the filesystem under the user's home directory with the path 
+	 * <code>${user.home}/flexdock/${library}${native.lib.extension}.  Thus, if this method is called
+	 * with an argument of <code>"foo"</code> for the library, then under windows the FlexDock Library 
+	 * should be <code>C:\Documents and Settings\${user.home}\flexdock\foo.dll</code>.  Under any type of 
+	 * Unix system, the FlexDock library should be <code>/home/${user.home}/flexdock/foo.so</code>.
+	 * <br/>
+	 * If the FlexDock Library exists on the filesystem, then this method will attempt to load it by 
+	 * calling <code>System.load(String filename)</code> with the FlexDock Library's absolute path.  If this 
+	 * call is successful, then the method exits here.
+	 * <br/>
+	 * If the FlexDock Library cannot be loaded, then the specified <code>classpathResource</code> is 
+	 * checked.  If <code>classpathResource</code> is <code>null</code>, then there is no more information
+	 * available to attempt to resolve the requested library and this method throws the last 
+	 * <code>UnsatisfiedLinkError</code> encountered.
+	 * <br/>
+	 * If <code>classpathResource</code> is non-<code>null</code>, then an <code>InputStream</code> to the
+	 * specified resource is resolved from the class loader.  The contents of the <code>InputStream</code>
+	 * are read into a <code>byte</code> array and written to disk as the FlexDock Library file.  The 
+	 * FlexDock Library is then loaded with a call to <code>System.load(String filename)</code> with the 
+	 * FlexDock Library's absolute path.  If the specified <code>classpathResource</code> cannot be resolved
+	 * by the class loader, if any errors occur during this process of extracting and writing to disk, or if
+	 * the resulting FlexDock Library file cannot be loaded as a native library, then this method throws an 
+	 * appropriate <code>UnsatisfiedLinkError</code> specific to the situation that prevented the native 
+	 * library from loading.
+	 * <br/>
+	 * Note that because this method may extract resources from the classpath and install to the filesystem
+	 * as a FlexDock Library, subsequent calls to this method across JVM sessions will find the FlexDock Library
+	 * on the filesystem and bypass the extraction process.
+	 * 
+	 * @param library the native library to load
+	 * @param classpathResource the fallback location within the classpath from which to extract the desired
+	 * native library in the event it is not already installed on the target system
+	 * @exception UnsatisfiedLinkError if the library cannot be loaded
+	 */
 	public static void loadLibrary(String library, String classpathResource) {
+		if(library==null)
+			return;
+		
+		UnsatisfiedLinkError linkageError = null;
 		try {
 			System.loadLibrary(library);
 			return;
 		} catch(UnsatisfiedLinkError err) {
 			// pass through here
+			linkageError = err;
 		}
 
 		// determine a file from which we can load our library.
@@ -193,8 +255,14 @@ public class ResourceManager {
 				return;
 			} catch(UnsatisfiedLinkError err) {
 				// pass through here
+				linkageError = err;
 			}
 		}
+		
+		// if we can't load from the classpath, then we're stuck.  
+		// throw the last UnsatisfiedLinkError we encountered.
+		if(classpathResource==null && linkageError!=null)
+			throw linkageError;
 			
 		// if the file didn't exist, or we couldn't load from it, 
 		// we'll have to pull from the classpath resource and write it
@@ -237,11 +305,33 @@ public class ResourceManager {
 		System.load(file.getAbsolutePath());
 	}
 	
+	/**
+	 * Returns a <code>Document</code> object based on the specified resource <code>uri</code>.
+	 * This method resolves a <code>URL</code> from the specified <code>String</code> via
+	 * <code>getResource(String uri)</code> and dispatches to <code>getDocument(URL url)</code>.
+	 * If the specified <code>uri</code> is <code>null</code>, then this method returns 
+	 * <code>null</code>.
+	 * 
+	 * @param uri the <code>String</code> describing the resource to be looked up
+	 * @return a <code>Document</code> object based on the specified resource <code>uri</code>
+	 * @see #getResource(String)
+	 * @see #getDocument(URL)
+	 */
 	public static Document getDocument(String uri) {
 		URL resource = getResource(uri);
 		return getDocument(resource);
 	}
 
+	/**
+	 * Returns a <code>Document</code> object based on the specified resource <code>URL</code>.
+	 * This method will open an <code>InputStream</code> to the specified <code>URL</code> and
+	 * construct a <code>Document</code> instance.  If any <code>Exceptions</code> are encountered
+	 * in the process, this method returns <code>null</code>.  If the specified <code>URL</code>
+	 * is <code>null</code>, then this method returns <code>null</code>.
+	 * 
+	 * @param url the <code>URL</code> describing the resource to be looked up
+	 * @return a <code>Document</code> object based on the specified resource <code>URL</code>
+	 */
 	public static Document getDocument(URL url) {
 		if(url==null)
 			return null;
@@ -265,19 +355,73 @@ public class ResourceManager {
 		return null;
 	}
 	
+	/**
+	 * Returns a <code>Properties</code> object based on the specified resource <code>uri</code>.
+	 * This method resolves a <code>URL</code> from the specified <code>String</code> via
+	 * <code>getResource(String uri)</code> and dispatches to 
+	 * <code>getProperties(URL url, boolean failSilent)</code> with an argument of <code>false</code>
+	 * for <code>failSilent</code>. If the specified <code>uri</code> is <code>null</code>, then 
+	 * this method will print a stack trace for the ensuing <code>NullPointerException</code> and
+	 * return <code>null</code>.
+	 * 
+	 * @param uri the <code>String</code> describing the resource to be looked up
+	 * @return a <code>Properties</code> object based on the specified resource <code>uri</code>.
+	 * @see #getResource(String)
+	 * @see #getProperties(URL, boolean)
+	 */
 	public static Properties getProperties(String uri) {
 		return getProperties(uri, false);
 	}
 	
+	/**
+	 * Returns a <code>Properties</code> object based on the specified resource <code>uri</code>.
+	 * This method resolves a <code>URL</code> from the specified <code>String</code> via
+	 * <code>getResource(String uri)</code> and dispatches to 
+	 * <code>getProperties(URL url, boolean failSilent)</code>, passing the specified 
+	 * <code>failSilent</code> parameter. If the specified <code>uri</code> is <code>null</code>, 
+	 * this method will return <code>null</code>.  If <code>failSilent</code> is <code>false</code>,
+	 * then the ensuing <code>NullPointerException's</code> stacktrace will be printed to the 
+	 * <code>System.err</code> before returning.
+	 * 
+	 * @param uri the <code>String</code> describing the resource to be looked up
+	 * @param failSilent <code>true</code> if no errors are to be reported to the <code>System.err</code>
+	 * before returning; <code>false</code> otherwise.
+	 * @return a <code>Properties</code> object based on the specified resource <code>uri</code>.
+	 * @see #getResource(String)
+	 * @see #getProperties(URL, boolean)
+	 */
 	public static Properties getProperties(String uri, boolean failSilent) {
 		URL url = getResource(uri);
 		return getProperties(url, failSilent); 
 	}
 	
+	/**
+	 * Returns a <code>Properties</code> object based on the specified resource <code>URL</code>.
+	 * This method dispatches to <code>getProperties(URL url, boolean failSilent)</code>, with an argument 
+	 * of <code>false</code> for <code>failSilent</code>. If the specified <code>uri</code> is 
+	 * <code>null</code>, this method will print the ensuing <code>NullPointerException</code> stack
+	 * tracke to the <code>System.err</code> and return <code>null</code>.
+	 * 
+	 * @param url the <code>URL</code> describing the resource to be looked up
+	 * @return a <code>Properties</code> object based on the specified resource <code>url</code>.
+	 * @see #getProperties(URL, boolean)
+	 */
 	public static Properties getProperties(URL url) {
 		return getProperties(url, false);
 	}
 	
+	/**
+	 * Returns a <code>Properties</code> object based on the specified resource <code>url</code>.
+	 * If the specified <code>uri</code> is <code>null</code>, this method will return <code>null</code>.
+	 * If any errors are encountered during the properties-load process, this method will return <code>null</code>.
+	 * If <code>failSilent</code> is <code>false</code>, then the any encoutered error stacktraces will be 
+	 * printed to the <code>System.err</code> before returning.  
+	 * 
+	 * @param url the <code>URL</code> describing the resource to be looked up
+	 * @param failSilent <code>true</code> if no errors are to be reported to the <code>System.err</code>
+	 * before returning; <code>false</code> otherwise.
+	 * @return a <code>Properties</code> object based on the specified resource <code>url</code>.
+	 */
 	public static Properties getProperties(URL url, boolean failSilent) {
 		if(failSilent && url==null)
 			return null;
@@ -298,6 +442,14 @@ public class ResourceManager {
 		}
 	}
 	
+	/**
+	 * Calls <code>close()</code> on the specified <code>InputStream</code>.  Any <code>Exceptions</code> encountered
+	 * will be printed to the <code>System.err</code>.  If <code>in</code> is <code>null</code>, then no
+	 * <code>Exception</code> is thrown and no action is taken.
+	 * 
+	 * @param in the <code>InputStream</code> to close
+	 * @see InputStream#close() 
+	 */
 	public static void close(InputStream in) {
 		try {
 			if(in!=null)
@@ -307,6 +459,14 @@ public class ResourceManager {
 		}
 	}
 	
+	/**
+	 * Calls <code>close()</code> on the specified <code>OutputStream</code>.  Any <code>Exceptions</code> encountered
+	 * will be printed to the <code>System.err</code>.  If <code>out</code> is <code>null</code>, then no
+	 * <code>Exception</code> is thrown and no action is taken.
+	 * 
+	 * @param out the <code>OutputStream</code> to close
+	 * @see OutputStream#close() 
+	 */
 	public static void close(OutputStream out) {
 		try {
 			if(out!=null)
