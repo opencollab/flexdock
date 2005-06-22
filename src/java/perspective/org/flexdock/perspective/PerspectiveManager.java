@@ -34,7 +34,7 @@ public class PerspectiveManager implements LayoutManager {
 	private static DockingStateListener UPDATE_LISTENER = new DockingStateListener();
 	
 	private HashMap m_perspectives = new HashMap();
-	private PerspectiveBuilder perspectiveBuilder;
+	private PerspectiveFactory perspectiveFactory;
 	private String m_defaultPerspective;
 	private String m_currentPerspective;
 	private PersistenceHandler m_persistHandler;
@@ -64,8 +64,8 @@ public class PerspectiveManager implements LayoutManager {
 		return SINGLETON;
 	}
 	
-	public static void setBuilder(PerspectiveBuilder builder) {
-		getInstance().perspectiveBuilder = builder;
+	public static void setFactory(PerspectiveFactory factory) {
+		getInstance().perspectiveFactory = factory;
 	}
 	
 	public static void setPersistenceHandler(PersistenceHandler handler) {
@@ -154,7 +154,7 @@ public class PerspectiveManager implements LayoutManager {
 				}
 		};
 		
-		return perspectiveBuilder==null? null: perspectiveBuilder.createPerspective(perspectiveId);
+		return perspectiveFactory==null? null: perspectiveFactory.getPerspective(perspectiveId);
 	}
 	
 	public Perspective[] getPerspectives() {

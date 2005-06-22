@@ -108,7 +108,7 @@ public class DockingManager implements DockingConstants {
 	private DockingStrategy defaultDocker;
 	private LayoutManager layoutManager;
 	private MinimizationManager minimizeManager;
-	private DockableBuilder dockableBuilder;
+	private DockableFactory dockableFactory;
 	private AutoPersist autoPersister;
 	
 	static {
@@ -1220,13 +1220,13 @@ public class DockingManager implements DockingConstants {
 
 	
 	private static Dockable loadAndRegister(String id) {
-		DockableBuilder builder = getDockingManager().dockableBuilder;
-		if(builder==null)
+		DockableFactory factory = getDockingManager().dockableFactory;
+		if(factory==null)
 			return null;
 		
-		// the createDockable() implementation may or may not
+		// the getDockable() implementation may or may not
 		// automatically register the dockable before returning.
-		Dockable dockable = builder.createDockable(id);
+		Dockable dockable = factory.getDockable(id);
 		if(dockable==null)
 			return null;
 		
@@ -1615,27 +1615,28 @@ public class DockingManager implements DockingConstants {
 	}
 
 	/**
-	 * Returns the currently installed <code>DockableBuilder</code>.  The <code>DockableBuilder</code>
+	 * Returns the currently installed <code>DockableFactory</code>.  The <code>DockableFactory</code>
 	 * installed by default is <code>null</code>.  Therefore, this method will return a 
 	 * <code>null</code> reference until the application developer explicitly provides a 
-	 * <code>DockableBuilder</code> implementation via <code>setDockableBuilder(DockableBuilder builder)</code>.
+	 * <code>DockableFactory</code> implementation via 
+	 * <code>setDockableFactory(DockableFactory factory)</code>.
 	 * <br/>
-	 * Installing a <code>DockableBuilder</code> allows FlexDock to seamlessly create and register
+	 * Installing a <code>DockableFactory</code> allows FlexDock to seamlessly create and register
 	 * <code>Dockables</code> within <code>getDockable(String id)</code>.  Generally, 
 	 * <code>getDockable(String id)</code> will lookup the requested <code>Dockable</code> within the
-	 * internal registry.  If not found, and there is no <code>DockableBuilder</code> installed, 
+	 * internal registry.  If not found, and there is no <code>DockableFactory</code> installed, 
 	 * <code>getDockable(String id)</code> returns a <code>null</code> reference.  When a 
-	 * <code>DockableBuilder</code> is installed, however, failure to lookup a valid <code>Dockable</code>
-	 * will cause <code>getDockable(String id)</code> to invoke the installed <code>DockableBuilder's</code>
-	 * <code>createDockable(String dockableId)</code> method, transparently registering and returning
+	 * <code>DockableFactory</code> is installed, however, failure to lookup a valid <code>Dockable</code>
+	 * will cause <code>getDockable(String id)</code> to invoke the installed <code>DockableFactory's</code>
+	 * <code>getDockable(String dockableId)</code> method, transparently registering and returning
 	 * the newly created <code>Dockable</code> from <code>getDockable(String id)</code>.
 	 * 
-	 * @return the currently installed <code>DockableBuilder</code>
+	 * @return the currently installed <code>DockableFactory</code>
 	 * @see #getDockable(String)
-	 * @see DockableBuilder#createDockable(String)
+	 * @see DockableFactory#getDockable(String)
 	 */
-	public static DockableBuilder getDockableBuilder() {
-		return getDockingManager().dockableBuilder;
+	public static DockableFactory getDockableFactory() {
+		return getDockingManager().dockableFactory;
 	}
 	
 	
@@ -1784,26 +1785,26 @@ public class DockingManager implements DockingConstants {
 	}
 	
 	/**
-	 * Sets the currently installed <code>DockableBuilder</code>.  <code>null</code> values 
-	 * for the <code>builder</code> parameter are acceptable.  
+	 * Sets the currently installed <code>DockableFactory</code>.  <code>null</code> values 
+	 * for the <code>factory</code> parameter are acceptable.  
 	 * <br/>
-	 * Installing a <code>DockableBuilder</code> allows FlexDock to seamlessly create and register
+	 * Installing a <code>DockableFactory</code> allows FlexDock to seamlessly create and register
 	 * <code>Dockables</code> within <code>getDockable(String id)</code>.  Generally, 
 	 * <code>getDockable(String id)</code> will lookup the requested <code>Dockable</code> within the
-	 * internal registry.  If not found, and there is no <code>DockableBuilder</code> installed, 
+	 * internal registry.  If not found, and there is no <code>DockableFactory</code> installed, 
 	 * <code>getDockable(String id)</code> returns a <code>null</code> reference.  When a 
-	 * <code>DockableBuilder</code> is installed, however, failure to lookup a valid <code>Dockable</code>
-	 * will cause <code>getDockable(String id)</code> to invoke the installed <code>DockableBuilder's</code>
-	 * <code>createDockable(String dockableId)</code> method, transparently registering and returning
+	 * <code>DockableFactory</code> is installed, however, failure to lookup a valid <code>Dockable</code>
+	 * will cause <code>getDockable(String id)</code> to invoke the installed <code>DockableFactory's</code>
+	 * <code>getDockable(String dockableId)</code> method, transparently registering and returning
 	 * the newly created <code>Dockable</code> from <code>getDockable(String id)</code>.
 	 * 
-	 * @param builder the <code>DockableBuilder</code> to install
-	 * @see #getDockableBuilder()
+	 * @param factory the <code>DockableFactory</code> to install
+	 * @see #getDockableFactory()
 	 * @see #getDockable(String)
-	 * @see DockableBuilder#createDockable(String)
+	 * @see DockableFactory#getDockable(String)
 	 */
-	public static void setDockableBuilder(DockableBuilder builder) {
-		getDockingManager().dockableBuilder = builder;
+	public static void setDockableFactory(DockableFactory factory) {
+		getDockingManager().dockableFactory = factory;
 	}
 	
 	/**

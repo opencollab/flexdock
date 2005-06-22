@@ -19,12 +19,12 @@ import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
 import org.flexdock.docking.Dockable;
-import org.flexdock.docking.DockableBuilder;
+import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
-import org.flexdock.perspective.PerspectiveBuilder;
+import org.flexdock.perspective.PerspectiveFactory;
 import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.actions.OpenPerspectiveAction;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
@@ -38,7 +38,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.7 2005-06-15 16:03:36 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.8 2005-06-22 00:22:35 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";
@@ -125,11 +125,11 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 	
 	private static void configureDocking() {
 		// setup the DockingManager to work with our application
-		DockingManager.setDockableBuilder(new ViewBuilder());
+		DockingManager.setDockableFactory(new ViewFactory());
 		DockingManager.setFloatingEnabled(true);
 		
 		// configure the perspective manager
-		PerspectiveManager.setBuilder(new DemoPerspectiveBuilder());
+		PerspectiveManager.setFactory(new DemoPerspectiveFactory());
 		PerspectiveManager.setRestoreFloatingOnLoad(true);
 		PerspectiveManager mgr = PerspectiveManager.getInstance();
 		mgr.setCurrentPerspective(P3, true);
@@ -150,9 +150,9 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 	
 
 
-	private static class DemoPerspectiveBuilder implements PerspectiveBuilder {
+	private static class DemoPerspectiveFactory implements PerspectiveFactory {
 		
-		public Perspective createPerspective(String persistentId) {
+		public Perspective getPerspective(String persistentId) {
 			if(P1.equals(persistentId))
 				return createPerspective1();
 			if(P2.equals(persistentId))
@@ -196,9 +196,9 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		}
 	}
 	
-	private static class ViewBuilder implements DockableBuilder {
+	private static class ViewFactory implements DockableFactory {
 		
-		public Dockable createDockable(String dockableId) {
+		public Dockable getDockable(String dockableId) {
 			if(MAIN_VIEW.equals(dockableId))
 				return createMainView();
 			if(BIRD_VIEW.equals(dockableId))
