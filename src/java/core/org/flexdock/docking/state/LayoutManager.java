@@ -13,13 +13,18 @@ import org.flexdock.docking.DockingPort;
  */
 public interface LayoutManager {
 	public DockingState getDockingState(String dockableId);
+	
 	public DockingState getDockingState(Dockable dockable);
+	
 	public FloatManager getFloatManager();
+	
 	public LayoutNode createLayout(DockingPort port);
 	
 	public boolean display(Dockable dockable);
 	
 	public boolean store() throws IOException;
+	
 	public boolean load() throws IOException;
+	
 	public boolean restore(boolean loadFromStorage) throws IOException;
 }
