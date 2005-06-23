@@ -50,18 +50,26 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		add(dockableId, parentId, region, ratio);
 	}
 	
-	public void add(String dockable, String relativeParent, String region, float ratio) {	
-		if(dockable==null)
+	public void add(String dockableId, String relativeParentId, String region, float ratio) {	
+		if(dockableId==null)
 			return;
 		
-		if(relativeParent==null && sequence.size()>0)
+		if(relativeParentId==null && sequence.size()>0)
 			throw new IllegalStateException("All calls to add() after the first dockable has been added MUST specify a relative dockable parent.");
 
-		DockingState info = new DockingState(dockable);
-		info.setRelativeParent(relativeParent);
+		DockingState info = new DockingState(dockableId);
+		info.setRelativeParentId(relativeParentId);
 		info.setRegion(region);
 		info.setSplitRatio(ratio);
 		sequence.add(info);
+	}
+
+	//Claudio Romano request
+	public void add(DockingState dockingState) {
+	    if (dockingState == null) {
+	        return;
+	    }
+		sequence.add(dockingState);
 	}
 	
 	public void apply(DockingPort port) {
@@ -103,7 +111,4 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		return new LayoutSequence(list);
 	}
 
-	
-
-	
 }

@@ -18,35 +18,29 @@
  */
 package org.flexdock.perspective.persist.xml;
 
-import java.awt.Rectangle;
-
-import org.flexdock.docking.state.FloatingGroup;
+import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
- * Created on 2005-06-03
+ * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FloatingGroupSerializer.java,v 1.4 2005-06-23 16:21:29 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.1 2005-06-23 16:21:30 winnetou25 Exp $
  */
-public class FloatingGroupSerializer implements ISerializer {
+public class SplitNodeSerializer implements ISerializer {
 
-    /**
-     * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
-     */
     public Element serialize(Document document, Object object) {
-        FloatingGroup floatingGroup = (FloatingGroup) object;
-        
-        Element floatingGroupElement = document.createElement(PersistenceConstants.FLOATING_GROUP_ELEMENT_NAME);
-        floatingGroupElement.setAttribute(PersistenceConstants.FLOATING_GROUP_ATTRIBUTE_NAME, floatingGroup.getName());
-        
-        ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
-        Element rectangleElement = rectangleSerializer.serialize(document, floatingGroup.getBounds());
+        SplitNode splitNode = (SplitNode) object;
 
-        floatingGroupElement.appendChild(rectangleElement);
-        
-        return floatingGroupElement;
+        Element splitNodeElement = document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
+        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION, splitNode.getOrientationDesc());
+        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_REGION, splitNode.getRegionDesc());
+        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_PERCENTAGE, String.valueOf(splitNode.getPercentage()));
+        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID, splitNode.getSiblingId());
+        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION, splitNode.getDockingRegion());
+
+        return splitNodeElement;
     }
 
 }

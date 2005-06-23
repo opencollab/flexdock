@@ -157,16 +157,4 @@ public class Perspective implements Cloneable, Serializable {
 		return clone;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

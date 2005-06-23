@@ -18,6 +18,9 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import java.awt.Point;
+
+import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 import org.w3c.dom.Document;
@@ -27,7 +30,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.5 2005-06-11 16:14:50 marius Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.6 2005-06-23 16:21:30 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -47,8 +50,30 @@ public class DockingStateSerializer implements ISerializer {
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion());
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO, String.valueOf(dockingState.getSplitRatio()));
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_LAYOUT_WEIGHT, String.valueOf(dockingState.getLayoutWeight()));
 
+        if (dockingState.isFloating()) {
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME, dockingState.getFloatingGroup());
+        }
+        if (dockingState.isMinimized()) {
+            int edge = dockingState.getMinimizedConstraint();
+            String presEdge = getPresentationDockbarEdge(edge);
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCK_BAR_EDGE, presEdge);
+        }
+        
         handleDockingState(dockingStateElement, dockingState);
+        
+        if (dockingState.hasCenterPoint()) {
+            ISerializer pointSerializer = SerializerRegistry.getSerializer(Point.class);
+            Element pointElement = pointSerializer.serialize(document, dockingState.getCenterPoint());
+            dockingStateElement.appendChild(pointElement);
+        }
+        
+        if (dockingState.hasDockingPath()) {
+            ISerializer dockingPathSerializer = SerializerRegistry.getSerializer(DockingPath.class);
+            Element dockingPathElement = dockingPathSerializer.serialize(document, dockingState.getPath());
+            dockingStateElement.appendChild(dockingPathElement);
+        }
         
         return dockingStateElement;
     }

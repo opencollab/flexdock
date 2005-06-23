@@ -97,7 +97,6 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 		m_dockingPath = path;
 	}
 	 
-	
 	public void setMinimizedConstraint(int constraint) {
 		m_minimizedConstraint = constraint;
 		if(constraint!=MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT) {
@@ -122,10 +121,10 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 
 	public void setRelativeParent(Dockable parent) {
 		String parentId = parent==null? null: parent.getPersistentId();
-		setRelativeParent(parentId);
+		setRelativeParentId(parentId);
 	}
 
-	public void setRelativeParent(String relativeParentId) {
+	public void setRelativeParentId(String relativeParentId) {
 		m_relativeParentId = relativeParentId;
 	}
 
@@ -171,9 +170,13 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 		centerX = p==null? 0: p.x;
 		centerY = p==null? 0: p.y;
 	}
+    
+    public Point getCenterPoint() {
+        return new Point(this.centerX, this.centerY);
+    }
 	
 	public boolean hasCenterPoint() {
-		return centerX!=DockingConstants.UNINITIALIZED && centerY!=DockingConstants.UNINITIALIZED;
+		return (centerX != DockingConstants.UNINITIALIZED && centerY != DockingConstants.UNINITIALIZED);
 	}
 	
 	public Object clone() {

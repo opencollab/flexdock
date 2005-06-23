@@ -22,12 +22,12 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.7 2005-06-04 15:55:40 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.8 2005-06-23 16:21:30 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
-    //perspective info constants
-    String PERSPECTIVE_INFO_ELEMENT_NAME = "PerspectiveInfo";
+    //perspective model constants
+    String PERSPECTIVE_MODEL_ELEMENT_NAME = "PerspectiveModel";
     String CURRENT_PERSPECTIVE_ELEMENT_NAME = "CurrentPerspective";
     String DEFAULT_PERSPECTIVE_ELEMENT_NAME = "DefaultPerspective";
 
@@ -66,5 +66,19 @@ public interface PersistenceConstants {
     String DOCKING_STATE_ATTRIBUTE_REGION = "dockingRegion";
     String DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO = "splitRatio";
     String DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME = "floatingGroup";
-
+    String DOCKING_STATE_ATTRIBUTE_DOCK_BAR_EDGE = "dockBarEdge";
+    String DOCKING_STATE_ATTRIBUTE_LAYOUT_WEIGHT = "layoutWeight";
+    
+    String DOCKING_PATH_ELEMENT_NAME = "DockingPath";
+    String DOCKING_PATH_ATTRIBUTE_ROOT_PORT_ID = "rootPortId";
+    String DOCKING_PATH_ATTRIBUTE_IS_TABBED = "isTabbed";
+    String DOCKING_PATH_ATTRIBUTE_SIBLING_ID = "siblingId";
+    
+    String SPLIT_NODE_ELEMENT_NAME = "SplitNode";
+    String SPLIT_NODE_ATTRIBUTE_ORIENTATION = "orientation";
+    String SPLIT_NODE_ATTRIBUTE_REGION = "region";
+    String SPLIT_NODE_ATTRIBUTE_PERCENTAGE = "percentage";
+    String SPLIT_NODE_ATTRIBUTE_SIBLING_ID = "siblingId";
+    String SPLIT_NODE_ATTRIBUTE_DOCKING_REGION = "dockingRegion";
+    
 }

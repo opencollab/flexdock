@@ -32,10 +32,12 @@ public class SplitNode extends DockingNode implements DockingConstants {
 	public int getOrientation() {
 		return orientation;
 	}
+    
 	public float getPercentage() {
 		return percentage;
 	}
-	public int getRegion() {
+
+    public int getRegion() {
 		return region;
 	}
 
@@ -52,7 +54,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
 		return sb.toString();
 	}
 	
-	private String getRegionDesc() {
+	public String getRegionDesc() {
 		switch(region) {
 			case TOP:
 				return "top";
@@ -65,7 +67,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
 		}
 	}
 	
-	private String getOrientationDesc() {
+	public String getOrientationDesc() {
 		return orientation==VERTICAL? "vertical": "horizontal";
 	}
 	

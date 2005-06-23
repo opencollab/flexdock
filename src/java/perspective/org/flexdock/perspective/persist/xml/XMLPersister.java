@@ -29,9 +29,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatingGroup;
 import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.perspective.Layout;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
@@ -44,7 +46,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.9 2005-06-11 16:14:50 marius Exp $
+ * @version $Id: XMLPersister.java,v 1.10 2005-06-23 16:21:30 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -56,7 +58,7 @@ public class XMLPersister implements Persister {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
-            Element rootElement = document.createElement(PersistenceConstants.PERSPECTIVE_INFO_ELEMENT_NAME);
+            Element rootElement = document.createElement(PersistenceConstants.PERSPECTIVE_MODEL_ELEMENT_NAME);
             
             ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
             
@@ -107,6 +109,15 @@ public class XMLPersister implements Persister {
         SerializerRegistry.registerSerializer(Dimension.class, new DimensionSerializer());
         SerializerRegistry.registerSerializer(Rectangle.class, new RectangleSerializer());
         SerializerRegistry.registerSerializer(FloatingGroup.class, new FloatingGroupSerializer());
+        SerializerRegistry.registerSerializer(DockingPath.class, new DockingPathSerializer());
+        SerializerRegistry.registerSerializer(SplitNode.class, new SplitNodeSerializer());
+    }
+    
+    public static XMLPersister newDefaultInstance() {
+        XMLPersister persister = new XMLPersister();
+        persister.registerSerializers();
+
+        return persister; 
     }
     
 }

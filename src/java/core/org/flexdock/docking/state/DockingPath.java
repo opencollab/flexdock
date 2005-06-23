@@ -133,12 +133,19 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		return restorePath;
 	}
 	
-	
 	private DockingPath(Dockable dockable) {
 		siblingId = findSiblingId(dockable);
 		tabbed = dockable.getComponent().getParent() instanceof JTabbedPane;
 		nodes = new ArrayList();
 	}
+    
+    public boolean isTabbed() {
+        return this.tabbed;
+    }
+    
+    public String getSiblingId() {
+        return this.siblingId;
+    }
 	
 	private DockingPath(String parent, boolean tabs, ArrayList nodeList) {
 		siblingId = parent;
@@ -153,6 +160,10 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	public DockingPort getRootPort() {
 		return DockingManager.getDockingPort(rootPortId);
 	}
+
+    public String getRootPortId() {
+        return this.rootPortId;
+    }
 	
 	private void setRootPort(String portId) {
 		rootPortId = portId;
