@@ -28,21 +28,12 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	
 	private DockingPath m_dockingPath;
 	
-	private int m_layoutWeight;
-	
-	private boolean m_displayed;
-	
 	private int centerX = DockingConstants.UNINITIALIZED;
 	
 	private int centerY = DockingConstants.UNINITIALIZED;
 
 	public DockingState(String dockableId) {
 		this.m_dockableId = dockableId;
-	}
-	
-	public DockingState(String dockableId, int weight) {
-		this.m_dockableId = dockableId;
-		this.m_layoutWeight = weight;
 	}
 
 	public Dockable getDockable() {
@@ -127,30 +118,13 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	public void setRelativeParentId(String relativeParentId) {
 		m_relativeParentId = relativeParentId;
 	}
-
-	public int getLayoutWeight() {
-		return m_layoutWeight;
-	}
-	
-	public void setLayoutWeight(int weight) {
-		m_layoutWeight = weight;
-	}
-	
-	public boolean isDisplayed() {
-		return m_displayed;
-	}
-	
-	public void setDisplayed(boolean display) {
-		m_displayed = display;
-	}
 	
 	public String toString() {
 		return "DockingState[id=" + m_dockableId + 
 				"; center=[" + centerX + "%," + centerY + "%]" +   
 				"; parent=" + m_relativeParentId + 
 				"; region=" + m_region + "; ratio=" + m_splitRatio + 
-				"; float=" + m_floatingGroup + "; minimization=" + m_minimizedConstraint + 
-				"; weight=" + m_layoutWeight + "; display=" + m_displayed + "; ]";
+				"; float=" + m_floatingGroup + "; minimization=" + m_minimizedConstraint + "; ]";
 	}
 
 	public int getCenterX() {
@@ -180,7 +154,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	}
 	
 	public Object clone() {
-		DockingState dockingStateClone = new DockingState(m_dockableId, m_layoutWeight);
+		DockingState dockingStateClone = new DockingState(m_dockableId);
 
 		dockingStateClone.m_relativeParentId = m_relativeParentId;
 		dockingStateClone.m_region = m_region;
@@ -188,7 +162,6 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 		dockingStateClone.m_floatingGroup = m_floatingGroup;
 		dockingStateClone.m_minimizedConstraint = m_minimizedConstraint;
 		dockingStateClone.m_dockingPath = m_dockingPath==null? null: (DockingPath)m_dockingPath.clone();
-		dockingStateClone.m_displayed = m_displayed;
 		dockingStateClone.centerX = centerX;
 		dockingStateClone.centerY = centerY;
 		
