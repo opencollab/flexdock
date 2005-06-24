@@ -46,43 +46,23 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.10 2005-06-23 16:21:30 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.11 2005-06-24 14:35:54 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(OutputStream os, PerspectiveModel perspectiveInfo) throws IOException {
+    public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.newDocument();
-            Element rootElement = document.createElement(PersistenceConstants.PERSPECTIVE_MODEL_ELEMENT_NAME);
+
+            ISerializer perspectiveModelSerializer = SerializerRegistry.getSerializer(PerspectiveModel.class);
+            Element perspectiveModelElement = perspectiveModelSerializer.serialize(document, perspectiveModel);
             
-            ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
-            
-            Element currentPerspectiveElement = document.createElement(PersistenceConstants.CURRENT_PERSPECTIVE_ELEMENT_NAME);
-            Element perspectiveElement1 = perspectiveSerializer.serialize(document, perspectiveInfo.getCurrentPerspective());
-            currentPerspectiveElement.appendChild(perspectiveElement1);
-            
-            Element defaultPerspectiveElement = document.createElement(PersistenceConstants.DEFAULT_PERSPECTIVE_ELEMENT_NAME);
-            Element perspectiveElement2 = perspectiveSerializer.serialize(document, perspectiveInfo.getDefaultPerspective());
-            defaultPerspectiveElement.appendChild(perspectiveElement2);
-            
-            Element perspectivesElement = document.createElement(PersistenceConstants.PERSPECTIVES_ELEMENT_NAME);
-            Perspective[] perspectives = perspectiveInfo.getPerspectives();
-            for (int i = 0; i < perspectives.length; i++) {
-                Perspective perspective = perspectives[i];
-                Element perspectiveElement = perspectiveSerializer.serialize(document, perspective);
-                perspectivesElement.appendChild(perspectiveElement);
-            }
-            
-            rootElement.appendChild(currentPerspectiveElement);
-            rootElement.appendChild(defaultPerspectiveElement);
-            rootElement.appendChild(perspectivesElement);
-            
-            document.appendChild(rootElement);
+            document.appendChild(perspectiveModelElement);
             
             return true;
         } catch (ParserConfigurationException e) {
@@ -111,6 +91,7 @@ public class XMLPersister implements Persister {
         SerializerRegistry.registerSerializer(FloatingGroup.class, new FloatingGroupSerializer());
         SerializerRegistry.registerSerializer(DockingPath.class, new DockingPathSerializer());
         SerializerRegistry.registerSerializer(SplitNode.class, new SplitNodeSerializer());
+        SerializerRegistry.registerSerializer(PerspectiveModel.class, new PerspectiveModelSerializer());
     }
     
     public static XMLPersister newDefaultInstance() {

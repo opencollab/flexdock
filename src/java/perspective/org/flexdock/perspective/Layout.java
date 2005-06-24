@@ -351,7 +351,6 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		}
 	}
 	
-	
 	private String getFloatingGroup(Dockable dockable) {
 		DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
 		return info.getFloatingGroup();

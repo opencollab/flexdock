@@ -30,12 +30,12 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.7 2005-06-24 02:50:28 marius Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.8 2005-06-24 14:35:53 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
     private final static String OPENED_STATE = "opened";
-    private final static String CLOSED_STATE = "closed";
+    //private final static String CLOSED_STATE = "closed";
     private final static String MINIMIZED_STATE = "minimized";
     private final static String FLOATING_STATE = "floating";
     

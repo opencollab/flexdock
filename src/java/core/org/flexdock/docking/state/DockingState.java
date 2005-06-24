@@ -146,6 +146,9 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 	}
     
     public Point getCenterPoint() {
+        if (this.centerX == DockingConstants.UNINITIALIZED || this.centerY == DockingConstants.UNINITIALIZED) {
+            return null;
+        }
         return new Point(this.centerX, this.centerY);
     }
 	

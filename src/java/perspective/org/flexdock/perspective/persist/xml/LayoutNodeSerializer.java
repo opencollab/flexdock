@@ -18,6 +18,7 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import org.flexdock.docking.state.LayoutNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -25,7 +26,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutNodeSerializer.java,v 1.2 2005-06-04 14:00:28 winnetou25 Exp $
+ * @version $Id: LayoutNodeSerializer.java,v 1.3 2005-06-24 14:35:53 winnetou25 Exp $
  */
 public class LayoutNodeSerializer implements ISerializer {
 
@@ -33,7 +34,8 @@ public class LayoutNodeSerializer implements ISerializer {
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
     public Element serialize(Document document, Object object) {
-        // TODO Auto-generated method stub
+        LayoutNode layoutNode = (LayoutNode) object;
+
         return null;
     }
 
