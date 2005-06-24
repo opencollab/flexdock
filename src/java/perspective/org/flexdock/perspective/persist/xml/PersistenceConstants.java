@@ -22,7 +22,7 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.8 2005-06-23 16:21:30 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.9 2005-06-24 02:49:48 marius Exp $
  */
 public interface PersistenceConstants {
 
@@ -66,8 +66,7 @@ public interface PersistenceConstants {
     String DOCKING_STATE_ATTRIBUTE_REGION = "dockingRegion";
     String DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO = "splitRatio";
     String DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME = "floatingGroup";
-    String DOCKING_STATE_ATTRIBUTE_DOCK_BAR_EDGE = "dockBarEdge";
-    String DOCKING_STATE_ATTRIBUTE_LAYOUT_WEIGHT = "layoutWeight";
+    String DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT = "minimizeConstraint";
     
     String DOCKING_PATH_ELEMENT_NAME = "DockingPath";
     String DOCKING_PATH_ATTRIBUTE_ROOT_PORT_ID = "rootPortId";
