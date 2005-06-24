@@ -27,7 +27,7 @@ import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
@@ -125,8 +125,8 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		return titlepane;
 	}
 	
-	public DockableProps getDockingProperties() {
-		return PropertyManager.getDockableProps(this);
+	public DockablePropertySet getDockingProperties() {
+		return PropertyManager.getDockablePropertySet(this);
 	}
 	
 	public ViewProps getViewProperties() {

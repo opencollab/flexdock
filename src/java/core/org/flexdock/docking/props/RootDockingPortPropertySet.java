@@ -13,14 +13,14 @@ import org.flexdock.docking.defaults.DefaultRegionChecker;
 /**
  * @author Christopher Butler
  */
-public class RootDockingPortProps extends BasicDockingPortProps {
+public class RootDockingPortPropertySet extends BasicDockingPortPropertySet {
 	private static final RegionChecker DEFAULT_REGION_CHECKER = new DefaultRegionChecker();
 	private static final Integer DEFAULT_TAB_PLACEMENT = new Integer(JTabbedPane.BOTTOM);
 	private static final Float DEFAULT_REGION_INSET = new Float(RegionChecker.DEFAULT_REGION_SIZE);
 	
 	private HashSet constraints;
 	
-	public RootDockingPortProps() {
+	public RootDockingPortPropertySet() {
 		super(5);
 		constraints = new HashSet(5);
 		

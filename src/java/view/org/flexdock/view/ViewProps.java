@@ -3,13 +3,13 @@ package org.flexdock.view;
 import java.util.Map;
 
 import org.flexdock.docking.props.PropertyManager;
-import org.flexdock.docking.props.RootDockableProps;
-import org.flexdock.docking.props.ScopedDockableProps;
+import org.flexdock.docking.props.RootDockablePropertySet;
+import org.flexdock.docking.props.ScopedDockablePropertySet;
 
 /**
  * @author Christopher Butler
  */
-public class ViewProps extends ScopedDockableProps {
+public class ViewProps extends ScopedDockablePropertySet {
 	public static final String ACTIVE_STATE_LOCKED = "View.ACTIVE_STATE_LOCKED";
 	
 	public ViewProps() {
@@ -28,8 +28,8 @@ public class ViewProps extends ScopedDockableProps {
 	
 	protected void constrainRoot(Object key, Object value) {
 		Map map = getRoot();
-		if(map instanceof RootDockableProps) {
-			((RootDockableProps)map).constrain(key, value);
+		if(map instanceof RootDockablePropertySet) {
+			((RootDockablePropertySet)map).constrain(key, value);
 		}
 	}
 	

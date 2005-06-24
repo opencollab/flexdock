@@ -12,8 +12,8 @@ import java.util.Stack;
 /**
  * @author Christopher Butler
  */
-public class EventDispatcher {
-	private static final EventDispatcher SINGLETON = new EventDispatcher();
+public class EventManager {
+	private static final EventManager SINGLETON = new EventManager();
 	private Stack handlers = new Stack();
 	
 	static {
@@ -21,11 +21,11 @@ public class EventDispatcher {
 	}
 	
 	
-	public static EventDispatcher getInstance() {
+	public static EventManager getInstance() {
 		return SINGLETON;
 	}	
 	
-	private EventDispatcher() {
+	private EventManager() {
 		
 	}
 	

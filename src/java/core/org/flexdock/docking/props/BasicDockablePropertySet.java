@@ -13,7 +13,7 @@ import org.flexdock.util.TypedHashtable;
 /**
  * @author Christopher Butler
  */
-public class BasicDockableProps extends TypedHashtable implements DockableProps, DockingConstants {
+public class BasicDockablePropertySet extends TypedHashtable implements DockablePropertySet, DockingConstants {
 
 	public static String getRegionInsetKey(String region) {
 		if(NORTH_REGION.equals(region))
@@ -53,19 +53,19 @@ public class BasicDockableProps extends TypedHashtable implements DockableProps,
 		return null;
 	}
 	
-	public BasicDockableProps() {
+	public BasicDockablePropertySet() {
 		super();
 	}
 
-	public BasicDockableProps(int initialCapacity) {
+	public BasicDockablePropertySet(int initialCapacity) {
 		super(initialCapacity);
 	}
 
-	public BasicDockableProps(int initialCapacity, float loadFactor) {
+	public BasicDockablePropertySet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 	}
 
-	public BasicDockableProps(Map t) {
+	public BasicDockablePropertySet(Map t) {
 		super(t);
 	}
 	

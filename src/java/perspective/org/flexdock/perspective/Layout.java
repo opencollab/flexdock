@@ -19,7 +19,7 @@ import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.docking.state.FloatingGroup;
 import org.flexdock.docking.state.LayoutNode;
-import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.EventManager;
 import org.flexdock.perspective.event.LayoutEvent;
 import org.flexdock.perspective.event.LayoutListener;
 import org.flexdock.perspective.event.RegistrationEvent;
@@ -93,7 +93,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 			dockingInfo.put(dockableId, info);
 		}
 
-		EventDispatcher.dispatch(new RegistrationEvent(info, this, true));
+		EventManager.dispatch(new RegistrationEvent(info, this, true));
 	}
 	
 	public DockingState remove(String dockableId) {
@@ -106,7 +106,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		}
 		// dispatch event notification if we actually removed something
 		if(info!=null)
-			EventDispatcher.dispatch(new RegistrationEvent(info, this, false));
+			EventManager.dispatch(new RegistrationEvent(info, this, false));
 		return info;
 	}
 	
@@ -192,7 +192,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		
 		// send notification
 		LayoutEvent evt = new LayoutEvent(this, null, null, LayoutEvent.LAYOUT_APPLIED);
-		EventDispatcher.dispatch(evt);
+		EventManager.dispatch(evt);
 	}
 
 	private boolean isMaintained(Dockable dockable) {
@@ -217,7 +217,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		
 		if(hidden) {
 			LayoutEvent evt = new LayoutEvent(this, null, dockable.getPersistentId(), LayoutEvent.DOCKABLE_HIDDEN);
-			EventDispatcher.dispatch(evt);
+			EventManager.dispatch(evt);
 		}
 	}
 	

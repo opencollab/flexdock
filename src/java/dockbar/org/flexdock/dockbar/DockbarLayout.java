@@ -10,7 +10,7 @@ import java.awt.Rectangle;
 import javax.swing.JLayeredPane;
 
 import org.flexdock.docking.Dockable;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.util.RootWindow;
 
@@ -75,7 +75,7 @@ public class DockbarLayout {
 			return 0;
 		
 		Rectangle rect = getViewpaneArea();
-		DockableProps props = dockable.getDockingProperties();
+		DockablePropertySet props = dockable.getDockingProperties();
 		
 		// determine what percentage of the viewable area we want the viewpane to take up
 		float viewSize = props.getPreviewSize().floatValue();

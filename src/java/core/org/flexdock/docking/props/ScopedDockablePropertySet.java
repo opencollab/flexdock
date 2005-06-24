@@ -11,28 +11,28 @@ import java.util.Map;
 /**
  * @author Christopher Butler
  */
-public class ScopedDockableProps extends BasicDockableProps implements ScopedMap {
-	public static final RootDockableProps ROOT_PROPS = new RootDockableProps();
+public class ScopedDockablePropertySet extends BasicDockablePropertySet implements ScopedMap {
+	public static final RootDockablePropertySet ROOT_PROPS = new RootDockablePropertySet();
 	public static final List DEFAULTS = new ArrayList(0);
 	public static final List GLOBALS = new ArrayList(0);
 	private ArrayList locals;
 
-	public ScopedDockableProps() {
+	public ScopedDockablePropertySet() {
 		this(6);
 		init();
 	}
 
-	public ScopedDockableProps(int initialCapacity) {
+	public ScopedDockablePropertySet(int initialCapacity) {
 		super(initialCapacity);
 		init();
 	}
 
-	public ScopedDockableProps(int initialCapacity, float loadFactor) {
+	public ScopedDockablePropertySet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		init();
 	}
 
-	public ScopedDockableProps(Map t) {
+	public ScopedDockablePropertySet(Map t) {
 		super(t);
 		init();
 	}

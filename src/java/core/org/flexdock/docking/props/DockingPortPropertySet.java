@@ -8,7 +8,7 @@ import org.flexdock.docking.RegionChecker;
 /**
  * @author Christopher Butler
  */
-public interface DockingPortProps {
+public interface DockingPortPropertySet {
 	public static final String REGION_CHECKER = "DockingPort.REGION_CHECKER";
 	public static final String SINGLE_TABS = "DockingPort.SINGLE_TABS";
 	public static final String TAB_PLACEMENT = "DockingPort.TAB_PLACEMENT";

@@ -50,7 +50,7 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
-import org.flexdock.docking.props.DockingPortProps;
+import org.flexdock.docking.props.DockingPortPropertySet;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
@@ -161,7 +161,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		dockingListeners = new ArrayList(2);
 		addDockingListener(this);
 		
-		DockingPortProps props = getDockingProperties();
+		DockingPortPropertySet props = getDockingProperties();
 		props.setRegionChecker(new DefaultRegionChecker());
 		
 		// check container hierarchy to track root dockingports
@@ -379,14 +379,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	/**
 	 * Returns the <code>RegionChecker</code> currently used by this <code>DockingPort</code>.
-	 * This method retrieves the <code>DockingPortProps</code> instance for this <code>
+	 * This method retrieves the <code>DockingPortPropertySet</code> instance for this <code>
 	 * <code>DockingPort</code> by calling <code>getDockingProperties()</code>.  It then
 	 * returns by invoking <code>getRegionChecker()</code> on the resolved 
-	 * <code>DockingPortProps</code>.
+	 * <code>DockingPortPropertySet</code>.
 	 * 
 	 * @return the <code>RegionChecker</code> currently used by this <code>DockingPort</code>.
 	 * @see #getDockingProperties()
-	 * @see DockingPortProps#getRegionChecker() 
+	 * @see DockingPortPropertySet#getRegionChecker() 
 	 */
 	public RegionChecker getRegionChecker() {
 		return getDockingProperties().getRegionChecker();
@@ -1011,8 +1011,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * @see DockingManager#isSingleTabsAllowed()
 	 * @see DockingManager#setSingleTabsAllowed(boolean)
 	 * @see PropertyManager
-	 * @see DockingPortProps#isSingleTabsAllowed()
-	 * @see DockingPortProps#setSingleTabsAllowed(boolean)
+	 * @see DockingPortPropertySet#isSingleTabsAllowed()
+	 * @see DockingPortPropertySet#setSingleTabsAllowed(boolean)
 	 */
 	public boolean isSingleTabAllowed() {
 		return getDockingProperties().isSingleTabsAllowed().booleanValue();
@@ -1049,8 +1049,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * @see DockingManager#setSingleTabsAllowed(boolean)
 	 * @see DockingManager#isSingleTabsAllowed()
 	 * @see PropertyManager
-	 * @see DockingPortProps#setSingleTabsAllowed(boolean)
-	 * @see DockingPortProps#isSingleTabsAllowed()
+	 * @see DockingPortPropertySet#setSingleTabsAllowed(boolean)
+	 * @see DockingPortPropertySet#isSingleTabsAllowed()
 	 */
 	public void setSingleTabAllowed(boolean allowed) {
 		getDockingProperties().setSingleTabsAllowed(allowed);
@@ -1556,20 +1556,20 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 	
     /**
-     * Returns a <code>DockingPortProps</code> instance associated with this 
+     * Returns a <code>DockingPortPropertySet</code> instance associated with this 
      * <code>DockingPort</code>.  This method returns the default implementation 
-     * supplied by the framework by invoking <code>getDockingPortProps(DockingPort port)</code> 
+     * supplied by the framework by invoking <code>getDockingPortPropertySet(DockingPort port)</code> 
      * on <code>org.flexdock.docking.props.PropertyManager</code> and supplying an argument of 
      * <code>this</code>.
      * 
-     * @return the <code>DockingPortProps</code> associated with this <code>DockingPort</code>.
+     * @return the <code>DockingPortPropertySet</code> associated with this <code>DockingPort</code>.
      * This method will not return a <code>null</code> reference.
-     * @see DockingPortProps
+     * @see DockingPortPropertySet
      * @see DockingPort#getDockingProperties()
-     * @see org.flexdock.docking.props.PropertyManager#getDockingPortProps(DockingPort)
+     * @see org.flexdock.docking.props.PropertyManager#getDockingPortPropertySet(DockingPort)
      */
-	public DockingPortProps getDockingProperties() {
-		return PropertyManager.getDockingPortProps(this);
+	public DockingPortPropertySet getDockingProperties() {
+		return PropertyManager.getDockingPortPropertySet(this);
 	}
 
 	/**

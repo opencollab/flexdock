@@ -12,29 +12,29 @@ import org.flexdock.docking.RegionChecker;
 /**
  * @author Christopher Butler
  */
-public class ScopedDockingPortProps extends BasicDockingPortProps implements ScopedMap {
-	public static final RootDockingPortProps ROOT_PROPS = new RootDockingPortProps();
+public class ScopedDockingPortPropertySet extends BasicDockingPortPropertySet implements ScopedMap {
+	public static final RootDockingPortPropertySet ROOT_PROPS = new RootDockingPortPropertySet();
 	public static final List DEFAULTS = new ArrayList(0);
 	public static final List GLOBALS = new ArrayList(0);
 	
 	private ArrayList locals;
 	
-	public ScopedDockingPortProps() {
+	public ScopedDockingPortPropertySet() {
 		super();
 		init();
 	}
 
-	public ScopedDockingPortProps(int initialCapacity) {
+	public ScopedDockingPortPropertySet(int initialCapacity) {
 		super(initialCapacity);
 		init();
 	}
 
-	public ScopedDockingPortProps(int initialCapacity, float loadFactor) {
+	public ScopedDockingPortPropertySet(int initialCapacity, float loadFactor) {
 		super(initialCapacity, loadFactor);
 		init();
 	}
 
-	public ScopedDockingPortProps(Map t) {
+	public ScopedDockingPortPropertySet(Map t) {
 		super(t);
 		init();
 	}

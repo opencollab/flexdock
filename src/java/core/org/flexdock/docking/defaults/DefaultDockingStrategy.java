@@ -26,7 +26,7 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
 import org.flexdock.docking.state.FloatManager;
-import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.EventManager;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
@@ -234,7 +234,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 	 * @see #dock(Dockable, DockingPort, String, DragOperation)
 	 * @see DockingPort#isDockingAllowed(String, Component)
 	 * @see Dockable#getDockingProperties()
-	 * @see DockableProps#isTerritoryBlocked(String)
+	 * @see DockablePropertySet#isTerritoryBlocked(String)
 	 */
 	public boolean dock(Dockable dockable, DockingPort port, String region) {
 		return dock(dockable, port, region, null);
@@ -279,7 +279,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 	 * @see #dock(Dockable, DockingPort, String, DragOperation)
 	 * @see DockingPort#isDockingAllowed(String, Component)
 	 * @see Dockable#getDockingProperties()
-	 * @see DockableProps#isTerritoryBlocked(String)
+	 * @see DockablePropertySet#isTerritoryBlocked(String)
 	 */
 	public boolean dock(Dockable dockable, DockingPort port, String region, DragOperation operation) {
 		if(!isDockingPossible(dockable, port, region, operation))
@@ -305,7 +305,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 
 		// notify the old docking port, new dockingport,and dockable
 		Object[] evtTargets = {oldPort, newPort, dockable};
-		EventDispatcher.dispatch(evt, evtTargets);
+		EventManager.dispatch(evt, evtTargets);
 		
 		return results.success; 
 	}
@@ -474,7 +474,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 		// notify that we are about to undock
 		Map dragContext = DragManager.getDragContext(dockable);
 		DockingEvent dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_STARTED, dragContext);
-		EventDispatcher.dispatch(dockingEvent);
+		EventManager.dispatch(dockingEvent);
 //		if(dockingEvent.isConsumed())
 //			return false;
 		
@@ -497,7 +497,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 			dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_COMPLETE, dragContext);
 			// notify the docking port and dockable
 			Object[] evtTargets = {dockingPort, dockable};
-			EventDispatcher.dispatch(dockingEvent, evtTargets);
+			EventManager.dispatch(dockingEvent, evtTargets);
 		}
 
 		return success;
@@ -726,7 +726,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 	 * <code>DockingManager.getDockable(Component comp)</code>.  If no <code>Dockable</code> can
 	 * be found, then <code>RegionChecker.DEFAULT_SIBLING_SIZE</code> is returned.
 	 * <br/>
-	 * Otherwise, the <code>DockingPortProps<code> is retrieved from the specified
+	 * Otherwise, the <code>DockingPortPropertySet<code> is retrieved from the specified
 	 * <code>DockingPort</code> and its <code>getRegionChecker()</code> method is called.
 	 * <code>getSiblingSize(Component c, String region)</code> is invoked on the returned 
 	 * <code>RegionChecker</code> passing the "elder" <code>Component</code> in the split pane 

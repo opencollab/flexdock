@@ -34,7 +34,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
-import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.EventManager;
 import org.flexdock.plaf.common.border.CompoundEmptyBorder;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.Utilities;
@@ -68,7 +68,7 @@ public class DockbarManager {
 
 	static {
 		Class c = DockingManager.class;
-		EventDispatcher.addHandler(new DockbarEventHandler());
+		EventManager.addHandler(new DockbarEventHandler());
 		DockbarTracker.register();
 	}
 	
@@ -119,7 +119,7 @@ public class DockbarManager {
 	}
 	
 	public static void addListener(DockbarListener listener) {
-		EventDispatcher.addListener(listener);
+		EventManager.addListener(listener);
 	}
 	
 	public static void activate(String dockableId, boolean locked) {
@@ -430,7 +430,7 @@ public class DockbarManager {
 		
 		// send event notification
 		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_COMPLETED, edge);
-		EventDispatcher.dispatch(evt);
+		EventManager.dispatch(evt);
 	}
 	
 	public void reAdd(Dockable dockable) {
@@ -460,7 +460,7 @@ public class DockbarManager {
 	
 	private boolean isDockingCancelled(Dockable dockable, int edge) {
 		DockbarEvent evt = new DockbarEvent(dockable, DockbarEvent.MINIMIZE_STARTED, edge);
-		EventDispatcher.dispatch(evt);
+		EventManager.dispatch(evt);
 		return evt.isConsumed();
 	}
 	
@@ -570,7 +570,7 @@ public class DockbarManager {
 		
 		if(newDockable!=null) {
 			DockbarEvent evt = new DockbarEvent(newDockable, evtType, getActiveEdge());
-			EventDispatcher.dispatch(evt);
+			EventManager.dispatch(evt);
 		}		
 	}
 	

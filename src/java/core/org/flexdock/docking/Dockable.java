@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 
 
 /**
@@ -102,21 +102,21 @@ public interface Dockable extends DockingListener, DockingMonitor {
 	public void putClientProperty(Object key, Object value);
 	
     /**
-     * Returns a <code>DockableProps</code> instance associated with this <code>Dockable</code>.
+     * Returns a <code>DockablePropertySet</code> instance associated with this <code>Dockable</code>.
      * Developers implementing the <code>Dockable</code> interface may or may not choose to 
-     * provide their own <code>DockableProps</code> implementation for use with this method.
+     * provide their own <code>DockablePropertySet</code> implementation for use with this method.
      * A default implementation is supplied by the framework and most <code>Dockable</code> 
      * implementations, including all implementations provided by the framework, will return 
-     * the default <code>DockableProps</code> via a call to 
+     * the default <code>DockablePropertySet</code> via a call to 
      * <code>org.flexdock.docking.props.PropertyManager</code>.  Developers are encouraged to 
-     * take advantage of this by calling <code>PropertyManager.getDockableProps(this)</code>.
+     * take advantage of this by calling <code>PropertyManager.getDockablePropertySet(this)</code>.
      * 
-     * @return the <code>DockableProps</code> associated with this <code>Dockable</code>  This
+     * @return the <code>DockablePropertySet</code> associated with this <code>Dockable</code>  This
      * method may not return a <code>null</code> reference.
-     * @see org.flexdock.docking.props.DockableProps#
-     * @see org.flexdock.docking.props.PropertyManager#getDockableProps(Dockable)
+     * @see org.flexdock.docking.props.DockablePropertySet#
+     * @see org.flexdock.docking.props.PropertyManager#getDockablePropertySet(Dockable)
      */
-	public DockableProps getDockingProperties();
+	public DockablePropertySet getDockingProperties();
 
 	/**
 	 * Implements the semantics for docking an external <code>Dockable</code> to this 

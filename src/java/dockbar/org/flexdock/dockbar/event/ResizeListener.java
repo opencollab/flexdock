@@ -17,7 +17,7 @@ import org.flexdock.dockbar.DockbarLayout;
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
 import org.flexdock.docking.Dockable;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.util.RootWindow;
 
@@ -90,7 +90,7 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
 		float minPercent = (float)DockbarLayout.MINIMUM_VIEW_SIZE/(float)dim;
 		percent = Math.max(percent, minPercent);
 		
-		DockableProps props = dockable.getDockingProperties();
+		DockablePropertySet props = dockable.getDockingProperties();
 		props.setPreviewSize(percent);
 		manager.revalidate();
 	}

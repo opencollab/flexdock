@@ -36,7 +36,7 @@ import javax.swing.border.EmptyBorder;
 import org.flexdock.dockbar.util.TextIcon;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.plaf.common.border.RoundedLineBorder;
 
@@ -174,7 +174,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
 			return;
 		
 		Dockable d = getDockable();
-		DockableProps p = d==null? null: d.getDockingProperties();
+		DockablePropertySet p = d==null? null: d.getDockingProperties();
 		if(p==null)
 			return;
 		

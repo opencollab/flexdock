@@ -32,7 +32,7 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
@@ -307,20 +307,20 @@ public abstract class AbstractDockable implements Dockable {
 	}
 
     /**
-     * Returns a <code>DockableProps</code> instance associated with this <code>Dockable</code>.
+     * Returns a <code>DockablePropertySet</code> instance associated with this <code>Dockable</code>.
      * This method returns the default implementation supplied by the framework by invoking
-     * <code>getDockableProps(Dockable dockable)</code> on 
+     * <code>getDockablePropertySet(Dockable dockable)</code> on 
      * <code>org.flexdock.docking.props.PropertyManager</code> and supplying an argument of 
      * <code>this</code>.
      * 
-     * @return the <code>DockableProps</code> associated with this <code>Dockable</code>.  This
+     * @return the <code>DockablePropertySet</code> associated with this <code>Dockable</code>.  This
      * method will not return a <code>null</code> reference.
-     * @see org.flexdock.docking.props.DockableProps#
+     * @see org.flexdock.docking.props.DockablePropertySet#
      * @see Dockable#getDockingProperties()
-     * @see org.flexdock.docking.props.PropertyManager#getDockableProps(Dockable)
+     * @see org.flexdock.docking.props.PropertyManager#getDockablePropertySet(Dockable)
      */
-	public DockableProps getDockingProperties() {
-		return PropertyManager.getDockableProps(this);
+	public DockablePropertySet getDockingProperties() {
+		return PropertyManager.getDockablePropertySet(this);
 	}
 	
 	/**

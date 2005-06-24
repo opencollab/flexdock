@@ -14,7 +14,7 @@ import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.docking.state.LayoutManager;
 import org.flexdock.docking.state.LayoutNode;
-import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.EventManager;
 import org.flexdock.event.RegistrationEvent;
 import org.flexdock.perspective.event.LayoutEventHandler;
 import org.flexdock.perspective.event.PerspectiveEventHandler;
@@ -53,11 +53,11 @@ public class PerspectiveManager implements LayoutManager {
 		// uninstall capability as well.
 		Class c = DockingManager.class;
 		
-		EventDispatcher.addHandler(new RegistrationHandler());
-		EventDispatcher.addHandler(PerspectiveEventHandler.getInstance());
-		EventDispatcher.addHandler(new LayoutEventHandler());
+		EventManager.addHandler(new RegistrationHandler());
+		EventManager.addHandler(PerspectiveEventHandler.getInstance());
+		EventManager.addHandler(new LayoutEventHandler());
 
-		EventDispatcher.addListener(UPDATE_LISTENER);
+		EventManager.addListener(UPDATE_LISTENER);
 	}
 	
 	public static PerspectiveManager getInstance() {
@@ -107,7 +107,7 @@ public class PerspectiveManager implements LayoutManager {
 		if(isDefault)
 			setDefaultPerspective(perspective.getPersistentId());
 		
-		EventDispatcher.dispatch(new RegistrationEvent(perspective, this, true));
+		EventManager.dispatch(new RegistrationEvent(perspective, this, true));
 	}
 	
 	/**
@@ -126,7 +126,7 @@ public class PerspectiveManager implements LayoutManager {
 		if(m_defaultPerspective.equals(perspectiveId))
 			setDefaultPerspective(EMPTY_PERSPECTIVE);
 
-		EventDispatcher.dispatch(new RegistrationEvent(perspective, this, false));
+		EventManager.dispatch(new RegistrationEvent(perspective, this, false));
 	}
 	
 	/**
@@ -174,14 +174,14 @@ public class PerspectiveManager implements LayoutManager {
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
 	 */
 	public void addListener(PerspectiveListener perspectiveListener) {
-		EventDispatcher.addListener(perspectiveListener);
+		EventManager.addListener(perspectiveListener);
 	}
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#removePerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
 	 */
 	public void removeListener(PerspectiveListener perspectiveListener) {
-		EventDispatcher.removeListener(perspectiveListener);
+		EventManager.removeListener(perspectiveListener);
 	}
 	
 	/**

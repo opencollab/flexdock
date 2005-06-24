@@ -10,7 +10,7 @@ import org.flexdock.docking.RegionChecker;
 /**
  * @author Christopher Butler
  */
-public class RootDockableProps extends BasicDockableProps {
+public class RootDockablePropertySet extends BasicDockablePropertySet {
 	private static final Float DEFAULT_REGION_INSETS = new Float(RegionChecker.DEFAULT_REGION_SIZE);
 	private static final Float DEFAULT_SIBLING_INSETS = new Float(RegionChecker.DEFAULT_SIBLING_SIZE);
 	public static final Float DEFAULT_DRAG_THRESHOLD = new Float(4);
@@ -18,7 +18,7 @@ public class RootDockableProps extends BasicDockableProps {
 
 	private HashSet constraints;
 	
-	public RootDockableProps() {
+	public RootDockablePropertySet() {
 		super(5);
 		constraints = new HashSet(5);
 

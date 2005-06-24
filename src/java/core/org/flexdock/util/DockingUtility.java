@@ -16,7 +16,7 @@ import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultRegionChecker;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 
@@ -578,19 +578,19 @@ public class DockingUtility implements DockingConstants {
 	
 	/**
 	 * Returns the text to be used by a <code>Dockable</code> as a tab label within a tabbed layout.
-	 * This method retrieves the associated <code>DockableProps</code> by calling 
+	 * This method retrieves the associated <code>DockablePropertySet</code> by calling 
 	 * <code>getDockingProperties()</code> on the specified <code>Dockable</code>.  It then returns the
-	 * value retrieved from calling <code>getDockableDesc()</code> on the <code>DockableProps</code>
+	 * value retrieved from calling <code>getDockableDesc()</code> on the <code>DockablePropertySet</code>
 	 * instance.  If the specified <code>Dockable</code> is <code>null</code>, then this method returns
 	 * <code>null</code>.
 	 * 
 	 * @param dockable the <code>Dockable</code> whose tab-text is to be returned
 	 * @return the text to be used by a <code>Dockable</code> as a tab label within a tabbed layout.
 	 * @see Dockable#getDockingProperties()
-	 * @see DockableProps#getDockableDesc()
+	 * @see DockablePropertySet#getDockableDesc()
 	 */
 	public static String getTabText(Dockable dockable) {
-		DockableProps props = dockable==null? null: dockable.getDockingProperties();
+		DockablePropertySet props = dockable==null? null: dockable.getDockingProperties();
 		return props==null? null: props.getDockableDesc();
 	}
 	

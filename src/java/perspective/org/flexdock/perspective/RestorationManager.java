@@ -11,7 +11,7 @@ import java.util.Vector;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.state.DockingState;
-import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.EventManager;
 import org.flexdock.perspective.event.RegistrationEvent;
 import org.flexdock.perspective.restore.handlers.AlreadyRestoredHandler;
 import org.flexdock.perspective.restore.handlers.DockPathHandler;
@@ -51,7 +51,7 @@ public class RestorationManager {
 	public void addHandler(RestorationHandler handler) {
 		if(handler!=null) {
 			restorationHandlers.add(handler);
-			EventDispatcher.dispatch(new RegistrationEvent(handler, this, true));
+			EventManager.dispatch(new RegistrationEvent(handler, this, true));
 		}
 	}
 	
@@ -60,7 +60,7 @@ public class RestorationManager {
 		if(handler!=null) {
 			ret = restorationHandlers.remove(handler);
 			if(ret)
-				EventDispatcher.dispatch(new RegistrationEvent(handler, this, false));
+				EventManager.dispatch(new RegistrationEvent(handler, this, false));
 		}
 		return ret;
 	}

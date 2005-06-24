@@ -40,13 +40,13 @@ import org.flexdock.docking.event.DockingEventHandler;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
 import org.flexdock.docking.floating.policy.FloatPolicyManager;
-import org.flexdock.docking.props.DockableProps;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.docking.state.LayoutManager;
 import org.flexdock.docking.state.MinimizationManager;
-import org.flexdock.event.EventDispatcher;
+import org.flexdock.event.EventManager;
 import org.flexdock.event.RegistrationEvent;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.DockingUtility;
@@ -153,8 +153,8 @@ public class DockingManager implements DockingConstants {
 		DragManager.prime();
 		
 		// make sure dockingEvents are properly intercepted
-		EventDispatcher.addHandler(new DockingEventHandler());
-		EventDispatcher.addListener(FloatPolicyManager.getInstance());
+		EventManager.addHandler(new DockingEventHandler());
+		EventManager.addListener(FloatPolicyManager.getInstance());
 		
 		Properties config = ResourceManager.getProperties(CONFIG_PROPS, true);
 		DockingManager mgr = getDockingManager();
@@ -547,7 +547,7 @@ public class DockingManager implements DockingConstants {
 	 * a tabbed layout for a single <code>Dockable</code> in the CENTER region; <code>false</code>
 	 * otherwise.
 	 * @see PropertyManager#getDockingPortRoot()
-	 * @see org.flexdock.docking.props.DockingPortProps#isSingleTabsAllowed()
+	 * @see org.flexdock.docking.props.DockingPortPropertySet#isSingleTabsAllowed()
 	 */
 	public static boolean isSingleTabsAllowed() {
 		return PropertyManager.getDockingPortRoot().isSingleTabsAllowed().booleanValue();
@@ -716,13 +716,13 @@ public class DockingManager implements DockingConstants {
 		dockable.addDockingListener(dockable);
 		
 		// make sure we have docking-properties initialized
-		DockableProps props = PropertyManager.getDockableProps(dockable);
+		DockablePropertySet props = PropertyManager.getDockablePropertySet(dockable);
 		
 		// cache the dockable by ID
 		DOCKABLES_BY_ID.put(dockable.getPersistentId(), dockable);
 		
 		// dispatch a registration event
-		EventDispatcher.dispatch(new RegistrationEvent(dockable, DockingManager.SINGLETON, true));
+		EventManager.dispatch(new RegistrationEvent(dockable, DockingManager.SINGLETON, true));
 		
 		// return the dockable
 		return dockable;
@@ -2095,7 +2095,7 @@ public class DockingManager implements DockingConstants {
 	 * a tabbed layout for a single <code>Dockable</code> in the CENTER region; <code>false</code>
 	 * otherwise.
 	 * @see PropertyManager#getDockingPortRoot()
-	 * @see org.flexdock.docking.props.DockingPortProps#setSingleTabsAllowed(boolean)
+	 * @see org.flexdock.docking.props.DockingPortPropertySet#setSingleTabsAllowed(boolean)
 	 */
 	public static void setSingleTabsAllowed(boolean allowed) {
 		PropertyManager.getDockingPortRoot().setSingleTabsAllowed(allowed);

@@ -16,16 +16,16 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  */
 public class PropertyManager {
-	public static final String DOCKABLE_PROPERTIES_KEY = DockableProps.class.getName();
-	public static final String DOCKINGPORT_PROPERTIES_KEY = DockingPortProps.class.getName();
-	private static final ClassMapping DOCKABLE_PROPS_MAPPING = new ClassMapping(ScopedDockableProps.class, null);
+	public static final String DOCKABLE_PROPERTIES_KEY = DockablePropertySet.class.getName();
+	public static final String DOCKINGPORT_PROPERTIES_KEY = DockingPortPropertySet.class.getName();
+	private static final ClassMapping DOCKABLE_PROPS_MAPPING = new ClassMapping(ScopedDockablePropertySet.class, null);
 	
-	public static DockingPortProps getDockingPortRoot() {
-		return ScopedDockingPortProps.ROOT_PROPS;
+	public static DockingPortPropertySet getDockingPortRoot() {
+		return ScopedDockingPortPropertySet.ROOT_PROPS;
 	}
 	
-	public static DockableProps getDockableRoot() {
-		return ScopedDockableProps.ROOT_PROPS;
+	public static DockablePropertySet getDockableRoot() {
+		return ScopedDockablePropertySet.ROOT_PROPS;
 	}
 	
 	
@@ -33,7 +33,7 @@ public class PropertyManager {
 		if(dockable==null || propType==null)
 			return;
 		
-		if(!Dockable.class.isAssignableFrom(dockable) || !DockableProps.class.isAssignableFrom(propType))
+		if(!Dockable.class.isAssignableFrom(dockable) || !DockablePropertySet.class.isAssignableFrom(propType))
 			return;
 
 		DOCKABLE_PROPS_MAPPING.addClassMapping(dockable, propType);
@@ -42,28 +42,28 @@ public class PropertyManager {
 	
 	
 	
-	public static DockableProps getDockableProps(Dockable dockable) {
+	public static DockablePropertySet getDockablePropertySet(Dockable dockable) {
 		if(dockable==null)
 			return null;
 		
 		Object obj = dockable.getClientProperty(DOCKABLE_PROPERTIES_KEY);
-		if(!(obj instanceof DockableProps)) {
-			obj = createDockableProps(dockable);
+		if(!(obj instanceof DockablePropertySet)) {
+			obj = createDockablePropertySet(dockable);
 			dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, obj);
 		}
-		return (DockableProps)obj;
+		return (DockablePropertySet)obj;
 	}
 
-	public static DockingPortProps getDockingPortProps(DockingPort port) {
+	public static DockingPortPropertySet getDockingPortPropertySet(DockingPort port) {
 		if(port==null)
 			return null;
 		
 		Object obj = port.getClientProperty(DOCKINGPORT_PROPERTIES_KEY);
-		if(!(obj instanceof DockingPortProps)) {
-			obj = new ScopedDockingPortProps(4);
+		if(!(obj instanceof DockingPortPropertySet)) {
+			obj = new ScopedDockingPortPropertySet(4);
 			port.putClientProperty(DOCKINGPORT_PROPERTIES_KEY, obj);
 		}
-		return (DockingPortProps)obj;
+		return (DockingPortPropertySet)obj;
 	}
 	
 	
@@ -105,10 +105,10 @@ public class PropertyManager {
 		return null;
 	}
 	
-	private static DockableProps createDockableProps(Dockable d) {
+	private static DockablePropertySet createDockablePropertySet(Dockable d) {
 		Class key = d.getClass();
 		Class c = DOCKABLE_PROPS_MAPPING.getClassMapping(key);
-		return (DockableProps)Utilities.createInstance(c.getName());
+		return (DockablePropertySet)Utilities.createInstance(c.getName());
 	}
 
 }

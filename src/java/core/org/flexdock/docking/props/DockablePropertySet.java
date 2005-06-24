@@ -8,7 +8,7 @@ import javax.swing.Icon;
 /**
  * @author Christopher Butler
  */
-public interface DockableProps {
+public interface DockablePropertySet {
 	public static final String DESCRIPTION = "Dockable.DESCRIPTION";
 	public static final String DOCKING_ENABLED = "Dockable.DOCKING_ENABLED";
 	public static final String MOUSE_MOTION_DRAG_BLOCK = "Dockable.MOUSE_MOTION_DRAG_BLOCK";

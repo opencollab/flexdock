@@ -24,7 +24,7 @@ import java.util.Set;
 
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
-import org.flexdock.docking.props.DockingPortProps;
+import org.flexdock.docking.props.DockingPortPropertySet;
 import org.flexdock.docking.state.LayoutNode;
 
 /**
@@ -141,21 +141,21 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 	
 	
     /**
-     * Returns a <code>DockingPortProps</code> instance associated with this <code>DockingPort</code>.
+     * Returns a <code>DockingPortPropertySet</code> instance associated with this <code>DockingPort</code>.
      * Developers implementing the <code>DockingPort</code> interface may or may not choose to 
-     * provide their own <code>DockingPortProps</code> implementation for use with this method.
+     * provide their own <code>DockingPortPropertySet</code> implementation for use with this method.
      * A default implementation is supplied by the framework and most <code>DockingPort</code> 
      * implementations, including all implementations provided by the framework, will return 
-     * the default <code>DockingPortProps</code> via a call to 
+     * the default <code>DockingPortPropertySet</code> via a call to 
      * <code>org.flexdock.docking.props.PropertyManager</code>.  Developers are encouraged to 
-     * take advantage of this by calling <code>PropertyManager.getDockingPortProps(this)</code>.
+     * take advantage of this by calling <code>PropertyManager.getDockingPortPropertySet(this)</code>.
      * 
-     * @return the <code>DockingPortProps</code> associated with this <code>DockingPort</code>  
+     * @return the <code>DockingPortPropertySet</code> associated with this <code>DockingPort</code>  
      * This method may not return a <code>null</code> reference.
-     * @see org.flexdock.docking.props.DockingPortProps#
-     * @see org.flexdock.docking.props.PropertyManager#getDockingPortProps(DockingPort)
+     * @see org.flexdock.docking.props.DockingPortPropertySet#
+     * @see org.flexdock.docking.props.PropertyManager#getDockingPortPropertySet(DockingPort)
      */
-	public DockingPortProps getDockingProperties();
+	public DockingPortPropertySet getDockingProperties();
 	
 	/**
 	 * Returns the <code>DockingStrategy</code> instance used by this <code>DockingPort</code>
