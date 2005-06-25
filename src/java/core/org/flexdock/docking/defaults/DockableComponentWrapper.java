@@ -25,11 +25,14 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.DockingStub;
+import org.flexdock.docking.adapter.DockingAdapter;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.props.DockablePropertySet;
@@ -102,6 +105,42 @@ public class DockableComponentWrapper implements Dockable {
 			
 		return new DockableComponentWrapper(src, id, desc);
 	}
+	
+	public static DockableComponentWrapper create(DockingStub stub) {
+		if(!(stub instanceof Component))
+			return null;
+		
+		return create((Component)stub, stub.getPersistentId(), stub.getTabText());
+	}
+	
+	public static DockableComponentWrapper create(DockingAdapter adapter) {
+		if(adapter==null)
+			return null;
+		
+		Component comp = adapter.getComponent();
+		String id = adapter.getPersistentId();
+		String tabText = adapter.getTabText();
+		DockableComponentWrapper dockable = create(comp, id, tabText);
+		
+		List dragSources = adapter.getDragSources();
+		Set frameDragSources = adapter.getFrameDragSources();
+		Icon icon = adapter.getDockbarIcon();
+		
+		if(dragSources!=null) {
+			dockable.getDragSources().clear();
+			dockable.getDragSources().addAll(dragSources);
+		}
+		
+		if(frameDragSources!=null) {
+			dockable.getFrameDragSources().clear();
+			dockable.getFrameDragSources().addAll(frameDragSources);
+		}
+		
+		if(icon!=null)
+			dockable.getDockingProperties().setDockbarIcon(icon);
+		
+		return dockable;
+	}
 
 	/**
 	 * @param src
@@ -116,7 +155,39 @@ public class DockableComponentWrapper implements Dockable {
 		
 		dockingListeners = new ArrayList(0);
 		dragListeners = new ArrayList(1);
-		dragListeners.add(getComponent());
+		
+		// initialize the drag sources lists
+		initDragListeners();
+	}
+	
+	private void initDragListeners() {
+		// by default, use the wrapped source component as the drag source
+		// and assume there is no frame drag source defined
+		Component draggable = dragSrc;
+		Component frameDragger = null;
+
+		// if the wrapped source component is a DockingStub, then
+		// we'll be able to pull some extra data from it
+		if(dragSrc instanceof DockingStub) {
+			DockingStub stub = (DockingStub)dragSrc;
+			Component c = stub.getDragSource();
+			// if the stub defines a specific drag source, then
+			// replace wrapped source component with the specified 
+			// drag source
+			if(c!=null)
+				draggable = c;
+			// if the stub defines a specified frame drag source, then
+			// use it
+			frameDragger = stub.getFrameDragSource();
+		}
+		
+		// add the "docking" drag source to the list
+		if(draggable!=null)
+			dragListeners.add(draggable);
+		
+		// add the floating frame drag source to the list
+		if(frameDragger!=null)
+			getFrameDragSources().add(frameDragger);
 	}
 	
 	private Hashtable getInternalClientProperties() {

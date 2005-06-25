@@ -27,12 +27,15 @@ import java.util.EventListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
+import org.flexdock.docking.adapter.AdapterFactory;
+import org.flexdock.docking.adapter.DockingAdapter;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
 import org.flexdock.docking.drag.DragManager;
@@ -152,6 +155,9 @@ public class DockingManager implements DockingConstants {
 		// prime the drag manager for use
 		DragManager.prime();
 		
+		// ensure our Dockable adapters have been loaded
+		AdapterFactory.prime();
+		
 		// make sure dockingEvents are properly intercepted
 		EventManager.addHandler(new DockingEventHandler());
 		EventManager.addListener(FloatPolicyManager.getInstance());
@@ -189,7 +195,15 @@ public class DockingManager implements DockingConstants {
 	
 	
 	
-	
+	public static void addDragSource(Dockable dockable, Component dragSrc) {
+		List sources = dockable==null? null: dockable.getDragSources();
+		if(sources==null || dragSrc==null)
+			return;
+		
+		if(!sources.contains(dragSrc)) {
+			updateDragListeners(dockable);			
+		}
+	}
 	
 	/**
 	 * Convenience method that removes the specified <code>Dockable</code> from the layout.  
@@ -259,7 +273,7 @@ public class DockingManager implements DockingConstants {
 	 * @see #dock(Dockable, DockingPort, String)
 	 */
 	public static boolean dock(Component dockable , DockingPort port, String region) {
-		Dockable d = getDockable(dockable);
+		Dockable d = resolveDockable(dockable);
 		return dock(d, port, region);
 	}
 	
@@ -303,6 +317,15 @@ public class DockingManager implements DockingConstants {
 		//when there would be no docker.
 	}
 	
+	private static Dockable resolveDockable(Component comp) {
+		if(comp==null)
+			return null;
+		
+		Dockable d = getDockable(comp);
+		if(d==null)
+			d = registerDockable(comp);
+		return d;
+	}
 	
 	/**
 	 * Docks the specified <code>Component</code> relative to another already-docked 
@@ -321,7 +344,7 @@ public class DockingManager implements DockingConstants {
 	 * @see DockingManager#dock(Dockable, Dockable)
 	 */
 	public static boolean dock(Component dockable, Component parent) {
-		return dock(getDockable(dockable), getDockable(parent));
+		return dock(resolveDockable(dockable), resolveDockable(parent));
 	}
 	
 	/**
@@ -419,8 +442,8 @@ public class DockingManager implements DockingConstants {
 	 * @return <code>true</code> if the docking operation was successful; <code>false</code> otherwise.
 	 */
 	public static boolean dock(Component dockable, Component parent, String region, float proportion) {
-		Dockable newDockable = getDockable(dockable);
-		Dockable parentDockable = getDockable(parent);
+		Dockable newDockable = resolveDockable(dockable);
+		Dockable parentDockable = resolveDockable(parent);
 		return dock(newDockable, parentDockable, region, proportion);
 	}
 	
@@ -625,8 +648,7 @@ public class DockingManager implements DockingConstants {
 			dragSrc.addMouseListener(listener);
 		}
 	}
-	
-	
+
 	
 	
 	
@@ -654,13 +676,38 @@ public class DockingManager implements DockingConstants {
 		if(comp instanceof Dockable)
 			return registerDockable((Dockable)comp);
 		
-		String name = comp.getName();
-		name = name==null? "null": name.trim();
-		if(name.length()==0)
-			name = "null";
-		
+		String name = determineTabText(comp);
 		return registerDockable(comp, name);
-	}	
+	}
+	
+	private static String determineTabText(Component comp) {
+		String tabText = null;
+		// if 'comp' is a DockingStub, then we may be able to
+		// pull the tab text from it
+		if(comp instanceof DockingStub) {
+			tabText = ((DockingStub)comp).getTabText();
+		}
+		else {
+			// if we can find an adapter mapping, then try to pull
+			// the tab text from there
+			DockingAdapter adapter = AdapterFactory.getAdapter(comp);
+			if(adapter!=null)
+				tabText = adapter.getTabText();
+		}
+
+		// if 'comp' wasn't a DockingStub, or the stub returned a null tabText, 
+		// then try the component name
+		if(tabText==null)
+			tabText = comp.getName();
+		
+		// get rid of null and empty cases.  use the string "null" if nothing
+		// else can be found
+		tabText = tabText==null? "null": tabText.trim();
+		if(tabText.length()==0)
+			tabText = "null";
+		
+		return tabText;
+	}
 	
 	/**
 	 * Creates a <code>Dockable</code> for the specified <code>Component</code> and dispatches to 
@@ -1247,12 +1294,32 @@ public class DockingManager implements DockingConstants {
 		if (c == null)
 			return null;
 
+		// return the dockable if it has already been registered
 		Dockable dockable = getDockable(c);
-		if (dockable == null) {
+		if(dockable!=null)
+			return dockable;
+		
+		// if we need to create a dockable, first try to do it with an adapter
+		DockingAdapter adapter = AdapterFactory.getAdapter(c);
+		if(adapter!=null) {
+			dockable = DockableComponentWrapper.create(adapter);
+		}
+
+		// if we weren't able to create from an adapter, then create the 
+		// dockable manually
+		if(dockable==null) {
 			String persistentId = generatePersistentId(c);
 			dockable = DockableComponentWrapper.create(c, persistentId, desc);
-			DOCKABLES_BY_COMPONENT.put(c, dockable);
 		}
+		
+		// make sure the specified description is applied
+		if(desc!=null)
+			dockable.getDockingProperties().setDockableDesc(desc);
+		
+		// cache the dockable for future use
+		DOCKABLES_BY_COMPONENT.put(c, dockable);
+		
+		// now we can return
 		return dockable;
 	}
 	
