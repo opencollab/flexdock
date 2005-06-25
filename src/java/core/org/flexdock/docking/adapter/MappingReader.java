@@ -1,0 +1,87 @@
+/*
+ * Created on Jun 24, 2005
+ */
+package org.flexdock.docking.adapter;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
+/**
+ * @author Christopher Butler
+ */
+public class MappingReader {
+	public static final String ADAPTER_KEY = "adapter";
+	public static final String CLASS_KEY = "class";
+	
+	public static final String METHOD_KEY = "method";
+	public static final String FLEXDOCK_KEY = "flexdock";
+	public static final String CLIENT_KEY = "client";
+	
+
+	public AdapterMapping[] readMappings(Document mappingDoc) {
+		if(mappingDoc==null)
+			return new AdapterMapping[0];
+		
+		NodeList nodes = mappingDoc.getElementsByTagName(ADAPTER_KEY);
+		int len = nodes.getLength();
+		ArrayList mappings = new ArrayList(len);
+		
+		for(int i=0; i<len; i++) {
+			Element elem = (Element)nodes.item(i);
+			String className = elem.getAttribute(CLASS_KEY);
+			if(className!=null) {
+				AdapterMapping mapping = createMapping(elem);
+				mapping.setClassName(className);
+				mappings.add(mapping);
+			}
+		}
+		
+		return (AdapterMapping[])mappings.toArray(new AdapterMapping[0]);
+	}
+	
+	private AdapterMapping createMapping(Element adapterElem) {
+		NodeList nodes = adapterElem.getElementsByTagName(METHOD_KEY);
+		String className = adapterElem.getAttribute(CLASS_KEY);
+		int len = nodes.getLength();
+		Properties p = new Properties();
+		for(int i=0; i<len; i++) {
+			Element elem = (Element)nodes.item(i);
+			String key = elem.getAttribute(FLEXDOCK_KEY);
+			String value = elem.getAttribute(CLIENT_KEY);
+			if(key!=null && value!=null)
+				p.setProperty(key, value);
+		}
+		
+		return createMapping(p);
+	}
+	
+	private AdapterMapping createMapping(Properties props) {
+		Method[] setters = AdapterMapping.class.getMethods();
+		AdapterMapping mapping = new AdapterMapping();
+		
+		for(int i=0; i<setters.length; i++) {
+			String methodName = setters[i].getName();
+			if(!methodName.startsWith("set"))
+				continue;
+			
+			String key = Character.toLowerCase(methodName.charAt(3)) + methodName.substring(4, methodName.length());
+			String clientMethod = props.getProperty(key);
+			if(clientMethod==null)
+				continue;
+			
+			Method setter = setters[i];
+			try {
+				setter.invoke(mapping, new Object[] {clientMethod});
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return mapping;
+	}
+}
