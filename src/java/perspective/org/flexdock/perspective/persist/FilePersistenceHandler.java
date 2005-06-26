@@ -27,7 +27,7 @@ import java.io.IOException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.1 2005-06-11 16:14:48 marius Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.2 2005-06-26 20:40:24 marius Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
@@ -65,6 +65,8 @@ public class FilePersistenceHandler implements PersistenceHandler {
     public boolean store(PerspectiveModel perspectiveInfo) throws IOException {
         File file = getPerspectiveFile();
         validatePerspectiveFile();
+        
+//        XMLDebugger.println(perspectiveInfo);
 
         FileOutputStream fos = new FileOutputStream(file);
         
