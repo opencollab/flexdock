@@ -6,6 +6,7 @@ package org.flexdock.perspective;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -102,13 +103,26 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		PerspectiveManager.updateDockingStates(dockables);
 	}
 	
-	public Object clone() {
+	
+	public List getDockingStates() {
+		return getSequenceClone();
+	}
+	
+	private ArrayList getSequenceClone() {
 		ArrayList list = new ArrayList(sequence.size());
 		for(Iterator it=sequence.iterator(); it.hasNext();) {
 			DockingState info = (DockingState)it.next();
 			list.add(info.clone());
 		}
-		return new LayoutSequence(list);
+		return list;
 	}
+	
+	public Object clone() {
+		return new LayoutSequence(getSequenceClone());
+	}
+	
+	
+	
+
 
 }

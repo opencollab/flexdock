@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -357,7 +358,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	}
 	
 	private void setFloatingGroup(Dockable dockable, String group) {
-		DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
+		DockingState info = getDockingState(dockable, false);
 		info.setFloatingGroup(group);
 	}
 	
@@ -373,4 +374,14 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		this.restorationLayout = restorationLayout;
 	}
 	
+	void update(LayoutSequence sequence) {
+		List states = sequence.getDockingStates();
+		
+		synchronized(dockingInfo) {
+			for(Iterator it=states.iterator(); it.hasNext();) {
+				DockingState info = (DockingState)it.next();
+				dockingInfo.put(info.getDockableId(), info);				
+			}
+		}
+	}
 }

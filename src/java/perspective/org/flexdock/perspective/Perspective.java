@@ -123,6 +123,10 @@ public class Perspective implements Cloneable, Serializable {
 	public void reset(DockingPort port) {
 		if(m_initalSequence!=null) {
 			m_initalSequence.apply(port);
+			
+			Layout layout = getLayout();
+			if(layout!=null)
+				layout.update(m_initalSequence);
 		}
 	}
 	
