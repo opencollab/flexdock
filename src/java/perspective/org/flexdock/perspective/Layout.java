@@ -376,7 +376,8 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	}
 	
 	void update(LayoutSequence sequence) {
-		List states = sequence.getDockingStates();
+        //TODO do we have to get cloned states?
+		List states = sequence.getClonedDockingStates();
 		
 		synchronized(dockingInfo) {
 			for(Iterator it=states.iterator(); it.hasNext();) {

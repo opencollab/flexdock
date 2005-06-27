@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveSerializer.java,v 1.4 2005-06-27 13:21:28 winnetou25 Exp $
+ * @version $Id: PerspectiveSerializer.java,v 1.5 2005-06-27 17:32:53 winnetou25 Exp $
  */
 public class PerspectiveSerializer implements ISerializer {
 
@@ -44,12 +44,14 @@ public class PerspectiveSerializer implements ISerializer {
         
         ISerializer layoutSerializer = SerializerRegistry.getSerializer(Layout.class);
         Element layoutElement = layoutSerializer.serialize(document, perspective.getLayout());
-        
-        ISerializer layoutSequenceSerializer = SerializerRegistry.getSerializer(LayoutSequence.class);
-        Element layoutSequenceElement = layoutSequenceSerializer.serialize(document, perspective.getInitialSequence());
-        
+
         perspectiveElement.appendChild(layoutElement);
-        //perspectiveElement.appendChild(layoutSequenceElement);
+
+        ISerializer layoutSequenceSerializer = SerializerRegistry.getSerializer(LayoutSequence.class);
+        if (perspective.getInitialSequence() != null) {
+            Element layoutSequenceElement = layoutSequenceSerializer.serialize(document, perspective.getInitialSequence());
+            perspectiveElement.appendChild(layoutSequenceElement);
+        }
         
         return perspectiveElement;
     }

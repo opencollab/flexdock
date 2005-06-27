@@ -19,6 +19,9 @@
 package org.flexdock.perspective.persist.xml;
 
 import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.docking.state.tree.DockableNode;
+import org.flexdock.docking.state.tree.DockingPortNode;
+import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -26,7 +29,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutNodeSerializer.java,v 1.3 2005-06-24 14:35:53 winnetou25 Exp $
+ * @version $Id: LayoutNodeSerializer.java,v 1.4 2005-06-27 17:32:53 winnetou25 Exp $
  */
 public class LayoutNodeSerializer implements ISerializer {
 
@@ -36,7 +39,19 @@ public class LayoutNodeSerializer implements ISerializer {
     public Element serialize(Document document, Object object) {
         LayoutNode layoutNode = (LayoutNode) object;
 
+        if (layoutNode instanceof SplitNode) {
+            SplitNode splitNode = (SplitNode) layoutNode;
+        } else if (layoutNode instanceof DockingPortNode) {
+            DockingPortNode dockingPortNode = (DockingPortNode) layoutNode;
+        } else if (layoutNode instanceof DockableNode) {
+            DockableNode dockableNode = (DockableNode) layoutNode;
+        }
+        
         return null;
     }
 
+    private void serializeDockableNode(Document document, DockableNode dockableNode) {
+        
+    }
+    
 }

@@ -22,7 +22,7 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.11 2005-06-27 15:07:07 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.12 2005-06-27 17:32:53 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
@@ -81,5 +81,9 @@ public interface PersistenceConstants {
     String SPLIT_NODE_ATTRIBUTE_PERCENTAGE = "percentage";
     String SPLIT_NODE_ATTRIBUTE_SIBLING_ID = "siblingId";
     String SPLIT_NODE_ATTRIBUTE_DOCKING_REGION = "dockingRegion";
-    
+
+    String LAYOUT_SEQUENCE_ELEMENT_NAME = "LayoutSequence";
+    String LAYOUT_SEQUENCE_DOCKABLE_ELEMENT = "Dockable";
+    String LAYOUT_SEQUENCE_DOCKABLE_ATTRIBUTE_ID = "id";
+
 }

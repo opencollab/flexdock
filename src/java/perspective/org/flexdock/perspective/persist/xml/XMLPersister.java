@@ -49,7 +49,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.13 2005-06-27 15:08:31 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.14 2005-06-27 17:32:53 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -57,23 +57,18 @@ public class XMLPersister implements Persister {
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
     public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException {
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            Document document = documentBuilder.newDocument();
-
-            ISerializer perspectiveModelSerializer = SerializerRegistry.getSerializer(PerspectiveModel.class);
-            Element perspectiveModelElement = perspectiveModelSerializer.serialize(document, perspectiveModel);
-            
-            document.appendChild(perspectiveModelElement);
-            
-            XMLSerializer serializer = new XMLSerializer(os, new OutputFormat(document, OutputFormat.Defaults.Encoding, true));
-            serializer.serialize(document);
-            
-            return true;
-        } catch (ParserConfigurationException ex) {
-            throw new RuntimeException(ex);
-        }
+        DocumentBuilder documentBuilder = createDocumentBuilder();
+        Document document = documentBuilder.newDocument();
+        
+        ISerializer perspectiveModelSerializer = SerializerRegistry.getSerializer(PerspectiveModel.class);
+        Element perspectiveModelElement = perspectiveModelSerializer.serialize(document, perspectiveModel);
+        
+        document.appendChild(perspectiveModelElement);
+        
+        XMLSerializer serializer = new XMLSerializer(os, new OutputFormat(document, OutputFormat.Defaults.Encoding, true));
+        serializer.serialize(document);
+        
+        return true;
     }
     
     /**
@@ -102,8 +97,18 @@ public class XMLPersister implements Persister {
     public static XMLPersister newDefaultInstance() {
         XMLPersister persister = new XMLPersister();
         persister.registerSerializers();
-
+        
         return persister; 
+    }
+    
+    private DocumentBuilder createDocumentBuilder() {
+        try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            return documentBuilder;
+        } catch (ParserConfigurationException ex) {
+            throw new RuntimeException(ex);
+        }
     }
     
 }

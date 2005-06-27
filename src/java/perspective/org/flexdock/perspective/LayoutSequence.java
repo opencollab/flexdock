@@ -19,7 +19,8 @@ import org.flexdock.util.DockingUtility;
  * @author Christopher Butler
  */
 public class LayoutSequence implements Cloneable, Serializable, DockingConstants {
-	private ArrayList sequence;  // contains DockingState objects
+
+    private ArrayList sequence;  // contains DockingState objects
 	
 	public LayoutSequence() {
 		sequence = new ArrayList();
@@ -55,7 +56,7 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		if(dockableId==null)
 			return;
 		
-		if(relativeParentId==null && sequence.size()>0)
+		if(relativeParentId==null && sequence.size() > 0)
 			throw new IllegalStateException("All calls to add() after the first dockable has been added MUST specify a relative dockable parent.");
 
 		DockingState info = new DockingState(dockableId);
@@ -80,7 +81,6 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		boolean listen = PerspectiveManager.isDockingStateListening(); 
 		PerspectiveManager.setDockingStateListening(false);
 		
-		
 		PerspectiveManager.clear(port);
 		int len = sequence.size();
 		Dockable[] dockables = new Dockable[len]; 
@@ -103,8 +103,12 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		PerspectiveManager.updateDockingStates(dockables);
 	}
 	
-	
-	public List getDockingStates() {
+    public List getDockingStates() {
+        return sequence;
+    }
+    
+    //TODO do we have to retrieve always the cloned list? 
+	public List getClonedDockingStates() {
 		return getSequenceClone();
 	}
 	
@@ -121,8 +125,4 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		return new LayoutSequence(getSequenceClone());
 	}
 	
-	
-	
-
-
 }
