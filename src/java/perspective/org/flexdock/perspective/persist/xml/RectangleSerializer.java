@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: RectangleSerializer.java,v 1.2 2005-06-04 14:00:29 winnetou25 Exp $
+ * @version $Id: RectangleSerializer.java,v 1.3 2005-06-27 15:07:24 winnetou25 Exp $
  */
 public class RectangleSerializer implements ISerializer {
     
@@ -47,7 +47,7 @@ public class RectangleSerializer implements ISerializer {
         ISerializer dimensionSerializer = SerializerRegistry.getSerializer(Dimension.class);
 
         Element pointElement = pointSerializer.serialize(document, rectangle.getLocation());
-        Element dimensionElement = dimensionSerializer.serialize(document, rectangle.getBounds());
+        Element dimensionElement = dimensionSerializer.serialize(document, rectangle.getSize());
         
         rectangleElement.appendChild(pointElement);
         rectangleElement.appendChild(dimensionElement);

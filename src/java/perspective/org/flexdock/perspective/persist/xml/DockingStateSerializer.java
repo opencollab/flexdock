@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.9 2005-06-27 14:19:54 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.10 2005-06-27 15:06:36 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -51,19 +51,25 @@ public class DockingStateSerializer implements ISerializer {
         if (dockingState.getRelativeParentId() != null) {
             dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
         }
-        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion());
+        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion().toLowerCase());
 
         if (dockingState.getSplitRatio() != DockingConstants.UNINITIALIZED_RATIO) {
             Element dockingStateSplitRatioElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_SPLIT_RATIO);
             dockingStateSplitRatioElement.setTextContent(String.valueOf(dockingState.getSplitRatio()));
+            dockingStateElement.appendChild(dockingStateSplitRatioElement);
         }
         
         if (dockingState.isFloating()) {
-            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME, dockingState.getFloatingGroup());
+            Element floatingGroupElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_FLOATING_GROUP);
+            floatingGroupElement.setAttribute(PersistenceConstants.DOCKING_STATE_ELEMENT_FLOATING_GROUP_ATTRIBUTE_NAME, dockingState.getFloatingGroup());
+            dockingStateElement.appendChild(floatingGroupElement);
         } else if (dockingState.isMinimized()) {
             int constraint = dockingState.getMinimizedConstraint();
             String presConstraint = getPresentationMinimizeConstraint(constraint);
-            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT, presConstraint);
+            Element minimizeConstraintElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_MINIMIZE_CONSTRAINT);
+            minimizeConstraintElement.setTextContent(presConstraint);
+
+            dockingStateElement.appendChild(minimizeConstraintElement);
         }
         
         handleDockingState(dockingStateElement, dockingState);

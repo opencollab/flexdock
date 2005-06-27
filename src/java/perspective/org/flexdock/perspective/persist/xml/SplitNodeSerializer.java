@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.1 2005-06-23 16:21:30 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.2 2005-06-27 15:08:11 winnetou25 Exp $
  */
 public class SplitNodeSerializer implements ISerializer {
 
@@ -34,11 +34,14 @@ public class SplitNodeSerializer implements ISerializer {
         SplitNode splitNode = (SplitNode) object;
 
         Element splitNodeElement = document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
+        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID, splitNode.getSiblingId());
         splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION, splitNode.getOrientationDesc());
         splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_REGION, splitNode.getRegionDesc());
         splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_PERCENTAGE, String.valueOf(splitNode.getPercentage()));
-        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID, splitNode.getSiblingId());
-        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION, splitNode.getDockingRegion());
+
+        if (splitNode.getDockingRegion() != null) {
+            splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION, splitNode.getDockingRegion());
+        }
 
         return splitNodeElement;
     }

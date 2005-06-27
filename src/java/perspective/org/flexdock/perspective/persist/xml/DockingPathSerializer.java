@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPathSerializer.java,v 1.1 2005-06-23 16:21:29 winnetou25 Exp $
+ * @version $Id: DockingPathSerializer.java,v 1.2 2005-06-27 15:06:14 winnetou25 Exp $
  */
 public class DockingPathSerializer implements ISerializer {
     
@@ -39,9 +39,12 @@ public class DockingPathSerializer implements ISerializer {
         
         Element dockingPathElement = document.createElement(PersistenceConstants.DOCKING_PATH_ELEMENT_NAME);
         dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_ROOT_PORT_ID, dockingPath.getRootPortId());
-        
+
+        if (dockingPath.getSiblingId() != null && !dockingPath.getSiblingId().equals("")) {
+            dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_SIBLING_ID, dockingPath.getSiblingId());
+        }
+
         dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_IS_TABBED, String.valueOf(dockingPath.isTabbed()));
-        dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_SIBLING_ID, dockingPath.getSiblingId());
         
         List splitNodes = dockingPath.getNodes();
         ISerializer splitNodeSerializer = SerializerRegistry.getSerializer(SplitNode.class);

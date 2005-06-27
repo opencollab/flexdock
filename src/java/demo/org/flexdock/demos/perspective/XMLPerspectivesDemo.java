@@ -40,7 +40,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPerspectivesDemo.java,v 1.1 2005-06-24 14:35:54 winnetou25 Exp $
+ * @version $Id: XMLPerspectivesDemo.java,v 1.2 2005-06-27 15:04:11 winnetou25 Exp $
  */
 public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.xml";
@@ -53,8 +53,6 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	private static final String P1 = "p1";
 	private static final String P2 = "p2";
 	private static final String P3 = "p3";
-	
-	
 	
 	public static void main(String[] args) {
 		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
@@ -101,8 +99,6 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		return contentPane;
 	}
 	
-
-
 	private JMenuBar createApplicationMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 

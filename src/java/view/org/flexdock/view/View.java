@@ -105,8 +105,7 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 	}
 	
 	protected Container createContentPane() {
-		JPanel p = new JPanel();
-		return p;
+		return new JPanel();
 	}
 	
 	protected Titlebar createTitlebar() {

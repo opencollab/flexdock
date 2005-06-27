@@ -23,11 +23,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.flexdock.test.xml.XMLDebugger;
+
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.2 2005-06-26 20:40:24 marius Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.3 2005-06-27 15:04:34 winnetou25 Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
@@ -66,14 +68,14 @@ public class FilePersistenceHandler implements PersistenceHandler {
         File file = getPerspectiveFile();
         validatePerspectiveFile();
         
-//        XMLDebugger.println(perspectiveInfo);
+        XMLDebugger.println(perspectiveInfo);
 
         FileOutputStream fos = new FileOutputStream(file);
-        
-        boolean result = m_persister.store(fos, perspectiveInfo);
-        fos.close();
-
-        return result;
+        try {
+            return m_persister.store(fos, perspectiveInfo);
+        } finally {
+            fos.close();
+        }
     }
 
     /**
@@ -85,12 +87,13 @@ public class FilePersistenceHandler implements PersistenceHandler {
         	return null;
 
         FileInputStream fis = new FileInputStream(file);
-        
-        PerspectiveModel perspectiveInfo = m_persister.load(fis);
 
-        fis.close();
-        
-        return perspectiveInfo;
+        try {
+            PerspectiveModel perspectiveModel = m_persister.load(fis);
+            return perspectiveModel;
+        } finally {
+            fis.close();
+        }
     }
     
 	protected void validatePerspectiveFile() throws IOException {

@@ -49,7 +49,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.12 2005-06-27 13:21:50 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.13 2005-06-27 15:08:31 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -71,9 +71,8 @@ public class XMLPersister implements Persister {
             serializer.serialize(document);
             
             return true;
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-            return false;
+        } catch (ParserConfigurationException ex) {
+            throw new RuntimeException(ex);
         }
     }
     

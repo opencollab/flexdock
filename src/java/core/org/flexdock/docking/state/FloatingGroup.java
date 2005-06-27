@@ -9,6 +9,7 @@ import java.util.HashSet;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.floating.frames.DockingFrame;
+import org.flexdock.util.UUID;
 
 /**
  * This class models a grouping of <code>Dockables</code> within a floating <code>DockingFrame</code>.
@@ -44,8 +45,7 @@ public class FloatingGroup implements Cloneable, Serializable {
 	 * @see FloatManager#getGroup(String)
 	 */
 	public FloatingGroup(String groupName) {
-	    //TODO can we change that to GUID.generateID() ? this hashCode thing...
-	    name = groupName==null? String.valueOf(this.hashCode()): groupName;
+	    name = groupName==null? UUID.randomUUID().toString():groupName;
 		dockables = new HashSet();
 	}
 	
