@@ -20,6 +20,7 @@ package org.flexdock.perspective.persist.xml;
 
 import java.awt.Point;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
@@ -30,7 +31,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.8 2005-06-24 14:35:53 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.9 2005-06-27 14:19:54 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -47,14 +48,19 @@ public class DockingStateSerializer implements ISerializer {
 
         Element dockingStateElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID, dockingState.getDockableId());
-        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
+        if (dockingState.getRelativeParentId() != null) {
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
+        }
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion());
-        dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO, String.valueOf(dockingState.getSplitRatio()));
 
+        if (dockingState.getSplitRatio() != DockingConstants.UNINITIALIZED_RATIO) {
+            Element dockingStateSplitRatioElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_SPLIT_RATIO);
+            dockingStateSplitRatioElement.setTextContent(String.valueOf(dockingState.getSplitRatio()));
+        }
+        
         if (dockingState.isFloating()) {
             dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME, dockingState.getFloatingGroup());
-        }
-        if (dockingState.isMinimized()) {
+        } else if (dockingState.isMinimized()) {
             int constraint = dockingState.getMinimizedConstraint();
             String presConstraint = getPresentationMinimizeConstraint(constraint);
             dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT, presConstraint);
