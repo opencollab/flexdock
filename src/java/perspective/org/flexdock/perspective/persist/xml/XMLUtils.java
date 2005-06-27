@@ -18,34 +18,35 @@
  */
 package org.flexdock.perspective.persist.xml;
 
-import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
- * Created on 2005-06-23
+ * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.3 2005-06-27 16:26:19 winnetou25 Exp $
+ * @version $Id: XMLUtils.java,v 1.1 2005-06-27 16:26:18 winnetou25 Exp $
  */
-public class SplitNodeSerializer implements ISerializer {
+public class XMLUtils {
 
-    public Element serialize(Document document, Object object) {
-        SplitNode splitNode = (SplitNode) object;
-
-        Element splitNodeElement = document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
-        if (splitNode.getSiblingId() != null) {
-            splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID, splitNode.getSiblingId());
+    /**
+     * This method provides a java 1.4 equivalent of the Element.setTextContent() that exists
+     * under 1.5.
+     */
+    public static void setTextContent(Document document, Element elem, String text) {
+        // remove any existing child nodes
+        while(elem.getChildNodes().getLength()>0) {
+            Node lastChild = elem.getLastChild();
+            elem.removeChild(lastChild);
         }
-        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION, splitNode.getOrientationDesc());
-        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_REGION, splitNode.getRegionDesc());
-        splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_PERCENTAGE, String.valueOf(splitNode.getPercentage()));
-
-        if (splitNode.getDockingRegion() != null) {
-            splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION, splitNode.getDockingRegion());
-        }
-
-        return splitNodeElement;
+        
+        if(text==null)
+            return;
+        
+        // now insert the desired text content
+        Node textNode = document.createTextNode(text);
+        elem.appendChild(textNode);
     }
-
+    
 }
