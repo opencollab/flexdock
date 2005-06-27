@@ -22,15 +22,18 @@ import org.flexdock.view.tracking.ViewTracker;
  * @author Christopher Butler
  */
 public class Viewport extends DefaultDockingPort implements DockingConstants {
-	protected HashSet blockedRegions;
+
+    protected HashSet blockedRegions;
 	
 	static {
 		DockingManager.setDockingStrategy(Viewport.class, View.VIEW_DOCKING_STRATEGY);
 	}
 
 	public Viewport() {
-		this(null);
-	}
+	    super();
+        blockedRegions = new HashSet(5);
+        setBorderManager(new StandardBorderManager());
+    }
 	
 	public Viewport(String portId) {
 		super(portId);
@@ -38,13 +41,13 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
 		setBorderManager(new StandardBorderManager());
 	}
 
-	
-	public void setRegionBlocked(String region, boolean b) {
+	public void setRegionBlocked(String region, boolean isBlocked) {
 		if(isValidDockingRegion(region)) {
-			if(b)
-				blockedRegions.add(region);
-			else
-				blockedRegions.remove(region);
+			if(isBlocked) {
+                blockedRegions.add(region);
+            } else {
+                blockedRegions.remove(region);
+            }
 		}
 	}
 	
@@ -84,7 +87,6 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
 		return pane;
 	}
 	
-
     public Set getViewset() {
     	// return ALL views, recursing to maximum depth
     	return getDockableSet(-1, 0, View.class);
@@ -94,13 +96,6 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
     	// return all views, including subviews up to the specified depth
     	return getDockableSet(depth, 0, View.class);
     }
-    
-
-    
-
-
-
-
 	
 	public void dockingComplete(DockingEvent evt) {
 		Object src = evt.getSource();
@@ -114,4 +109,5 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
 		String id = getPersistentId();
 		return "ViewPort[id=" + id + "]";
 	}
+    
 }

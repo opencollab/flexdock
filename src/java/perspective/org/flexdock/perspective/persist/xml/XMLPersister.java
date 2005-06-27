@@ -42,11 +42,14 @@ import org.flexdock.perspective.persist.PerspectiveModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.11 2005-06-24 14:35:54 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.12 2005-06-27 13:21:50 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -63,6 +66,9 @@ public class XMLPersister implements Persister {
             Element perspectiveModelElement = perspectiveModelSerializer.serialize(document, perspectiveModel);
             
             document.appendChild(perspectiveModelElement);
+            
+            XMLSerializer serializer = new XMLSerializer(os, new OutputFormat(document, OutputFormat.Defaults.Encoding, true));
+            serializer.serialize(document);
             
             return true;
         } catch (ParserConfigurationException e) {

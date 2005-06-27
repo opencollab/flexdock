@@ -16,12 +16,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.demos.raw.elegant.ShadowBorder;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.PerspectiveFactory;
@@ -38,7 +41,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.8 2005-06-22 00:22:35 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.9 2005-06-27 13:20:10 winnetou25 Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";
@@ -93,14 +96,16 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 
 		//tworzymy glowny view port do dokowania
 		Viewport viewport = new Viewport();
+        Border outerBorder = BorderFactory.createEmptyBorder(0,0,5,5);
+        Border innerBorder = new ShadowBorder();
+        viewport.setBorderManager(new StandardBorderManager(BorderFactory.createCompoundBorder(outerBorder, innerBorder)));
+
 		//rejestrujemy glowny view port
 
 		contentPane.add(viewport, BorderLayout.CENTER);
 		return contentPane;
 	}
 	
-
-
 	private JMenuBar createApplicationMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
 
@@ -133,7 +138,7 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		PerspectiveManager.setRestoreFloatingOnLoad(true);
 		PerspectiveManager mgr = PerspectiveManager.getInstance();
 		mgr.setCurrentPerspective(P3, true);
-		
+        
 		// load any previously persisted layouts
 		PersistenceHandler persister = FilePersistenceHandler.createDefault(PERSPECTIVE_FILE);
 		PerspectiveManager.setPersistenceHandler(persister);
@@ -146,10 +151,6 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		DockingManager.setAutoPersist(true);
 	}
 	
-	
-	
-
-
 	private static class DemoPerspectiveFactory implements PerspectiveFactory {
 		
 		public Perspective getPerspective(String persistentId) {
@@ -166,9 +167,9 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 			Perspective perspective = new Perspective(P1, "Perspective1");
 			LayoutSequence sequence = perspective.getInitialSequence(true);
 			
-			sequence.add("main.view");
-			sequence.add(BIRD_VIEW, "main.view", EAST_REGION, .3f);
-			sequence.add(MESSAGE_VIEW, "main.view", WEST_REGION, .3f);
+			sequence.add(MAIN_VIEW);
+			sequence.add(BIRD_VIEW, MAIN_VIEW, EAST_REGION, .3f);
+			sequence.add(MESSAGE_VIEW, MAIN_VIEW, WEST_REGION, .3f);
 			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
 			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW);
 			
@@ -179,8 +180,8 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 			Perspective perspective = new Perspective(P2, "Perspective2");
 			LayoutSequence sequence = perspective.getInitialSequence(true);
 
-			sequence.add("main.view");
-			sequence.add(BIRD_VIEW, "main.view", WEST_REGION, .3f);
+			sequence.add(MAIN_VIEW);
+			sequence.add(BIRD_VIEW, MAIN_VIEW, WEST_REGION, .3f);
 			sequence.add(MESSAGE_VIEW, BIRD_VIEW, SOUTH_REGION, .5f);
 			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
 			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, EAST_REGION, .5f);
@@ -191,7 +192,8 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		private Perspective createPerspective3() {
 			Perspective perspective = new Perspective(P3, "Perspective3");
 			LayoutSequence sequence = perspective.getInitialSequence(true);
-			sequence.add("main.view");
+			sequence.add(MAIN_VIEW);
+            
 			return perspective;
 		}
 	}
