@@ -27,9 +27,16 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PointSerializer.java,v 1.2 2005-06-04 14:00:28 winnetou25 Exp $
+ * @version $Id: PointSerializer.java,v 1.3 2005-06-27 21:55:38 winnetou25 Exp $
  */
 public class PointSerializer implements ISerializer {
+
+    private String m_tagName = null;
+
+    public PointSerializer(String tagName) {
+        if (tagName == null) throw new IllegalArgumentException("tagName cannot be null");
+        m_tagName = tagName;
+    }
 
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
@@ -37,11 +44,11 @@ public class PointSerializer implements ISerializer {
     public Element serialize(Document document, Object object) {
         Point point = (Point) object;
 
-        Element pointElement = document.createElement(PersistenceConstants.POINT_ELEMENT_NAME);
+        Element pointElement = document.createElement(m_tagName);
         pointElement.setAttribute(PersistenceConstants.POINT_ATTRIBUTE_X, String.valueOf(point.x));
         pointElement.setAttribute(PersistenceConstants.POINT_ATTRIBUTE_Y, String.valueOf(point.y));
         
         return pointElement;
     }
-
+    
 }

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveModelSerializer.java,v 1.3 2005-06-27 16:26:19 winnetou25 Exp $
+ * @version $Id: PerspectiveModelSerializer.java,v 1.4 2005-06-27 21:55:38 winnetou25 Exp $
  */
 public class PerspectiveModelSerializer implements ISerializer {
 
@@ -36,14 +36,9 @@ public class PerspectiveModelSerializer implements ISerializer {
         
         Element perspectiveModelElement = document.createElement(PersistenceConstants.PERSPECTIVE_MODEL_ELEMENT_NAME);
         
-        Element currentPerspectiveElement = document.createElement(PersistenceConstants.CURRENT_PERSPECTIVE_ELEMENT_NAME);
-        XMLUtils.setTextContent(document, currentPerspectiveElement, perspectiveModel.getCurrentPerspective());
-        perspectiveModelElement.appendChild(currentPerspectiveElement);
+        perspectiveModelElement.setAttribute(PersistenceConstants.CURRENT_PERSPECTIVE_ID_ATTRIBUTE_NAME, perspectiveModel.getCurrentPerspective());
+        perspectiveModelElement.setAttribute(PersistenceConstants.DEFAULT_PERSPECTIVE_ID_ATTRIBUTE_NAME, perspectiveModel.getDefaultPerspective());
         
-        Element defaultPerspectiveElement = document.createElement(PersistenceConstants.DEFAULT_PERSPECTIVE_ELEMENT_NAME);
-        XMLUtils.setTextContent(document, defaultPerspectiveElement, perspectiveModel.getDefaultPerspective());
-        perspectiveModelElement.appendChild(defaultPerspectiveElement);
-
         ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
 
         Element perspectivesElement = document.createElement(PersistenceConstants.PERSPECTIVES_ELEMENT_NAME);
@@ -54,8 +49,6 @@ public class PerspectiveModelSerializer implements ISerializer {
             perspectivesElement.appendChild(perspectiveElement);
         }
         
-        perspectiveModelElement.appendChild(currentPerspectiveElement);
-        perspectiveModelElement.appendChild(defaultPerspectiveElement);
         perspectiveModelElement.appendChild(perspectivesElement);
 
         return perspectiveModelElement;
