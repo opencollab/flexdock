@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSequenceSerializer.java,v 1.3 2005-06-27 17:32:53 winnetou25 Exp $
+ * @version $Id: LayoutSequenceSerializer.java,v 1.4 2005-06-27 21:32:56 winnetou25 Exp $
  */
 public class LayoutSequenceSerializer implements ISerializer {
     
@@ -42,20 +42,12 @@ public class LayoutSequenceSerializer implements ISerializer {
         Element layoutSequenceElement = document.createElement(PersistenceConstants.LAYOUT_SEQUENCE_ELEMENT_NAME);
         
         List dockingStates = layoutSequence.getDockingStates();
+        ISerializer dockableStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
         for (int i = 0; i < dockingStates.size(); i++) {
-            //TODO do we have to serialize whole DockingState object? No please no
-            //we could only serialize some unique id but it seems that DockingState does
-            //not have unique id, does it?
             DockingState dockingState = (DockingState) dockingStates.get(i);
-            //dockableId should be unique within perspective
-            //that it is, it is not possible for two dockables to be included in the same perspective?
-            String dockableId = dockingState.getDockableId();
-            //By using this dockableId we will have to find DockingState object.
+            Element dockingStateElement = dockableStateSerializer.serialize(document, dockingState);
             
-            Element dockableElement = document.createElement(PersistenceConstants.LAYOUT_SEQUENCE_DOCKABLE_ELEMENT);
-            dockableElement.setAttribute(PersistenceConstants.LAYOUT_SEQUENCE_DOCKABLE_ATTRIBUTE_ID, dockableId);
-        
-            layoutSequenceElement.appendChild(dockableElement);
+            layoutSequenceElement.appendChild(dockingStateElement);
         }
         
         return layoutSequenceElement;

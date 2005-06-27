@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: AbstractLayoutNodeSerializer.java,v 1.1 2005-06-27 19:00:06 winnetou25 Exp $
+ * @version $Id: AbstractLayoutNodeSerializer.java,v 1.2 2005-06-27 21:32:56 winnetou25 Exp $
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
@@ -36,28 +36,20 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
         LayoutNode layoutNode = (LayoutNode) object;
 
         Element layoutNodeElement = getElement(document, object);
-        Element childrenElement = serializeTreeNodeChildren(document, layoutNode);
-
-        layoutNodeElement.appendChild(childrenElement);
         
-        return layoutNodeElement;
-    }
-    
-    private Element serializeTreeNodeChildren(Document document, MutableTreeNode treeNode) {
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
-        Element childrenElement = document.createElement(PersistenceConstants.LAYOUT_NODE_ELEMENT_CHILDREN);
-        for (int i=0; i<treeNode.getChildCount(); i++) {
-            MutableTreeNode childTreeNode = (MutableTreeNode) treeNode.getChildAt(i);
+        for (int i=0; i<layoutNode.getChildCount(); i++) {
+            MutableTreeNode childTreeNode = (MutableTreeNode) layoutNode.getChildAt(i);
             if (childTreeNode.isLeaf()) {
                 Element element = layoutNodeSerializer.serialize(document, childTreeNode);
-                childrenElement.appendChild(element);
+                layoutNodeElement.appendChild(element);
             } else {
-                Element element = serializeTreeNodeChildren(document, childTreeNode); //recursion
-                childrenElement.appendChild(element);
+                Element element = layoutNodeSerializer.serialize(document, childTreeNode); //recursion
+                layoutNodeElement.appendChild(element);
             }
         }
         
-        return childrenElement;
+        return layoutNodeElement;
     }
     
     protected abstract Element getElement(Document document, Object o);

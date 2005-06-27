@@ -26,21 +26,17 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockableNodeSerializer.java,v 1.1 2005-06-27 19:00:07 winnetou25 Exp $
+ * @version $Id: DockableNodeSerializer.java,v 1.2 2005-06-27 21:32:56 winnetou25 Exp $
  */
-public class DockableNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
+public class DockableNodeSerializer implements ISerializer {
 
     public Element serialize(Document document, Object object) {
         DockableNode dockableNode = (DockableNode) object;
         
-        Element dockableNodeElement = super.serialize(document, dockableNode);
+        Element dockableNodeElement = document.createElement(PersistenceConstants.DOCKABLE_NODE_ELEMENT_NAME);
         dockableNodeElement.setAttribute(PersistenceConstants.DOCKABLE_NODE_ATTRIBUTE_DOCKABLE_ID, dockableNode.getDockableId());
 
         return dockableNodeElement;
     }
     
-    protected Element getElement(Document document, Object o) {
-        return document.createElement(PersistenceConstants.DOCKABLE_NODE_ELEMENT_NAME);
-    }
-
 }
