@@ -33,6 +33,8 @@ import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatingGroup;
 import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.docking.state.tree.DockableNode;
+import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.perspective.Layout;
 import org.flexdock.perspective.LayoutSequence;
@@ -49,7 +51,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.14 2005-06-27 17:32:53 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.15 2005-06-27 19:00:06 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -82,7 +84,6 @@ public class XMLPersister implements Persister {
     private void registerSerializers() {
         SerializerRegistry.registerSerializer(Perspective.class, new PerspectiveSerializer());
         SerializerRegistry.registerSerializer(Layout.class, new LayoutSerializer());
-        SerializerRegistry.registerSerializer(LayoutNode.class, new LayoutNodeSerializer());
         SerializerRegistry.registerSerializer(LayoutSequence.class, new LayoutSequenceSerializer());
         SerializerRegistry.registerSerializer(DockingState.class, new DockingStateSerializer());
         SerializerRegistry.registerSerializer(Point.class, new PointSerializer());
@@ -90,8 +91,11 @@ public class XMLPersister implements Persister {
         SerializerRegistry.registerSerializer(Rectangle.class, new RectangleSerializer());
         SerializerRegistry.registerSerializer(FloatingGroup.class, new FloatingGroupSerializer());
         SerializerRegistry.registerSerializer(DockingPath.class, new DockingPathSerializer());
-        SerializerRegistry.registerSerializer(SplitNode.class, new SplitNodeSerializer());
         SerializerRegistry.registerSerializer(PerspectiveModel.class, new PerspectiveModelSerializer());
+        SerializerRegistry.registerSerializer(LayoutNode.class, new LayoutNodeSerializer());
+        SerializerRegistry.registerSerializer(SplitNode.class, new SplitNodeSerializer());
+        SerializerRegistry.registerSerializer(DockingPortNode.class, new DockingPortNodeSerializer());
+        SerializerRegistry.registerSerializer(DockableNode.class, new DockableNodeSerializer());
     }
     
     public static XMLPersister newDefaultInstance() {

@@ -21,6 +21,7 @@ package org.flexdock.perspective.persist.xml;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatingGroup;
+import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.perspective.Layout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,10 +30,10 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSerializer.java,v 1.5 2005-06-24 14:35:53 winnetou25 Exp $
+ * @version $Id: LayoutSerializer.java,v 1.6 2005-06-27 19:00:06 winnetou25 Exp $
  */
 public class LayoutSerializer implements ISerializer {
-
+    
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
@@ -50,7 +51,7 @@ public class LayoutSerializer implements ISerializer {
             Element dockingStateElement = dockingStateSerializer.serialize(document, dockingState);
             layoutElement.appendChild(dockingStateElement);
         }
-
+        
         ISerializer floatingGroupSerializer = SerializerRegistry.getSerializer(FloatingGroup.class);
         for (int i = 0; i < dockables.length; i++) {
             Dockable dockable = dockables[i];
@@ -63,12 +64,14 @@ public class LayoutSerializer implements ISerializer {
             }
         }
         
-//        LayoutNode layoutNode = layout.getRestorationLayout();
-//        ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
-//        Element layoutNodeElement = layoutNodeSerializer.serialize(document, layoutNode);
-//        layoutElement.appendChild(layoutNodeElement);
+        LayoutNode layoutNode = layout.getRestorationLayout();
+        if (layoutNode != null) {
+            ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
+            Element layoutNodeElement = layoutNodeSerializer.serialize(document, layoutNode);
+            layoutElement.appendChild(layoutNodeElement);
+        }
         
         return layoutElement;
     }
-
+    
 }

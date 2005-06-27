@@ -25,8 +25,8 @@ public abstract class DockingNode extends DefaultMutableTreeNode implements Layo
 	}
 
 	public abstract Object getDockingObject();
-	protected abstract DockingNode shallowClone();
 
+    protected abstract DockingNode shallowClone();
 	
 	public Object clone() {
 		return deepClone();
@@ -40,4 +40,5 @@ public abstract class DockingNode extends DefaultMutableTreeNode implements Layo
 		}
 		return clone;		
 	}
+    
 }

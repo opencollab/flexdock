@@ -26,14 +26,15 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.3 2005-06-27 16:26:19 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.4 2005-06-27 19:00:06 winnetou25 Exp $
  */
-public class SplitNodeSerializer implements ISerializer {
+public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
     public Element serialize(Document document, Object object) {
         SplitNode splitNode = (SplitNode) object;
+        
+        Element splitNodeElement = super.serialize(document, object);
 
-        Element splitNodeElement = document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
         if (splitNode.getSiblingId() != null) {
             splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID, splitNode.getSiblingId());
         }
@@ -46,6 +47,10 @@ public class SplitNodeSerializer implements ISerializer {
         }
 
         return splitNodeElement;
+    }
+
+    protected Element getElement(Document document, Object o) {
+        return document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
     }
 
 }

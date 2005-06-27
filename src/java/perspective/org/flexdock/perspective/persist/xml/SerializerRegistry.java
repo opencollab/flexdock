@@ -24,7 +24,7 @@ import java.util.HashMap;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SerializerRegistry.java,v 1.2 2005-06-04 14:00:28 winnetou25 Exp $
+ * @version $Id: SerializerRegistry.java,v 1.3 2005-06-27 19:00:06 winnetou25 Exp $
  */
 public class SerializerRegistry {
 
@@ -42,5 +42,5 @@ public class SerializerRegistry {
 
         return (ISerializer) m_serializers.get(clazz);
     }
-    
+
 }

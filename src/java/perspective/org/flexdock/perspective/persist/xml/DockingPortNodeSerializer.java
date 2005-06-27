@@ -18,9 +18,7 @@
  */
 package org.flexdock.perspective.persist.xml;
 
-import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
-import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -28,21 +26,19 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutNodeSerializer.java,v 1.5 2005-06-27 19:00:05 winnetou25 Exp $
+ * @version $Id: DockingPortNodeSerializer.java,v 1.1 2005-06-27 19:00:06 winnetou25 Exp $
  */
-public class LayoutNodeSerializer implements ISerializer {
+public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
     public Element serialize(Document document, Object object) {
-        if (object instanceof SplitNode) {
-            return SerializerRegistry.getSerializer(SplitNode.class).serialize(document, object);
-        } else if (object instanceof DockingPortNode) {
-            return SerializerRegistry.getSerializer(DockingPortNode.class).serialize(document, object);
-        } else if (object instanceof DockableNode) {
-            return SerializerRegistry.getSerializer(DockableNode.class).serialize(document, object);
-        }
-        
-        throw new RuntimeException("Incorrect element: "+ object);
-    }
+        DockingPortNode dockingPortNode = (DockingPortNode) object;
+        Element dockingPortNodeElement = super.serialize(document, dockingPortNode);
 
+        return dockingPortNodeElement;
+    }
+    
+    protected Element getElement(Document document, Object o) {
+        return document.createElement(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME);
+    }
 
 }
