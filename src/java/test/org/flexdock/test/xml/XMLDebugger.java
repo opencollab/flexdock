@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -68,9 +69,7 @@ public class XMLDebugger {
 	}
 	
 	private void buildXML(Object obj, Document document, Element parentElem) {
-		Class c = obj.getClass();
-
-		String elemName = getName(c);
+		String elemName = getName(obj);
 		Element objElem = document.createElement(elemName);
 		
 		if(isBasic(obj)) {
@@ -80,7 +79,7 @@ public class XMLDebugger {
 		}
 		
 		
-		Field[] fields = c.getDeclaredFields();
+		Field[] fields = getFields(obj);
 		for(int i=0; i<fields.length; i++) {
 			String modifiers = Modifier.toString(fields[i].getModifiers());
 			if(modifiers.indexOf("static")!=-1 || modifiers.indexOf("transient")!=-1)
@@ -157,7 +156,36 @@ public class XMLDebugger {
 	
 	
 	
+	private static Field[] getFields(Object obj) {
+		Class c = obj.getClass();
+		Field[] fields = c.getDeclaredFields();
+		if(obj instanceof DefaultMutableTreeNode) {
+			Field children = getField(obj, "children");
+			if(children!=null) {
+				Field[] tmp = new Field[fields.length+1];
+				System.arraycopy(fields, 0, tmp, 0, fields.length);
+				tmp[tmp.length-1] = children;
+				fields = tmp;
+			}
+		}
+		return fields;
+	}
+	
+	
 
+	private static Field getField(Object obj, String fieldName) {
+		Class c = obj.getClass();
+
+		while(true) {
+			try {
+				return c.getDeclaredField(fieldName);
+			} catch(Exception e) {
+				if(c==Object.class)
+					return null;
+				c = c.getSuperclass();
+			}
+		}
+	}
 	
 	private static Object getValue(Field field, Object owner) {
 		boolean toggle = !field.isAccessible();
@@ -178,7 +206,9 @@ public class XMLDebugger {
 		return obj;
 	}
 	
-	private static String getName(Class clazz) {
+	private static String getName(Object obj) {
+		Class clazz = obj.getClass();
+		
 		String name = clazz.getName();
 		int indx = name.lastIndexOf('.');
 		if(indx!=-1)
