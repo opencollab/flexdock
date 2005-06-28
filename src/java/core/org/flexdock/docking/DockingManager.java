@@ -1429,7 +1429,9 @@ public class DockingManager implements DockingConstants {
 	}
 	
 	private static Dockable getDockableImpl(String id) {
-		return id==null? null: (Dockable)DOCKABLES_BY_ID.get(id);
+		synchronized(DOCKABLES_BY_ID) {
+			return id==null? null: (Dockable)DOCKABLES_BY_ID.get(id);
+		}
 	}
 	
 	
