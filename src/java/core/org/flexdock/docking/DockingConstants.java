@@ -38,4 +38,6 @@ public interface DockingConstants {
 	String WEST_REGION = "WEST";
 	String UNKNOWN_REGION = "UNKNOWN";
 	
+	String HEAVYWEIGHT_DOCKABLES = "heavyweight.dockables";
+	
 }
