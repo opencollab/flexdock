@@ -501,7 +501,15 @@ public class DockbarManager {
 	
 	
 	public int getActiveEdge() {
-		return activeEdge;
+		synchronized(this) {
+			return activeEdge;
+		}
+	}
+	
+	private void setActiveEdge(int edge) {
+		synchronized(this) {
+			activeEdge = edge;
+		}
 	}
 	
 	private Dockbar getActiveDockbar() {
@@ -517,12 +525,23 @@ public class DockbarManager {
 	}
 
 	public String getActiveDockableId() {
-		return activeDockableId;
+		synchronized(this) {
+			return activeDockableId;
+		}
+	}
+	
+	private void setActiveDockableId(String id) {
+		synchronized(this) {
+			activeDockableId = id;
+		}
 	}
 	
 	public Dockable getActiveDockable() {
-		return DockingManager.getDockable(activeDockableId);
+		String dockingId = getActiveDockableId();
+		Dockable dockable = DockingManager.getDockable(dockingId);
+		return dockable;
 	}
+
 	
 	public Cursor getResizeCursor() {
 		return viewPane.getResizeCursor();
@@ -548,14 +567,17 @@ public class DockbarManager {
 		// check for dockable changes
 		Dockable oldDockable = getActiveDockable();
 		final String newDockableId = dockable==null? null: dockable.getPersistentId();
-		boolean changed = Utilities.isChanged(activeDockableId, newDockableId);
+		String currentlyActiveId = getActiveDockableId();
+		boolean changed = Utilities.isChanged(currentlyActiveId, newDockableId);
 		// check for edge changes
-		changed = changed || newEdge!=activeEdge;
+		changed = changed || newEdge!=getActiveEdge();
 
 		
 		// if nothing has changed, then we're done
 		if(changed) {
 			viewPane.setLocked(false);
+			setActiveEdge(newEdge);
+			setActiveDockableId(newDockableId);
 			startAnimation(oldDockable, dockable, newDockableId, newEdge);
 		}
 	}
@@ -578,8 +600,8 @@ public class DockbarManager {
 		Animation deactivation = oldDockable==null? null: new Animation(this, true);
 		Runnable updater1 = new Runnable() {
 			public void run() {
-				activeEdge = newEdge;
-				activeDockableId = newDockableId;
+				setActiveEdge(newEdge);
+				setActiveDockableId(newDockableId);
 				viewPane.updateOrientation();
 				viewPane.updateContents();
 			}
