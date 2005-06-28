@@ -26,6 +26,17 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 		sequence = new ArrayList();
 	}
 	
+	public LayoutSequence(DockingState[] dockingStates) {
+		if(dockingStates==null)
+			dockingStates = new DockingState[0];
+		
+		ArrayList list = new ArrayList(dockingStates.length);
+		for(int i=0; i<dockingStates.length; i++) {
+			list.add(dockingStates[i]);
+		}
+		sequence = list;
+	}
+	
 	private LayoutSequence(ArrayList list) {
 		sequence = list;
 	}
@@ -104,13 +115,8 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 	}
 	
     public List getDockingStates() {
-        return sequence;
+        return getSequenceClone();
     }
-    
-    //TODO do we have to retrieve always the cloned list? 
-	public List getClonedDockingStates() {
-		return getSequenceClone();
-	}
 	
 	private ArrayList getSequenceClone() {
 		ArrayList list = new ArrayList(sequence.size());
