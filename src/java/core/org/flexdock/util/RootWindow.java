@@ -23,6 +23,7 @@ import java.awt.Container;
 import java.awt.Frame;
 import java.awt.LayoutManager;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Window;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -391,5 +392,17 @@ public class RootWindow {
 		else if(root instanceof JDialog)
 			return ((JDialog)root).getOwner();
 		return null;		
+	}
+	
+	public Rectangle getBounds() {
+		if(root instanceof JFrame)
+			return ((JFrame)root).getBounds();
+		if(root instanceof JApplet)
+			return ((JApplet)root).getBounds();
+		else if(root instanceof JWindow)
+			return ((JWindow)root).getBounds();
+		else if(root instanceof JDialog)
+			return ((JDialog)root).getBounds();
+		return null;
 	}
 }
