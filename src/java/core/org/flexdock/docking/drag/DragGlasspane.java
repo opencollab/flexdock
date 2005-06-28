@@ -146,7 +146,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 	}
 	
 	public void paint(Graphics g) {
-		paintComponent(g);
+		paintComponentImpl(g);
 		postPaint(g);
 	}
 	
@@ -187,7 +187,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 	
 
 	
-	protected void paintComponent(Graphics g) {
+	protected void paintComponentImpl(Graphics g) {
 		if(currentDragToken!=null && previewDelegate!=null && previewPoly!=null) { 
 			Dockable dockable = currentDragToken.getDockableReference();
 			Map dragInfo = getDragContext(currentDragToken);
