@@ -25,12 +25,14 @@ import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.perspective.Layout;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSerializer.java,v 1.6 2005-06-27 19:00:06 winnetou25 Exp $
+ * @version $Id: LayoutSerializer.java,v 1.7 2005-06-28 23:00:29 winnetou25 Exp $
  */
 public class LayoutSerializer implements ISerializer {
     
@@ -43,7 +45,6 @@ public class LayoutSerializer implements ISerializer {
         Element layoutElement = document.createElement(PersistenceConstants.LAYOUT_ELEMENT_NAME);
         
         Dockable[] dockables = layout.getDockables();
-        
         ISerializer dockingStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
         for (int i = 0; i < dockables.length; i++) {
             Dockable dockable = dockables[i];
@@ -72,6 +73,24 @@ public class LayoutSerializer implements ISerializer {
         }
         
         return layoutElement;
+    }
+
+    public Object deserialize(Document document, Element element) {
+        
+        Layout layout = new Layout();
+        NodeList dockingStateNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
+        ISerializer dockingStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
+        for (int i = 0; i < dockingStateNodeList.getLength(); i++) {
+            Node node = dockingStateNodeList.item(i);
+            if (node instanceof Element) {
+                Element dockingStateElement = (Element) node;
+                DockingState dockingState = (DockingState) dockingStateSerializer.deserialize(document, dockingStateElement);
+                String dockableId = dockingState.getDockableId();
+                layout.setDockingState(dockableId, dockingState);
+            }
+        }
+        
+        return layout;
     }
     
 }

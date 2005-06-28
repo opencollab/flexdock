@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSequenceSerializer.java,v 1.4 2005-06-27 21:32:56 winnetou25 Exp $
+ * @version $Id: LayoutSequenceSerializer.java,v 1.5 2005-06-28 23:00:31 winnetou25 Exp $
  */
 public class LayoutSequenceSerializer implements ISerializer {
     
@@ -51,6 +51,11 @@ public class LayoutSequenceSerializer implements ISerializer {
         }
         
         return layoutSequenceElement;
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

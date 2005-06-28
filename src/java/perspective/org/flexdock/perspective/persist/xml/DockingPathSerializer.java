@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPathSerializer.java,v 1.2 2005-06-27 15:06:14 winnetou25 Exp $
+ * @version $Id: DockingPathSerializer.java,v 1.3 2005-06-28 23:00:31 winnetou25 Exp $
  */
 public class DockingPathSerializer implements ISerializer {
     
@@ -55,6 +55,11 @@ public class DockingPathSerializer implements ISerializer {
         }
         
         return dockingPathElement;
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

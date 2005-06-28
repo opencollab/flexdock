@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.4 2005-06-27 19:00:06 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.5 2005-06-28 23:00:30 winnetou25 Exp $
  */
 public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -51,6 +51,11 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
 
     protected Element getElement(Document document, Object o) {
         return document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

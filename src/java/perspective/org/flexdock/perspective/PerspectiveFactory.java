@@ -7,5 +7,7 @@ package org.flexdock.perspective;
  * @author Christopher Butler
  */
 public interface PerspectiveFactory {
-	public Perspective getPerspective(String persistentId);
+	
+    Perspective getPerspective(String persistentId);
+
 }

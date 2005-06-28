@@ -31,12 +31,11 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.12 2005-06-28 04:41:32 marius Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.13 2005-06-28 23:00:30 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
     private final static String OPENED_STATE = "opened";
-    //private final static String CLOSED_STATE = "closed";
     private final static String MINIMIZED_STATE = "minimized";
     private final static String FLOATING_STATE = "floating";
     
@@ -111,6 +110,11 @@ public class DockingStateSerializer implements ISerializer {
         	
         	default: throw new RuntimeException("Unknown dockbarEdge");
         }
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

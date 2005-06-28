@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: RectangleSerializer.java,v 1.3 2005-06-27 15:07:24 winnetou25 Exp $
+ * @version $Id: RectangleSerializer.java,v 1.4 2005-06-28 23:00:30 winnetou25 Exp $
  */
 public class RectangleSerializer implements ISerializer {
     
@@ -53,6 +53,11 @@ public class RectangleSerializer implements ISerializer {
         rectangleElement.appendChild(dimensionElement);
         
         return rectangleElement;
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

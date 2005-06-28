@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPortNodeSerializer.java,v 1.1 2005-06-27 19:00:06 winnetou25 Exp $
+ * @version $Id: DockingPortNodeSerializer.java,v 1.2 2005-06-28 23:00:31 winnetou25 Exp $
  */
 public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -39,6 +39,11 @@ public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer impl
     
     protected Element getElement(Document document, Object o) {
         return document.createElement(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME);
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

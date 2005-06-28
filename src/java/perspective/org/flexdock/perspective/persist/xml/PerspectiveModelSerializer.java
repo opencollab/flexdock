@@ -18,16 +18,20 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import java.util.ArrayList;
+
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveModelSerializer.java,v 1.4 2005-06-27 21:55:38 winnetou25 Exp $
+ * @version $Id: PerspectiveModelSerializer.java,v 1.5 2005-06-28 23:00:30 winnetou25 Exp $
  */
 public class PerspectiveModelSerializer implements ISerializer {
 
@@ -36,8 +40,8 @@ public class PerspectiveModelSerializer implements ISerializer {
         
         Element perspectiveModelElement = document.createElement(PersistenceConstants.PERSPECTIVE_MODEL_ELEMENT_NAME);
         
-        perspectiveModelElement.setAttribute(PersistenceConstants.CURRENT_PERSPECTIVE_ID_ATTRIBUTE_NAME, perspectiveModel.getCurrentPerspective());
-        perspectiveModelElement.setAttribute(PersistenceConstants.DEFAULT_PERSPECTIVE_ID_ATTRIBUTE_NAME, perspectiveModel.getDefaultPerspective());
+        perspectiveModelElement.setAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_CURRENT_PERSPECTIVE_ID, perspectiveModel.getCurrentPerspective());
+        perspectiveModelElement.setAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_DEFAULT_PERSPECTIVE_ID, perspectiveModel.getDefaultPerspective());
         
         ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
 
@@ -52,6 +56,28 @@ public class PerspectiveModelSerializer implements ISerializer {
         perspectiveModelElement.appendChild(perspectivesElement);
 
         return perspectiveModelElement;
+    }
+    
+    public Object deserialize(Document document, Element element) {
+        String currentPerspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_CURRENT_PERSPECTIVE_ID);
+        String defaultPerspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_DEFAULT_PERSPECTIVE_ID);
+
+        NodeList perspectivesList = element.getElementsByTagName(PersistenceConstants.PERSPECTIVE_ELEMENT_NAME);
+        ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
+        ArrayList perspectives = new ArrayList();
+        for (int i=0; i<perspectivesList.getLength(); i++) {
+            Node node = perspectivesList.item(i);
+            if (node instanceof Element) {
+                Element perspectiveElement = (Element) node;
+                Perspective perspective = (Perspective) perspectiveSerializer.deserialize(document, perspectiveElement);
+                perspectives.add(perspective);
+            }
+        }
+        
+        Perspective[] perspectivesArray = (Perspective[]) perspectives.toArray(new Perspective[perspectives.size()]);
+        PerspectiveModel perspectiveModel = new PerspectiveModel(defaultPerspectiveId, currentPerspectiveId, perspectivesArray);
+        
+        return perspectiveModel;
     }
     
 }

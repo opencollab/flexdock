@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FloatingGroupSerializer.java,v 1.4 2005-06-23 16:21:29 winnetou25 Exp $
+ * @version $Id: FloatingGroupSerializer.java,v 1.5 2005-06-28 23:00:31 winnetou25 Exp $
  */
 public class FloatingGroupSerializer implements ISerializer {
 
@@ -47,6 +47,11 @@ public class FloatingGroupSerializer implements ISerializer {
         floatingGroupElement.appendChild(rectangleElement);
         
         return floatingGroupElement;
+    }
+
+    public Object deserialize(Document document, Element element) {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

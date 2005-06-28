@@ -23,12 +23,13 @@ import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveSerializer.java,v 1.5 2005-06-27 17:32:53 winnetou25 Exp $
+ * @version $Id: PerspectiveSerializer.java,v 1.6 2005-06-28 23:00:31 winnetou25 Exp $
  */
 public class PerspectiveSerializer implements ISerializer {
 
@@ -54,6 +55,31 @@ public class PerspectiveSerializer implements ISerializer {
         }
         
         return perspectiveElement;
+    }
+
+    public Object deserialize(Document document, Element element) {
+        String perspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_ID);
+        String perspectiveName = element.getAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_NAME);
+        
+        Perspective perspective = new Perspective(perspectiveId, perspectiveName);
+        
+        NodeList layoutNodeList = element.getElementsByTagName(PersistenceConstants.LAYOUT_ELEMENT_NAME);
+        ISerializer layoutSerializer = SerializerRegistry.getSerializer(Layout.class);
+        if (layoutNodeList.getLength() > 0 && layoutNodeList.item(0) instanceof Element) {
+            Element layoutElement = (Element) layoutNodeList.item(0);
+            Layout layout = (Layout) layoutSerializer.deserialize(document, layoutElement);
+            perspective.setLayout(layout);
+        }
+        
+        NodeList layoutSequenceNodeList = element.getElementsByTagName(PersistenceConstants.LAYOUT_SEQUENCE_ELEMENT_NAME);
+        ISerializer layoutSequenceSerializer = SerializerRegistry.getSerializer(LayoutSequence.class);
+        if (layoutSequenceNodeList.getLength() > 0 && layoutSequenceNodeList.item(0) instanceof Element) {
+            Element layoutSequenceElement = (Element) layoutSequenceNodeList.item(0);
+            LayoutSequence layoutSequence = (LayoutSequence) layoutSequenceSerializer.deserialize(document, layoutSequenceElement);
+            perspective.setInitialSequence(layoutSequence);
+        }
+        
+        return perspective;
     }
 
 }

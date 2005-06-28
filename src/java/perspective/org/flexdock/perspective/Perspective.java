@@ -119,6 +119,10 @@ public class Perspective implements Cloneable, Serializable {
 	public Layout getLayout() {
 		return m_layout;
 	}
+    
+    public void setLayout(Layout layout) {
+        m_layout = layout;
+    }
 	
 	public void reset(DockingPort port) {
 		if(m_initalSequence!=null) {

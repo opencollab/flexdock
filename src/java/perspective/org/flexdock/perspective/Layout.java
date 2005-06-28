@@ -165,6 +165,13 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		Object obj = dockingInfo.get(dockableId);
 		return (DockingState)obj;
 	}
+    
+    public void setDockingState(String dockableId, DockingState dockingState) {
+        if(dockableId==null || dockingState == null) {
+            return;
+        }
+        this.dockingInfo.put(dockableId, dockingState);
+    }
 	
 	public void apply(DockingPort dockingPort) {
 		Component comp = (Component)dockingPort;
