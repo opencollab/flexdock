@@ -6,6 +6,7 @@ package org.flexdock.dockbar.event;
 import java.awt.Point;
 
 import org.flexdock.dockbar.DockbarManager;
+import org.flexdock.docking.Dockable;
 import org.flexdock.event.EventManager;
 import org.flexdock.util.Utilities;
 
@@ -92,8 +93,11 @@ public class ActivationListener {
 		dispatchDockbarEvent(DockbarEvent.LOCKED);		
 	}
 	
+	
 	private void dispatchDockbarEvent(int type) {
-		DockbarEvent evt = new DockbarEvent(manager.getActiveDockable(), type, manager.getActiveEdge());
+		Dockable dockable = manager.getActiveDockable();
+		int edge = manager.getActiveEdge();
+		DockbarEvent evt = new DockbarEvent(dockable, type, edge);
 		EventManager.dispatch(evt);
 	}
 	

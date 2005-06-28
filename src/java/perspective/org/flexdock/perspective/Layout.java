@@ -353,7 +353,6 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	}
 	
 	private String getFloatingGroup(Dockable dockable) {
-        //DockingState info = DockingManager.getLayoutManager().getDockingState(dockable);
         DockingState info = getDockingState(dockable, false);
 		return info.getFloatingGroup();
 	}
@@ -377,7 +376,13 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	
 	void update(LayoutSequence sequence) {
         //TODO do we have to get cloned states?
-		List states = sequence.getClonedDockingStates();
+		// Yes, they have to be cloned states.  The DockingStates inside of a LayoutSequence 
+		// should be treated as if they're immutable.  They should not be updated anywhere inside
+		// of this class.  This class represents the current on-screen state for the owner perspective, 
+		// not it's initial.  It this class is allowed to modify any of the DockingStates inside of 
+		// LayoutSequence, then you will never be able to reset the perspective again.
+		// -marius
+		List states = sequence.getDockingStates();
 		
 		synchronized(dockingInfo) {
 			for(Iterator it=states.iterator(); it.hasNext();) {
