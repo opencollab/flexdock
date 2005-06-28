@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.11 2005-06-27 16:26:19 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.12 2005-06-28 04:41:32 marius Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -67,7 +67,7 @@ public class DockingStateSerializer implements ISerializer {
             int constraint = dockingState.getMinimizedConstraint();
             String presConstraint = getPresentationMinimizeConstraint(constraint);
             Element minimizeConstraintElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_MINIMIZE_CONSTRAINT);
-            minimizeConstraintElement.setTextContent(presConstraint);
+            XMLUtils.setTextContent(document, minimizeConstraintElement, presConstraint);
 
             dockingStateElement.appendChild(minimizeConstraintElement);
         }
