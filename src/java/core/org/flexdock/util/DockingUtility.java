@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Point;
 
+import javax.swing.JComponent;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -619,13 +620,25 @@ public class DockingUtility implements DockingConstants {
 		if(obj==null)
 			return false;
 		
+		// if the object directly implements Dockable, then we can return from here.
 		if(obj instanceof Dockable)
 			return true;
 		
-		if(obj instanceof Component) {
+		// if the object is a JComponent, but not a Dockable implementation, then check its
+		// client property indicator
+		if(obj instanceof JComponent) {
 			Component comp = (Component)obj;
 			return SwingUtility.getClientProperty(comp, Dockable.DOCKABLE_INDICATOR)==Boolean.TRUE;
 		}
+		
+		// they may have a heavyweight Component that does not directly implement Dockable.
+		// in this case, Component does not have client properties we can check.  we'll have to
+		// check directly with the DockingManager.
+		if(obj instanceof Component) {
+			Component comp = (Component)obj;
+			return DockingManager.getDockable(comp)!=null;
+		}
+		
 		return false;
 	}
 }
