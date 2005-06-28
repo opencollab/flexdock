@@ -2,25 +2,30 @@ package org.flexdock.docking.drag;
 
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.drag.effects.EffectsFactory;
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
+import org.flexdock.util.Utilities;
 
 public class DragPipeline {
 	private GlassPaneMonitor paneMonitor;
 	private RootWindow[] windows;
-	private HashMap rootWindows;
+	private HashMap rootWindowsByBounds;
 	private DragGlasspane currentGlasspane;
 	private DragGlasspane newGlassPane;
+	private Rectangle[] windowBounds;
+	private boolean heavyweightDockableSupportted;
 	
 	private boolean open;
 	private DragOperation dragToken;
@@ -67,14 +72,23 @@ public class DragPipeline {
 	}
 	
 	private void openImpl(DragOperation operation) {
+		// check to see if we're going to support heavyweight dockables for this operation
+		heavyweightDockableSupportted = Utilities.sysTrue(DockingConstants.HEAVYWEIGHT_DOCKABLES);
+		
 		this.dragToken = operation;
 
 		// turn the current drag operation on
 		setCurrentDragOperation(operation);
 		
 		windows = RootWindow.getVisibleWindows();
+		
+		windowBounds = new Rectangle[windows.length];
+		rootWindowsByBounds = new HashMap();
+		
 		for(int i=0; i<windows.length; i++) {
 			applyGlassPane(windows[i], createGlassPane());
+			windowBounds[i] = windows[i].getBounds();
+			rootWindowsByBounds.put(windowBounds[i], windows[i]);
 		}
 		
 		// kill the rubberband if floating is not allowed
@@ -117,6 +131,8 @@ public class DragPipeline {
 			}
 		}
 		
+		windowBounds = null;
+		rootWindowsByBounds.clear();
 		// turn the current drag operation off
 		setCurrentDragOperation(null);
 		open = false;
@@ -147,6 +163,10 @@ public class DragPipeline {
 	
 	private void processDragEventImpl(MouseEvent me) {
 		dragToken.updateMouse(me);
+
+		if(heavyweightDockableSupportted)
+			preprocessHeavyweightDockables();
+		
 		me.consume();
 
 		// hide the rubber band
@@ -306,6 +326,25 @@ public class DragPipeline {
 		}
 	}
 		
+	private void preprocessHeavyweightDockables() {
+		RootWindow targetWindow = getTargetWindow();
+		
+		if(newGlassPane==null && targetWindow!=null) {
+			Component gp = targetWindow.getGlassPane();
+			if(gp instanceof DragGlasspane) {
+				setCurrentGlassPane((DragGlasspane)gp);
+			}
+		}
+	}
+	
+	private RootWindow getTargetWindow() {
+		Point screenLoc = dragToken.getCurrentMouse(true);
+		for(int i=0; i<windowBounds.length; i++) {
+			if(windowBounds[i].contains(screenLoc))
+				return (RootWindow)rootWindowsByBounds.get(windowBounds[i]);
+		}
+		return null;
+	}
 	
 
 }
