@@ -22,7 +22,7 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.16 2005-06-28 23:00:30 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.17 2005-06-29 17:56:53 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
@@ -84,12 +84,13 @@ public interface PersistenceConstants {
     String SPLIT_NODE_ATTRIBUTE_DOCKING_REGION = "dockingRegion";
 
     String LAYOUT_SEQUENCE_ELEMENT_NAME = "LayoutSequence";
-    String LAYOUT_SEQUENCE_DOCKABLE_ELEMENT = "Dockable";
-    String LAYOUT_SEQUENCE_DOCKABLE_ATTRIBUTE_ID = "id";
 
     String DOCKABLE_NODE_ELEMENT_NAME = "DockableNode";
     String DOCKABLE_NODE_ATTRIBUTE_DOCKABLE_ID = "dockableId";
 
     String DOCKING_PORT_NODE_ELEMENT_NAME = "DockingPortNode";
 
+    String DOCKABLE_ELEMENT_NAME = "Dockable";
+    String DOCKABLE_ATTRIBUTE_ID = "id";
+    
 }

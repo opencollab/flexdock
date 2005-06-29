@@ -19,16 +19,19 @@
 package org.flexdock.perspective.persist.xml;
 
 import java.awt.Rectangle;
+import java.util.Iterator;
 
 import org.flexdock.docking.state.FloatingGroup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FloatingGroupSerializer.java,v 1.5 2005-06-28 23:00:31 winnetou25 Exp $
+ * @version $Id: FloatingGroupSerializer.java,v 1.6 2005-06-29 17:56:53 winnetou25 Exp $
  */
 public class FloatingGroupSerializer implements ISerializer {
 
@@ -43,15 +46,45 @@ public class FloatingGroupSerializer implements ISerializer {
         
         ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
         Element rectangleElement = rectangleSerializer.serialize(document, floatingGroup.getBounds());
-
         floatingGroupElement.appendChild(rectangleElement);
+
+        for (Iterator it = floatingGroup.getDockableIterator(); it.hasNext();) {
+            String dockableId = (String) it.next();
+            Element dockableElement = document.createElement(PersistenceConstants.DOCKABLE_ELEMENT_NAME);
+            dockableElement.setAttribute(PersistenceConstants.DOCKABLE_ATTRIBUTE_ID, dockableId);
+            floatingGroupElement.appendChild(dockableElement);
+        }
         
         return floatingGroupElement;
     }
 
     public Object deserialize(Document document, Element element) {
-        // TODO Auto-generated method stub
-        return null;
+        String floatingGroupName = element.getAttribute(PersistenceConstants.FLOATING_GROUP_ATTRIBUTE_NAME);
+
+        ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
+        FloatingGroup floatingGroup = new FloatingGroup(floatingGroupName);
+
+        NodeList rectangleNodeList = element.getElementsByTagName(PersistenceConstants.RECTANGLE_ELEMENT_NAME);
+        if (rectangleNodeList.getLength() > 0 && rectangleNodeList.item(0) instanceof Element) {
+            Node rectangleNode = rectangleNodeList.item(0);
+            if (rectangleNode instanceof Element) {
+                Element rectangleElement = (Element) rectangleNode;
+                Rectangle rectangle = (Rectangle) rectangleSerializer.deserialize(document, rectangleElement);
+                floatingGroup.setBounds(rectangle);
+            }
+        }
+
+        NodeList dockableNodeList = element.getElementsByTagName(PersistenceConstants.DOCKABLE_ELEMENT_NAME);
+        for (int i=0; i<dockableNodeList.getLength(); i++) {
+            Node dockableNode = dockableNodeList.item(i);
+            if (dockableNode instanceof Element) {
+                Element dockableElement = (Element) dockableNode;
+                String dockableId = dockableElement.getAttribute(PersistenceConstants.DOCKABLE_ATTRIBUTE_ID);
+                floatingGroup.addDockable(dockableId);
+            }
+        }
+        
+        return floatingGroup;
     }
 
 }

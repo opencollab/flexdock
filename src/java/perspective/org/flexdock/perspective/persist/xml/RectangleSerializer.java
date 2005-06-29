@@ -24,12 +24,13 @@ import java.awt.Rectangle;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: RectangleSerializer.java,v 1.4 2005-06-28 23:00:30 winnetou25 Exp $
+ * @version $Id: RectangleSerializer.java,v 1.5 2005-06-29 17:56:52 winnetou25 Exp $
  */
 public class RectangleSerializer implements ISerializer {
     
@@ -56,8 +57,27 @@ public class RectangleSerializer implements ISerializer {
     }
 
     public Object deserialize(Document document, Element element) {
-        // TODO Auto-generated method stub
-        return null;
+        ISerializer pointSerializer = SerializerRegistry.getSerializer(Point.class);
+        ISerializer dimensionSerializer = SerializerRegistry.getSerializer(Dimension.class);
+        
+        Rectangle rectangle = new Rectangle();
+
+        NodeList dimenstionNodeList = element.getElementsByTagName(PersistenceConstants.DIMENSION_ELEMENT_NAME);
+        if (dimenstionNodeList.getLength() > 0 && dimenstionNodeList.item(0) instanceof Element) {
+            Element dimensionElement = (Element) dimenstionNodeList.item(0);
+            Dimension dimension = (Dimension) dimensionSerializer.deserialize(document, dimensionElement);
+            rectangle.setSize(dimension);
+        }
+
+        NodeList pointNodeList = element.getElementsByTagName(PersistenceConstants.POINT_ELEMENT_NAME);
+        if (pointNodeList.getLength() > 0 && pointNodeList.item(0) instanceof Element) {
+            Element pointElement = (Element) pointNodeList.item(0);
+            Point point = (Point) pointSerializer.deserialize(document, pointElement);
+            rectangle.setLocation(point);
+        }
+
+
+        return rectangle;
     }
     
 }

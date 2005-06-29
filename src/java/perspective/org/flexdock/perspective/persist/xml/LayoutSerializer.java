@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSerializer.java,v 1.7 2005-06-28 23:00:29 winnetou25 Exp $
+ * @version $Id: LayoutSerializer.java,v 1.8 2005-06-29 17:56:53 winnetou25 Exp $
  */
 public class LayoutSerializer implements ISerializer {
     
@@ -54,18 +54,16 @@ public class LayoutSerializer implements ISerializer {
         }
         
         ISerializer floatingGroupSerializer = SerializerRegistry.getSerializer(FloatingGroup.class);
-        for (int i = 0; i < dockables.length; i++) {
-            Dockable dockable = dockables[i];
-            if (layout.contains(dockable)) {
-                FloatingGroup floatingGroup = layout.getGroup(dockable);
-                if (floatingGroup != null) {
-                    Element floatingGroupElement = floatingGroupSerializer.serialize(document, floatingGroup);
-                    layoutElement.appendChild(floatingGroupElement);
-                }
-            }
+        String[] floatingGroupIds = layout.getFloatingGroupIds();
+        for (int i = 0; i < floatingGroupIds.length; i++) {
+            String floatingGroupId = floatingGroupIds[i];
+            FloatingGroup floatingGroup = layout.getGroup(floatingGroupId);
+            Element floatingGroupElement = floatingGroupSerializer.serialize(document, floatingGroup);
+            layoutElement.appendChild(floatingGroupElement);
         }
-        
+
         LayoutNode layoutNode = layout.getRestorationLayout();
+        //TODO should we nest restoration layout in Restoration node?
         if (layoutNode != null) {
             ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
             Element layoutNodeElement = layoutNodeSerializer.serialize(document, layoutNode);
@@ -76,10 +74,10 @@ public class LayoutSerializer implements ISerializer {
     }
 
     public Object deserialize(Document document, Element element) {
-        
         Layout layout = new Layout();
-        NodeList dockingStateNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
+
         ISerializer dockingStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
+        NodeList dockingStateNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
         for (int i = 0; i < dockingStateNodeList.getLength(); i++) {
             Node node = dockingStateNodeList.item(i);
             if (node instanceof Element) {
@@ -90,6 +88,38 @@ public class LayoutSerializer implements ISerializer {
             }
         }
         
+        ISerializer floatingGroupsSerializer = SerializerRegistry.getSerializer(FloatingGroup.class);
+        NodeList floatingGroupsNodeList = element.getElementsByTagName(PersistenceConstants.FLOATING_GROUP_ELEMENT_NAME);
+        for (int i=0; i<floatingGroupsNodeList.getLength(); i++) {
+            Node floatingGroupNode = floatingGroupsNodeList.item(i);
+            if (floatingGroupNode instanceof Element) {
+                Element floatingGroupElement = (Element) floatingGroupNode;
+                FloatingGroup floatingGroup = (FloatingGroup) floatingGroupsSerializer.deserialize(document, floatingGroupElement);
+                layout.addFloatingGroup(floatingGroup);
+            }
+        }
+        
+        ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
+
+        NodeList dockingPortNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME);
+        if (dockingPortNodeList.getLength() > 0 && dockingPortNodeList.item(0) instanceof Element) {
+            Element layoutNodeElement = (Element) dockingPortNodeList.item(0);
+            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(document, layoutNodeElement);
+            layout.setRestorationLayout(restorationLayout);
+        }
+        NodeList splitNodeList = element.getElementsByTagName(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
+        if (splitNodeList.getLength() > 0 && splitNodeList.item(0) instanceof Element) {
+            Element layoutNodeElement = (Element) splitNodeList.item(0);
+            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(document, layoutNodeElement);
+            layout.setRestorationLayout(restorationLayout);
+        }
+        NodeList dockableNodeNodeList = element.getElementsByTagName(PersistenceConstants.DOCKABLE_NODE_ELEMENT_NAME);
+        if (dockableNodeNodeList.getLength() > 0 && dockableNodeNodeList.item(0) instanceof Element) {
+            Element layoutNodeElement = (Element) dockableNodeNodeList.item(0);
+            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(document, layoutNodeElement);
+            layout.setRestorationLayout(restorationLayout);
+        }
+
         return layout;
     }
     

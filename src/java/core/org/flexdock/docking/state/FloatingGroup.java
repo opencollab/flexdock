@@ -6,6 +6,7 @@ package org.flexdock.docking.state;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.floating.frames.DockingFrame;
@@ -149,6 +150,10 @@ public class FloatingGroup implements Cloneable, Serializable {
 		dockables.add(dockableId);
 	}
 	
+    public Iterator getDockableIterator() {
+        return this.dockables.iterator();
+    }
+    
 	public void removeDockable(String dockableId) {
 		dockables.remove(dockableId);
 	}
