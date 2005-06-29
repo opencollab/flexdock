@@ -24,12 +24,14 @@ import org.flexdock.docking.state.DockingState;
 import org.flexdock.perspective.LayoutSequence;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSequenceSerializer.java,v 1.5 2005-06-28 23:00:31 winnetou25 Exp $
+ * @version $Id: LayoutSequenceSerializer.java,v 1.6 2005-06-29 20:13:12 winnetou25 Exp $
  */
 public class LayoutSequenceSerializer implements ISerializer {
     
@@ -52,10 +54,22 @@ public class LayoutSequenceSerializer implements ISerializer {
         
         return layoutSequenceElement;
     }
-
+    
     public Object deserialize(Document document, Element element) {
-        // TODO Auto-generated method stub
-        return null;
+        LayoutSequence layoutSequence = new LayoutSequence();
+        
+        NodeList dockingStateNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
+        ISerializer dockingStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
+        for (int i=0; i<dockingStateNodeList.getLength(); i++) {
+            Node dockingStateNode = dockingStateNodeList.item(i);
+            if (dockingStateNode instanceof Element) {
+                Element dockingStateElement = (Element) dockingStateNode;
+                DockingState dockingState = (DockingState) dockingStateSerializer.deserialize(document, dockingStateElement);
+                layoutSequence.add(dockingState);
+            }
+        }
+        
+        return layoutSequence;
     }
     
 }
