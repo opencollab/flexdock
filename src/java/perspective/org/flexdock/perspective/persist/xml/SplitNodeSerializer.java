@@ -18,6 +18,7 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.5 2005-06-28 23:00:30 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.6 2005-06-29 20:46:05 winnetou25 Exp $
  */
 public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -54,8 +55,35 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
     }
 
     public Object deserialize(Document document, Element element) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        String siblingId = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID);
+        String orientationString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION);
+        String regionString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_REGION);
+        String percentage = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_PERCENTAGE);
+        String dockingRegion = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION);
+        
+        int orientation = DockingConstants.UNINITIALIZED;
+        if (orientationString.equals("vertical")) {
+            orientation = DockingConstants.VERTICAL;
+        } else if (orientationString.equals("horizontal")) {
+            orientation = DockingConstants.HORIZONTAL;
+        }
+        
+        int region = DockingConstants.UNINITIALIZED;
+        if (regionString.equals("top")) {
+            region = DockingConstants.TOP;
+        } else if (regionString.equals("bottom")) {
+            region = DockingConstants.BOTTOM;
+        } else if (regionString.equals("left")) {
+            region = DockingConstants.LEFT;
+        } else if (regionString.equals("right")) {
+            region = DockingConstants.RIGHT;
+        }
+        
+        SplitNode splitNode = new SplitNode(orientation, region, Float.parseFloat(percentage), siblingId);
+        splitNode.setDockingRegion(dockingRegion);
+
+        return splitNode;
     }
 
 }
