@@ -16,15 +16,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
-import org.flexdock.demos.raw.elegant.ShadowBorder;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.PerspectiveFactory;
@@ -41,7 +38,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.9 2005-06-27 13:20:10 winnetou25 Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.10 2005-06-30 13:54:21 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";
@@ -96,9 +93,11 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 
 		//tworzymy glowny view port do dokowania
 		Viewport viewport = new Viewport();
-        Border outerBorder = BorderFactory.createEmptyBorder(0,0,5,5);
-        Border innerBorder = new ShadowBorder();
-        viewport.setBorderManager(new StandardBorderManager(BorderFactory.createCompoundBorder(outerBorder, innerBorder)));
+//        Border outerBorder = BorderFactory.createEmptyBorder(0,0,5,5);
+//        Border innerBorder = new ShadowBorder();
+//        viewport.setBorderManager(new StandardBorderManager(BorderFactory.createCompoundBorder(outerBorder, innerBorder)));
+        
+//        viewport.setBorder(new EmptyBorder(10, 10, 10, 10));
 
 		//rejestrujemy glowny view port
 

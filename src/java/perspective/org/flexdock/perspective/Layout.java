@@ -4,6 +4,7 @@
 package org.flexdock.perspective;
 
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import org.flexdock.perspective.event.LayoutListener;
 import org.flexdock.perspective.event.RegistrationEvent;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.RootWindow;
+import org.flexdock.util.SwingUtility;
 
 /**
  * @author Christopher Butler
@@ -188,19 +190,65 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		
 		// not restore floating and minimized layouts
 		Dockable[] dockables = getDockables();
+		
+		// if there is no active window into which to restore our minimized
+		// dockables, then we'll have to defer restoration until a window appears.
+		ArrayList deferredMinimizedDockables = new ArrayList();
+		boolean deferMinimized = SwingUtility.getActiveWindow()==null;
+		
 		boolean restoreFloatOnLoad = PerspectiveManager.isRestoreFloatingOnLoad();
 		for(int i=0; i<dockables.length; i++) {
 			Dockable dockable = dockables[i];
 			if(DockingUtility.isMinimized(dockable)) { 
-				RestorationManager.getInstance().restore(dockable);
+				if(deferMinimized) {
+					deferredMinimizedDockables.add(dockable);
+				}
+				else {
+					RestorationManager.getInstance().restore(dockable);	
+				}
+				
 			} else if(restoreFloatOnLoad && DockingUtility.isFloating(dockable)) {
 				RestorationManager.getInstance().restore(dockable);
 			}
 		}
 		
+		// if necessary, defer minimized restoration until after a valid window 
+		// has been resolved
+		restoreDeferredMinimizedDockables(deferredMinimizedDockables);
+		
 		// send notification
 		LayoutEvent evt = new LayoutEvent(this, null, null, LayoutEvent.LAYOUT_APPLIED);
 		EventManager.dispatch(evt);
+	}
+	
+	private void restoreDeferredMinimizedDockables(final ArrayList deferred) {
+		if(deferred==null || deferred.size()==0)
+			return;
+		
+		Thread t = new Thread() {
+			public void run() {
+				Runnable r = new Runnable() {
+					public void run() {
+						restoreMinimizedDockables(deferred);
+					}
+				};
+				EventQueue.invokeLater(r);
+			}
+		};
+		t.start();
+	}
+	
+	
+	private void restoreMinimizedDockables(ArrayList dockables) {
+		if(SwingUtility.getActiveWindow()==null) {
+			restoreDeferredMinimizedDockables(dockables);
+			return;
+		}
+		
+		for(Iterator it=dockables.iterator(); it.hasNext();) {
+			Dockable dockable = (Dockable)it.next();
+			RestorationManager.getInstance().restore(dockable);
+		}
 	}
 
 	private boolean isMaintained(Dockable dockable) {

@@ -12,6 +12,9 @@ public class ElegantDockingPort extends DefaultDockingPort implements DockingCon
 	
 	public ElegantDockingPort(String id) {
 		super(id);
+//        Border outerBorder = BorderFactory.createEmptyBorder(0,0,5,5);
+//        Border innerBorder = new ShadowBorder();
+//		setBorderManager(new StandardBorderManager(BorderFactory.createCompoundBorder(outerBorder, innerBorder)));
 		setBorderManager(new StandardBorderManager(new ShadowBorder()));
 	}
 	

@@ -1750,13 +1750,16 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		node.setUserObject(this);
 		ArrayList splitPaneResizeList = new ArrayList();
 		constructLayout(node, splitPaneResizeList);
-		deferSplitPaneResize(splitPaneResizeList, 0);
+		deferSplitPaneValidation(splitPaneResizeList, 0);
 		revalidate();
 	}
 	
 	private void constructLayout(LayoutNode node, ArrayList splitPaneResizeList) {
-		// load the user object;
-		//Object obj = node.getUserObject();
+		// load the user object.  this object isn't used here, but
+		// LayoutNode should have a lazy-load mechanism for loading of userObject
+		// at runtime.  we just want to make sure the userObject has been loaded
+		// before we proceed.
+		Object obj = node.getUserObject();
 		if(node instanceof SplitNode)
 			splitPaneResizeList.add(node);
 		
@@ -1779,6 +1782,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			JSplitPane split = child.getSplitPane();
 			//float percentage = child.getPercentage();
 			port.setComponent(split);
+			port.evaluateDockingBorderStatus();
 			return;
 		}
 		
@@ -1799,22 +1803,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		split.setRightComponent(right);
 	}
 	
-	private void deferSplitPaneResize(final ArrayList splitNodes, final int startIndx) {
+	private void deferSplitPaneValidation(final ArrayList splitNodes, final int startIndx) {
 		Thread t = new Thread() {
 			public void run() {
 				Runnable r = new Runnable() {
 					public void run() {
-						int len = splitNodes.size();
-						for(int i=startIndx; i<len; i++) {
-							SplitNode node = (SplitNode)splitNodes.get(i);
-							JSplitPane split = node.getSplitPane();
-							int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
-							float percent = node.getPercentage();
-							int divLoc = (int)((float)size * percent);
-                            //System.err.println("percent: " + percent + ", divLoc: " + divLoc);
-                            split.setDividerLocation(divLoc);
-							split.validate();
-                        }
+						processImportedSplitPaneValidation(splitNodes, startIndx);
 					}
 				};
 				EventQueue.invokeLater(r);
@@ -1823,6 +1817,27 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		t.start();
 	}
 
+	private void processImportedSplitPaneValidation(ArrayList splitNodes, int startIndx) {
+		int len = splitNodes.size();
+		for(int i=startIndx; i<len; i++) {
+			SplitNode node = (SplitNode)splitNodes.get(i);
+			JSplitPane split = node.getSplitPane();
+			int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
+			float percent = node.getPercentage();
+			int divLoc = (int)((float)size * percent);
+            //System.err.println("percent: " + percent + ", divLoc: " + divLoc);
+            split.setDividerLocation(divLoc);
+            
+            // make sure to invoke the installed BorderManager how that we have
+            // a hierarchy of DockingPorts.  otherwise, we may end up with some
+            // ugly nested borders.
+            DockingPort port = DockingUtility.getParentDockingPort(split);
+            if(port instanceof DefaultDockingPort)
+            	((DefaultDockingPort)port).evaluateDockingBorderStatus();
+            
+			split.validate();
+		}
+	}
 	
 
 }
