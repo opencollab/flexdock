@@ -26,6 +26,9 @@ import javax.swing.UIManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 
+import com.l2fprod.gui.plaf.skin.Skin;
+import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+
 /**
  * @author Christopher Butler
  */
@@ -151,12 +154,35 @@ public class SwingUtility {
 		return rootWin==null? null: rootWin.getContentPane();
     }
     
+    public static void setPlaf(Class lookAndFeelClass) {
+    	String className = lookAndFeelClass==null? null: lookAndFeelClass.getName();
+    	setPlaf(className);
+    }
+    
     public static void setPlaf(String lookAndFeelClassName) {
+    	if(loadSkinLF(lookAndFeelClassName))
+    		return;
+    	
     	try {
     		UIManager.setLookAndFeel(lookAndFeelClassName);
     	} catch(Exception e) {
     		e.printStackTrace();
     	}
+    }
+    
+    private static boolean loadSkinLF(String themePack) {
+    	if(themePack==null || !themePack.endsWith(".zip") || !isSkinLFInstalled())
+    		return false;
+    	
+		try {
+			Skin skin = SkinLookAndFeel.loadThemePack(ResourceManager.getResource(themePack));
+			SkinLookAndFeel.setSkin(skin);
+			UIManager.setLookAndFeel(SkinLookAndFeel.class.getName());
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
     }
     
     public static void add(Point p1, Point p2) {
@@ -414,5 +440,10 @@ public class SwingUtility {
 		};
 		t.start();
 			
+	}
+	
+	public static boolean isSkinLFInstalled() {
+		return LookAndFeelSettings.isSkinLFSupported();
+		
 	}
 }

@@ -58,6 +58,7 @@ import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.DockingUtility;
+import org.flexdock.util.LookAndFeelSettings;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.UUID;
 
@@ -551,28 +552,32 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	
 	protected JTabbedPane createTabbedPane() {
+		Insets oldInsets = UIManager.getInsets(LookAndFeelSettings.TAB_PANE_BORDER_INSETS);
 		int tabPlacement = getInitTabPlacement();
-		Insets insets = new Insets(0, 0, 0, 0);
+
+		int edgeInset = LookAndFeelSettings.getTabEdgeInset(tabPlacement);
+		
+		Insets newInsets = new Insets(0, 0, 0, 0);
 		switch(tabPlacement) {
 			case JTabbedPane.TOP:
-				insets.top = 1;
+				newInsets.top = edgeInset>=0? edgeInset: oldInsets.top;
 				break;
 			case JTabbedPane.LEFT:
-				insets.left = 1;
+				newInsets.left = edgeInset>=0? edgeInset: oldInsets.left;
 				break;
 			case JTabbedPane.BOTTOM:
-				insets.bottom = 1;
+				newInsets.bottom = edgeInset>=0? edgeInset: oldInsets.bottom;
 				break;
 			case JTabbedPane.RIGHT:
-				insets.right = 1;
+				newInsets.right = edgeInset>=0? edgeInset: oldInsets.right;
 				break;
 		}
+
 		
-		Insets oldInsets = UIManager.getInsets("TabbedPane.contentBorderInsets");
-		UIManager.put("TabbedPane.contentBorderInsets", insets); 
+		UIManager.put(LookAndFeelSettings.TAB_PANE_BORDER_INSETS, newInsets);
 		JTabbedPane pane = new JTabbedPane();
 		pane.setTabPlacement(tabPlacement);
-		UIManager.put("TabbedPane.contentBorderInsets", oldInsets);
+		UIManager.put(LookAndFeelSettings.TAB_PANE_BORDER_INSETS, oldInsets);
 
 		TabbedDragListener tdl = new TabbedDragListener();
 		pane.addMouseListener(tdl);
@@ -1660,7 +1665,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			return;
 		
 		if(inProgress) {
-			dragImage = SwingUtility.createImage(getDockedComponent());
+//			dragImage = SwingUtility.createImage(getDockedComponent());
+			dragImage = SwingUtility.createImage(this);
 		}
 		else {
 			dragImage = null;
