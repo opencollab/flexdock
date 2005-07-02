@@ -53,6 +53,11 @@ public class PropertyManager {
 		}
 		return (DockablePropertySet)obj;
 	}
+	
+	public static void removePropertySet(Dockable dockable) {
+		if(dockable!=null)
+			dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, null);
+	}
 
 	public static DockingPortPropertySet getDockingPortPropertySet(DockingPort port) {
 		if(port==null)
