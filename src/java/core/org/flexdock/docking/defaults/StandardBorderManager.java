@@ -152,13 +152,13 @@ public class StandardBorderManager implements BorderManager {
 		managePortSimpleChild(port);
 		if(port==null || !(port.getDockedComponent() instanceof JTabbedPane))
 			return;
-			
+		
 		// we need to use a special UI to remove the outline around a JTabbedPane.
 		// this UI will only allow the outline on the side of the JTabbedPane that
 		// contains the tabs.
 		JTabbedPane tabs = (JTabbedPane)port.getDockedComponent();
-		if(!(tabs.getUI() instanceof SimpleTabbedPaneUI))
-			tabs.setUI(new SimpleTabbedPaneUI());
+//		if(!(tabs.getUI() instanceof SimpleTabbedPaneUI))
+//			tabs.setUI(new SimpleTabbedPaneUI());
 			
 		// remove any borders from the tabPane children
 		int tc = tabs.getTabCount();
@@ -168,7 +168,6 @@ public class StandardBorderManager implements BorderManager {
 			if(cmp instanceof JComponent)
 				((JComponent)cmp).setBorder(null);
 		}
-		
 	}
 	
 	private void setBorder(Component cmp, Border border) {
