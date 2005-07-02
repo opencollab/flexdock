@@ -775,6 +775,47 @@ public class DockingManager implements DockingConstants {
 		return dockable;
 	}
 	
+	public static void unregisterDockable(Component comp) {
+		Dockable dockable = getDockable(comp);
+		unregisterDockable(dockable);
+	}
+	
+	public static void unregisterDockable(String dockingId) {
+		Dockable dockable = getDockableImpl(dockingId);
+		unregisterDockable(dockable);
+	}
+	
+	public static void unregisterDockable(Dockable dockable) {
+		if(dockable==null)
+			return;
+		
+		synchronized(DOCKABLES_BY_COMPONENT) {
+			DOCKABLES_BY_COMPONENT.remove(dockable.getComponent());	
+		}
+		
+		// flag the component as dockable, in case it doesn't 
+		// implement the interface directly
+		Component c = dockable.getComponent();
+		SwingUtility.removeClientProperty(c, Dockable.DOCKABLE_INDICATOR);
+		
+		// remove the drag listeners
+		removeDragListeners(dockable);
+		
+		// remove the dockable as its own listener
+		dockable.removeDockingListener(dockable);
+		
+		// unlink the propertySet
+		PropertyManager.removePropertySet(dockable);
+		
+		// remove the dockable by ID
+		synchronized(DOCKABLES_BY_ID) {
+			DOCKABLES_BY_ID.remove(dockable.getPersistentId());
+		}
+		
+		// dispatch a registration event
+		EventManager.dispatch(new RegistrationEvent(dockable, DockingManager.SINGLETON, false));
+	}
+	
 	/**
 	 * Removes the event listeners that manage drag-n-drop docking operations from the
 	 * specified <code>Component</code>.  If the specific listeners are not present, then
@@ -2353,4 +2394,16 @@ public class DockingManager implements DockingConstants {
 			}
 		}
 	}
+	
+	private static void removeDragListeners(Dockable dockable) {
+		if(dockable==null)
+			return;
+		
+		for(Iterator it=dockable.getDragSources().iterator(); it.hasNext();) {
+			Object obj = it.next();
+			if(obj instanceof Component) {
+				removeDragListeners((Component)obj);				
+			}
+		}
+	}	
 }
