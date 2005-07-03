@@ -24,10 +24,18 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
@@ -40,6 +48,7 @@ import org.flexdock.perspective.Layout;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.persist.Persister;
+import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,39 +56,51 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.18 2005-07-03 15:57:49 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.19 2005-07-03 19:18:30 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException {
+    public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException, PersisterException {
         DocumentBuilder documentBuilder = createDocumentBuilder();
         Document document = documentBuilder.newDocument();
         
         ISerializer perspectiveModelSerializer = SerializerRegistry.getSerializer(PerspectiveModel.class);
         Element perspectiveModelElement = perspectiveModelSerializer.serialize(document, perspectiveModel);
-        
+
         document.appendChild(perspectiveModelElement);
-        
-        XMLSerializer serializer = new XMLSerializer(os, new OutputFormat(document, OutputFormat.Defaults.Encoding, true));
-        serializer.serialize(document);
-        
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        transformerFactory.setAttribute("indent-number", new Integer(4));
+
+        try {
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new OutputStreamWriter(os));
+            
+            transformer.transform(source, result);
+        } catch (TransformerConfigurationException ex) {
+            throw new PersisterException("Unable to serialize perspectiveModel", ex);
+        } catch (TransformerException ex) {
+            throw new PersisterException("Unable to serialize perspectiveModel", ex);
+        }
+
         return true;
     }
     
     /**
      * @see org.flexdock.perspective.persist.Persister#load(java.lang.String)
      */
-    public PerspectiveModel load(InputStream is) throws IOException {
+    public PerspectiveModel load(InputStream is) throws IOException, PersisterException {
         try {
             InputSource inputSource = new InputSource(is);
             DocumentBuilder documentBuilder = createDocumentBuilder();
@@ -94,8 +115,7 @@ public class XMLPersister implements Persister {
             
             return null;
         } catch (SAXException ex) {
-            ex.printStackTrace();
-            return null;
+            throw new PersisterException("Unable to deserialize perspectiveModel from xml", ex);
         }
     }
     
@@ -123,13 +143,14 @@ public class XMLPersister implements Persister {
         return persister; 
     }
     
-    private DocumentBuilder createDocumentBuilder() {
+    private DocumentBuilder createDocumentBuilder() throws PersisterException {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+
             return documentBuilder;
         } catch (ParserConfigurationException ex) {
-            throw new RuntimeException(ex);
+            throw new PersisterException("Unable to create document builder", ex);
         }
     }
     

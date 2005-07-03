@@ -14,7 +14,7 @@ import java.io.OutputStream;
  */
 public class DefaultFilePersister implements Persister {
 	
-	public PerspectiveModel load(InputStream in) throws IOException {
+	public PerspectiveModel load(InputStream in) throws IOException, PersisterException {
 		if(in==null)
 			return null;
 
@@ -22,15 +22,13 @@ public class DefaultFilePersister implements Persister {
 		try {
 			ois = in instanceof ObjectInputStream? (ObjectInputStream)in:
 					new ObjectInputStream(in);
-			return (PerspectiveModel)ois.readObject();
-		} catch(ClassNotFoundException e) {
-			IOException ex = new IOException("Unable to unmarshall stored data.");
-			ex.initCause(e);
-			throw ex;
-		}
-		finally {
-			if(ois!=null)
-				ois.close();
+			return (PerspectiveModel) ois.readObject();
+		} catch(ClassNotFoundException ex) {
+		    throw new PersisterException("Unable to unmarshal data", ex);
+        } finally {
+			if(ois != null) {
+                ois.close();
+            }
 		}
 	}
 	
@@ -40,14 +38,14 @@ public class DefaultFilePersister implements Persister {
 
 		ObjectOutputStream oos = null;
 		try {
-			oos = out instanceof ObjectOutputStream? (ObjectOutputStream)out: 
-						new ObjectOutputStream(out);
+			oos = out instanceof ObjectOutputStream? (ObjectOutputStream) out:new ObjectOutputStream(out);
 			oos.writeObject(info);
-			return true;
-		}
-		finally {
-			if(oos!=null)
-				oos.close();
+			
+            return true;
+		} finally {
+			if(oos != null) {
+                oos.close();
+            }
 		}
 	}
 

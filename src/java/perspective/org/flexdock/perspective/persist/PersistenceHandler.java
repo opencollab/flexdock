@@ -24,13 +24,13 @@ import java.io.IOException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceHandler.java,v 1.2 2005-06-25 21:22:43 winnetou25 Exp $
+ * @version $Id: PersistenceHandler.java,v 1.3 2005-07-03 19:18:31 winnetou25 Exp $
  */
 public interface PersistenceHandler {
     
-    boolean store(PerspectiveModel perspectiveModel) throws IOException;
+    boolean store(PerspectiveModel perspectiveModel) throws IOException, PersisterException;
 
-    PerspectiveModel load() throws IOException;
+    PerspectiveModel load() throws IOException, PersisterException;
     
     Persister createDefaultPersister();
 

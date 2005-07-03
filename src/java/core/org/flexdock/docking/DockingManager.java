@@ -51,6 +51,7 @@ import org.flexdock.docking.state.LayoutManager;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventManager;
 import org.flexdock.event.RegistrationEvent;
+import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
@@ -133,7 +134,9 @@ public class DockingManager implements DockingConstants {
 					storeLayoutModel();
 			} catch(IOException e) {
 				e.printStackTrace();
-			}
+			} catch (PersisterException e) {
+                e.printStackTrace();
+            }
 		}
 		
 		public synchronized boolean isEnabled() {
@@ -145,7 +148,6 @@ public class DockingManager implements DockingConstants {
 		}
 	}
 	
-
 	private static void init() {
 		// load the dev system properties
 		Properties p = ResourceManager.getProperties(DEV_PROPS, true);
@@ -1166,11 +1168,12 @@ public class DockingManager implements DockingConstants {
 	 * @return <code>true</code> if the current layout model was succesfully stored, 
 	 * <code>false</code> otherwise.
 	 * @throws IOException
+	 * @throws PersisterException 
 	 * @see #getLayoutManager()
 	 * @see #setLayoutManager(LayoutManager)
 	 * @see LayoutManager#store()
 	 */
-	public static boolean storeLayoutModel() throws IOException {
+	public static boolean storeLayoutModel() throws IOException, PersisterException {
 		LayoutManager mgr = getLayoutManager();
 		return mgr==null? false: mgr.store();
 	}
@@ -1194,10 +1197,11 @@ public class DockingManager implements DockingConstants {
 	 * @return <code>true</code> if the current layout model was succesfully loaded, 
 	 * <code>false</code> otherwise.
 	 * @throws IOException
+	 * @throws PersisterException 
 	 * @see #loadLayoutModel(boolean)
 	 * @see LayoutManager#load()
 	 */
-	public static boolean loadLayoutModel() throws IOException {
+	public static boolean loadLayoutModel() throws IOException, PersisterException {
 		return loadLayoutModel(false);
 	}
 	
@@ -1224,12 +1228,13 @@ public class DockingManager implements DockingConstants {
 	 * @return <code>true</code> if the current layout model was succesfully loaded, 
 	 * <code>false</code> otherwise.
 	 * @throws IOException
+	 * @throws PersisterException 
 	 * @see #getLayoutManager()
 	 * @see #setLayoutManager(LayoutManager)
 	 * @see #restoreLayout(boolean)
 	 * @see LayoutManager#load()
 	 */
-	public static boolean loadLayoutModel(boolean restore) throws IOException {
+	public static boolean loadLayoutModel(boolean restore) throws IOException, PersisterException {
 		LayoutManager mgr = getLayoutManager();
 		if(mgr==null)
 			return false;
@@ -1252,6 +1257,7 @@ public class DockingManager implements DockingConstants {
 	 *  
 	 * @return <code>true</code> if the in-memory layout model was properly restored to the 
 	 * application view, <code>false</code> otherwise.
+	 * @throws PersisterException 
 	 * @see #restoreLayout(boolean)
 	 * @see #getLayoutManager()
 	 * @see #setLayoutManager(LayoutManager)
@@ -1264,6 +1270,10 @@ public class DockingManager implements DockingConstants {
 			// shouldn't happen since we're not intending to load from storage
 			e.printStackTrace();
 			return false;
+		} catch (PersisterException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
 		}
 	}
 	
@@ -1284,28 +1294,15 @@ public class DockingManager implements DockingConstants {
 	 * into memory before synchronizing the application view.
 	 * @return <code>true</code> if the in-memory layout model was properly restored to the 
 	 * application view, <code>false</code> otherwise.
+	 * @throws PersisterException 
 	 * @see #getLayoutManager()
 	 * @see #setLayoutManager(LayoutManager)
 	 * @see LayoutManager#restore(boolean)
 	 */
-	public static boolean restoreLayout(boolean loadFromStorage) throws IOException {
+	public static boolean restoreLayout(boolean loadFromStorage) throws IOException, PersisterException {
 		LayoutManager mgr = getLayoutManager();
 		return mgr==null? false: mgr.restore(loadFromStorage);
 	}
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-
 	
 	private static Dockable loadAndRegister(String id) {
 		DockableFactory factory = getDockingManager().dockableFactory;

@@ -29,7 +29,7 @@ import org.flexdock.test.xml.XMLDebugger;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.3 2005-06-27 15:04:34 winnetou25 Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.4 2005-07-03 19:18:31 winnetou25 Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
@@ -62,9 +62,10 @@ public class FilePersistenceHandler implements PersistenceHandler {
 	}
     
     /**
+     * @throws PersisterException 
      * @see org.flexdock.perspective.persist.PersistenceHandler#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(PerspectiveModel perspectiveInfo) throws IOException {
+    public boolean store(PerspectiveModel perspectiveInfo) throws IOException, PersisterException {
         File file = getPerspectiveFile();
         validatePerspectiveFile();
         
@@ -79,9 +80,10 @@ public class FilePersistenceHandler implements PersistenceHandler {
     }
 
     /**
+     * @throws PersisterException 
      * @see org.flexdock.perspective.persist.PersistenceHandler#load(java.lang.String)
      */
-    public PerspectiveModel load() throws IOException {
+    public PerspectiveModel load() throws IOException, PersisterException {
         File file = getPerspectiveFile();
         if(file==null || !file.exists())
         	return null;

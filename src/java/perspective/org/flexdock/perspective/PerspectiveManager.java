@@ -21,6 +21,7 @@ import org.flexdock.perspective.event.PerspectiveEventHandler;
 import org.flexdock.perspective.event.PerspectiveListener;
 import org.flexdock.perspective.event.RegistrationHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
+import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
@@ -396,8 +397,7 @@ public class PerspectiveManager implements LayoutManager {
 		t.start();
 	}
 	
-	
-	public synchronized boolean store() throws IOException {
+	public synchronized boolean store() throws IOException, PersisterException {
 		if(m_persistHandler==null)
 			return false;
 
@@ -414,7 +414,7 @@ public class PerspectiveManager implements LayoutManager {
 		return m_persistHandler.store(info);
 	}
 	
-	public synchronized boolean load() throws IOException {
+	public synchronized boolean load() throws IOException, PersisterException {
 		if(m_persistHandler==null)
 			return false;
 		
@@ -458,7 +458,7 @@ public class PerspectiveManager implements LayoutManager {
 		return window==null? null: DockingManager.getRootDockingPort(window.getRootContainer());
 	}
 	
-	public boolean restore(boolean loadFromStorage) throws IOException {
+	public boolean restore(boolean loadFromStorage) throws IOException, PersisterException {
 		boolean loaded = loadFromStorage? load(): true;
 		reload();
 		return loaded;

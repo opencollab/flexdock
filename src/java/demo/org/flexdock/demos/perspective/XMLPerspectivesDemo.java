@@ -30,6 +30,7 @@ import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.actions.OpenPerspectiveAction;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
+import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.perspective.persist.xml.XMLPersister;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
@@ -40,7 +41,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPerspectivesDemo.java,v 1.3 2005-07-03 15:05:48 winnetou25 Exp $
+ * @version $Id: XMLPerspectivesDemo.java,v 1.4 2005-07-03 19:18:32 winnetou25 Exp $
  */
 public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	
@@ -138,9 +139,11 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		PerspectiveManager.setPersistenceHandler(persister);
 		try {
 			DockingManager.loadLayoutModel();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		} catch(IOException ex) {
+			ex.printStackTrace();
+		} catch (PersisterException ex) {
+            ex.printStackTrace();
+        }
 		// remember to store on shutdown
 		DockingManager.setAutoPersist(true);
 	}

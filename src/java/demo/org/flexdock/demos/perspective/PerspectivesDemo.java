@@ -16,12 +16,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.demos.raw.elegant.ShadowBorder;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.defaults.StandardBorderManager;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.PerspectiveFactory;
@@ -29,6 +32,7 @@ import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.actions.OpenPerspectiveAction;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
+import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -38,10 +42,11 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.10 2005-06-30 13:54:21 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.11 2005-07-03 19:18:31 winnetou25 Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
-	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";
+
+    public static final String PERSPECTIVE_FILE = "PerspectiveDemo.data";
 	private static final String MAIN_VIEW = "main.view";
 	private static final String BIRD_VIEW = "bird.view";
 	private static final String MESSAGE_VIEW = "message.log";
@@ -145,7 +150,9 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 			DockingManager.loadLayoutModel();
 		} catch(IOException e) {
 			e.printStackTrace();
-		}
+		} catch (PersisterException e) {
+            e.printStackTrace();
+        }
 		// remember to store on shutdown
 		DockingManager.setAutoPersist(true);
 	}

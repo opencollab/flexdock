@@ -7,24 +7,27 @@ import java.io.IOException;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.perspective.persist.PersisterException;
 
 /**
  * @author Christopher Butler
  */
 public interface LayoutManager {
-	public DockingState getDockingState(String dockableId);
 	
-	public DockingState getDockingState(Dockable dockable);
+    DockingState getDockingState(String dockableId);
 	
-	public FloatManager getFloatManager();
+	DockingState getDockingState(Dockable dockable);
 	
-	public LayoutNode createLayout(DockingPort port);
+	FloatManager getFloatManager();
 	
-	public boolean display(Dockable dockable);
+	LayoutNode createLayout(DockingPort port);
 	
-	public boolean store() throws IOException;
+	boolean display(Dockable dockable);
 	
-	public boolean load() throws IOException;
+	boolean store() throws IOException, PersisterException;
 	
-	public boolean restore(boolean loadFromStorage) throws IOException;
+	boolean load() throws IOException, PersisterException;
+	
+	boolean restore(boolean loadFromStorage) throws IOException, PersisterException;
+    
 }
