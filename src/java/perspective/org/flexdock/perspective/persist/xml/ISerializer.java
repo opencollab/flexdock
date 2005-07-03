@@ -25,12 +25,12 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: ISerializer.java,v 1.3 2005-06-28 23:00:30 winnetou25 Exp $
+ * @version $Id: ISerializer.java,v 1.4 2005-07-03 13:11:55 winnetou25 Exp $
  */
 public interface ISerializer {
     
     Element serialize(Document document, Object object);
     
-    Object deserialize(Document document, Element element);
+    Object deserialize(Element element, DeserializationStack deserializationStack);
    
 }

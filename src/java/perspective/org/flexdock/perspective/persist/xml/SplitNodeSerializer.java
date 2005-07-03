@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.6 2005-06-29 20:46:05 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.7 2005-07-03 13:11:55 winnetou25 Exp $
  */
 public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -54,7 +54,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         return document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
     }
 
-    public Object deserialize(Document document, Element element) {
+    public Object deserialize(Element element, DeserializationStack deserializationStack) {
         
         String siblingId = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID);
         String orientationString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION);

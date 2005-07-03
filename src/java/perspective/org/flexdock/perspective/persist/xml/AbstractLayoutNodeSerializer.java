@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: AbstractLayoutNodeSerializer.java,v 1.3 2005-06-29 17:56:53 winnetou25 Exp $
+ * @version $Id: AbstractLayoutNodeSerializer.java,v 1.4 2005-07-03 13:11:56 winnetou25 Exp $
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
@@ -54,13 +54,13 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
     protected abstract Element getElement(Document document, Object o);
     
-    public Object deserialize(Document document, Element element) {
+    public Object deserialize(Element element, DeserializationStack deserializationStack) {
 
-        ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
-
-        LayoutNode layoutNode = (LayoutNode) layoutNodeSerializer.deserialize(document, element);
+//        ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
+//
+//        LayoutNode layoutNode = (LayoutNode) layoutNodeSerializer.deserialize(element, deserializationStack);
         
-        return layoutNode;
+        return null;
         
     }
     

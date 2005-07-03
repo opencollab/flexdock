@@ -30,14 +30,15 @@ import org.flexdock.util.SwingUtility;
  * @author Christopher Butler
  */
 public class DockingPath implements Cloneable, DockingConstants, Serializable {
-	public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY"; 
-	private transient String stringForm;
+
+    public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY";
+	
+    private transient String stringForm;
 	private String rootPortId;
 	private ArrayList nodes; // contains SplitNode objects
 	private String siblingId;
 	private boolean tabbed;
 
-	
 	public static DockingPath create(String dockableId) {
 		Dockable dockable = findDockable(dockableId);
 		return create(dockable);
@@ -59,7 +60,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 			parent = parent.getParent();
 		}
 		if(isDockingRoot(parent))
-			path.setRootPort(((DockingPort)parent).getPersistentId());
+			path.setRootPortId(((DockingPort)parent).getPersistentId());
 		
 		path.initialize();
 		return path;
@@ -142,9 +143,17 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     public boolean isTabbed() {
         return this.tabbed;
     }
+
+    public void setTabbed(boolean isTabbed) {
+        this.tabbed = isTabbed;
+    }
     
     public String getSiblingId() {
         return this.siblingId;
+    }
+    
+    public void setSiblingId(String siblingId) {
+        this.siblingId = siblingId;
     }
 	
 	private DockingPath(String parent, boolean tabs, ArrayList nodeList) {
@@ -165,7 +174,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         return this.rootPortId;
     }
 	
-	private void setRootPort(String portId) {
+    public void setRootPortId(String portId) {
 		rootPortId = portId;
 	}
 	

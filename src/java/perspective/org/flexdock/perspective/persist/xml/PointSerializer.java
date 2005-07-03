@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PointSerializer.java,v 1.5 2005-06-29 17:56:53 winnetou25 Exp $
+ * @version $Id: PointSerializer.java,v 1.6 2005-07-03 13:11:54 winnetou25 Exp $
  */
 public class PointSerializer implements ISerializer {
 
@@ -51,7 +51,7 @@ public class PointSerializer implements ISerializer {
         return pointElement;
     }
 
-    public Object deserialize(Document document, Element element) {
+    public Object deserialize(Element element, DeserializationStack deserializationStack) {
         String xString = element.getAttribute(PersistenceConstants.POINT_ATTRIBUTE_X);
         String yString = element.getAttribute(PersistenceConstants.POINT_ATTRIBUTE_Y);
         

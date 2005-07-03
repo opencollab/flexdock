@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutNodeSerializer.java,v 1.7 2005-06-29 17:56:52 winnetou25 Exp $
+ * @version $Id: LayoutNodeSerializer.java,v 1.8 2005-07-03 13:11:54 winnetou25 Exp $
  */
 public class LayoutNodeSerializer implements ISerializer {
 
@@ -44,13 +44,13 @@ public class LayoutNodeSerializer implements ISerializer {
         throw new RuntimeException("Incorrect element: "+ object);
     }
 
-    public Object deserialize(Document document, Element element) {
+    public Object deserialize(Element element, DeserializationStack deserializationStack) {
         if (element.getTagName().equals(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME)) {
-            return SerializerRegistry.getSerializer(DockingPortNode.class).deserialize(document, element);
+            return SerializerRegistry.getSerializer(DockingPortNode.class).deserialize(element, deserializationStack);
         } else if (element.getTagName().equals(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME)) {
-            return SerializerRegistry.getSerializer(SplitNode.class).deserialize(document, element);
+            return SerializerRegistry.getSerializer(SplitNode.class).deserialize(element, deserializationStack);
         } else if (element.getTagName().equals(PersistenceConstants.DOCKABLE_NODE_ELEMENT_NAME)) {
-            return SerializerRegistry.getSerializer(DockableNode.class).deserialize(document, element);
+            return SerializerRegistry.getSerializer(DockableNode.class).deserialize(element, deserializationStack);
         }
 
         throw new RuntimeException("Incorrect element: "+element);

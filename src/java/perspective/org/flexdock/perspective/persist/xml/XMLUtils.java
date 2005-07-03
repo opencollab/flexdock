@@ -26,7 +26,7 @@ import org.w3c.dom.Node;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLUtils.java,v 1.1 2005-06-27 16:26:18 winnetou25 Exp $
+ * @version $Id: XMLUtils.java,v 1.2 2005-07-03 13:11:54 winnetou25 Exp $
  */
 public class XMLUtils {
 
@@ -48,5 +48,24 @@ public class XMLUtils {
         Node textNode = document.createTextNode(text);
         elem.appendChild(textNode);
     }
+    
+//    public static String getTextContent(Element element) {
+//        Node child = element.getFirstChild();
+//        if (child != null) {
+//            Node next = child.getNextSibling();
+//            if (next == null) {
+//                return element.hasTextContent(child) ? ((NodeImpl) child).getTextContent() : "";
+//            }
+//            if (fBufferStr == null){
+//                fBufferStr = new StringBuffer();
+//            }
+//            else {
+//                fBufferStr.setLength(0);
+//            }
+//            getTextContent(fBufferStr);
+//            return fBufferStr.toString();
+//        }
+//        return "";
+//    }
     
 }

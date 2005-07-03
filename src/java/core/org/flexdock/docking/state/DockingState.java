@@ -56,8 +56,8 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
 		return m_region;
 	}
 	
-	public void setRegion(String m_region) {
-		this.m_region = m_region;
+	public void setRegion(String region) {
+	    m_region = region;
 	}
 	
 	public int getMinimizedConstraint() {

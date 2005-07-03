@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSequenceSerializer.java,v 1.6 2005-06-29 20:13:12 winnetou25 Exp $
+ * @version $Id: LayoutSequenceSerializer.java,v 1.7 2005-07-03 13:11:56 winnetou25 Exp $
  */
 public class LayoutSequenceSerializer implements ISerializer {
     
@@ -55,7 +55,7 @@ public class LayoutSequenceSerializer implements ISerializer {
         return layoutSequenceElement;
     }
     
-    public Object deserialize(Document document, Element element) {
+    public Object deserialize(Element element, DeserializationStack deserializationStack) {
         LayoutSequence layoutSequence = new LayoutSequence();
         
         NodeList dockingStateNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
@@ -64,7 +64,7 @@ public class LayoutSequenceSerializer implements ISerializer {
             Node dockingStateNode = dockingStateNodeList.item(i);
             if (dockingStateNode instanceof Element) {
                 Element dockingStateElement = (Element) dockingStateNode;
-                DockingState dockingState = (DockingState) dockingStateSerializer.deserialize(document, dockingStateElement);
+                DockingState dockingState = (DockingState) dockingStateSerializer.deserialize(dockingStateElement, deserializationStack);
                 layoutSequence.add(dockingState);
             }
         }

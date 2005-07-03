@@ -43,6 +43,9 @@ import org.flexdock.perspective.persist.Persister;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -51,7 +54,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.16 2005-06-27 21:55:38 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.17 2005-07-03 13:11:56 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -77,8 +80,23 @@ public class XMLPersister implements Persister {
      * @see org.flexdock.perspective.persist.Persister#load(java.lang.String)
      */
     public PerspectiveModel load(InputStream is) throws IOException {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            InputSource inputSource = new InputSource(is);
+            DocumentBuilder documentBuilder = createDocumentBuilder();
+            Document document = documentBuilder.parse(inputSource);
+
+            ISerializer perspectiveModelSerializer = SerializerRegistry.getSerializer(PerspectiveModel.class);
+            NodeList perspectiveModelNodeList = document.getElementsByTagName(PersistenceConstants.PERSPECTIVE_MODEL_ELEMENT_NAME);
+            if (perspectiveModelNodeList.getLength() > 0 && perspectiveModelNodeList.item(0) instanceof Element) {
+                Element perspectiveModelElement = (Element) perspectiveModelNodeList.item(0);
+                return (PerspectiveModel) perspectiveModelSerializer.deserialize(perspectiveModelElement, new DeserializationStack());
+            }
+            
+            return null;
+        } catch (SAXException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
     
     private void registerSerializers() {
