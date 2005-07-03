@@ -22,7 +22,7 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.17 2005-06-29 17:56:53 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.18 2005-07-03 15:57:49 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
@@ -50,7 +50,7 @@ public interface PersistenceConstants {
     
     //point constants
     String POINT_ELEMENT_NAME = "Point";
-    String CENTER_POINT_ELEMENT_NAME = "CenterPoint";
+//    String CENTER_POINT_ELEMENT_NAME = "CenterPoint";
     String POINT_ATTRIBUTE_X = "x";
     String POINT_ATTRIBUTE_Y = "y";
 

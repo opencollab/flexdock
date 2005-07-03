@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.15 2005-07-03 15:05:47 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.16 2005-07-03 15:57:49 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -165,7 +165,7 @@ public class DockingStateSerializer implements ISerializer {
         }
         
         ISerializer pointDeserializer = SerializerRegistry.getSerializer(Point.class);
-        NodeList pointNodeList = element.getElementsByTagName(PersistenceConstants.CENTER_POINT_ELEMENT_NAME); 
+        NodeList pointNodeList = element.getElementsByTagName(PersistenceConstants.POINT_ELEMENT_NAME); 
         if (pointNodeList.getLength() > 0 && pointNodeList.item(0) instanceof Element) {
             Element centerPointElement = (Element) pointNodeList.item(0); 
             Point centerPoint = (Point) pointDeserializer.deserialize(centerPointElement, deserializationStack);

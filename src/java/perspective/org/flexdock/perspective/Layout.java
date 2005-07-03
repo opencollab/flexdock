@@ -35,10 +35,11 @@ import org.flexdock.util.SwingUtility;
 public class Layout implements Cloneable, FloatManager, Serializable {
 
     private HashMap dockingInfo;  // contains DockingState objects
-	private transient ArrayList layoutListeners;
 	private Hashtable floatingGroups;  // contains FloatingGroup objects
 	private LayoutNode restorationLayout;
-	
+
+    private transient ArrayList layoutListeners;
+
 	public Layout() {
 		this(new HashMap(), new ArrayList(), new Hashtable());
 	}

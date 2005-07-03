@@ -27,8 +27,10 @@ import org.flexdock.util.RootWindow;
  * @author Christopher Butler
  */
 public class RestorationManager {
-	private static final RestorationManager SINGLETON = new RestorationManager();
-	private Vector restorationHandlers = new Vector();
+
+    private static final RestorationManager SINGLETON = new RestorationManager();
+
+    private Vector restorationHandlers = new Vector();
 	
 	static {
 		getInstance().addHandler(new AlreadyRestoredHandler());
@@ -39,13 +41,13 @@ public class RestorationManager {
 		getInstance().addHandler(new PointHandler());
 		getInstance().addHandler(new UnknownStateHandler());
 	}
-	
+
+    private RestorationManager() {
+        //prevent instant..
+    }
+
 	public static RestorationManager getInstance() {
 		return SINGLETON;
-	}
-	
-	private RestorationManager() {
-		
 	}
 	
 	public void addHandler(RestorationHandler handler) {
@@ -80,9 +82,6 @@ public class RestorationManager {
 		return false;
 	}
 	
-	
-	
-	
 	public static RootWindow getRestoreWindow(Dockable dockable) {
 		// TODO: fix this code to keep track of the proper dialog owner
 		RootWindow[] windows = DockingManager.getDockingWindows();
@@ -93,4 +92,5 @@ public class RestorationManager {
 		RootWindow window = getRestoreWindow(dockable);
 		return window==null? null: window.getRootContainer();
 	}
+
 }

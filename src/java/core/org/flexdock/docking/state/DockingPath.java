@@ -349,12 +349,6 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		return dock(dockable, port, region, ctrlNode);
 	}
 	
-	
-
-	
-	
-	
-	
 	private String getRegion(SplitNode node, Component dockedComponent) {
 		if(dockedComponent==null)
 			return CENTER_REGION;
@@ -418,7 +412,6 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		return indx<0 || indx>=getDepth()? null: (SplitNode)nodes.get(indx);
 	}
 	
-	
 	public Object clone() {
 		ArrayList nodeList = null;
 		if(nodes!=null) {
@@ -433,4 +426,5 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		path.rootPortId = rootPortId;
 		return path;
 	}
+    
 }

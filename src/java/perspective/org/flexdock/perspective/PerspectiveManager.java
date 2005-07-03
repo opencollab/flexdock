@@ -29,7 +29,8 @@ import org.flexdock.util.SwingUtility;
  * @author Mateusz Szczap
  */
 public class PerspectiveManager implements LayoutManager {
-	public static final String EMPTY_PERSPECTIVE = "PerspectiveManager.EMPTY_PERSPECTIVE";
+
+    public static final String EMPTY_PERSPECTIVE = "PerspectiveManager.EMPTY_PERSPECTIVE";
 	private static PerspectiveManager SINGLETON = new PerspectiveManager();
 	private static DockingStateListener UPDATE_LISTENER = new DockingStateListener();
 	
@@ -78,17 +79,9 @@ public class PerspectiveManager implements LayoutManager {
 
 	
 	private PerspectiveManager() {
-		m_defaultPerspective = EMPTY_PERSPECTIVE;
+	    m_defaultPerspective = EMPTY_PERSPECTIVE;
 		loadPerspective(m_defaultPerspective, (DockingPort)null);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective)
@@ -165,11 +158,6 @@ public class PerspectiveManager implements LayoutManager {
 		
 	}
 	
-	
-	
-	
-	
-	
 	/**
 	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
 	 */
@@ -242,9 +230,6 @@ public class PerspectiveManager implements LayoutManager {
 		return getCurrentPerspective().getLayout();
 	}
 
-	
-	
-	
 	public void reset() {
 		RootWindow[] windows = DockingManager.getDockingWindows();
 		if(windows.length!=0)
@@ -264,8 +249,6 @@ public class PerspectiveManager implements LayoutManager {
 	public void reset(DockingPort rootPort) {
 		loadPerspectiveImpl(m_currentPerspective, rootPort, true);
 	}
-	
-
 	
 	public void reload() {
 		String key = m_currentPerspective==null? m_defaultPerspective: m_currentPerspective;
@@ -480,4 +463,5 @@ public class PerspectiveManager implements LayoutManager {
 		reload();
 		return loaded;
 	}
+    
 }

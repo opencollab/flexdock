@@ -54,7 +54,7 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.17 2005-07-03 13:11:56 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.18 2005-07-03 15:57:49 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -104,7 +104,7 @@ public class XMLPersister implements Persister {
         SerializerRegistry.registerSerializer(Layout.class, new LayoutSerializer());
         SerializerRegistry.registerSerializer(LayoutSequence.class, new LayoutSequenceSerializer());
         SerializerRegistry.registerSerializer(DockingState.class, new DockingStateSerializer());
-        SerializerRegistry.registerSerializer(Point.class, new PointSerializer(PersistenceConstants.CENTER_POINT_ELEMENT_NAME));
+        SerializerRegistry.registerSerializer(Point.class, new PointSerializer());
         SerializerRegistry.registerSerializer(Dimension.class, new DimensionSerializer());
         SerializerRegistry.registerSerializer(Rectangle.class, new RectangleSerializer());
         SerializerRegistry.registerSerializer(FloatingGroup.class, new FloatingGroupSerializer());

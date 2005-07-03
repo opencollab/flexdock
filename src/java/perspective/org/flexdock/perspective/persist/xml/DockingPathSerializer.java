@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPathSerializer.java,v 1.6 2005-07-03 15:05:47 winnetou25 Exp $
+ * @version $Id: DockingPathSerializer.java,v 1.7 2005-07-03 15:57:49 winnetou25 Exp $
  */
 public class DockingPathSerializer implements ISerializer {
     
@@ -46,7 +46,9 @@ public class DockingPathSerializer implements ISerializer {
             dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_SIBLING_ID, dockingPath.getSiblingId());
         }
 
-        dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_IS_TABBED, String.valueOf(dockingPath.isTabbed()));
+        if (dockingPath.isTabbed()) {
+            dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_IS_TABBED, String.valueOf(dockingPath.isTabbed()));
+        }
         
         List splitNodes = dockingPath.getNodes();
         ISerializer splitNodeSerializer = SerializerRegistry.getSerializer(SplitNode.class);
