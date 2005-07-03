@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.14 2005-07-03 13:11:55 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.15 2005-07-03 15:05:47 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -135,7 +135,7 @@ public class DockingStateSerializer implements ISerializer {
         String region = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION);
         
         DockingState dockingState = new DockingState(dockableId);
-        if (relativeParentId != null) {
+        if (relativeParentId != null && !relativeParentId.equals("")) {
             dockingState.setRelativeParentId(relativeParentId);
         }
         dockingState.setRegion(region.toUpperCase());

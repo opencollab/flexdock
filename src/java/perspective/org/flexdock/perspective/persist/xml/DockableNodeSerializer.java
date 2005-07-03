@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockableNodeSerializer.java,v 1.5 2005-07-03 13:11:56 winnetou25 Exp $
+ * @version $Id: DockableNodeSerializer.java,v 1.6 2005-07-03 15:05:48 winnetou25 Exp $
  */
 public class DockableNodeSerializer implements ISerializer {
 
@@ -40,7 +40,7 @@ public class DockableNodeSerializer implements ISerializer {
     }
 
     public Object deserialize(Element element, DeserializationStack deserializationStack) {
-        String dockableId = element.getAttribute(PersistenceConstants.DOCKABLE_ATTRIBUTE_ID);
+        String dockableId = element.getAttribute(PersistenceConstants.DOCKABLE_NODE_ATTRIBUTE_DOCKABLE_ID);
 
         DockableNode dockableNode = new DockableNode();
         dockableNode.setDockableId(dockableId);

@@ -40,19 +40,21 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPerspectivesDemo.java,v 1.2 2005-06-27 15:04:11 winnetou25 Exp $
+ * @version $Id: XMLPerspectivesDemo.java,v 1.3 2005-07-03 15:05:48 winnetou25 Exp $
  */
 public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
-	public static final String PERSPECTIVE_FILE = "PerspectiveDemo.xml";
-	private static final String MAIN_VIEW = "main.view";
+	
+    public static final String PERSPECTIVE_FILE = "PerspectiveDemo.xml";
+	
+    private static final String MAIN_VIEW = "main.view";
 	private static final String BIRD_VIEW = "bird.view";
 	private static final String MESSAGE_VIEW = "message.log";
 	private static final String PROBLEM_VIEW = "problem";
 	private static final String CONSOLE_VIEW = "console";
 	
 	private static final String P1 = "p1";
-	private static final String P2 = "p2";
-	private static final String P3 = "p3";
+	//private static final String P2 = "p2";
+	//private static final String P3 = "p3";
 	
 	public static void main(String[] args) {
 		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
@@ -79,7 +81,6 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		// now show the frame
 		flexDockDemo.setVisible(true);
 	}
-	
 	
 	public XMLPerspectivesDemo() {
 		super("FlexDock Demo");
@@ -112,8 +113,8 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		JMenu perspectiveMenu = new JMenu("Perspective");
 		//pobieramy perspektywe nr 1
 		perspectiveMenu.add(new OpenPerspectiveAction(P1));
-		perspectiveMenu.add(new OpenPerspectiveAction(P2));
-		perspectiveMenu.add(new OpenPerspectiveAction(P3));
+//		perspectiveMenu.add(new OpenPerspectiveAction(P2));
+//		perspectiveMenu.add(new OpenPerspectiveAction(P3));
 		
 		menuBar.add(showViewMenu);
 		menuBar.add(perspectiveMenu);
@@ -130,7 +131,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		PerspectiveManager.setFactory(new DemoPerspectiveFactory());
 		PerspectiveManager.setRestoreFloatingOnLoad(true);
 		PerspectiveManager mgr = PerspectiveManager.getInstance();
-		mgr.setCurrentPerspective(P3, true);
+		mgr.setCurrentPerspective(P1, true);
 		
 		// load any previously persisted layouts
 		PersistenceHandler persister = new FilePersistenceHandler(new File(FilePersistenceHandler.DEFAULT_PERSPECTIVE_DIR, PERSPECTIVE_FILE), XMLPersister.newDefaultInstance());
@@ -149,10 +150,11 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		public Perspective getPerspective(String persistentId) {
 			if(P1.equals(persistentId))
 				return createPerspective1();
-			if(P2.equals(persistentId))
-				return createPerspective2();
-			if(P3.equals(persistentId))
-				return createPerspective3();
+            
+//			if(P2.equals(persistentId))
+//				return createPerspective2();
+//			if(P3.equals(persistentId))
+//				return createPerspective3();
 			return null;
 		}
 		
@@ -169,25 +171,25 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 			return perspective;
 		}
 
-		private Perspective createPerspective2() {
-			Perspective perspective = new Perspective(P2, "Perspective2");
-			LayoutSequence sequence = perspective.getInitialSequence(true);
-
-			sequence.add("main.view");
-			sequence.add(BIRD_VIEW, "main.view", WEST_REGION, .3f);
-			sequence.add(MESSAGE_VIEW, BIRD_VIEW, SOUTH_REGION, .5f);
-			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
-			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, EAST_REGION, .5f);
-			
-			return perspective;
-		}
-
-		private Perspective createPerspective3() {
-			Perspective perspective = new Perspective(P3, "Perspective3");
-			LayoutSequence sequence = perspective.getInitialSequence(true);
-			sequence.add("main.view");
-			return perspective;
-		}
+//		private Perspective createPerspective2() {
+//			Perspective perspective = new Perspective(P2, "Perspective2");
+//			LayoutSequence sequence = perspective.getInitialSequence(true);
+//
+//			sequence.add("main.view");
+//			sequence.add(BIRD_VIEW, "main.view", WEST_REGION, .3f);
+//			sequence.add(MESSAGE_VIEW, BIRD_VIEW, SOUTH_REGION, .5f);
+//			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
+//			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, EAST_REGION, .5f);
+//			
+//			return perspective;
+//		}
+//
+//		private Perspective createPerspective3() {
+//			Perspective perspective = new Perspective(P3, "Perspective3");
+//			LayoutSequence sequence = perspective.getInitialSequence(true);
+//			sequence.add("main.view");
+//			return perspective;
+//		}
 	}
 	
 	private static class ViewFactory implements DockableFactory {

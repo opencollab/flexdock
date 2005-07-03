@@ -19,6 +19,7 @@
 package org.flexdock.perspective.persist.xml;
 
 import org.flexdock.docking.DockingConstants;
+import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -27,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.7 2005-07-03 13:11:55 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.8 2005-07-03 15:05:47 winnetou25 Exp $
  */
 public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -36,7 +37,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         
         Element splitNodeElement = super.serialize(document, object);
 
-        if (splitNode.getSiblingId() != null) {
+        if (splitNode.getSiblingId() != null && !"".equals(splitNode.getSiblingId())) {
             splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID, splitNode.getSiblingId());
         }
         splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION, splitNode.getOrientationDesc());
@@ -55,6 +56,8 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
     }
 
     public Object deserialize(Element element, DeserializationStack deserializationStack) {
+        
+        SplitNode splitNode = (SplitNode) super.deserialize(element, deserializationStack);
         
         String siblingId = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID);
         String orientationString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION);
@@ -79,11 +82,22 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         } else if (regionString.equals("right")) {
             region = DockingConstants.RIGHT;
         }
-        
-        SplitNode splitNode = new SplitNode(orientation, region, Float.parseFloat(percentage), siblingId);
-        splitNode.setDockingRegion(dockingRegion);
+
+        splitNode.setOrientation(orientation);
+        splitNode.setRegion(region);
+        splitNode.setPercentage(Float.parseFloat(percentage));
+        if (siblingId != null && !"".equals(siblingId)) {
+            splitNode.setSiblingId(siblingId);
+        }
+        if (dockingRegion != null && !dockingRegion.equals("")) {
+            splitNode.setDockingRegion(dockingRegion);
+        }
 
         return splitNode;
+    }
+
+    protected LayoutNode createLayoutNode() {
+        return new SplitNode(-1, -1, -1.0f, null);
     }
 
 }

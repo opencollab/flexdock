@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.flexdock.docking.state.DockingPath;
-import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.w3c.dom.Document;
@@ -33,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPathSerializer.java,v 1.5 2005-07-03 13:11:55 winnetou25 Exp $
+ * @version $Id: DockingPathSerializer.java,v 1.6 2005-07-03 15:05:47 winnetou25 Exp $
  */
 public class DockingPathSerializer implements ISerializer {
     
@@ -61,18 +60,18 @@ public class DockingPathSerializer implements ISerializer {
     }
 
     public Object deserialize(Element element, DeserializationStack deserializationStack) {
-        DockingState dockingState = (DockingState) deserializationStack.popObject();
-        DockingPath dockingPath = DockingPath.create(dockingState.getDockableId());
+        //DockingState dockingState = (DockingState) deserializationStack.popObject();
+        DockingPath dockingPath = new DockingPath();
         
         String dockingPathRootPortId = element.getAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_ROOT_PORT_ID);
         String siblingId = element.getAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_SIBLING_ID);
         String isTabbed = element.getAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_IS_TABBED); 
         
         dockingPath.setRootPortId(dockingPathRootPortId);
-        if (siblingId != null) {
+        if (siblingId != null && !"".equals(siblingId)) {
             dockingPath.setSiblingId(siblingId);
         }
-        if (isTabbed != null) {
+        if (isTabbed != null && !"".equals(isTabbed)) {
             dockingPath.setTabbed(Boolean.valueOf(isTabbed).booleanValue());
         } else {
             dockingPath.setTabbed(false);

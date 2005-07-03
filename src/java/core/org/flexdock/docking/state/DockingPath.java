@@ -39,6 +39,10 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	private String siblingId;
 	private boolean tabbed;
 
+	public DockingPath() {
+	    nodes = new ArrayList();
+    }
+    
 	public static DockingPath create(String dockableId) {
 		Dockable dockable = findDockable(dockableId);
 		return create(dockable);

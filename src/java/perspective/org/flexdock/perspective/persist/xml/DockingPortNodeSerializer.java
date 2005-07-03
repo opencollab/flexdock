@@ -18,6 +18,7 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -26,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPortNodeSerializer.java,v 1.3 2005-07-03 13:11:56 winnetou25 Exp $
+ * @version $Id: DockingPortNodeSerializer.java,v 1.4 2005-07-03 15:05:47 winnetou25 Exp $
  */
 public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -42,9 +43,11 @@ public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer impl
     }
 
     public Object deserialize(Element element, DeserializationStack deserializationStack) {
-        DockingPortNode dockingPortNode = (DockingPortNode) super.deserialize(element, deserializationStack);
-        
-        return dockingPortNode;
+        return (DockingPortNode) super.deserialize(element, deserializationStack);
+    }
+
+    protected LayoutNode createLayoutNode() {
+        return new DockingPortNode();
     }
 
 }

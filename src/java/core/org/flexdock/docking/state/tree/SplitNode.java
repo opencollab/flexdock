@@ -16,7 +16,8 @@ import org.flexdock.docking.state.LayoutNode;
  * @author Christopher Butler
  */
 public class SplitNode extends DockingNode implements DockingConstants {
-	private int orientation;
+
+    private int orientation;
 	private int region;
 	private float percentage;
 	private String siblingId;
@@ -33,17 +34,33 @@ public class SplitNode extends DockingNode implements DockingConstants {
 		return orientation;
 	}
     
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+    
 	public float getPercentage() {
 		return percentage;
 	}
+    
+    public void setPercentage(float percentage) {
+        this.percentage = percentage;
+    }
 
     public int getRegion() {
 		return region;
 	}
+    
+    public void setRegion(int region) {
+        this.region = region;
+    }
 
 	public String getSiblingId() {
 		return siblingId;
 	}
+    
+    public void setSiblingId(String siblingId) {
+        this.siblingId = siblingId;
+    }
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer("SplitNode[");

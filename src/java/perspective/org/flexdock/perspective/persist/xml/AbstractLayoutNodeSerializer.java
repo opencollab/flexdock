@@ -23,30 +23,27 @@ import javax.swing.tree.MutableTreeNode;
 import org.flexdock.docking.state.LayoutNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: AbstractLayoutNodeSerializer.java,v 1.4 2005-07-03 13:11:56 winnetou25 Exp $
+ * @version $Id: AbstractLayoutNodeSerializer.java,v 1.5 2005-07-03 15:05:47 winnetou25 Exp $
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
     public Element serialize(Document document, Object object) {
         LayoutNode layoutNode = (LayoutNode) object;
-
+        
         Element layoutNodeElement = getElement(document, object);
         
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
         for (int i=0; i<layoutNode.getChildCount(); i++) {
             MutableTreeNode childTreeNode = (MutableTreeNode) layoutNode.getChildAt(i);
-            if (childTreeNode.isLeaf()) {
-                Element element = layoutNodeSerializer.serialize(document, childTreeNode);
-                layoutNodeElement.appendChild(element);
-            } else {
-                Element element = layoutNodeSerializer.serialize(document, childTreeNode); //recursion
-                layoutNodeElement.appendChild(element);
-            }
+            Element element = layoutNodeSerializer.serialize(document, childTreeNode);
+            layoutNodeElement.appendChild(element);
         }
         
         return layoutNodeElement;
@@ -54,14 +51,36 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
     protected abstract Element getElement(Document document, Object o);
     
+//  <DockingPortNode>
+//      <SplitNode dockingRegion="WEST" orientation="horizontal" percentage="0.22506393" region="left">
+//          <DockingPortNode>
+//              <DockableNode dockableId="message.log"/>
+//              <DockableNode dockableId="problem"/>
+//              <DockableNode dockableId="console"/>
+//          </DockingPortNode>
+//          <DockingPortNode>
+//              <DockableNode dockableId="main.view"/>
+//          </DockingPortNode>
+//      </SplitNode>
+//  </DockingPortNode>
+    
     public Object deserialize(Element element, DeserializationStack deserializationStack) {
+        LayoutNode layoutNode = createLayoutNode();
 
-//        ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
-//
-//        LayoutNode layoutNode = (LayoutNode) layoutNodeSerializer.deserialize(element, deserializationStack);
+        ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
+        NodeList nodeList = element.getChildNodes();
+        for (int i = 0; i<nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node instanceof Element) {
+                Element childElement = (Element) node;
+                LayoutNode childLayoutNode = (LayoutNode) layoutNodeSerializer.deserialize(childElement, deserializationStack);   
+                layoutNode.add(childLayoutNode);
+            }
+        }
         
-        return null;
-        
+        return layoutNode;
     }
+    
+    protected abstract LayoutNode createLayoutNode();
     
 }
