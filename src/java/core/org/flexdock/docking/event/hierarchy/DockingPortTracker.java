@@ -3,8 +3,10 @@
  */
 package org.flexdock.docking.event.hierarchy;
 
+import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Window;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.util.HashSet;
@@ -12,6 +14,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.RootWindow;
 
@@ -157,5 +161,24 @@ public class DockingPortTracker implements HierarchyListener {
 		synchronized(TRACKERS_BY_WINDOW) {
 			return new HashSet(TRACKERS_BY_WINDOW.keySet());	
 		}
+	}
+	
+	public static DockingPort getRootDockingPort(Dockable dockable) {
+		if(dockable==null || !DockingManager.isDocked(dockable))
+			return null;
+		
+		DockingPort port = dockable.getDockingPort();
+		Container parent = ((Component)port).getParent();
+		while(!isWindowRoot(parent)) {
+			if(parent instanceof DockingPort)
+				port = (DockingPort)parent;
+			parent = parent.getParent();
+		}
+		
+		return port;
+	}
+	
+	private static boolean isWindowRoot(Component comp) {
+		return comp instanceof Window || comp instanceof Applet;
 	}
 }
