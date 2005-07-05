@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.16 2005-07-03 15:57:49 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.17 2005-07-05 14:53:29 marius Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -142,7 +142,8 @@ public class DockingStateSerializer implements ISerializer {
         NodeList splitRatioNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_SPLIT_RATIO);
         if (splitRatioNodeList.getLength() > 0 && splitRatioNodeList.item(0) instanceof Element) {
             Element splitRatioElement = (Element) splitRatioNodeList.item(0);
-            String splitRatio = splitRatioElement.getTextContent();
+//          String splitRatio = splitRatioElement.getTextContent();
+            String splitRatio = XMLUtils.getStrictTextContent(splitRatioElement);
             dockingState.setSplitRatio(Float.parseFloat(splitRatio));
         }
         
@@ -158,7 +159,8 @@ public class DockingStateSerializer implements ISerializer {
             NodeList minimizationConstraintNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_MINIMIZE_CONSTRAINT);
             if (minimizationConstraintNodeList.getLength() > 0 && minimizationConstraintNodeList.item(0) instanceof Element) {
                 Element minimizationContraintElement = (Element) minimizationConstraintNodeList.item(0);
-                String minimizeConstraint = minimizationContraintElement.getTextContent();
+//              String minimizeConstraint = minimizationContraintElement.getTextContent();
+                String minimizeConstraint = XMLUtils.getStrictTextContent(minimizationContraintElement);
                 int minimizeConstraintInt = getRealMinimizeConstraint(minimizeConstraint);
                 dockingState.setMinimizedConstraint(minimizeConstraintInt);
             }

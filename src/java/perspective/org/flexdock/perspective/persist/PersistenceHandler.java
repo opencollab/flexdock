@@ -20,17 +20,19 @@ package org.flexdock.perspective.persist;
 
 import java.io.IOException;
 
+import org.flexdock.docking.state.PersistenceException;
+
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceHandler.java,v 1.3 2005-07-03 19:18:31 winnetou25 Exp $
+ * @version $Id: PersistenceHandler.java,v 1.4 2005-07-05 14:53:25 marius Exp $
  */
 public interface PersistenceHandler {
     
-    boolean store(PerspectiveModel perspectiveModel) throws IOException, PersisterException;
+    boolean store(PerspectiveModel perspectiveModel) throws IOException, PersistenceException;
 
-    PerspectiveModel load() throws IOException, PersisterException;
+    PerspectiveModel load() throws IOException, PersistenceException;
     
     Persister createDefaultPersister();
 

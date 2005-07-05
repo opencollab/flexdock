@@ -3,19 +3,26 @@
  */
 package org.flexdock.docking.props;
 
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JComponent;
+
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ClassMapping;
+import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
  */
 public class PropertyManager {
+	private static final HashMap DOCKABLE_CLIENT_PROPERTIES = new HashMap();
 	public static final String DOCKABLE_PROPERTIES_KEY = DockablePropertySet.class.getName();
 	public static final String DOCKINGPORT_PROPERTIES_KEY = DockingPortPropertySet.class.getName();
 	private static final ClassMapping DOCKABLE_PROPS_MAPPING = new ClassMapping(ScopedDockablePropertySet.class, null);
@@ -55,8 +62,12 @@ public class PropertyManager {
 	}
 	
 	public static void removePropertySet(Dockable dockable) {
-		if(dockable!=null)
+		if(dockable!=null) {
 			dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, null);
+			synchronized(DOCKABLE_CLIENT_PROPERTIES) {
+				DOCKABLE_CLIENT_PROPERTIES.remove(dockable.getPersistentId());
+			}
+		}
 	}
 
 	public static DockingPortPropertySet getDockingPortPropertySet(DockingPort port) {
@@ -114,6 +125,48 @@ public class PropertyManager {
 		Class key = d.getClass();
 		Class c = DOCKABLE_PROPS_MAPPING.getClassMapping(key);
 		return (DockablePropertySet)Utilities.createInstance(c.getName());
+	}
+	
+	public static Object getClientProperty(Dockable dockable, Object key) {
+		if(dockable==null || key==null)
+			return null;
+		
+		Component comp = dockable.getComponent();
+		if(comp instanceof JComponent) {
+			return SwingUtility.getClientProperty(comp, key);
+		}
+		return getClientProperties(dockable).get(key);
+	}
+	
+	public static void putClientProperty(Dockable dockable, Object key, Object value) {
+		if(dockable==null || key==null)
+			return;
+		
+		Component comp = dockable.getComponent();
+		if(comp instanceof JComponent) {
+			SwingUtility.putClientProperty(comp, key, value);
+			return;
+		}
+		
+		Hashtable table = getClientProperties(dockable);
+		if(value==null) {
+			table.remove(key);
+		}
+		else {
+			table.put(key, value);
+		}
+	}
+	
+	private static Hashtable getClientProperties(Dockable dockable) {
+		String dockableId = dockable.getPersistentId();
+		synchronized(DOCKABLE_CLIENT_PROPERTIES) {
+			Hashtable table = (Hashtable)DOCKABLE_CLIENT_PROPERTIES.get(dockableId);
+			if(table==null) {
+				table = new Hashtable(2);
+				DOCKABLE_CLIENT_PROPERTIES.put(dockableId, table);
+			}
+			return table;
+		}
 	}
 
 }

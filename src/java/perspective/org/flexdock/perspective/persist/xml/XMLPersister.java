@@ -41,6 +41,7 @@ import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatingGroup;
 import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
 import org.flexdock.docking.state.tree.SplitNode;
@@ -48,7 +49,6 @@ import org.flexdock.perspective.Layout;
 import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.persist.Persister;
-import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -60,14 +60,14 @@ import org.xml.sax.SAXException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.19 2005-07-03 19:18:30 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.20 2005-07-05 14:53:28 marius Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
      * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException, PersisterException {
+    public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException, PersistenceException {
         DocumentBuilder documentBuilder = createDocumentBuilder();
         Document document = documentBuilder.newDocument();
         
@@ -89,9 +89,9 @@ public class XMLPersister implements Persister {
             
             transformer.transform(source, result);
         } catch (TransformerConfigurationException ex) {
-            throw new PersisterException("Unable to serialize perspectiveModel", ex);
+            throw new PersistenceException("Unable to serialize perspectiveModel", ex);
         } catch (TransformerException ex) {
-            throw new PersisterException("Unable to serialize perspectiveModel", ex);
+            throw new PersistenceException("Unable to serialize perspectiveModel", ex);
         }
 
         return true;
@@ -100,7 +100,7 @@ public class XMLPersister implements Persister {
     /**
      * @see org.flexdock.perspective.persist.Persister#load(java.lang.String)
      */
-    public PerspectiveModel load(InputStream is) throws IOException, PersisterException {
+    public PerspectiveModel load(InputStream is) throws IOException, PersistenceException {
         try {
             InputSource inputSource = new InputSource(is);
             DocumentBuilder documentBuilder = createDocumentBuilder();
@@ -115,7 +115,7 @@ public class XMLPersister implements Persister {
             
             return null;
         } catch (SAXException ex) {
-            throw new PersisterException("Unable to deserialize perspectiveModel from xml", ex);
+            throw new PersistenceException("Unable to deserialize perspectiveModel from xml", ex);
         }
     }
     
@@ -143,14 +143,14 @@ public class XMLPersister implements Persister {
         return persister; 
     }
     
-    private DocumentBuilder createDocumentBuilder() throws PersisterException {
+    private DocumentBuilder createDocumentBuilder() throws PersistenceException {
         try {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 
             return documentBuilder;
         } catch (ParserConfigurationException ex) {
-            throw new PersisterException("Unable to create document builder", ex);
+            throw new PersistenceException("Unable to create document builder", ex);
         }
     }
     

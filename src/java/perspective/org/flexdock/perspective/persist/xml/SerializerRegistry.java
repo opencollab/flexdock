@@ -20,13 +20,11 @@ package org.flexdock.perspective.persist.xml;
 
 import java.util.HashMap;
 
-import org.w3c.dom.Element;
-
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SerializerRegistry.java,v 1.4 2005-06-28 23:00:30 winnetou25 Exp $
+ * @version $Id: SerializerRegistry.java,v 1.5 2005-07-05 14:53:29 marius Exp $
  */
 public class SerializerRegistry {
 

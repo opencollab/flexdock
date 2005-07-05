@@ -11,9 +11,9 @@
 	<classpathentry kind="src" path="resources/core"/>
 	<classpathentry kind="src" path="resources/demo"/>
 	<classpathentry kind="src" path="resources/plaf"/>
-	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
 	<classpathentry kind="lib" path="lib/jmf.jar"/>
 	<classpathentry kind="lib" path="lib/looks-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/skinlf-1.2.11.jar"/>
+	<classpathentry sourcepath="JRE_SRC" kind="var" path="JRE_LIB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

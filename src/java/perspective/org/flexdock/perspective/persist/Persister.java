@@ -22,12 +22,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.flexdock.docking.state.PersistenceException;
+
 /**
  * Created on 2005-03-30
  * 
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: Persister.java,v 1.6 2005-07-03 19:18:31 winnetou25 Exp $
+ * @version $Id: Persister.java,v 1.7 2005-07-05 14:53:26 marius Exp $
  */
 public interface Persister {
     
@@ -39,7 +41,7 @@ public interface Persister {
      * @return <code>true</code> when there was no problem with persisting the perspectiveInfo object.
      * @throws IOException in case of input/output problem.
      */
-    boolean store(OutputStream os, PerspectiveModel perspectiveInfo) throws IOException, PersisterException;
+    boolean store(OutputStream os, PerspectiveModel perspectiveInfo) throws IOException, PersistenceException;
     
     /**
      * Deserializes <code>PerspectiveInfo</code> from the supplied data stream.
@@ -48,6 +50,6 @@ public interface Persister {
      * @return <code>true</code> when there was no problem with persisting the perspectiveInfo object.
      * @throws IOException in case of input/output problem.
      */
-    PerspectiveModel load(InputStream is) throws IOException, PersisterException;
+    PerspectiveModel load(InputStream is) throws IOException, PersistenceException;
 
 }

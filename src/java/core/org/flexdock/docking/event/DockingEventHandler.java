@@ -4,7 +4,9 @@
 package org.flexdock.docking.event;
 
 import java.util.EventListener;
+import java.util.Vector;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.event.Event;
 import org.flexdock.event.EventHandler;
 
@@ -12,7 +14,37 @@ import org.flexdock.event.EventHandler;
  * @author Christopher Butler
  */
 public class DockingEventHandler extends EventHandler {
-
+	private static final String DOCKING_LISTENERS_KEY = "EventManager.DOCKING_LISTENERS_KEY";
+	
+	public static DockingListener[] getDockingListeners(Dockable dockable) {
+		Vector list = getDockingListenersList(dockable);
+		return list==null? null: (DockingListener[])list.toArray(new DockingListener[0]);
+	}
+	
+	public static void addDockingListener(Dockable dockable, DockingListener listener) {
+		if(dockable!=null && listener!=null) {
+			getDockingListenersList(dockable).add(listener);
+		}
+	}
+	
+	public static void removeDockingListener(Dockable dockable, DockingListener listener) {
+		if(dockable!=null && listener!=null) {
+			getDockingListenersList(dockable).remove(listener);
+		}
+	}
+	
+	private static Vector getDockingListenersList(Dockable dockable) {
+		if(dockable==null)
+			return null;
+		
+		Vector list = (Vector)dockable.getClientProperty(DOCKING_LISTENERS_KEY);
+		if(list==null) {
+			list = new Vector();
+			dockable.putClientProperty(DOCKING_LISTENERS_KEY, list);
+		}
+		return list;
+	}
+	
 	public boolean acceptsEvent(Event evt) {
 		return evt instanceof DockingEvent;
 	}

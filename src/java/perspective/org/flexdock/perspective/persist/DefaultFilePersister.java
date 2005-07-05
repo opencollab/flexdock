@@ -9,12 +9,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 
+import org.flexdock.docking.state.PersistenceException;
+
 /**
  * @author Christopher Butler
  */
 public class DefaultFilePersister implements Persister {
 	
-	public PerspectiveModel load(InputStream in) throws IOException, PersisterException {
+	public PerspectiveModel load(InputStream in) throws IOException, PersistenceException {
 		if(in==null)
 			return null;
 
@@ -24,7 +26,7 @@ public class DefaultFilePersister implements Persister {
 					new ObjectInputStream(in);
 			return (PerspectiveModel) ois.readObject();
 		} catch(ClassNotFoundException ex) {
-		    throw new PersisterException("Unable to unmarshal data", ex);
+		    throw new PersistenceException("Unable to unmarshal data", ex);
         } finally {
 			if(ois != null) {
                 ois.close();

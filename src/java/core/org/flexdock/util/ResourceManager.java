@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
 
@@ -82,6 +83,17 @@ public class ResourceManager {
 		if(url==null && !uri.startsWith("/"))
 			url = getResource("/" + uri);
 			
+		// if resource is still null, then check to see if it's a filesystem path
+		if(url==null) {
+			try {
+				File file = new File(uri);
+				if(file.exists())
+					url = file.toURL();
+			} catch(MalformedURLException e) {
+				e.printStackTrace();
+				url = null;
+			}
+		}
 		return url;
 	}
 

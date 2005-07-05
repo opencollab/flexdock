@@ -49,9 +49,9 @@ import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.docking.state.LayoutManager;
 import org.flexdock.docking.state.MinimizationManager;
+import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.event.EventManager;
 import org.flexdock.event.RegistrationEvent;
-import org.flexdock.perspective.persist.PersisterException;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
@@ -134,7 +134,7 @@ public class DockingManager implements DockingConstants {
 					storeLayoutModel();
 			} catch(IOException e) {
 				e.printStackTrace();
-			} catch (PersisterException e) {
+			} catch (PersistenceException e) {
                 e.printStackTrace();
             }
 		}
@@ -1173,7 +1173,7 @@ public class DockingManager implements DockingConstants {
 	 * @see #setLayoutManager(LayoutManager)
 	 * @see LayoutManager#store()
 	 */
-	public static boolean storeLayoutModel() throws IOException, PersisterException {
+	public static boolean storeLayoutModel() throws IOException, PersistenceException {
 		LayoutManager mgr = getLayoutManager();
 		return mgr==null? false: mgr.store();
 	}
@@ -1201,7 +1201,7 @@ public class DockingManager implements DockingConstants {
 	 * @see #loadLayoutModel(boolean)
 	 * @see LayoutManager#load()
 	 */
-	public static boolean loadLayoutModel() throws IOException, PersisterException {
+	public static boolean loadLayoutModel() throws IOException, PersistenceException {
 		return loadLayoutModel(false);
 	}
 	
@@ -1234,7 +1234,7 @@ public class DockingManager implements DockingConstants {
 	 * @see #restoreLayout(boolean)
 	 * @see LayoutManager#load()
 	 */
-	public static boolean loadLayoutModel(boolean restore) throws IOException, PersisterException {
+	public static boolean loadLayoutModel(boolean restore) throws IOException, PersistenceException {
 		LayoutManager mgr = getLayoutManager();
 		if(mgr==null)
 			return false;
@@ -1270,7 +1270,7 @@ public class DockingManager implements DockingConstants {
 			// shouldn't happen since we're not intending to load from storage
 			e.printStackTrace();
 			return false;
-		} catch (PersisterException e) {
+		} catch (PersistenceException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
@@ -1299,7 +1299,7 @@ public class DockingManager implements DockingConstants {
 	 * @see #setLayoutManager(LayoutManager)
 	 * @see LayoutManager#restore(boolean)
 	 */
-	public static boolean restoreLayout(boolean loadFromStorage) throws IOException, PersisterException {
+	public static boolean restoreLayout(boolean loadFromStorage) throws IOException, PersistenceException {
 		LayoutManager mgr = getLayoutManager();
 		return mgr==null? false: mgr.restore(loadFromStorage);
 	}

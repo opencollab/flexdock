@@ -5,6 +5,7 @@ package org.flexdock.docking.floating.frames;
 
 import java.awt.Component;
 import java.awt.Point;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ import org.flexdock.docking.event.DockingEvent;
  * @author Christopher Butler
  */
 public class FloatingDockingPort extends DefaultDockingPort {
-    
+    private static final Set EMPTY_SET = new HashSet(0);
     protected DockingFrame frame;
     protected FrameDragListener dragListener;
     
@@ -64,7 +65,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
         Component dragSrc = (Component)evt.getTriggerSource();
         Dockable dockable = (Dockable)evt.getSource();
         
-        boolean listenerEnabled = dockable.getFrameDragSources().contains(dragSrc);
+        boolean listenerEnabled = getFrameDragSources(dockable).contains(dragSrc);
         dragListener.setEnabled(listenerEnabled);
         if(listenerEnabled) {
             evt.consume();
@@ -88,7 +89,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
     }
     
     protected void installListeners(Dockable dockable) {
-        Set frameDraggers = dockable.getFrameDragSources();
+        Set frameDraggers = getFrameDragSources(dockable);
         for(Iterator it=frameDraggers.iterator(); it.hasNext();) {
             Component frameDragSrc = (Component)it.next();
             frameDragSrc.addMouseListener(dragListener);
@@ -99,7 +100,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
     }
     
     protected void uninstallListeners(Dockable dockable) {
-        Set frameDraggers = dockable.getFrameDragSources();
+        Set frameDraggers = getFrameDragSources(dockable);
         for(Iterator it=frameDraggers.iterator(); it.hasNext();) {
             Component frameDragSrc = (Component)it.next();
             frameDragSrc.removeMouseListener(dragListener);
@@ -113,6 +114,11 @@ public class FloatingDockingPort extends DefaultDockingPort {
         if(!(comp instanceof JTabbedPane))
             return 0;
         return ((JTabbedPane)comp).getTabCount();
+    }
+    
+    protected Set getFrameDragSources(Dockable dockable) {
+    	Set set = dockable==null? null: dockable.getFrameDragSources();
+    	return set==null? EMPTY_SET: set;
     }
     
 }

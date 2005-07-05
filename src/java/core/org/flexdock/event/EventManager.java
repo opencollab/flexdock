@@ -46,6 +46,16 @@ public class EventManager {
 		getInstance().removeEventListener(listener);
 	}
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static void dispatch(Event evt) {
 		getInstance().dispatchEvent(evt);
 	}

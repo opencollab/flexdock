@@ -23,13 +23,14 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.test.xml.XMLDebugger;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.4 2005-07-03 19:18:31 winnetou25 Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.5 2005-07-05 14:53:26 marius Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
@@ -62,10 +63,10 @@ public class FilePersistenceHandler implements PersistenceHandler {
 	}
     
     /**
-     * @throws PersisterException 
+     * @throws PersistenceException 
      * @see org.flexdock.perspective.persist.PersistenceHandler#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(PerspectiveModel perspectiveInfo) throws IOException, PersisterException {
+    public boolean store(PerspectiveModel perspectiveInfo) throws IOException, PersistenceException {
         File file = getPerspectiveFile();
         validatePerspectiveFile();
         
@@ -80,10 +81,10 @@ public class FilePersistenceHandler implements PersistenceHandler {
     }
 
     /**
-     * @throws PersisterException 
+     * @throws PersistenceException 
      * @see org.flexdock.perspective.persist.PersistenceHandler#load(java.lang.String)
      */
-    public PerspectiveModel load() throws IOException, PersisterException {
+    public PerspectiveModel load() throws IOException, PersistenceException {
         File file = getPerspectiveFile();
         if(file==null || !file.exists())
         	return null;

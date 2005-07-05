@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.perspective.persist.PersisterException;
 
 /**
  * @author Christopher Butler
@@ -24,10 +23,10 @@ public interface LayoutManager {
 	
 	boolean display(Dockable dockable);
 	
-	boolean store() throws IOException, PersisterException;
+	boolean store() throws IOException, PersistenceException;
 	
-	boolean load() throws IOException, PersisterException;
+	boolean load() throws IOException, PersistenceException;
 	
-	boolean restore(boolean loadFromStorage) throws IOException, PersisterException;
+	boolean restore(boolean loadFromStorage) throws IOException, PersistenceException;
     
 }

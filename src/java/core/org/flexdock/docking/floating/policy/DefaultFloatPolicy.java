@@ -3,6 +3,8 @@
  */
 package org.flexdock.docking.floating.policy;
 
+import java.util.Set;
+
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
@@ -82,7 +84,8 @@ public class DefaultFloatPolicy extends FloatPolicy.Stub {
 		if(dockable==null || !FloatPolicyManager.isGlobalFloatingEnabled())
 			return false;
 		
-		if(dockable.getFrameDragSources().size()==0)
+		Set frameDragSources = dockable.getFrameDragSources();
+		if(frameDragSources==null || frameDragSources.size()==0)
 			return false;
 		
 		return super.isFloatingAllowed(dockable);

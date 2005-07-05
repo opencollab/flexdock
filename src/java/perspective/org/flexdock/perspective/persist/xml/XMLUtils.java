@@ -18,15 +18,17 @@
  */
 package org.flexdock.perspective.persist.xml;
 
+import org.apache.crimson.tree.TextNode;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLUtils.java,v 1.2 2005-07-03 13:11:54 winnetou25 Exp $
+ * @version $Id: XMLUtils.java,v 1.3 2005-07-05 14:53:28 marius Exp $
  */
 public class XMLUtils {
 
@@ -47,6 +49,23 @@ public class XMLUtils {
         // now insert the desired text content
         Node textNode = document.createTextNode(text);
         elem.appendChild(textNode);
+    }
+    
+    public static String getStrictTextContent(Element element) {
+    	if(element==null)
+    		return null;
+    	
+    	// get only the text nodes.  igore any other types
+    	StringBuffer sb = new StringBuffer();
+    	NodeList nodes = element.getChildNodes();
+    	for(int i=0; i<nodes.getLength(); i++) {
+    		Node node = nodes.item(i);
+    		if(node instanceof TextNode) {
+    			String txt = ((TextNode)node).getData();
+    			sb.append(txt);
+    		}
+    	}
+    	return sb.toString();
     }
     
 //    public static String getTextContent(Element element) {

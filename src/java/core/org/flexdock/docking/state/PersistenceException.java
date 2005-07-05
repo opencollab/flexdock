@@ -16,17 +16,17 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
  */
-package org.flexdock.perspective.persist;
+package org.flexdock.docking.state;
 
 /**
  * Created on 2005-07-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersisterException.java,v 1.1 2005-07-03 19:18:31 winnetou25 Exp $
+ * @version $Id: PersistenceException.java,v 1.1 2005-07-05 14:53:31 marius Exp $
  */
-public class PersisterException extends Exception {
+public class PersistenceException extends Exception {
 
-    public PersisterException(String message, Exception ex) {
+    public PersistenceException(String message, Exception ex) {
         super(message, ex);
     }
     
