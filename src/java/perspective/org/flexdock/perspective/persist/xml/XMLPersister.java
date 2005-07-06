@@ -61,7 +61,7 @@ import org.xml.sax.SAXException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.21 2005-07-06 03:21:54 marius Exp $
+ * @version $Id: XMLPersister.java,v 1.22 2005-07-06 18:10:49 winnetou25 Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -115,7 +115,7 @@ public class XMLPersister implements Persister {
             NodeList perspectiveModelNodeList = document.getElementsByTagName(PersistenceConstants.PERSPECTIVE_MODEL_ELEMENT_NAME);
             if (perspectiveModelNodeList.getLength() > 0 && perspectiveModelNodeList.item(0) instanceof Element) {
                 Element perspectiveModelElement = (Element) perspectiveModelNodeList.item(0);
-                return (PerspectiveModel) perspectiveModelSerializer.deserialize(perspectiveModelElement, new DeserializationStack());
+                return (PerspectiveModel) perspectiveModelSerializer.deserialize(perspectiveModelElement);
             }
             
             return null;

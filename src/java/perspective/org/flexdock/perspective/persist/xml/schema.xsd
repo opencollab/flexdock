@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: schema.xsd,v 1.2 2005-07-06 17:48:59 winnetou25 Exp $ -->
+<!-- $Id: schema.xsd,v 1.3 2005-07-06 18:10:48 winnetou25 Exp $ -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flexdock.org" xmlns="http://www.flexdock.org">
 
 	<xs:simpleType name="dockingRegionType">
@@ -81,6 +81,7 @@
 			<xs:attribute name="orientation" type="orientationType" use="required"/>
 			<xs:attribute name="percentage" type="xs:float" use="required"/>
 			<xs:attribute name="region" type="regionType" use="required"/>
+			<xs:attribute name="dockingRegion" type="dockingRegionType" use="optional"/>
 			<xs:element ref="DockingPortNode" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="DockableNode" minOccurs="0" maxOccurs="unbounded"/>
 	    </xs:complexType>
@@ -122,7 +123,7 @@
        			<xs:complexType>
 					<xs:element name="Layout" minOccurs="1" maxOccurs="1">
 						<xs:sequence>
-							<xs:element ref="DockingState" minOccurs="1" maxOccurs="unbounded"/>
+							<xs:element ref="DockingState" minOccurs="0" maxOccurs="unbounded"/>
 							<xs:element ref="FloatingGroup" minOccurs="0" maxOccurs="unbounded"/>
 						    <xsd:choice>
 								<xs:element ref="SplitNode"/>
@@ -131,9 +132,9 @@
 						    </xsd:choice>
 						</xs:sequence>
 		            </xs:element>
-					<xs:element name="LayoutSequence" minOccurs="1" maxOccurs="1">
+					<xs:element name="LayoutSequence" minOccurs="0" maxOccurs="1">
 						<xs:element ref="DockingState" minOccurs="0" maxOccurs="unbounded"/>
-		            </xs:element>
+					</xs:element>
 		    		<xs:attribute name="id" type="xs:string" use="required"/>
 	    		    <xs:attribute name="name" type="xs:string" use="required"/>
 		        </xs:complexType>

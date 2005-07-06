@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: AbstractLayoutNodeSerializer.java,v 1.6 2005-07-06 03:21:54 marius Exp $
+ * @version $Id: AbstractLayoutNodeSerializer.java,v 1.7 2005-07-06 18:10:49 winnetou25 Exp $
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
@@ -52,20 +52,7 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
     protected abstract Element getElement(Document document, Object o);
     
-//  <DockingPortNode>
-//      <SplitNode dockingRegion="WEST" orientation="horizontal" percentage="0.22506393" region="left">
-//          <DockingPortNode>
-//              <DockableNode dockableId="message.log"/>
-//              <DockableNode dockableId="problem"/>
-//              <DockableNode dockableId="console"/>
-//          </DockingPortNode>
-//          <DockingPortNode>
-//              <DockableNode dockableId="main.view"/>
-//          </DockingPortNode>
-//      </SplitNode>
-//  </DockingPortNode>
-    
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         LayoutNode layoutNode = createLayoutNode();
 
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
@@ -74,7 +61,7 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
             Node node = nodeList.item(i);
             if (node instanceof Element) {
                 Element childElement = (Element) node;
-                LayoutNode childLayoutNode = (LayoutNode) layoutNodeSerializer.deserialize(childElement, deserializationStack);   
+                LayoutNode childLayoutNode = (LayoutNode) layoutNodeSerializer.deserialize(childElement);   
                 layoutNode.add(childLayoutNode);
             }
         }

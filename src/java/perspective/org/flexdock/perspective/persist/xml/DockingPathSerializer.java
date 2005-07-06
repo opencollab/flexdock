@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingPathSerializer.java,v 1.7 2005-07-03 15:57:49 winnetou25 Exp $
+ * @version $Id: DockingPathSerializer.java,v 1.8 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class DockingPathSerializer implements ISerializer {
     
@@ -61,7 +61,7 @@ public class DockingPathSerializer implements ISerializer {
         return dockingPathElement;
     }
 
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         //DockingState dockingState = (DockingState) deserializationStack.popObject();
         DockingPath dockingPath = new DockingPath();
         
@@ -83,7 +83,7 @@ public class DockingPathSerializer implements ISerializer {
         NodeList splitNodeList = element.getElementsByTagName(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
         if (splitNodeList.getLength() > 0 && splitNodeList.item(0) instanceof Element) {
             Element splitNodeElement = (Element) splitNodeList.item(0);
-            SplitNode splitNode = (SplitNode) layoutNodeSerializer.deserialize(splitNodeElement, deserializationStack);
+            SplitNode splitNode = (SplitNode) layoutNodeSerializer.deserialize(splitNodeElement);
             dockingPath.getNodes().add(splitNode);
         }
         

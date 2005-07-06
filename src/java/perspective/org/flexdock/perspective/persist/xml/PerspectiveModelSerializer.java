@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveModelSerializer.java,v 1.7 2005-07-06 17:27:45 winnetou25 Exp $
+ * @version $Id: PerspectiveModelSerializer.java,v 1.8 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class PerspectiveModelSerializer implements ISerializer {
 
@@ -55,7 +55,7 @@ public class PerspectiveModelSerializer implements ISerializer {
         return perspectiveModelElement;
     }
     
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         String currentPerspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_CURRENT_PERSPECTIVE_ID);
         String defaultPerspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_DEFAULT_PERSPECTIVE_ID);
 
@@ -66,7 +66,7 @@ public class PerspectiveModelSerializer implements ISerializer {
             Node node = perspectivesList.item(i);
             if (node instanceof Element) {
                 Element perspectiveElement = (Element) node;
-                Perspective perspective = (Perspective) perspectiveSerializer.deserialize(perspectiveElement, deserializationStack);
+                Perspective perspective = (Perspective) perspectiveSerializer.deserialize(perspectiveElement);
                 perspectives.add(perspective);
             }
         }

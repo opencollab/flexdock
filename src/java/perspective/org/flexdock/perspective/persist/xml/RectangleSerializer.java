@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: RectangleSerializer.java,v 1.6 2005-07-03 13:11:55 winnetou25 Exp $
+ * @version $Id: RectangleSerializer.java,v 1.7 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class RectangleSerializer implements ISerializer {
     
@@ -56,7 +56,7 @@ public class RectangleSerializer implements ISerializer {
         return rectangleElement;
     }
 
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         ISerializer pointSerializer = SerializerRegistry.getSerializer(Point.class);
         ISerializer dimensionSerializer = SerializerRegistry.getSerializer(Dimension.class);
         
@@ -65,14 +65,14 @@ public class RectangleSerializer implements ISerializer {
         NodeList dimenstionNodeList = element.getElementsByTagName(PersistenceConstants.DIMENSION_ELEMENT_NAME);
         if (dimenstionNodeList.getLength() > 0 && dimenstionNodeList.item(0) instanceof Element) {
             Element dimensionElement = (Element) dimenstionNodeList.item(0);
-            Dimension dimension = (Dimension) dimensionSerializer.deserialize(dimensionElement, deserializationStack);
+            Dimension dimension = (Dimension) dimensionSerializer.deserialize(dimensionElement);
             rectangle.setSize(dimension);
         }
 
         NodeList pointNodeList = element.getElementsByTagName(PersistenceConstants.POINT_ELEMENT_NAME);
         if (pointNodeList.getLength() > 0 && pointNodeList.item(0) instanceof Element) {
             Element pointElement = (Element) pointNodeList.item(0);
-            Point point = (Point) pointSerializer.deserialize(pointElement, deserializationStack);
+            Point point = (Point) pointSerializer.deserialize(pointElement);
             rectangle.setLocation(point);
         }
 

@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-23
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: SplitNodeSerializer.java,v 1.8 2005-07-03 15:05:47 winnetou25 Exp $
+ * @version $Id: SplitNodeSerializer.java,v 1.9 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
@@ -45,7 +45,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_PERCENTAGE, String.valueOf(splitNode.getPercentage()));
 
         if (splitNode.getDockingRegion() != null) {
-            splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION, splitNode.getDockingRegion());
+            splitNodeElement.setAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION, splitNode.getDockingRegion().toLowerCase());
         }
 
         return splitNodeElement;
@@ -55,9 +55,9 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         return document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
     }
 
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         
-        SplitNode splitNode = (SplitNode) super.deserialize(element, deserializationStack);
+        SplitNode splitNode = (SplitNode) super.deserialize(element);
         
         String siblingId = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID);
         String orientationString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION);
@@ -90,7 +90,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
             splitNode.setSiblingId(siblingId);
         }
         if (dockingRegion != null && !dockingRegion.equals("")) {
-            splitNode.setDockingRegion(dockingRegion);
+            splitNode.setDockingRegion(dockingRegion.toUpperCase());
         }
 
         return splitNode;

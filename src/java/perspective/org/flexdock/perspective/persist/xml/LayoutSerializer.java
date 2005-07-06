@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSerializer.java,v 1.10 2005-07-06 03:21:54 marius Exp $
+ * @version $Id: LayoutSerializer.java,v 1.11 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class LayoutSerializer implements ISerializer {
     
@@ -73,7 +73,7 @@ public class LayoutSerializer implements ISerializer {
         return layoutElement;
     }
 
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         Layout layout = new Layout();
 
         ISerializer dockingStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
@@ -82,7 +82,7 @@ public class LayoutSerializer implements ISerializer {
             Node node = dockingStateNodeList.item(i);
             if (node instanceof Element) {
                 Element dockingStateElement = (Element) node;
-                DockingState dockingState = (DockingState) dockingStateSerializer.deserialize(dockingStateElement, deserializationStack);
+                DockingState dockingState = (DockingState) dockingStateSerializer.deserialize(dockingStateElement);
                 String dockableId = dockingState.getDockableId();
                 layout.setDockingState(dockableId, dockingState);
             }
@@ -94,7 +94,7 @@ public class LayoutSerializer implements ISerializer {
             Node floatingGroupNode = floatingGroupsNodeList.item(i);
             if (floatingGroupNode instanceof Element) {
                 Element floatingGroupElement = (Element) floatingGroupNode;
-                FloatingGroup floatingGroup = (FloatingGroup) floatingGroupsSerializer.deserialize(floatingGroupElement, deserializationStack);
+                FloatingGroup floatingGroup = (FloatingGroup) floatingGroupsSerializer.deserialize(floatingGroupElement);
                 layout.addFloatingGroup(floatingGroup);
             }
         }
@@ -104,7 +104,7 @@ public class LayoutSerializer implements ISerializer {
         NodeList dockingPortNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME);
         if (dockingPortNodeList.getLength() > 0 && dockingPortNodeList.item(0) instanceof Element) {
             Element layoutNodeElement = (Element) dockingPortNodeList.item(0);
-            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(layoutNodeElement, deserializationStack);
+            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(layoutNodeElement);
             layout.setRestorationLayout(restorationLayout);
         }
  

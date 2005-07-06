@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.18 2005-07-06 17:27:45 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.19 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -122,7 +122,7 @@ public class DockingStateSerializer implements ISerializer {
         throw new RuntimeException("Minimization conversion error!");
     }
 
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         String dockableId = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID);
         String relativeParentId = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID);
         String region = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION);
@@ -156,16 +156,15 @@ public class DockingStateSerializer implements ISerializer {
         NodeList pointNodeList = element.getElementsByTagName(PersistenceConstants.POINT_ELEMENT_NAME); 
         if (pointNodeList.getLength() > 0 && pointNodeList.item(0) instanceof Element) {
             Element centerPointElement = (Element) pointNodeList.item(0); 
-            Point centerPoint = (Point) pointDeserializer.deserialize(centerPointElement, deserializationStack);
+            Point centerPoint = (Point) pointDeserializer.deserialize(centerPointElement);
             dockingState.setCenter(centerPoint);
         }
         
         ISerializer dockingPathDeserializer = SerializerRegistry.getSerializer(DockingPath.class);
         NodeList dockingPathNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_PATH_ELEMENT_NAME);
-        deserializationStack.pushObject(dockingState);
         if (dockingPathNodeList.getLength() > 0 && dockingPathNodeList.item(0) instanceof Element) {
             Element dockingPathElement = (Element) dockingPathNodeList.item(0);
-            DockingPath dockingPath = (DockingPath) dockingPathDeserializer.deserialize(dockingPathElement, deserializationStack);
+            DockingPath dockingPath = (DockingPath) dockingPathDeserializer.deserialize(dockingPathElement);
             dockingState.setPath(dockingPath);
         }
         

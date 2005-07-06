@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FloatingGroupSerializer.java,v 1.7 2005-07-03 13:11:56 winnetou25 Exp $
+ * @version $Id: FloatingGroupSerializer.java,v 1.8 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class FloatingGroupSerializer implements ISerializer {
 
@@ -58,7 +58,7 @@ public class FloatingGroupSerializer implements ISerializer {
         return floatingGroupElement;
     }
 
-    public Object deserialize(Element element, DeserializationStack deserializationStack) {
+    public Object deserialize(Element element) {
         String floatingGroupName = element.getAttribute(PersistenceConstants.FLOATING_GROUP_ATTRIBUTE_NAME);
 
         ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
@@ -69,7 +69,7 @@ public class FloatingGroupSerializer implements ISerializer {
             Node rectangleNode = rectangleNodeList.item(0);
             if (rectangleNode instanceof Element) {
                 Element rectangleElement = (Element) rectangleNode;
-                Rectangle rectangle = (Rectangle) rectangleSerializer.deserialize(rectangleElement, deserializationStack);
+                Rectangle rectangle = (Rectangle) rectangleSerializer.deserialize(rectangleElement);
                 floatingGroup.setBounds(rectangle);
             }
         }
