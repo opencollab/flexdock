@@ -28,9 +28,15 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 	}
 
 	private void init() {
+		// create all of the dockable panels
 		createViews();
-		initLayout();
+		
+		// create the dockingPort
+		rootDockingPort = new ElegantDockingPort();
 		setContentPane((Container)rootDockingPort);
+		
+		// initialize the layout
+		initLayout();
 	}
 	
 	private void createViews() {
@@ -45,9 +51,25 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 		editorView = new ElegantPanel("Editor");
 	}
 	
-
 	private void initLayout() {
-		rootDockingPort = new ElegantDockingPort();
+		DockingManager.setDefaultPersistenceKey("ElegantDemo.xml");
+		
+		try {
+			if(!DockingManager.restoreLayout(true))
+				setupDefaultLayout();
+		} catch(Exception e) {
+			e.printStackTrace();
+			setupDefaultLayout();
+		}
+		
+		// remember to save the current layout state when the application
+		// shuts down
+		DockingManager.setAutoPersist(true);
+	}
+
+	private void setupDefaultLayout() {
+		// make sure there is nothing within the root dockingport
+		rootDockingPort.clear();
 		
 		// setup 4 quadrants
 		// dock the editor into the root dockingport

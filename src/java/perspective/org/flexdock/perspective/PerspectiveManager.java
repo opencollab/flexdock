@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
@@ -21,6 +22,7 @@ import org.flexdock.perspective.event.LayoutEventHandler;
 import org.flexdock.perspective.event.PerspectiveEventHandler;
 import org.flexdock.perspective.event.PerspectiveListener;
 import org.flexdock.perspective.event.RegistrationHandler;
+import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.flexdock.util.RootWindow;
@@ -32,6 +34,7 @@ import org.flexdock.util.SwingUtility;
 public class PerspectiveManager implements LayoutManager {
 
     public static final String EMPTY_PERSPECTIVE = "PerspectiveManager.EMPTY_PERSPECTIVE";
+    public static final String DEFAULT_PERSISTENCE_KEY_VALUE = "perspectiveFile.data";
 	private static PerspectiveManager SINGLETON = new PerspectiveManager();
 	private static DockingStateListener UPDATE_LISTENER = new DockingStateListener();
 	
@@ -41,6 +44,7 @@ public class PerspectiveManager implements LayoutManager {
 	private String m_currentPerspective;
 	private PersistenceHandler m_persistHandler;
 	private boolean restoreFloatingOnLoad;
+	private String m_defaultPersistenceKey;
 	
 	static {
 		initialize();
@@ -60,6 +64,10 @@ public class PerspectiveManager implements LayoutManager {
 		EventManager.addHandler(new LayoutEventHandler());
 
 		EventManager.addListener(UPDATE_LISTENER);
+		
+		String pKey = System.getProperty(DockingConstants.DEFAULT_PERSISTENCE_KEY);
+		setPersistenceHandler(FilePersistenceHandler.createDefault(DEFAULT_PERSISTENCE_KEY_VALUE));
+		getInstance().setDefaultPersistenceKey(pKey);
 	}
 	
 	public static PerspectiveManager getInstance() {
@@ -74,7 +82,7 @@ public class PerspectiveManager implements LayoutManager {
 		getInstance().m_persistHandler = handler;
 	}
 	
-	public static PersistenceHandler setPersistenceHandler() {
+	public static PersistenceHandler getPersistenceHandler() {
 		return getInstance().m_persistHandler;
 	}
 
@@ -398,6 +406,10 @@ public class PerspectiveManager implements LayoutManager {
 	}
 	
 	public synchronized boolean store() throws IOException, PersistenceException {
+		return store(null);
+	}
+	
+	public synchronized boolean store(String persistenceKey) throws IOException, PersistenceException {
 		if(m_persistHandler==null)
 			return false;
 
@@ -411,14 +423,20 @@ public class PerspectiveManager implements LayoutManager {
 		}
 		
 		PerspectiveModel info = new PerspectiveModel(m_defaultPerspective, m_currentPerspective, items);
-		return m_persistHandler.store(info);
+		String pKey = persistenceKey==null? m_defaultPersistenceKey: persistenceKey;
+		return m_persistHandler.store(pKey, info);
 	}
 	
 	public synchronized boolean load() throws IOException, PersistenceException {
+		return load(null);
+	}
+	
+	public synchronized boolean load(String persistenceKey) throws IOException, PersistenceException {
 		if(m_persistHandler==null)
 			return false;
 		
-		PerspectiveModel info = m_persistHandler.load();
+		String pKey = persistenceKey==null? m_defaultPersistenceKey: persistenceKey;
+		PerspectiveModel info = m_persistHandler.load(pKey);
 		if(info==null)
 			return false;
 
@@ -462,6 +480,14 @@ public class PerspectiveManager implements LayoutManager {
 		boolean loaded = loadFromStorage? load(): true;
 		reload();
 		return loaded;
+	}
+	
+	public String getDefaultPersistenceKey() {
+		return m_defaultPersistenceKey;
+	}
+	
+	public void setDefaultPersistenceKey(String key) {
+		m_defaultPersistenceKey = key;
 	}
     
 }

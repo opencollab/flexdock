@@ -1,4 +1,4 @@
-package org.flexdock.demos.raw.elegant;
+package org.flexdock.plaf.common.border;
 
 import java.awt.Color;
 import java.awt.Component;

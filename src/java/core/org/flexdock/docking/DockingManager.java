@@ -1242,6 +1242,7 @@ public class DockingManager implements DockingConstants {
 		return restore? restoreLayout(true): mgr.load();
 	}
 	
+	
 	/**
 	 * Synchronizes the application view with the current in-memory layout model.  This method 
 	 * defers processing to <code>restoreLayout(boolean loadFromStorage)</code> with an 
@@ -1305,7 +1306,7 @@ public class DockingManager implements DockingConstants {
 	}
 	
 	private static Dockable loadAndRegister(String id) {
-		DockableFactory factory = getDockingManager().dockableFactory;
+		DockableFactory factory = id==null? null: getDockingManager().dockableFactory;
 		if(factory==null)
 			return null;
 		
@@ -1460,6 +1461,9 @@ public class DockingManager implements DockingConstants {
 	 * @see Dockable#getPersistentId()
 	 */
 	public static Dockable getDockable(String id) {
+		if(id==null)
+			return null;
+		
 		Dockable dockable = getDockableImpl(id);
 		if(dockable==null)
 			dockable = loadAndRegister(id);
@@ -2186,6 +2190,14 @@ public class DockingManager implements DockingConstants {
 	 */
 	public static void setFloatingEnabled(boolean enabled) {
 		FloatPolicyManager.setGlobalFloatingEnabled(enabled);
+	}
+	
+	public static void setDefaultPersistenceKey(String key) {
+		getLayoutManager().setDefaultPersistenceKey(key);
+	}
+	
+	public static String getDefaultPersistenceKey() {
+		return getLayoutManager().getDefaultPersistenceKey(); 
 	}
 
 	/**

@@ -50,6 +50,7 @@ import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.persist.Persister;
 import org.flexdock.perspective.persist.PerspectiveModel;
+import org.flexdock.util.Utilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -60,7 +61,7 @@ import org.xml.sax.SAXException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.20 2005-07-05 14:53:28 marius Exp $
+ * @version $Id: XMLPersister.java,v 1.21 2005-07-06 03:21:54 marius Exp $
  */
 public class XMLPersister implements Persister {
     
@@ -77,10 +78,14 @@ public class XMLPersister implements Persister {
         document.appendChild(perspectiveModelElement);
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        transformerFactory.setAttribute("indent-number", new Integer(4));
+        // the indent-number attribute causes an IllegalArgumentException under 1.4 
+        if(Utilities.JAVA_1_5) {
+        	transformerFactory.setAttribute("indent-number", new Integer(4));
+        }
 
         try {
             Transformer transformer = transformerFactory.newTransformer();
+            // this property is ignored under java 1.5.
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             

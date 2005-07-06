@@ -39,5 +39,6 @@ public interface DockingConstants {
 	String UNKNOWN_REGION = "UNKNOWN";
 	
 	String HEAVYWEIGHT_DOCKABLES = "heavyweight.dockables";
+	String DEFAULT_PERSISTENCE_KEY = "default.persist.key";
 	
 }

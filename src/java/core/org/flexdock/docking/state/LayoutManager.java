@@ -25,8 +25,16 @@ public interface LayoutManager {
 	
 	boolean store() throws IOException, PersistenceException;
 	
+	boolean store(String persistenceKey) throws IOException, PersistenceException;
+	
 	boolean load() throws IOException, PersistenceException;
 	
+	boolean load(String persistenceKey) throws IOException, PersistenceException;
+	
 	boolean restore(boolean loadFromStorage) throws IOException, PersistenceException;
+	
+	public String getDefaultPersistenceKey();
+	
+	public void setDefaultPersistenceKey(String key);
     
 }

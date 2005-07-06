@@ -24,18 +24,19 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.flexdock.docking.state.PersistenceException;
+import org.flexdock.perspective.persist.xml.XMLPersister;
 import org.flexdock.test.xml.XMLDebugger;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.5 2005-07-05 14:53:26 marius Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.6 2005-07-06 03:21:53 marius Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
 	
-	protected File perspectiveFile;
+	protected File defaultPerspectiveFile;
     protected Persister m_persister = null;
     
 	public FilePersistenceHandler(String absolutePath) {
@@ -50,8 +51,8 @@ public class FilePersistenceHandler implements PersistenceHandler {
 		this(new File(absolutePath), persister);
 	}
 	
-	public FilePersistenceHandler(File file, Persister persister) {
-		perspectiveFile = file;
+	public FilePersistenceHandler(File defaultFile, Persister persister) {
+		defaultPerspectiveFile = defaultFile;
 		if(persister==null)
 			persister = createDefaultPersister();
 		m_persister = persister;
@@ -66,15 +67,15 @@ public class FilePersistenceHandler implements PersistenceHandler {
      * @throws PersistenceException 
      * @see org.flexdock.perspective.persist.PersistenceHandler#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
      */
-    public boolean store(PerspectiveModel perspectiveInfo) throws IOException, PersistenceException {
-        File file = getPerspectiveFile();
-        validatePerspectiveFile();
+    public boolean store(String persistenceKey, PerspectiveModel perspectiveModel) throws IOException, PersistenceException {
+        File file = getPerspectiveFile(persistenceKey);
+        validatePerspectiveFile(file);
         
-        XMLDebugger.println(perspectiveInfo);
+        XMLDebugger.println(perspectiveModel);
 
         FileOutputStream fos = new FileOutputStream(file);
         try {
-            return m_persister.store(fos, perspectiveInfo);
+            return m_persister.store(fos, perspectiveModel);
         } finally {
             fos.close();
         }
@@ -84,8 +85,8 @@ public class FilePersistenceHandler implements PersistenceHandler {
      * @throws PersistenceException 
      * @see org.flexdock.perspective.persist.PersistenceHandler#load(java.lang.String)
      */
-    public PerspectiveModel load() throws IOException, PersistenceException {
-        File file = getPerspectiveFile();
+    public PerspectiveModel load(String persistenceKey) throws IOException, PersistenceException {
+        File file = getPerspectiveFile(persistenceKey);
         if(file==null || !file.exists())
         	return null;
 
@@ -93,14 +94,14 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
         try {
             PerspectiveModel perspectiveModel = m_persister.load(fis);
+            XMLDebugger.println(perspectiveModel);
             return perspectiveModel;
         } finally {
             fis.close();
         }
     }
     
-	protected void validatePerspectiveFile() throws IOException {
-		File file = getPerspectiveFile();
+	protected void validatePerspectiveFile(File file) throws IOException {
 		File dir = file.getParentFile();
 		if(!dir.exists())
 			dir.mkdirs();
@@ -110,20 +111,28 @@ public class FilePersistenceHandler implements PersistenceHandler {
 	}
 	
 
-	public File getPerspectiveFile() {
-		return perspectiveFile;
+	public File getPerspectiveFile(String persistenceKey) {
+		if(persistenceKey==null)
+			return defaultPerspectiveFile;
+		
+		String filePath = persistenceKey;
+		if(filePath.indexOf('/')==-1 && filePath.indexOf('\\')==-1)
+			filePath = DEFAULT_PERSPECTIVE_DIR.getAbsolutePath() + "/" + filePath;
+		return new File(filePath);
+		
 	}
 	
-	public void setPerspectiveFile(File file) {
-		perspectiveFile = file;
+	public void setDefaultPerspectiveFile(File file) {
+		defaultPerspectiveFile = file;
 	}
 	
-	public void setPerspectiveFile(String absolutePath) {
-		perspectiveFile = new File(absolutePath);
+	public void setDefaultPerspectiveFile(String absolutePath) {
+		defaultPerspectiveFile = new File(absolutePath);
 	}
 	
 	public Persister createDefaultPersister() {
-		return new DefaultFilePersister();
+//		return new DefaultFilePersister();
+		return XMLPersister.newDefaultInstance();
 	}
 
 }

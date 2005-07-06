@@ -25,6 +25,9 @@ public class Utilities {
 	public static final String OS_FAMILY = loadOSFamily();
 	public static final String[] OS_CHAIN = loadOSChain();
 	
+	public static final boolean JAVA_1_4 = isJavaVersion("1.4");
+	public static final boolean JAVA_1_5 = isJavaVersion("1.5");
+	
 	/**
 	 * Returns an <code>int</code> value for the specified <code>String</code>.  This method calls 
 	 * <code>Integer.parseInt(String s)</code> and returns the resulting <code>int</code> value.
@@ -538,5 +541,11 @@ public class Utilities {
 		} catch(InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static boolean isJavaVersion(String version) {
+		if(version==null)
+			return false;
+		return System.getProperty("java.version").startsWith(version);
 	}
 }

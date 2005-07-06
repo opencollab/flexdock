@@ -30,7 +30,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-27
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: AbstractLayoutNodeSerializer.java,v 1.5 2005-07-03 15:05:47 winnetou25 Exp $
+ * @version $Id: AbstractLayoutNodeSerializer.java,v 1.6 2005-07-06 03:21:54 marius Exp $
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
     
@@ -40,7 +40,8 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
         Element layoutNodeElement = getElement(document, object);
         
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
-        for (int i=0; i<layoutNode.getChildCount(); i++) {
+        int childCount = layoutNode.getChildCount();
+        for (int i=0; i<childCount; i++) {
             MutableTreeNode childTreeNode = (MutableTreeNode) layoutNode.getChildAt(i);
             Element element = layoutNodeSerializer.serialize(document, childTreeNode);
             layoutNodeElement.appendChild(element);

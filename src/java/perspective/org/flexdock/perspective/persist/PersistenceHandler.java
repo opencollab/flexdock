@@ -26,13 +26,13 @@ import org.flexdock.docking.state.PersistenceException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceHandler.java,v 1.4 2005-07-05 14:53:25 marius Exp $
+ * @version $Id: PersistenceHandler.java,v 1.5 2005-07-06 03:21:53 marius Exp $
  */
 public interface PersistenceHandler {
     
-    boolean store(PerspectiveModel perspectiveModel) throws IOException, PersistenceException;
+    boolean store(String persistenceKey, PerspectiveModel perspectiveModel) throws IOException, PersistenceException;
 
-    PerspectiveModel load() throws IOException, PersistenceException;
+    PerspectiveModel load(String persistenceKey) throws IOException, PersistenceException;
     
     Persister createDefaultPersister();
 

@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: LayoutSerializer.java,v 1.9 2005-07-03 13:11:54 winnetou25 Exp $
+ * @version $Id: LayoutSerializer.java,v 1.10 2005-07-06 03:21:54 marius Exp $
  */
 public class LayoutSerializer implements ISerializer {
     
@@ -107,19 +107,7 @@ public class LayoutSerializer implements ISerializer {
             LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(layoutNodeElement, deserializationStack);
             layout.setRestorationLayout(restorationLayout);
         }
-        NodeList splitNodeList = element.getElementsByTagName(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
-        if (splitNodeList.getLength() > 0 && splitNodeList.item(0) instanceof Element) {
-            Element layoutNodeElement = (Element) splitNodeList.item(0);
-            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(layoutNodeElement, deserializationStack);
-            layout.setRestorationLayout(restorationLayout);
-        }
-        NodeList dockableNodeNodeList = element.getElementsByTagName(PersistenceConstants.DOCKABLE_NODE_ELEMENT_NAME);
-        if (dockableNodeNodeList.getLength() > 0 && dockableNodeNodeList.item(0) instanceof Element) {
-            Element layoutNodeElement = (Element) dockableNodeNodeList.item(0);
-            LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(layoutNodeElement, deserializationStack);
-            layout.setRestorationLayout(restorationLayout);
-        }
-
+ 
         return layout;
     }
     
