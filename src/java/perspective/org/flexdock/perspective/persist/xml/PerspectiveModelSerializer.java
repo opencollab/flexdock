@@ -31,7 +31,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveModelSerializer.java,v 1.6 2005-07-03 13:11:55 winnetou25 Exp $
+ * @version $Id: PerspectiveModelSerializer.java,v 1.7 2005-07-06 17:27:45 winnetou25 Exp $
  */
 public class PerspectiveModelSerializer implements ISerializer {
 
@@ -45,16 +45,13 @@ public class PerspectiveModelSerializer implements ISerializer {
         
         ISerializer perspectiveSerializer = SerializerRegistry.getSerializer(Perspective.class);
 
-        Element perspectivesElement = document.createElement(PersistenceConstants.PERSPECTIVES_ELEMENT_NAME);
         Perspective[] perspectives = perspectiveModel.getPerspectives();
         for (int i = 0; i < perspectives.length; i++) {
             Perspective perspective = perspectives[i];
             Element perspectiveElement = perspectiveSerializer.serialize(document, perspective);
-            perspectivesElement.appendChild(perspectiveElement);
+            perspectiveModelElement.appendChild(perspectiveElement);
         }
         
-        perspectiveModelElement.appendChild(perspectivesElement);
-
         return perspectiveModelElement;
     }
     

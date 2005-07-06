@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.17 2005-07-05 14:53:29 marius Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.18 2005-07-06 17:27:45 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -54,24 +54,17 @@ public class DockingStateSerializer implements ISerializer {
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion().toLowerCase());
 
         if (dockingState.getSplitRatio() != DockingConstants.UNINITIALIZED_RATIO) {
-            Element dockingStateSplitRatioElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_SPLIT_RATIO);
-            XMLUtils.setTextContent(document, dockingStateSplitRatioElement, String.valueOf(dockingState.getSplitRatio()));
-            dockingStateElement.appendChild(dockingStateSplitRatioElement);
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO, String.valueOf(dockingState.getSplitRatio()));
         }
 
         handleDockingState(dockingStateElement, dockingState);
 
         if (dockingState.isFloating()) {
-            Element floatingGroupElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_FLOATING_GROUP);
-            floatingGroupElement.setAttribute(PersistenceConstants.DOCKING_STATE_ELEMENT_FLOATING_GROUP_ATTRIBUTE_NAME, dockingState.getFloatingGroup());
-            dockingStateElement.appendChild(floatingGroupElement);
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME, dockingState.getFloatingGroup());
         } else if (dockingState.isMinimized()) {
             int constraint = dockingState.getMinimizedConstraint();
             String presConstraint = getPresentationMinimizeConstraint(constraint);
-            Element minimizeConstraintElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_MINIMIZE_CONSTRAINT);
-            XMLUtils.setTextContent(document, minimizeConstraintElement, presConstraint);
-
-            dockingStateElement.appendChild(minimizeConstraintElement);
+            dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT, presConstraint);
         }
         
         if (dockingState.hasCenterPoint()) {
@@ -102,14 +95,14 @@ public class DockingStateSerializer implements ISerializer {
     private String getPresentationMinimizeConstraint(int constraint) {
         switch (constraint) {
         
-        	case MinimizationManager.LEFT: return "left";
-        	case MinimizationManager.BOTTOM: return "bottom";
-        	case MinimizationManager.CENTER: return "center";
-        	case MinimizationManager.RIGHT: return "right";
-        	case MinimizationManager.TOP: return "top";
-        	case MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT: return "unspecified";
-        	
-        	default: throw new RuntimeException("Unknown dockbarEdge");
+            case MinimizationManager.LEFT: return "left";
+            case MinimizationManager.BOTTOM: return "bottom";
+            case MinimizationManager.CENTER: return "center";
+            case MinimizationManager.RIGHT: return "right";
+            case MinimizationManager.TOP: return "top";
+            case MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT: return "unspecified";
+            
+            default: throw new RuntimeException("Unknown dockbarEdge");
         }
     }
     
@@ -138,32 +131,25 @@ public class DockingStateSerializer implements ISerializer {
         if (relativeParentId != null && !relativeParentId.equals("")) {
             dockingState.setRelativeParentId(relativeParentId);
         }
+
         dockingState.setRegion(region.toUpperCase());
-        NodeList splitRatioNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_SPLIT_RATIO);
-        if (splitRatioNodeList.getLength() > 0 && splitRatioNodeList.item(0) instanceof Element) {
-            Element splitRatioElement = (Element) splitRatioNodeList.item(0);
-//          String splitRatio = splitRatioElement.getTextContent();
-            String splitRatio = XMLUtils.getStrictTextContent(splitRatioElement);
-            dockingState.setSplitRatio(Float.parseFloat(splitRatio));
+        
+        String splitRatioString = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO);
+        if (splitRatioString != null && !splitRatioString.equals("")) {
+            float splitRatio = Float.parseFloat(splitRatioString);
+            dockingState.setSplitRatio(splitRatio);
         }
         
         String dockingStateState = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_STATE);
         if (dockingStateState.equals(FLOATING_STATE)) {
-            NodeList floatingGroupNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_FLOATING_GROUP);
-            if (floatingGroupNodeList.getLength() > 0 && floatingGroupNodeList.item(0) instanceof Element) {
-                Element floatingGroupElement = (Element) floatingGroupNodeList.item(0);
-                String floatingGroupName = floatingGroupElement.getAttribute(PersistenceConstants.DOCKING_STATE_ELEMENT_FLOATING_GROUP_ATTRIBUTE_NAME);
+            String floatingGroupName = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME);
+            if (floatingGroupName != null && !floatingGroupName.equals("")) {
                 dockingState.setFloatingGroup(floatingGroupName);
             }
         } else if (dockingState.equals(MINIMIZED_STATE)) {
-            NodeList minimizationConstraintNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_STATE_ELEMENT_MINIMIZE_CONSTRAINT);
-            if (minimizationConstraintNodeList.getLength() > 0 && minimizationConstraintNodeList.item(0) instanceof Element) {
-                Element minimizationContraintElement = (Element) minimizationConstraintNodeList.item(0);
-//              String minimizeConstraint = minimizationContraintElement.getTextContent();
-                String minimizeConstraint = XMLUtils.getStrictTextContent(minimizationContraintElement);
-                int minimizeConstraintInt = getRealMinimizeConstraint(minimizeConstraint);
-                dockingState.setMinimizedConstraint(minimizeConstraintInt);
-            }
+            String minimizeConstraint = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT);
+            int minimizeConstraintInt = getRealMinimizeConstraint(minimizeConstraint);
+            dockingState.setMinimizedConstraint(minimizeConstraintInt);
         }
         
         ISerializer pointDeserializer = SerializerRegistry.getSerializer(Point.class);
@@ -185,5 +171,5 @@ public class DockingStateSerializer implements ISerializer {
         
         return dockingState;
     }
-
+    
 }

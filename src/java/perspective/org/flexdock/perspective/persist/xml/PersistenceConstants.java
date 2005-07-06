@@ -22,7 +22,7 @@ package org.flexdock.perspective.persist.xml;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PersistenceConstants.java,v 1.18 2005-07-03 15:57:49 winnetou25 Exp $
+ * @version $Id: PersistenceConstants.java,v 1.19 2005-07-06 17:27:45 winnetou25 Exp $
  */
 public interface PersistenceConstants {
 
@@ -30,8 +30,6 @@ public interface PersistenceConstants {
     String PERSPECTIVE_MODEL_ELEMENT_NAME = "PerspectiveModel";
     String PERSPECTIVE_MODEL_ATTRIBUTE_CURRENT_PERSPECTIVE_ID = "currentPerspectiveId";
     String PERSPECTIVE_MODEL_ATTRIBUTE_DEFAULT_PERSPECTIVE_ID = "defaultPerspectiveId";
-
-    String PERSPECTIVES_ELEMENT_NAME = "Perspectives";
 
     //perspective constants
     String PERSPECTIVE_ELEMENT_NAME = "Perspective";
@@ -50,7 +48,6 @@ public interface PersistenceConstants {
     
     //point constants
     String POINT_ELEMENT_NAME = "Point";
-//    String CENTER_POINT_ELEMENT_NAME = "CenterPoint";
     String POINT_ATTRIBUTE_X = "x";
     String POINT_ATTRIBUTE_Y = "y";
 
@@ -61,16 +58,15 @@ public interface PersistenceConstants {
     
     //docking state constants
     String DOCKING_STATE_ELEMENT_NAME = "DockingState";
-    String DOCKING_STATE_ELEMENT_SPLIT_RATIO = "SplitRatio";
-    String DOCKING_STATE_ELEMENT_FLOATING_GROUP = "FloatingGroup";
-    String DOCKING_STATE_ELEMENT_FLOATING_GROUP_ATTRIBUTE_NAME = "name";
-    String DOCKING_STATE_ELEMENT_MINIMIZE_CONSTRAINT = "MinimizeConstraint";
 
     String DOCKING_STATE_ATTRIBUTE_STATE = "state";
+    String DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO = "splitRatio";
+    String DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT = "minimizeConstraint";
     String DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID = "dockableId";
     String DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID = "relativeParentId";
     String DOCKING_STATE_ATTRIBUTE_REGION = "dockingRegion";
-
+    String DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME = "floatingGroupName";
+    
     String DOCKING_PATH_ELEMENT_NAME = "DockingPath";
     String DOCKING_PATH_ATTRIBUTE_ROOT_PORT_ID = "rootPortId";
     String DOCKING_PATH_ATTRIBUTE_IS_TABBED = "isTabbed";
