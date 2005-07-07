@@ -9,8 +9,7 @@ import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import com.l2fprod.gui.border.LineBorder;
+import javax.swing.border.LineBorder;
 
 /**
  * @author Christopher Butler
