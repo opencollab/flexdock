@@ -32,7 +32,7 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DockingStateSerializer.java,v 1.19 2005-07-06 18:10:48 winnetou25 Exp $
+ * @version $Id: DockingStateSerializer.java,v 1.20 2005-07-07 17:21:28 winnetou25 Exp $
  */
 public class DockingStateSerializer implements ISerializer {
 
@@ -146,12 +146,11 @@ public class DockingStateSerializer implements ISerializer {
             if (floatingGroupName != null && !floatingGroupName.equals("")) {
                 dockingState.setFloatingGroup(floatingGroupName);
             }
-        } else if (dockingState.equals(MINIMIZED_STATE)) {
+        } else if (dockingStateState.equals(MINIMIZED_STATE)) {
             String minimizeConstraint = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_MINIMIZE_CONSTRAINT);
             int minimizeConstraintInt = getRealMinimizeConstraint(minimizeConstraint);
             dockingState.setMinimizedConstraint(minimizeConstraintInt);
-        }
-        
+        }        
         ISerializer pointDeserializer = SerializerRegistry.getSerializer(Point.class);
         NodeList pointNodeList = element.getElementsByTagName(PersistenceConstants.POINT_ELEMENT_NAME); 
         if (pointNodeList.getLength() > 0 && pointNodeList.item(0) instanceof Element) {
