@@ -52,10 +52,11 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 	}
 	
 	private void initLayout() {
-		DockingManager.setDefaultPersistenceKey("ElegantDemo.xml");
+//		DockingManager.setDefaultPersistenceKey("ElegantDemo.xml");
 		
 		try {
-			if(!DockingManager.restoreLayout(true))
+//			if(!DockingManager.restoreLayout(true))
+			if(true)
 				setupDefaultLayout();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -75,11 +76,11 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 		// dock the editor into the root dockingport
 		DockingManager.dock(editorView, rootDockingPort);
 		// dock the hierarchy-view to the west of the editor
-		editorView.dock(j2eeHierarchyView, WEST_REGION);
+		editorView.dock(j2eeHierarchyView, WEST_REGION, 0.3f);
 		// dock the outline to the south of the hierarchy
-		j2eeHierarchyView.dock(outlineView, SOUTH_REGION);
+		j2eeHierarchyView.dock(outlineView, SOUTH_REGION, 0.3f);
 		// dock the task-view to the south of the editor
-		editorView.dock(tasksView, SOUTH_REGION);
+		editorView.dock(tasksView, SOUTH_REGION, 0.3f);
 
 		// tab the nav-view onto the hierarchy view
 		j2eeHierarchyView.dock(j2eeNavView);
@@ -91,11 +92,11 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 		tasksView.dock(synchronizeView);
 		
 		// resize the immediate splitPane child of the root dockingport
-		DockingManager.setSplitProportion(rootDockingPort, 0.3f);
+//		DockingManager.setSplitProportion(rootDockingPort, 0.3f);
 		// resize the splitPane containing the hierarchy-view
-		DockingManager.setSplitProportion(j2eeHierarchyView, 0.75f);
+//		DockingManager.setSplitProportion(j2eeHierarchyView, 0.75f);
 		// resize the splitPane containing the editor
-		DockingManager.setSplitProportion(editorView, 0.75f);
+//		DockingManager.setSplitProportion(editorView, 0.75f);
 	}
 	
 	public static void main(String[] args) {

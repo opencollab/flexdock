@@ -678,8 +678,8 @@ public class DockingManager implements DockingConstants {
 		if(comp instanceof Dockable)
 			return registerDockable((Dockable)comp);
 		
-		String name = determineTabText(comp);
-		return registerDockable(comp, name);
+		String tabText = determineTabText(comp);
+		return registerDockable(comp, tabText);
 	}
 	
 	private static String determineTabText(Component comp) {
@@ -1310,17 +1310,17 @@ public class DockingManager implements DockingConstants {
 		if(factory==null)
 			return null;
 		
-		// the getDockable() implementation may or may not
-		// automatically register the dockable before returning.
-		Dockable dockable = factory.getDockable(id);
-		if(dockable==null)
+		// the getDockableComponent() implementation may or may not
+		// automatically register a dockable before returning.
+		Component comp = factory.getDockableComponent(id);
+		if(comp==null)
 			return null;
-		
+
 		// if the newly created dockable has not yet been registered, 
 		// then register it.
-		boolean registered = getDockableImpl(dockable.getPersistentId())!=null;
-		if(!registered) {
-			registerDockable(dockable);
+		Dockable dockable = getDockable(comp);
+		if(dockable==null) {
+			dockable = registerDockable(comp);
 		}
 		return dockable;
 	}

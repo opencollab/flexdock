@@ -2,6 +2,7 @@ package org.flexdock.demos.perspective;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.io.File;
@@ -19,7 +20,6 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
-import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -41,7 +41,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPerspectivesDemo.java,v 1.5 2005-07-05 14:53:31 marius Exp $
+ * @version $Id: XMLPerspectivesDemo.java,v 1.6 2005-07-07 13:39:44 marius Exp $
  */
 public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	
@@ -197,7 +197,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	
 	private static class ViewFactory implements DockableFactory {
 		
-		public Dockable getDockable(String dockableId) {
+		public Component getDockableComponent(String dockableId) {
 			if(MAIN_VIEW.equals(dockableId))
 				return createMainView();
 			if(BIRD_VIEW.equals(dockableId))

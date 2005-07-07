@@ -94,7 +94,7 @@ public class PropertyManager {
 			value = getProperty(key, map.getLocals());
 		// if not in the local list, check the defaults
 		if(value==null)
-			value = getProperty(key, map.getLocals());
+			value = getProperty(key, map.getDefaults());
 		// if not in the default list, check the root
 		if(value==null)
 			value = getProperty(key, map.getRoot());

@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import org.flexdock.demos.util.Titlepane;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;

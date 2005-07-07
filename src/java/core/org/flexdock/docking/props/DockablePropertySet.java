@@ -79,5 +79,9 @@ public interface DockablePropertySet {
 	public void setDockbarIcon(Icon icon);
 	
 	public void setPreviewSize(float size);
+	
+	public Object put(Object key, Object value);
+	
+	public Object remove(Object key);
 
 }
