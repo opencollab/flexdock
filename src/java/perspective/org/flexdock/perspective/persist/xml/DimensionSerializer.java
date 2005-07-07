@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: DimensionSerializer.java,v 1.6 2005-07-06 18:10:47 winnetou25 Exp $
+ * @version $Id: DimensionSerializer.java,v 1.7 2005-07-07 22:24:01 winnetou25 Exp $
  */
 public class DimensionSerializer implements ISerializer {
 
@@ -47,7 +47,7 @@ public class DimensionSerializer implements ISerializer {
 
     public Object deserialize(Element element) {
         String width = element.getAttribute(PersistenceConstants.DIMENSION_ATTRIBUTE_WIDTH);
-        String height = element.getAttribute(PersistenceConstants.DIMENSION_ATTRIBUTE_WIDTH);
+        String height = element.getAttribute(PersistenceConstants.DIMENSION_ATTRIBUTE_HEIGHT);
 
         return new Dimension(Integer.parseInt(width), Integer.parseInt(height));
     }
