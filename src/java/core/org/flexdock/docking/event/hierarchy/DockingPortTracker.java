@@ -168,13 +168,18 @@ public class DockingPortTracker implements HierarchyListener {
 			return new HashSet(TRACKERS_BY_WINDOW.keySet());	
 		}
 	}
-	
-	public static Set getRootDockingPorts() {
-		HashSet rootSet = new HashSet();
+
+	public static Set getDockingPorts() {
 		Set globalSet = new HashSet();
 		synchronized(DOCKING_PORTS) {
 			globalSet.addAll(DOCKING_PORTS.keySet());
 		}
+		return globalSet;
+	}
+	
+	public static Set getRootDockingPorts() {
+		HashSet rootSet = new HashSet();
+		Set globalSet = getDockingPorts();
 		
 		for(Iterator it=globalSet.iterator(); it.hasNext();) {
 			DockingPort port = (DockingPort)it.next();
