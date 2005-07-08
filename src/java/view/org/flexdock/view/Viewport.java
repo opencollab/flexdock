@@ -67,7 +67,7 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
 			return true;
 		
 		// allow docking in the CENTER if there's nothing already there,
-		// of if there's no Dockable associated with the component there
+		// or if there's no Dockable associated with the component there
 		Dockable dockable = getCenterDockable();
 		if(dockable==null)
 			return true;

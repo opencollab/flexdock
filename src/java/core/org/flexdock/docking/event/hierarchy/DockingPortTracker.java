@@ -25,6 +25,8 @@ import org.flexdock.util.RootWindow;
 public class DockingPortTracker implements HierarchyListener {
 	private static final DockingPortTracker SINGLETON = new DockingPortTracker();
 	private static WeakHashMap TRACKERS_BY_WINDOW = new WeakHashMap();
+	private static WeakHashMap DOCKING_PORTS = new WeakHashMap();
+	private static final Object NULL = new Object();
 	
 
 	public static HierarchyListener getInstance() {
@@ -97,6 +99,10 @@ public class DockingPortTracker implements HierarchyListener {
 		if(port==null)
 			return;
 		
+		synchronized(DOCKING_PORTS) {
+			DOCKING_PORTS.put(port, NULL);
+		}
+		
 		RootDockingPortInfo info = findInfoByPort(port);
 		if(info!=null) {
 			info.remove(port);
@@ -161,6 +167,21 @@ public class DockingPortTracker implements HierarchyListener {
 		synchronized(TRACKERS_BY_WINDOW) {
 			return new HashSet(TRACKERS_BY_WINDOW.keySet());	
 		}
+	}
+	
+	public static Set getRootDockingPorts() {
+		HashSet rootSet = new HashSet();
+		Set globalSet = new HashSet();
+		synchronized(DOCKING_PORTS) {
+			globalSet.addAll(DOCKING_PORTS.keySet());
+		}
+		
+		for(Iterator it=globalSet.iterator(); it.hasNext();) {
+			DockingPort port = (DockingPort)it.next();
+			if(port.isRoot())
+				rootSet.add(port);
+		}
+		return rootSet;
 	}
 	
 	public static DockingPort getRootDockingPort(Dockable dockable) {

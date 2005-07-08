@@ -25,13 +25,12 @@ import java.io.IOException;
 
 import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.perspective.persist.xml.XMLPersister;
-import org.flexdock.test.xml.XMLDebugger;
 
 /**
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.6 2005-07-06 03:21:53 marius Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.7 2005-07-08 01:39:43 marius Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
@@ -71,7 +70,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
         File file = getPerspectiveFile(persistenceKey);
         validatePerspectiveFile(file);
         
-        XMLDebugger.println(perspectiveModel);
+//        XMLDebugger.println(perspectiveModel);
 
         FileOutputStream fos = new FileOutputStream(file);
         try {
@@ -94,7 +93,6 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
         try {
             PerspectiveModel perspectiveModel = m_persister.load(fis);
-            XMLDebugger.println(perspectiveModel);
             return perspectiveModel;
         } finally {
             fis.close();

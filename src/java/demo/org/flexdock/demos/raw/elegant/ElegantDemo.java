@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.docking.defaults.StandardBorderManager;
+import org.flexdock.plaf.common.border.ShadowBorder;
 
 
 public class ElegantDemo extends JFrame implements DockingConstants {
@@ -32,11 +35,19 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 		createViews();
 		
 		// create the dockingPort
-		rootDockingPort = new ElegantDockingPort();
-		setContentPane((Container)rootDockingPort);
+		setContentPane((Container)getRootDockingPort());
 		
 		// initialize the layout
 		initLayout();
+	}
+	
+	private DockingPort getRootDockingPort() {
+		if(rootDockingPort==null) {
+			DefaultDockingPort port = new DefaultDockingPort();
+			port.setBorderManager(new StandardBorderManager(new ShadowBorder()));
+			rootDockingPort = port;
+		}
+		return rootDockingPort;
 	}
 	
 	private void createViews() {
@@ -52,11 +63,11 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 	}
 	
 	private void initLayout() {
-//		DockingManager.setDefaultPersistenceKey("ElegantDemo.xml");
+		DockingManager.setDefaultPersistenceKey("ElegantDemo.xml");
 		
 		try {
-//			if(!DockingManager.restoreLayout(true))
-			if(true)
+			if(!DockingManager.restoreLayout(true))
+//			if(true)
 				setupDefaultLayout();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -70,11 +81,11 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 
 	private void setupDefaultLayout() {
 		// make sure there is nothing within the root dockingport
-		rootDockingPort.clear();
+		getRootDockingPort().clear();
 		
 		// setup 4 quadrants
 		// dock the editor into the root dockingport
-		DockingManager.dock(editorView, rootDockingPort);
+		DockingManager.dock(editorView, getRootDockingPort());
 		// dock the hierarchy-view to the west of the editor
 		editorView.dock(j2eeHierarchyView, WEST_REGION, 0.3f);
 		// dock the outline to the south of the hierarchy

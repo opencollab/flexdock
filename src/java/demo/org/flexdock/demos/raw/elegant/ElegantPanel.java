@@ -2,39 +2,31 @@ package org.flexdock.demos.raw.elegant;
 
 import javax.swing.JComponent;
 
+import org.flexdock.demos.util.DockingStubTitlepane;
 import org.flexdock.demos.util.GradientTitlebar;
 import org.flexdock.demos.util.Titlebar;
-import org.flexdock.demos.util.Titlepane;
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.DockingManager;
 
 
-public class ElegantPanel extends Titlepane {
+public class ElegantPanel extends DockingStubTitlepane {
 	private Dockable dockable;
 
 	public ElegantPanel(String title) {
-		super(title);
-	}
-	
-	public Dockable getDockable() {
-		if(dockable==null) {
-			dockable = new DockableImpl(this, getTitlebar(), getTitle());
-		}
-		return dockable;
+		super(title, title);
+		DockingManager.registerDockable(this);
 	}
 	
 	public void dock(ElegantPanel otherPanel) {
-		if(otherPanel!=null)
-			getDockable().dock(otherPanel.getDockable());		
+		DockingManager.dock(otherPanel, this);
 	}
 	
 	public void dock(ElegantPanel otherPanel, String region) {
-		if(otherPanel!=null)
-			getDockable().dock(otherPanel.getDockable(), region);		
+		DockingManager.dock(otherPanel, this, region);		
 	}
 	
 	public void dock(ElegantPanel otherPanel, String region, float ratio) {
-		if(otherPanel!=null)
-			getDockable().dock(otherPanel.getDockable(), region, ratio);
+		DockingManager.dock(otherPanel, this, region, ratio);
 	}
 	
 	protected JComponent createContentPane() {

@@ -61,6 +61,7 @@ import org.flexdock.util.DockingUtility;
 import org.flexdock.util.LookAndFeelSettings;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.UUID;
+import org.flexdock.util.Utilities;
 
 
 /**
@@ -1756,7 +1757,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		node.setUserObject(this);
 		ArrayList splitPaneResizeList = new ArrayList();
 		constructLayout(node, splitPaneResizeList);
-		deferSplitPaneValidation(splitPaneResizeList, 0);
+		deferSplitPaneValidation(splitPaneResizeList);
 		revalidate();
 	}
 	
@@ -1809,12 +1810,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		split.setRightComponent(right);
 	}
 	
-	private void deferSplitPaneValidation(final ArrayList splitNodes, final int startIndx) {
+	private void deferSplitPaneValidation(final ArrayList splitNodes) {
 		Thread t = new Thread() {
 			public void run() {
+				// poor man's yield(), intended for finer grained control across platforms
+				Utilities.sleep(15);
 				Runnable r = new Runnable() {
 					public void run() {
-						processImportedSplitPaneValidation(splitNodes, startIndx);
+						processImportedSplitPaneValidation(splitNodes);
 					}
 				};
 				EventQueue.invokeLater(r);
@@ -1823,12 +1826,27 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		t.start();
 	}
 
-	private void processImportedSplitPaneValidation(ArrayList splitNodes, int startIndx) {
+	private void processImportedSplitPaneValidation(ArrayList splitNodes) {
 		int len = splitNodes.size();
-		for(int i=startIndx; i<len; i++) {
-			SplitNode node = (SplitNode)splitNodes.get(i);
-			JSplitPane split = node.getSplitPane();
-			int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
+		if(len==0)
+			return;
+
+		// first, check to see if we're ready for rendering
+		SplitNode node = (SplitNode)splitNodes.get(0);
+		JSplitPane split = node.getSplitPane();
+		int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
+		// if we're not ready to render, then defer processing again until later
+		if(!split.isValid() || !split.isVisible() || size==0) {
+			deferSplitPaneValidation(splitNodes);
+			return;
+		}
+			
+		// if we're ready to render, then loop through all the splitNodes and 
+		// set the split dividers to their appropriate locations.
+		for(int i=0; i<len; i++) {
+			node = (SplitNode)splitNodes.get(i);
+			split = node.getSplitPane();
+			size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
 			float percent = node.getPercentage();
 			int divLoc = (int)((float)size * percent);
             //System.err.println("percent: " + percent + ", divLoc: " + divLoc);
@@ -1844,6 +1862,4 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			split.validate();
 		}
 	}
-	
-
 }

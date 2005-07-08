@@ -1347,8 +1347,13 @@ public class DockingManager implements DockingConstants {
 		// if we weren't able to create from an adapter, then create the 
 		// dockable manually
 		if(dockable==null) {
-			String persistentId = generatePersistentId(c);
-			dockable = DockableComponentWrapper.create(c, persistentId, desc);
+			if(c instanceof DockingStub) {
+				dockable = DockableComponentWrapper.create((DockingStub)c);
+			}
+			else {
+				String persistentId = generatePersistentId(c);
+				dockable = DockableComponentWrapper.create(c, persistentId, desc);				
+			}
 		}
 		
 		// make sure the specified description is applied

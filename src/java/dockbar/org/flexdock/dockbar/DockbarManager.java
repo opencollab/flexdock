@@ -32,6 +32,7 @@ import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.dockbar.event.DockbarTracker;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventManager;
@@ -80,6 +81,15 @@ public class DockbarManager {
 	public static DockbarManager getInstance(RootWindow window) {
 		if(window==null)
 			return null;
+		
+		// DockingFrames should not be allowed to contain dockbars.
+		// This may change in the future, but for now if our window is a 
+		// DockingFrame, reroute to its owner.
+		Component root = window.getRootContainer();
+		if(root instanceof DockingFrame) {
+			root = ((DockingFrame)root).getOwner();
+			return getInstance(root);
+		}
 		
 		DockbarManager mgr = (DockbarManager)MANAGERS_BY_WINDOW.get(window);
 		if(mgr==null) { 
