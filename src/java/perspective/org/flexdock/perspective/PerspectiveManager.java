@@ -1,6 +1,7 @@
 package org.flexdock.perspective;
 
 import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.EventQueue;
 import java.awt.Window;
 import java.io.IOException;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+
+import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -307,10 +310,25 @@ public class PerspectiveManager implements LayoutManager {
 	
 	public void loadPerspective(String perspectiveId, boolean reset) {
 		RootWindow window = getMainApplicationWindow();
-		if(window==null)
+		if(window!=null) {
+			loadPerspective(perspectiveId, window.getRootContainer(), reset);
 			return;
+		}
 		
-		loadPerspective(perspectiveId, window.getRootContainer(), reset);		
+		Set rootPorts = DockingPortTracker.getRootDockingPorts();
+		DockingPort rootPort = null;
+		for(Iterator it=rootPorts.iterator(); it.hasNext();) {
+			DockingPort port = (DockingPort)it.next();
+			Window win = SwingUtilities.getWindowAncestor((Component)port);
+			if(win instanceof Dialog)
+				continue;
+			
+			rootPort = port;
+			break;
+		}
+		
+		if(rootPort!=null)
+			loadPerspective(perspectiveId, rootPort, reset);
 	}
 	
 	public void loadPerspective(String perspectiveId, Component window) {

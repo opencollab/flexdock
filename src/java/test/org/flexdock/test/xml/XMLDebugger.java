@@ -20,6 +20,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.flexdock.util.Utilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
@@ -47,9 +48,12 @@ public class XMLDebugger {
 		Document document = createDocument();
 		Element rootElem = document.getDocumentElement();
 		buildXML(obj, document, rootElem);
-		
+
 		try {
 			TransformerFactory factory = TransformerFactory.newInstance();
+	        if(Utilities.JAVA_1_5) {
+	        	factory.setAttribute("indent-number", new Integer(4));
+	        }
 			Transformer transformer = factory.newTransformer();
 			transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -247,4 +251,13 @@ public class XMLDebugger {
 			this.value = value;
 		}
 	}
+	
+	public static class DataObject {
+		private Object data;
+		
+		public DataObject(Object obj) {
+			data = obj;
+		}
+	}
+
 }

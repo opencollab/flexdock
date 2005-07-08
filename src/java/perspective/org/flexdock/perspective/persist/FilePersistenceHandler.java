@@ -30,7 +30,7 @@ import org.flexdock.perspective.persist.xml.XMLPersister;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: FilePersistenceHandler.java,v 1.7 2005-07-08 01:39:43 marius Exp $
+ * @version $Id: FilePersistenceHandler.java,v 1.8 2005-07-08 22:50:24 marius Exp $
  */
 public class FilePersistenceHandler implements PersistenceHandler {
 	public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
@@ -93,6 +93,10 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
         try {
             PerspectiveModel perspectiveModel = m_persister.load(fis);
+            
+//            LayoutNode node = perspectiveModel.getPerspectives()[1].getLayout().getRestorationLayout();
+//            XMLDebugger.println(node);
+            
             return perspectiveModel;
         } finally {
             fis.close();

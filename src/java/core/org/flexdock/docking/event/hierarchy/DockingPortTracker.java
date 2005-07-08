@@ -172,7 +172,10 @@ public class DockingPortTracker implements HierarchyListener {
 	public static Set getDockingPorts() {
 		Set globalSet = new HashSet();
 		synchronized(DOCKING_PORTS) {
-			globalSet.addAll(DOCKING_PORTS.keySet());
+			for(Iterator it=DOCKING_PORTS.keySet().iterator(); it.hasNext();) {
+				Object obj = it.next();
+				globalSet.add(obj);
+			}
 		}
 		return globalSet;
 	}

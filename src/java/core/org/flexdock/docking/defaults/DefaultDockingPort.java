@@ -1837,6 +1837,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		int size = split.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? split.getWidth(): split.getHeight();
 		// if we're not ready to render, then defer processing again until later
 		if(!split.isValid() || !split.isVisible() || size==0) {
+			// try to validate first
+			if(!split.isValid())
+				split.validate();
+			// now redispatch
 			deferSplitPaneValidation(splitNodes);
 			return;
 		}

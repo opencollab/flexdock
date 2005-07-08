@@ -678,11 +678,10 @@ public class DockingManager implements DockingConstants {
 		if(comp instanceof Dockable)
 			return registerDockable((Dockable)comp);
 		
-		String tabText = determineTabText(comp);
-		return registerDockable(comp, tabText);
+		return registerDockable(comp, null, null);
 	}
 	
-	private static String determineTabText(Component comp) {
+	private static String determineTabText(Component comp, String persistId) {
 		String tabText = null;
 		// if 'comp' is a DockingStub, then we may be able to
 		// pull the tab text from it
@@ -701,6 +700,10 @@ public class DockingManager implements DockingConstants {
 		// then try the component name
 		if(tabText==null)
 			tabText = comp.getName();
+
+		// if tabText is still null, then use the persistentId
+		if(tabText==null)
+			tabText = persistId;
 		
 		// get rid of null and empty cases.  use the string "null" if nothing
 		// else can be found
@@ -722,10 +725,17 @@ public class DockingManager implements DockingConstants {
 	 * @see #registerDockable(Dockable)
 	 */
 	public static Dockable registerDockable(Component comp, String tabText) {
+		return registerDockable(comp, tabText, null);
+	}
+	
+	private static Dockable registerDockable(Component comp, String tabText, String dockingId) {
 		if (comp == null)
 			return null;
 
-		Dockable dockable = getDockableForComponent(comp, tabText);
+		if(tabText==null)
+			tabText = determineTabText(comp, dockingId);
+		
+		Dockable dockable = getDockableForComponent(comp, tabText, dockingId);
 		return registerDockable(dockable);
 	}
 
@@ -1320,16 +1330,16 @@ public class DockingManager implements DockingConstants {
 		// then register it.
 		Dockable dockable = getDockable(comp);
 		if(dockable==null) {
-			dockable = registerDockable(comp);
+			dockable = registerDockable(comp, null, id);
 		}
 		return dockable;
 	}
 
 	private static Dockable getDragInitiator(Component c) {
-		return getDockableForComponent(c, null);
+		return getDockableForComponent(c, null, null);
 	}
 
-	private static Dockable getDockableForComponent(Component c, String desc) {
+	private static Dockable getDockableForComponent(Component c, String desc, String dockingId) {
 		if (c == null)
 			return null;
 
@@ -1351,7 +1361,7 @@ public class DockingManager implements DockingConstants {
 				dockable = DockableComponentWrapper.create((DockingStub)c);
 			}
 			else {
-				String persistentId = generatePersistentId(c);
+				String persistentId = dockingId==null? generatePersistentId(c): dockingId;
 				dockable = DockableComponentWrapper.create(c, persistentId, desc);				
 			}
 		}

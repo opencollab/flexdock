@@ -177,7 +177,8 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 	
 	public void apply(DockingPort dockingPort) {
 		Component comp = (Component)dockingPort;
-		if(comp==null || comp.getParent()==null || !isInitialized())
+		if(comp==null || !isInitialized())
+//		if(comp==null || comp.getParent()==null || !isInitialized())
 			return;
 		
 		// clear out the existing components
