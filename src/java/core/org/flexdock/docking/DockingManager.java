@@ -1322,17 +1322,34 @@ public class DockingManager implements DockingConstants {
 		
 		// the getDockableComponent() implementation may or may not
 		// automatically register a dockable before returning.
-		Component comp = factory.getDockableComponent(id);
-		if(comp==null)
-			return null;
-
-		// if the newly created dockable has not yet been registered, 
-		// then register it.
-		Dockable dockable = getDockable(comp);
-		if(dockable==null) {
-			dockable = registerDockable(comp, null, id);
+		
+		// first, try to get a Dockable from the factory
+		Dockable dockable = factory.getDockable(id);
+		if(dockable!=null) {
+			// check to see if the dockable is already registered.
+			Dockable tmp = getDockableImpl(dockable.getPersistentId());
+			if(tmp==null)
+				registerDockable(dockable);
 		}
+		// if we couldn't find a dockable from the factory, then try getting
+		// a component.
+		else {
+			Component comp = factory.getDockableComponent(id);
+			// we already weren't able to get a Dockable from the factory.  If
+			// we couldn't get a Component either, then give up.
+			if(comp==null)
+				return null;
+
+			// if the newly created dockable has not yet been registered, 
+			// then register it.
+			dockable = getDockable(comp);
+			if(dockable==null) {
+				dockable = registerDockable(comp, null, id);
+			}
+		}
+		
 		return dockable;
+
 	}
 
 	private static Dockable getDragInitiator(Component c) {

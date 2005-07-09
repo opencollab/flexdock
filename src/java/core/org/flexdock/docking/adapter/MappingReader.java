@@ -28,10 +28,9 @@ public class MappingReader {
 			return new AdapterMapping[0];
 		
 		NodeList nodes = mappingDoc.getElementsByTagName(ADAPTER_KEY);
-		int len = nodes.getLength();
-		ArrayList mappings = new ArrayList(len);
+		ArrayList mappings = new ArrayList(nodes.getLength());
 		
-		for(int i=0; i<len; i++) {
+		for(int i=0; i<nodes.getLength(); i++) {
 			Element elem = (Element)nodes.item(i);
 			String className = elem.getAttribute(CLASS_KEY);
 			if(className!=null) {

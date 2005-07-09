@@ -39,7 +39,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.13 2005-07-07 13:39:44 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.14 2005-07-09 16:25:12 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 
@@ -201,7 +201,7 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		}
 	}
 	
-	private static class ViewFactory implements DockableFactory {
+	private static class ViewFactory extends DockableFactory.Stub {
 		
 		public Component getDockableComponent(String dockableId) {
 			if(MAIN_VIEW.equals(dockableId))

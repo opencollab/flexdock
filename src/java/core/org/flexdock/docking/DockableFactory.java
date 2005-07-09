@@ -35,11 +35,30 @@ import java.awt.Component;
 public interface DockableFactory {
 	
 	/**
-	 * Returns a <code>Component</code> specified Dockable ID, possibly creating and
+	 * Returns a <code>Component</code> for the specified Dockable ID, possibly creating and
 	 * registering a <code>Dockable</code> in the process.
 	 * 
 	 * @param dockableId the ID for the requested dockable <code>Component</code>
 	 * @return the <code>Component</code> for the specified ID
 	 */
-	public Component getDockableComponent(String dockableId);
+	Component getDockableComponent(String dockableId);
+	
+	/**
+	 * Returns a <code>Dockable</code> for the specified Dockable ID, possibly creating and
+	 * registering it in the process.
+	 * 
+	 * @param dockableId the ID for the requested <code>Dockable</code>
+	 * @return the <code>Dockable</code> for the specified ID
+	 */
+	Dockable getDockable(String dockableId);
+	
+	
+	public static class Stub implements DockableFactory {
+		public Dockable getDockable(String dockableId) {
+			return null;
+		}
+		public Component getDockableComponent(String dockableId) {
+			return null;
+		}
+	}
 }
