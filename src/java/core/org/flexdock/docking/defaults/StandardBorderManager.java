@@ -138,8 +138,15 @@ public class StandardBorderManager implements BorderManager {
 		setBorder(split, null);
 
 		// set the borders on each of the child components
-		setBorder(split.getLeftComponent(), assignedBorder);
-		setBorder(split.getRightComponent(), assignedBorder);
+		setSubComponentBorder(split.getLeftComponent(), assignedBorder);
+		setSubComponentBorder(split.getRightComponent(), assignedBorder);
+	}
+	
+	private void setSubComponentBorder(Component comp, Border border) {
+		if(comp instanceof DefaultDockingPort)
+			((DefaultDockingPort)comp).evaluateDockingBorderStatus();
+		else
+			setBorder(comp, border);
 	}
 
 	/**

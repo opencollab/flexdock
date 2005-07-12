@@ -309,7 +309,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * <code>managePortSplitChild(DockingPort port)</code>
 	 * <code>managePortTabbedChild(DockingPort port)</code>
 	 */
-	private final void evaluateDockingBorderStatus() {
+	final void evaluateDockingBorderStatus() {
 		if(borderManager==null)
 			return;
 			
