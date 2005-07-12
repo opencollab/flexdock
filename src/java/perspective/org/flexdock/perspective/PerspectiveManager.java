@@ -95,7 +95,7 @@ public class PerspectiveManager implements LayoutManager {
 
 	
 	private PerspectiveManager() {
-	    m_defaultPerspective = EMPTY_PERSPECTIVE;
+		setDefaultPerspective(EMPTY_PERSPECTIVE);
 		loadPerspective(m_defaultPerspective, (DockingPort)null);
 	}
 	
@@ -211,7 +211,7 @@ public class PerspectiveManager implements LayoutManager {
 	}
 	
 	private void setCurrentPerspectiveName(String name) {
-		m_currentPerspective = name;
+		m_currentPerspective = "".equals(name)? null: name;
 	}
 	
 	public void setCurrentPerspective(String perspectiveId, boolean asDefault) {
