@@ -745,11 +745,11 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 	 */
 	public double getDividerProportion(DockingPort port, JSplitPane splitPane) {
 		if(port==null || splitPane==null)
-			return RegionChecker.DEFAULT_SIBLING_SIZE;
+			return DockingManager.getDefaultSiblingSize();
 
 		Component elder = getElderComponent(splitPane);
 		if(elder==null)
-			return RegionChecker.DEFAULT_SIBLING_SIZE;
+			return DockingManager.getDefaultSiblingSize();
 		
 		Float prefProp = getPreferredProportion(splitPane, elder);
 		if(prefProp!=null)
@@ -768,7 +768,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 //			return prefSize;
 		}
 
-		return RegionChecker.DEFAULT_SIBLING_SIZE;
+		return DockingManager.getDefaultSiblingSize();
 	}
 	
 	protected String getCreationRegion(JSplitPane splitPane) {

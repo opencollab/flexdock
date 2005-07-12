@@ -436,7 +436,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	 */
 	public static float getSiblingPreference(Dockable d, String region) {
 		Float size = d==null? null: d.getDockingProperties().getSiblingSize(region);
-		return getDockingInset(size, DEFAULT_SIBLING_SIZE, MAX_SIBILNG_SIZE, MIN_SIBILNG_SIZE);
+		return getDockingInset(size, DockingManager.getDefaultSiblingSize(), MAX_SIBILNG_SIZE, MIN_SIBILNG_SIZE);
 	}
 	
 }

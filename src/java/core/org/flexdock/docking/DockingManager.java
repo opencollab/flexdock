@@ -114,6 +114,7 @@ public class DockingManager implements DockingConstants {
 	private MinimizationManager minimizeManager;
 	private DockableFactory dockableFactory;
 	private AutoPersist autoPersister;
+	private float defaultSiblingSize;
 	
 	static {
 		// call this method to preload any framework resources
@@ -172,6 +173,9 @@ public class DockingManager implements DockingConstants {
 		// set the layout manager
 		mgr.defaultLayoutManagerClass = config.getProperty(LAYOUT_MANAGER); 
 		setLayoutManager(mgr.defaultLayoutManagerClass);
+		// setup the default sibling size
+		float siblingSize = Utilities.getFloat(System.getProperty(RegionChecker.DEFAULT_SIBLING_SIZE_KEY), RegionChecker.DEFAULT_SIBLING_SIZE);
+		setDefaultSiblingSize(siblingSize);
 		
 		// setup auto-persistence
 		Runtime.getRuntime().addShutdownHook(getDockingManager().autoPersister);
@@ -180,6 +184,7 @@ public class DockingManager implements DockingConstants {
 	private DockingManager() {
 		defaultDocker = new DefaultDockingStrategy();
 		autoPersister = new AutoPersist();
+		
 	}
 	
 	
@@ -2447,4 +2452,16 @@ public class DockingManager implements DockingConstants {
 			}
 		}
 	}	
+	
+	public static float getDefaultSiblingSize() {
+		return getDockingManager().defaultSiblingSize;
+	}
+	
+	public static void setDefaultSiblingSize(float size) {
+		size = Math.max(size, 0);
+		size = Math.min(size, 1);
+		getDockingManager().defaultSiblingSize = size;
+	}
+	
+	
 }

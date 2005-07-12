@@ -41,6 +41,8 @@ public interface RegionChecker {
 	public static final float DEFAULT_REGION_SIZE = .25F;
 	public static final float DEFAULT_SIBLING_SIZE = .5F;
 	
+	public static final String DEFAULT_SIBLING_SIZE_KEY = "default.sibling.size";
+	
 	/**
 	 * Returns the docking region of the supplied <code>Component</code> that contains
 	 * the coordinates of the specified <code>Point</code>.  Valid return values are 

@@ -16,7 +16,6 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
@@ -125,7 +124,7 @@ public class DockingStateListener extends DockingListener.Stub {
 		} 
 		// if we still can't find a specified splitPane percentage, then use
 		// the default value
-		return RegionChecker.DEFAULT_SIBLING_SIZE;
+		return DockingManager.getDefaultSiblingSize();
 	}
 	
 	private void updateCenterPoint(Dockable dockable) {
