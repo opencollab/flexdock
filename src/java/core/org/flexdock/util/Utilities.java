@@ -54,8 +54,22 @@ public class Utilities {
 	 * @see Integer#parseInt(java.lang.String)
 	 */
 	public static int getInt(String data, int defaultValue) {
+		if(data==null)
+			return defaultValue;
+		
 		try {
 			return Integer.parseInt(data);
+		} catch(Exception e) {
+			return defaultValue;
+		}
+	}
+	
+	public static float getFloat(String data, float defaultValue) {
+		if(data==null)
+			return defaultValue;
+		
+		try {
+			return Float.parseFloat(data);
 		} catch(Exception e) {
 			return defaultValue;
 		}
