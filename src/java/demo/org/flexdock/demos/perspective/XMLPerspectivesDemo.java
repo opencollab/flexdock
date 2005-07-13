@@ -24,11 +24,9 @@ import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.state.PersistenceException;
-import org.flexdock.perspective.LayoutSequence;
 import org.flexdock.perspective.Perspective;
 import org.flexdock.perspective.PerspectiveFactory;
 import org.flexdock.perspective.PerspectiveManager;
-import org.flexdock.perspective.actions.OpenPerspectiveAction;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
 import org.flexdock.perspective.persist.xml.XMLPersister;
@@ -41,7 +39,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPerspectivesDemo.java,v 1.7 2005-07-09 16:25:12 marius Exp $
+ * @version $Id: XMLPerspectivesDemo.java,v 1.8 2005-07-13 19:25:42 winnetou25 Exp $
  */
 public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	
@@ -53,7 +51,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	private static final String PROBLEM_VIEW = "problem";
 	private static final String CONSOLE_VIEW = "console";
 	
-	private static final String P1 = "p1";
+	//private static final String P1 = "p1";
 	//private static final String P2 = "p2";
 	//private static final String P3 = "p3";
 	
@@ -113,7 +111,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 
 		JMenu perspectiveMenu = new JMenu("Perspective");
 		//pobieramy perspektywe nr 1
-		perspectiveMenu.add(new OpenPerspectiveAction(P1));
+//      perspectiveMenu.add(new OpenPerspectiveAction(P1));
 //		perspectiveMenu.add(new OpenPerspectiveAction(P2));
 //		perspectiveMenu.add(new OpenPerspectiveAction(P3));
 		
@@ -132,7 +130,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		PerspectiveManager.setFactory(new DemoPerspectiveFactory());
 		PerspectiveManager.setRestoreFloatingOnLoad(true);
 		PerspectiveManager mgr = PerspectiveManager.getInstance();
-		mgr.setCurrentPerspective(P1, true);
+		//mgr.setCurrentPerspective(P1, true);
 		
 		// load any previously persisted layouts
 		PersistenceHandler persister = new FilePersistenceHandler(new File(FilePersistenceHandler.DEFAULT_PERSPECTIVE_DIR, PERSPECTIVE_FILE), XMLPersister.newDefaultInstance());
@@ -151,8 +149,8 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	private static class DemoPerspectiveFactory implements PerspectiveFactory {
 		
 		public Perspective getPerspective(String persistentId) {
-			if(P1.equals(persistentId))
-				return createPerspective1();
+//			if(P1.equals(persistentId))
+//				return createPerspective1();
             
 //			if(P2.equals(persistentId))
 //				return createPerspective2();
@@ -161,18 +159,18 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 			return null;
 		}
 		
-		private Perspective createPerspective1() {
-			Perspective perspective = new Perspective(P1, "Perspective1");
-			LayoutSequence sequence = perspective.getInitialSequence(true);
-			
-			sequence.add("main.view");
-			sequence.add(BIRD_VIEW, "main.view", EAST_REGION, .3f);
-			sequence.add(MESSAGE_VIEW, "main.view", WEST_REGION, .3f);
-			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
-			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW);
-			
-			return perspective;
-		}
+//		private Perspective createPerspective1() {
+//			Perspective perspective = new Perspective(P1, "Perspective1");
+//			LayoutSequence sequence = perspective.getInitialSequence(true);
+//			
+//			sequence.add("main.view");
+//			sequence.add(BIRD_VIEW, "main.view", EAST_REGION, .3f);
+//			sequence.add(MESSAGE_VIEW, "main.view", WEST_REGION, .3f);
+//			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
+//			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW);
+//			
+//			return perspective;
+//		}
 
 //		private Perspective createPerspective2() {
 //			Perspective perspective = new Perspective(P2, "Perspective2");
