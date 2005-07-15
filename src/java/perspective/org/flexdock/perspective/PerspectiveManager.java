@@ -1,3 +1,21 @@
+/* 
+ * Copyright (c) 2005 FlexDock Development Team. All rights reserved. 
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of 
+ * this software and associated documentation files (the "Software"), to deal in the 
+ * Software without restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+ * to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in all 
+ * copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
+ */
 package org.flexdock.perspective;
 
 import java.awt.Component;
@@ -32,7 +50,6 @@ import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
 import org.flexdock.perspective.persist.PerspectiveModel;
 import org.flexdock.util.RootWindow;
-import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
 
 /**
@@ -315,18 +332,7 @@ public class PerspectiveManager implements LayoutManager {
 			return;
 		}
 		
-		Set rootPorts = DockingPortTracker.getRootDockingPorts();
-		DockingPort rootPort = null;
-		for(Iterator it=rootPorts.iterator(); it.hasNext();) {
-			DockingPort port = (DockingPort)it.next();
-			Window win = SwingUtilities.getWindowAncestor((Component)port);
-			if(win instanceof Dialog)
-				continue;
-			
-			rootPort = port;
-			break;
-		}
-		
+		DockingPort rootPort = findMainDockingPort();
 		if(rootPort!=null)
 			loadPerspective(perspectiveId, rootPort, reset);
 	}
@@ -453,8 +459,7 @@ public class PerspectiveManager implements LayoutManager {
 		if(m_persistHandler==null)
 			return false;
 
-		Window window = SwingUtility.getActiveWindow();
-		DockingPort rootPort = DockingManager.getRootDockingPort(window);
+		DockingPort rootPort = findMainDockingPort();
 		cacheLayoutState(getCurrentPerspective(), rootPort);
 		
 		Perspective[] items = getPerspectives();
@@ -547,5 +552,20 @@ public class PerspectiveManager implements LayoutManager {
 	
 	public void setDefaultPersistenceKey(String key) {
 		m_defaultPersistenceKey = key;
+	}
+	
+	private DockingPort findMainDockingPort() {
+		Set rootPorts = DockingPortTracker.getRootDockingPorts();
+		DockingPort rootPort = null;
+		for(Iterator it=rootPorts.iterator(); it.hasNext();) {
+			DockingPort port = (DockingPort)it.next();
+			Window win = SwingUtilities.getWindowAncestor((Component)port);
+			if(win instanceof Dialog)
+				continue;
+			
+			rootPort = port;
+			break;
+		}
+		return rootPort;
 	}
 }
