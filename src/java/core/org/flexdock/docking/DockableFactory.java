@@ -23,7 +23,7 @@ import java.awt.Component;
  * <code>DockingManager</code> will check for a factory via 
  * <code>DockingManager.getDockableFactory()</code>.  If a factory is present, its 
  * <code>getDockableComponent()</code> method is invoked.  If a valid <code>Component</code> is returned
- * from <code>getDockableComponent()</code>, the DockingManager will attemp to 
+ * from <code>getDockableComponent()</code>, the DockingManager will attempt to 
  * register it as a <code>Dockable</code> and return the <code>Dockable</code>.
  * 
  * <code>DockableFactory</code> implementations are especially useful for applications with
@@ -52,13 +52,16 @@ public interface DockableFactory {
 	 */
 	Dockable getDockable(String dockableId);
 	
-	
 	public static class Stub implements DockableFactory {
+        
 		public Dockable getDockable(String dockableId) {
 			return null;
 		}
+        
 		public Component getDockableComponent(String dockableId) {
 			return null;
 		}
+        
 	}
+
 }
