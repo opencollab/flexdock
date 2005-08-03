@@ -108,7 +108,7 @@ public class DockbarLayout {
 		}
 		else {
 			if(edge==MinimizationManager.BOTTOM) {
-				rect.y = rect.height - viewpaneSize;
+                rect.y = rect.y + rect.height - viewpaneSize;
 			}
 			rect.height = viewpaneSize;
 		}
