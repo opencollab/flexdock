@@ -13,9 +13,10 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.flexdock.dockbar.DockbarLayout;
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
+import org.flexdock.dockbar.layout.DockbarLayout;
+import org.flexdock.dockbar.layout.DockbarLayoutManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.MinimizationManager;
@@ -72,7 +73,7 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
 	private void handleResizeEvent(MouseEvent me) {
 		ViewPane viewPane = manager.getViewPane();
 		Point p = SwingUtilities.convertPoint((Component)me.getSource(), me.getPoint(), viewPane.getParent());
-		Rectangle viewArea = manager.getViewPaneArea();
+		Rectangle viewArea = DockbarLayoutManager.getManager().getDockbarArea(manager, dockable); 
 		
 		p.x = Math.max(p.x, 0);
 		p.x = Math.min(p.x, viewArea.width);

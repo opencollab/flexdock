@@ -1,7 +1,7 @@
 /*
  * Created on Apr 21, 2005
  */
-package org.flexdock.dockbar;
+package org.flexdock.dockbar.layout;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -9,6 +9,9 @@ import java.awt.Rectangle;
 
 import javax.swing.JLayeredPane;
 
+import org.flexdock.dockbar.Dockbar;
+import org.flexdock.dockbar.DockbarManager;
+import org.flexdock.dockbar.ViewPane;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.MinimizationManager;
@@ -61,20 +64,14 @@ public class DockbarLayout {
 
 		layoutViewpane();
 	}
-	
-	public Rectangle getViewpaneArea() {
-		Rectangle leftBar = manager.getLeftBar().getBounds();
-		Rectangle bottomBar = manager.getBottomBar().getBounds();
-		
-		return new Rectangle(leftBar.x + leftBar.width, leftBar.y, bottomBar.width, leftBar.height);
-	}
+
 	
 	public int getDesiredViewpaneSize() {
 		Dockable dockable = manager.getActiveDockable();
 		if(dockable==null)
 			return 0;
 		
-		Rectangle rect = getViewpaneArea();
+		Rectangle rect = DockbarLayoutManager.getManager().getDockbarArea(manager, dockable);
 		DockablePropertySet props = dockable.getDockingProperties();
 		
 		// determine what percentage of the viewable area we want the viewpane to take up
@@ -99,7 +96,7 @@ public class DockbarLayout {
 		if(viewpaneSize==ViewPane.UNSPECIFIED_PREFERRED_SIZE)
 			viewpaneSize = getDesiredViewpaneSize();
 		
-		Rectangle rect = getViewpaneArea();
+		Rectangle rect = DockbarLayoutManager.getManager().getDockbarArea(manager, dockable);
 		if(edge==MinimizationManager.LEFT || edge==MinimizationManager.RIGHT) {
 			if(edge==MinimizationManager.RIGHT) {
 				rect.x = rect.x + rect.width - viewpaneSize;

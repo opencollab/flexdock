@@ -30,6 +30,7 @@ import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarEventHandler;
 import org.flexdock.dockbar.event.DockbarListener;
 import org.flexdock.dockbar.event.DockbarTracker;
+import org.flexdock.dockbar.layout.DockbarLayout;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.floating.frames.DockingFrame;
@@ -240,9 +241,7 @@ public class DockbarManager {
 		return viewPane;
 	}
 	
-	public Rectangle getViewPaneArea() {
-		return dockbarLayout.getViewpaneArea();
-	}
+
 	
 	
 	
