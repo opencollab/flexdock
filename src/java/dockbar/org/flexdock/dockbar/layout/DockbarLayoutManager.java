@@ -6,10 +6,14 @@
  */
 package org.flexdock.dockbar.layout;
 
+import java.awt.Container;
 import java.awt.Rectangle;
+
+import javax.swing.JLayeredPane;
 
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
+import org.flexdock.util.RootWindow;
 
 /**
  * @author Christopher Butler
@@ -31,13 +35,28 @@ public class DockbarLayoutManager {
 	    }
 	}
 	
-	public Rectangle getDockbarArea(DockbarManager mgr, Dockable dockable) {
+	public Rectangle getViewArea(DockbarManager mgr, Dockable dockable) {
 	    if(mgr==null)
-	        return null;
+	        return new Rectangle(0, 0, 0, 0);
 	    
 		Rectangle leftBar = mgr.getLeftBar().getBounds();
 		Rectangle bottomBar = mgr.getBottomBar().getBounds();
 		
 		return new Rectangle(leftBar.x + leftBar.width, leftBar.y, bottomBar.width, leftBar.height);
+	}
+	
+	public Rectangle getLayoutArea(DockbarManager mgr) {
+		RootWindow window = mgr==null? null: mgr.getWindow();
+		if(window==null)
+			return new Rectangle(0, 0, 0, 0);
+		
+		Container contentPane = window.getContentPane();
+		JLayeredPane layeredPane = window.getLayeredPane();
+
+		// no rectangle translation required because layeredPane is already the direct
+		// parent of contentPane.
+
+		Rectangle rect = contentPane.getBounds();
+		return rect;
 	}
 }
