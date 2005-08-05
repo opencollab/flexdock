@@ -64,15 +64,19 @@
 	<target name="build.default" depends="clean, resources, compile, dist" />
 	<target name="build.with.dll" depends="clean, resources, compile, compile.dll, dist" />
 
-	<target name="clean">
-		<delete includeemptydirs="true" failonerror="false">
-			<fileset dir="${bin.dir}" />
-			<fileset dir="${bin.dir.demo}" />
-			<fileset dir="${bin.dir.test}" />
-			<fileset dir="${dist.dir}" />
-			<fileset dir="${doc.api.dir}" />
-		</delete>
-	</target>
+   <target name="clean">
+     <!-- This way of deleting will not fail if run repeatedly, will delete the dirs,
+          and will also fail if we are unable to delete a file or dir too. -->
+     <delete includeemptydirs="true" failonerror="true">
+       <fileset dir="${basedir}" defaultexcludes="no">
+         <include name="bin/**"/>
+         <include name="bin-demo/**"/>
+         <include name="bin-test/**"/>
+         <include name="dist/**"/>
+         <include name="docs/api/**"/> 
+       </fileset>
+     </delete>
+   </target>
 
 	<target name="init">
 		<mkdir dir="${bin.dir}" />
@@ -81,7 +85,7 @@
 		<mkdir dir="${dist.dir}" />
 	</target>
 
-	<target name="resources">
+	<target name="resources" depends="init">
 		<copy todir="${bin.dir}">
 			<fileset dir="${resource.dir}/core" />
 			<fileset dir="${resource.dir}/plaf" />
