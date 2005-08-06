@@ -33,8 +33,8 @@ public interface LayoutManager {
 	
 	boolean restore(boolean loadFromStorage) throws IOException, PersistenceException;
 	
-	public String getDefaultPersistenceKey();
+	String getDefaultPersistenceKey();
 	
-	public void setDefaultPersistenceKey(String key);
+	void setDefaultPersistenceKey(String key);
     
 }
