@@ -169,11 +169,11 @@ public class SwingUtility {
     		e.printStackTrace();
     	}
     }
-    
+
     private static boolean loadSkinLF(String themePack) {
     	if(themePack==null || !themePack.endsWith(".zip") || !isSkinLFInstalled())
     		return false;
-    	
+    
 		try {
 			Skin skin = SkinLookAndFeel.loadThemePack(ResourceManager.getResource(themePack));
 			SkinLookAndFeel.setSkin(skin);
@@ -218,19 +218,26 @@ public class SwingUtility {
     	}
     }
     
-    public static void focus(Component c) {
+    public static void focus(final Component c) {
 		RootWindow window = RootWindow.getRootContainer(c);
 		if(window==null)
 			return;
 
 		Component root = window.getRootContainer();
-		for(Component parent=c.getParent(); parent!=root; parent=c.getParent()) {
+        Component comp = c;
+		for(Component parent=comp.getParent(); parent!=root; parent=comp.getParent()) {
 			if(parent instanceof JTabbedPane) {
-				((JTabbedPane)parent).setSelectedComponent(c);
+				((JTabbedPane)parent).setSelectedComponent(comp);
 			}
-			c = parent;
+			comp = parent;
 		}
-	    c.requestFocus();
+        
+        
+        EventQueue.invokeLater(new Runnable() {        
+            public void run() {
+                c.requestFocus();
+            }        
+        });
     }
     
     
