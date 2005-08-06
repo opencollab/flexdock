@@ -29,14 +29,14 @@ import java.util.Map;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.drag.effects.DefaultPreview;
 
-
 public class AlphaPreview extends DefaultPreview {
+    
 	public static final float DEFAULT_ALPHA = 0.5f;
 	public static final Color DEFAULT_COLOR = Color.WHITE;
 	public static final Color DEFAULT_BORDER = Color.BLACK;
 	
-	public static final AlphaPreview BLUE = new AlphaPreview(Color.BLACK, Color.BLUE, .2f, true);
-	public static final AlphaPreview BLACK = new AlphaPreview(Color.BLACK, Color.BLACK, .25f, true);
+	public static final AlphaPreview BLUE = new AlphaPreview(Color.BLACK, Color.BLUE.brighter().brighter().brighter().brighter(), .2f, true);
+	public static final AlphaPreview BLACK = new AlphaPreview(Color.BLACK, Color.BLACK.brighter().brighter().brighter().brighter(), .25f, true);
 	
 	private float previewAlpha;
 	private Color previewColor;
@@ -57,8 +57,6 @@ public class AlphaPreview extends DefaultPreview {
 		setAlpha(alpha);
 		this.immutable = immutable;
 	}
-	
-	
 	
 	public void setPreviewColor(Color color) {
 		if(!immutable)
@@ -88,4 +86,5 @@ public class AlphaPreview extends DefaultPreview {
 		g.setColor(previewColor);
 		g.fillRect(rect.x, rect.y, rect.width, rect.height);
 	}
+    
 }
