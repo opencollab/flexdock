@@ -22,6 +22,7 @@ import org.flexdock.util.NestedComponents;
 import org.flexdock.util.RootWindow;
 
 public class DragGlasspane extends JComponent implements DockingConstants {
+    
 	private NestedComponents currentDropTargets;
 	private Component cachedGlassPane;
 	private RootWindow rootWindow;
@@ -51,20 +52,12 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 		this.rootWindow = rootWindow;
 	}
 	
-	
-	
 	private NestedComponents getDropTargets(DragOperation token) {
 		Container c = rootWindow.getContentPane();
 		Point currMouse = token.getCurrentMouse(c);
 		Component deep = SwingUtilities.getDeepestComponentAt(c, currMouse.x, currMouse.y);
 		return NestedComponents.find(deep, Dockable.class, DockingPort.class);
 	}
-	
-	
-	
-	
-	
-	
 	
 	public void processDragEvent(DragOperation token) {
 		currentDragToken = token;
@@ -185,8 +178,6 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 		postPainter = painter;
 	}
 	
-
-	
 	protected void paintComponentImpl(Graphics g) {
 		if(currentDragToken!=null && previewDelegate!=null && previewPoly!=null) { 
 			Dockable dockable = currentDragToken.getDockableReference();
@@ -195,11 +186,11 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 		}
 	}
 	
-	private boolean match(Object o1, Object o2) {
-		if(o1==o2)
-			return true;
-		return o1==null? false: o1.equals(o2);
-	}
+//	private boolean match(Object o1, Object o2) {
+//		if(o1==o2)
+//			return true;
+//		return o1==null? false: o1.equals(o2);
+//	}
 	
 	private Map getDragContext(DragOperation token) {
 		if(token==null)
@@ -208,4 +199,5 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 		Dockable dockable = token.getDockableReference();
 		return DragManager.getDragContext(dockable);
 	}
+    
 }
