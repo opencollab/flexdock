@@ -10,6 +10,7 @@ import javax.swing.SwingConstants;
  * @author Christopher Butler
  */
 public interface DockingConstants {
+    
 	float UNSPECIFIED_SIBLING_PREF = -1F;
 	int UNINITIALIZED = -1;
 	float UNINITIALIZED_RATIO = -1F;

@@ -10,9 +10,9 @@ import java.awt.Component;
  */
 public interface DockingStub {
 
-	public Component getDragSource();
+	Component getDragSource();
 
-	public Component getFrameDragSource();
+	Component getFrameDragSource();
 
 	/**
 	 * Returns a <code>String</code> identifier that is unique within a JVM instance, but persistent 
@@ -26,7 +26,8 @@ public interface DockingStub {
 	 * The framework performs indexing on the persistent ID.  Consequently, this method may 
 	 * <b>not</code> return a <code>null</code> reference.
 	 */		
-	public String getPersistentId();
+	String getPersistentId();
 	
-	public String getTabText();
+	String getTabText();
+    
 }

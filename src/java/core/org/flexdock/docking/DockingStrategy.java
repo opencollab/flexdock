@@ -53,7 +53,7 @@ public interface DockingStrategy {
 	 * @param region the region of the specified <code>DockingPort</code> into which we wish to dock.
 	 * @return whether or not the docking operation was successful.
 	 */
-	public boolean dock(Dockable dockable, DockingPort port, String region);
+	boolean dock(Dockable dockable, DockingPort dockingPort, String dockingRegion);
 
 	/**
 	 * Attempts to dock the specified <code>Dockable</code> into the supplied <code>DockingPort</code>
@@ -67,7 +67,7 @@ public interface DockingStrategy {
 	 * at the point in time in which we're attempting to dock.
 	 * @return whether or not the docking operation was successful.
 	 */
-	public boolean dock(Dockable dockable, DockingPort port, String region, DragOperation operation);
+	boolean dock(Dockable dockable, DockingPort dockingPort, String dockingRegion, DragOperation operation);
 	
 	/**
 	 * Undocks the specified <code>Dockable</code> instance from its containing <code>DockingPort</code>.
@@ -76,7 +76,7 @@ public interface DockingStrategy {
 	 * @return <code>true</code> if the <code>Dockable</code> was successfully undocked.  Otherwise, 
 	 * returns <code>false</code>.
 	 */
-	public boolean undock(Dockable dockable);
+	boolean undock(Dockable dockable);
 	
 	/**
 	 * Creates and returns a new <code>DockingPort</code> instance based upon the supplied 
@@ -87,7 +87,7 @@ public interface DockingStrategy {
 	 * @param base the <code>DockingPort</code> off of which the returned instance will be based.
 	 * @return a new <code>DockingPort</code> instance based upon the supplied parameter.
 	 */	
-	public DockingPort createDockingPort(DockingPort base);
+	DockingPort createDockingPort(DockingPort base);
 	
 	/**
 	 * Creates and returns a new <code>JSplitPane</code> instance based upon the supplied parameters.
@@ -102,7 +102,7 @@ public interface DockingStrategy {
 	 * @return a new <code>JSplitPane</code> suitable for embedding within the base <code>DockingPort</code>
 	 * parameter.
 	 */
-	public JSplitPane createSplitPane(DockingPort base, String region);
+	JSplitPane createSplitPane(DockingPort base, String region);
 	
 	/**
 	 * Returns the initial divider location to be used by the specified <code>JSplitPane</code>.
@@ -114,7 +114,7 @@ public interface DockingStrategy {
 	 * @param splitPane the <code>JSplitPane</code> whose initial divider location is to be determined.
 	 * @return the desired divider location of the supplied <code>JSplitPane</code>.
 	 */
-	public int getInitialDividerLocation(DockingPort port, JSplitPane splitPane);
+	int getInitialDividerLocation(DockingPort dockingPort, JSplitPane splitPane);
 	
 	/**
 	 * Returns the desired divider proportion of the specified <code>JSplitPane</code> after
@@ -126,5 +126,6 @@ public interface DockingStrategy {
 	 * @param splitPane the <code>JSplitPane</code> whose initial divider location is to be determined.
 	 * @return the desired divider proportion of the supplied <code>JSplitPane</code>.
 	 */
-	public double getDividerProportion(DockingPort port, JSplitPane splitPane);
+	double getDividerProportion(DockingPort dockingPort, JSplitPane splitPane);
+    
 }

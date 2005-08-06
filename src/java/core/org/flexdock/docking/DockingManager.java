@@ -96,7 +96,8 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  */
 public class DockingManager implements DockingConstants {
-	public static final String MINIMIZE_MANAGER = "minimize.manager";
+	
+    public static final String MINIMIZE_MANAGER = "minimize.manager";
 	public static final String LAYOUT_MANAGER = "layout.manager";
 	private static final String DEV_PROPS = "org/flexdock/util/dev-props.properties";
 	private static final String CONFIG_PROPS = "org/flexdock/docking/flexdock-core.properties";
@@ -2462,6 +2463,5 @@ public class DockingManager implements DockingConstants {
 		size = Math.min(size, 1);
 		getDockingManager().defaultSiblingSize = size;
 	}
-	
 	
 }
