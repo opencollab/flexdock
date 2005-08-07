@@ -2,10 +2,15 @@
 <project name="flexdock" basedir="." default="build.default">
 
 	<!-- Pull properties that are specific to the working copy environment.
-       For instance if your sdk is in a different location that C:\j2sdk1.4.2_03,
+       For instance if your sdk is in a different location that C:\jdk1.5.0_03,
        then specify where it is in this properties file.
     -->
 	<property file="workingcopy.properties" />
+
+   <!-- This is the default location of the JDK to compile native DLL/so against.
+        If your JDK is in a different location then create a
+        workingcopy.properties and set sdk.home to your preferred value there -->
+   <property name="sdk.home" value="c:/jdk1.5.0._03"/>
 
 	<!-- build-source properties -->
 	<property name="java.src" value="${basedir}/src/java" />
@@ -114,11 +119,26 @@
 
 	</target>
 
+   <target name="native.init">
+     <available file="${sdk.home}" type="dir" property="sdk.home.available"/>
+     <fail unless="sdk.home.available">
+
+ERROR:
+The sdk.home property is set to: ${sdk.home}
+
+This directory does not exist but is required in order to compile
+native libraries.  To set this property for your environment create
+a workingcopy.properties (copying from workingcopy.properties-sample)
+and edit the sdk.home property to reference your JDK's root directory.
+     </fail>
+   </target>
+
 	<!--
       This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
       Also, it requires MinGW to compile the DLL.
   -->
-	<target name="compile.dll" depends="init">
+	<target name="compile.dll" depends="init,native.init">
+
 		<property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
 		<property name="dll.dir" value="${basedir}\bin\org\flexdock\docking\drag\outline\win32" />
 		
@@ -134,7 +154,7 @@
 		</exec>
 	</target>
 
-	<target name="compile.unix.lib">
+	<target name="compile.unix.lib" depends="init,native.init">
 		<!--
         gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux
     -->

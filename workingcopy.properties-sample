@@ -1,0 +1,17 @@
+#-----------------------------------------------------------------------
+# This is a sample of a workingcopy.properties.
+#
+# It is read by the ant build script to load any properties 
+# whose values are specific to your working copy or development
+# environment.
+#
+# This file must be formatted according to the javadoc for the 
+# java.util.Properties method load(InputStream).  See: http://java.sun.com/j2se/1.4.2/docs/api/java/util/Properties.html#load(java.io.InputStream)
+#
+# DO NOT CHECK IN A COPY OF THIS FILE RENAMED TO workingcopy.properties
+#-----------------------------------------------------------------------
+
+# Java SDK Home.  This is needed for JNI compilation for any
+# native FlexDock DLL or SO.  Change this value to match the 
+# current system setup.
+sdk.home=C:\\jdk1.5.0_03

@@ -1,7 +1,33 @@
-Notes:
+To build this project, obtain a copy of Apache's Ant from http://ant.apache.org.  Currently,
+the project will build with version 1.5.x, but we will soon require that you use version 1.6.x.
 
-To build, create a directory called Docking and extract everything to there.  Move to the Docking directory 
-and type "ant".  The resulting docking.jar may be found in "Docking/output".
+From this directory you should be able to build enverything just by running the command: ant
 
-To create javadocs, use the javadoc target by typing "ant javadoc" at the command-line.  The javadocs will
-be generated in "Docking/output/docs".
+This will generate output in the following directories:
+
+  bin       The compiled framework and required resource files.
+  bin-demo  The compiled demos and required resource files.
+  bin-test  The compiled tests and required resource files
+  docs/api  The javadoc for the framework.
+  dist      Contains:
+              - a jar containing just the framework code and it's resources
+              - a zip containing this jar plus the javadoc (i.e. a binary distribution of the framework)
+
+To run the demos, there are several ant targets:
+
+  demo.adapter
+  demo.border
+  demo.compound
+  demo.elegant
+  demo.jmf
+  demo.perspective
+  demo.simple
+  demo.splitpane
+  demo.tabbedpane
+  demo.view
+
+To run a demo, choose the name of the demo target you wish to run and execute it via ant.  For example:
+
+  ant demo.simple
+
+will run the simple demo.
