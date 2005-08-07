@@ -64,6 +64,10 @@
       <path refid="javac.classpath.demo" />
       <pathelement location="${bin.dir.demo}" />
    </path>
+   <path id="rt.classpath.test">
+      <path refid="javac.classpath.test" />
+      <pathelement location="${bin.dir.test}" />
+   </path>
 
    <!-- build targets -->
    <target name="build.default" depends="clean, resources, compile, dist" />
@@ -92,15 +96,12 @@
 
    <target name="resources" depends="init">
       <copy todir="${bin.dir}">
-         <fileset dir="${resource.dir}/core" />
+         <fileset dir="${resource.dir}/core" excludes="org/flexdock/util/dev-props.properties" />
          <fileset dir="${resource.dir}/plaf" />
       </copy>
       <copy todir="${bin.dir.demo}">
          <fileset dir="${resource.dir}/demo" />
       </copy>
-
-      <!-- remove the dev properties set from the build output -->
-      <delete failonerror="false" file="${bin.dir}/org/flexdock/util/dev-props.properties" />
    </target>
 
    <target name="compile" depends="init, resources">
@@ -198,75 +199,91 @@
    </target>
 
 
-   <target name="-runDemo">
-      <java fork="yes" dir="${bin.dir.demo}" classpathref="rt.classpath.demo" classname="${demo.classname}" />
-   </target>
+   <!-- define a java task preset to run demos forked from the demo bin dir with the right stuff in the classpath -->
+   <presetdef name="java.demo">
+      <java fork="yes" dir="${bin.dir.demo}" classpathref="rt.classpath.demo" />
+   </presetdef>
+
+   <!-- Targets to run demos -->
 
    <target name="demo.perspectives" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.perspective.PerspectivesDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.perspective.PerspectivesDemo" />
    </target>
 
    <target name="demo.xmlperspectives" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.perspective.XMLPerspectivesDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.perspective.XMLPerspectivesDemo" />
    </target>
 
    <target name="demo.adapter" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.adapter.AdapterDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.adapter.AdapterDemo" />
    </target>
 
    <target name="demo.border" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.border.BorderDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.border.BorderDemo" />
    </target>
 
    <target name="demo.compound" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.CompoundDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.CompoundDemo" />
    </target>
 
    <target name="demo.elegant" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.elegant.ElegantDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.elegant.ElegantDemo" />
    </target>
 
    <target name="demo.jmf" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.jmf.JMFDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.jmf.JMFDemo" />
    </target>
 
    <target name="demo.simple" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.SimpleDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.SimpleDemo" />
    </target>
 
-
    <target name="demo.splitpane" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.SplitPaneDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.SplitPaneDemo" />
    </target>
 
    <target name="demo.tabbedpane" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.raw.TabbedPaneDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.raw.TabbedPaneDemo" />
    </target>
 
    <target name="demo.view" depends="resources,compile">
-      <antcall target="-runDemo">
-         <param name="demo.classname" value="org.flexdock.demos.view.ViewDemo" />
-      </antcall>
+      <java.demo classname="org.flexdock.demos.view.ViewDemo" />
+   </target>
+
+
+   <!-- define a java task preset to run tests forked from the test bin dir with the right stuff in the classpath -->
+   <presetdef name="java.test">
+      <java fork="yes" dir="${bin.dir.test}" classpathref="rt.classpath.test" />
+   </presetdef>
+
+   <!-- Targets to run tests -->
+
+   <target name="test.rubberband" depends="resources,compile">
+      <java.test classname="org.flexdock.test.drag.RubberBandTest" />
+   </target>
+
+   <target name="test.basicdockbar" depends="resources,compile">
+      <java.test classname="org.flexdock.test.dockbar.BasicDockbarTest" />
+   </target>
+
+   <target name="test.complexdockbar" depends="resources,compile">
+      <java.test classname="org.flexdock.test.dockbar.ComplexDockbarTest" />
+   </target>
+
+   <target name="test.viewrestoration" depends="resources,compile">
+      <java.test classname="org.flexdock.test.perspective.ViewRestorationTest" />
+   </target>
+
+   <target name="test.sibling" depends="resources,compile">
+      <java.test classname="org.flexdock.test.SiblingTest" />
+   </target>
+
+   <target name="test.viewframe" depends="resources,compile">
+      <java.test classname="org.flexdock.test.view.ViewFrameTest" />
+   </target>
+
+   <target name="test.view" depends="resources,compile">
+      <java.test classname="org.flexdock.test.view.ViewTest" />
    </target>
 
 </project>
