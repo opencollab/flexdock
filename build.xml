@@ -105,19 +105,17 @@
    </target>
 
    <target name="compile" depends="init, resources">
-      <javac classpathref="javac.classpath" srcdir="${java.src.core}" destdir="${bin.dir}" />
-
-      <!-- these 3 are interdependent -->
-      <javac classpathref="javac.classpath" sourcepath="${java.src.plaf};${java.src.dockbar}" srcdir="${java.src.view}" destdir="${bin.dir}" />
-      <javac classpathref="javac.classpath" srcdir="${java.src.plaf}" destdir="${bin.dir}" />
-      <javac classpathref="javac.classpath" srcdir="${java.src.dockbar}" destdir="${bin.dir}" />
-
-      <javac classpathref="javac.classpath" srcdir="${java.src.drag}" destdir="${bin.dir}" />
-      <javac classpathref="javac.classpath" srcdir="${java.src.perspective}" destdir="${bin.dir}" />
-
+      <javac classpathref="javac.classpath" destdir="${bin.dir}">
+         <src path="${java.src.core}" />
+         <!-- the next 3 are interdependent -->
+         <src path="${java.src.view}"/>
+         <src path="${java.src.plaf}"/>
+         <src path="${java.src.dockbar}"/>
+         <src path="${java.src.drag}"/>
+         <src path="${java.src.perspective}"/>
+      </javac>
       <javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" />
       <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" />
-
    </target>
 
    <target name="native.init">
