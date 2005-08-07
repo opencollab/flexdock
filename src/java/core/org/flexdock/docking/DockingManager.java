@@ -123,33 +123,6 @@ public class DockingManager implements DockingConstants {
 		init();
 	}
 	
-	private static class AutoPersist extends Thread {
-		private boolean enabled;
-		
-		public void run() {
-			store();
-		}
-		
-		private synchronized void store() {
-			try {
-				if(isEnabled())
-					storeLayoutModel();
-			} catch(IOException e) {
-				e.printStackTrace();
-			} catch (PersistenceException e) {
-                e.printStackTrace();
-            }
-		}
-		
-		public synchronized boolean isEnabled() {
-			return enabled;
-		}
-		
-		public synchronized void setEnabled(boolean enabled) {
-			this.enabled = enabled;
-		}
-	}
-	
 	private static void init() {
 		// load the dev system properties
 		Properties p = ResourceManager.getProperties(DEV_PROPS, true);
@@ -188,21 +161,10 @@ public class DockingManager implements DockingConstants {
 		
 	}
 	
-	
 	private static DockingManager getDockingManager() {
 		return SINGLETON;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public static void addDragSource(Dockable dockable, Component dragSrc) {
 		List sources = dockable==null? null: dockable.getDragSources();
 		if(sources==null || dragSrc==null)
@@ -477,18 +439,6 @@ public class DockingManager implements DockingConstants {
 		return DockingUtility.dockRelative(dockable, parent, region, proportion);
 	}
 	
-
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	private static DockingStrategy findDockingStrategy(Dockable dockable) {
 		DockingPort port = dockable.getDockingPort();
 		DockingStrategy strategy = port==null? null: port.getDockingStrategy();
@@ -499,13 +449,6 @@ public class DockingManager implements DockingConstants {
 		return strategy;
 	}
 
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * Indicates whether the specified <code>Component</code> is currently docked.
 	 * This method looks up a parent <code>DockingPort</code> for the specified
@@ -601,32 +544,6 @@ public class DockingManager implements DockingConstants {
 			WEST_REGION.equals(region); 
 	}
 	
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-
-
-
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
 	private static void updateDragListeners(Component dragSrc, DragManager listener) {
 		MouseMotionListener motionListener = null;
 		EventListener[] listeners = dragSrc.getMouseMotionListeners();
@@ -657,9 +574,6 @@ public class DockingManager implements DockingConstants {
 		}
 	}
 
-	
-	
-	
 	/**
 	 * Creates, registers, and returns a <code>Dockable</code> for the specified <code>Component</code>.
 	 * If the specified <code>Component</code> implements the <code>Dockable</code> interface, 
@@ -924,17 +838,6 @@ public class DockingManager implements DockingConstants {
 		return getLayoutManager().display(getDockable(dockable));
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	private static String generatePersistentId(Object obj) {
 		return generatePersistentId(obj, null);
 	}
@@ -957,12 +860,6 @@ public class DockingManager implements DockingConstants {
 	private static boolean hasRegisteredDockableId(String id) {
 		return DOCKABLES_BY_ID.containsKey(id);
 	}
-	
-	
-	
-	
-	
-
 	
 	/**
 	 * Returns the <code>DockingStrategy</code> associated with the <code>Class</code> of the
@@ -1150,20 +1047,6 @@ public class DockingManager implements DockingConstants {
 	public static RootDockingPortInfo getRootDockingPortInfo(Component comp) {
 		return DockingPortTracker.getRootDockingPortInfo(comp);
 	}
-	
-
-	
-	
-	
-	
-	
-
-	
-
-	
-
-
-
 	
 	/**
 	 * Sends the application's current layout model to external storage.  This method 
@@ -1355,7 +1238,6 @@ public class DockingManager implements DockingConstants {
 		}
 		
 		return dockable;
-
 	}
 
 	private static Dockable getDragInitiator(Component c) {
@@ -1400,16 +1282,6 @@ public class DockingManager implements DockingConstants {
 		return dockable;
 	}
 	
-
-	
-	
-	
-	
-	
-	
-	
-
-
 	/**
 	 * Returns the <code>DockingPort</code> that contains the specified <code>Component</code>.
 	 * If the <code>Component</code> is <code>null</code>, then a <code>null</code> reference
@@ -1513,7 +1385,6 @@ public class DockingManager implements DockingConstants {
 			return id==null? null: (Dockable)DOCKABLES_BY_ID.get(id);
 		}
 	}
-	
 	
 	/**
 	 * Returns a <code>Set</code> of <code>String</code> IDs for all <code>Dockables</code>
@@ -1787,17 +1658,6 @@ public class DockingManager implements DockingConstants {
 	public static DockableFactory getDockableFactory() {
 		return getDockingManager().dockableFactory;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Enables and disables auto-persistence of the current docking layout model when the application exits.
@@ -2258,7 +2118,6 @@ public class DockingManager implements DockingConstants {
 		PropertyManager.getDockingPortRoot().setSingleTabsAllowed(allowed);
 	}
 
-	
 	/**
 	 * Sets the currently installed <code>LayoutManager</code>.  The <code>LayoutManager</code>
 	 * is responsible for managing docking layout state.  This includes tracking the state
@@ -2294,7 +2153,7 @@ public class DockingManager implements DockingConstants {
 	}
 	
 	/**
-	 * Sets the currently installed <code>LayoutManager</code> using the specfied
+	 * Sets the currently installed <code>LayoutManager</code> using the specified
 	 * class name.  An attempt is make to instantiate a <code>LayoutManager</code> based 
 	 * upon the supplied class name <code>String</code>.  If the class cannot be instaniated, 
 	 * a stacktrace is reported to the System.err and the default <code>LayoutManager</code>
@@ -2363,8 +2222,6 @@ public class DockingManager implements DockingConstants {
 		else
 			DOCKING_STRATEGIES.addClassMapping(classKey, strategy.getClass(), strategy);
 	}
-	
-	
 	
 	/**
 	 * Undocks the specified <code>Dockable</code> from its parent <code>DockingPort</code>.
@@ -2463,5 +2320,32 @@ public class DockingManager implements DockingConstants {
 		size = Math.min(size, 1);
 		getDockingManager().defaultSiblingSize = size;
 	}
-	
+    
+    private static class AutoPersist extends Thread {
+        private boolean enabled;
+        
+        public void run() {
+            store();
+        }
+        
+        private synchronized void store() {
+            try {
+                if(isEnabled())
+                    storeLayoutModel();
+            } catch(IOException e) {
+                e.printStackTrace();
+            } catch (PersistenceException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        public synchronized boolean isEnabled() {
+            return enabled;
+        }
+        
+        public synchronized void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
 }
