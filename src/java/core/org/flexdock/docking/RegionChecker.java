@@ -52,8 +52,8 @@ public interface RegionChecker {
      * <code>CENTER_REGION</code>, <code>NORTH_REGION</code>, <code>SOUTH_REGION</code>, 
      * <code>EAST_REGION</code>, <code>WEST_REGION</code>, or <code>UNKNOWN_REGION</code>.
      * 
-     * @param c the <code>Component</code> whose region is to be examined.
-     * @param p the coordinates whose region is to be determined.
+     * @param component the <code>Component</code> whose region is to be examined.
+     * @param point the coordinates whose region is to be determined.
      * @return the docking region containing the specified <code>Point</code>.
      */
     String getRegion(Component component, Point point);
@@ -62,7 +62,7 @@ public interface RegionChecker {
      * Returns the rectangular bounds within the specified component that represent it's
      * <code>DockingConstants.NORTH_REGION</code>.
      * 
-     * @param c the <code>Component</code> whose north region is to be returned.
+     * @param component the <code>Component</code> whose north region is to be returned.
      * @return the bounds containing the north region of the specified <code>Component</code>. 
      */
     Rectangle getNorthRegion(Component component);
@@ -71,7 +71,7 @@ public interface RegionChecker {
      * Returns the rectangular bounds within the specified component that represent it's
      * <code>DockingConstants.SOUTH_REGION</code>.
      * 
-     * @param c the <code>Component</code> whose south region is to be returned.
+     * @param component the <code>Component</code> whose south region is to be returned.
      * @return the bounds containing the south region of the specified <code>Component</code>. 
      */
     Rectangle getSouthRegion(Component component);
@@ -80,7 +80,7 @@ public interface RegionChecker {
      * Returns the rectangular bounds within the specified component that represent it's
      * <code>DockingConstants.EAST_REGION</code>.
      * 
-     * @param c the <code>Component</code> whose east region is to be returned.
+     * @param component the <code>Component</code> whose east region is to be returned.
      * @return the bounds containing the east region of the specified <code>Component</code>. 
      */
     Rectangle getEastRegion(Component component);
@@ -89,7 +89,7 @@ public interface RegionChecker {
      * Returns the rectangular bounds within the specified component that represent it's
      * <code>DockingConstants.WEST_REGION</code>.
      * 
-     * @param c the <code>Component</code> whose west region is to be returned.
+     * @param component the <code>Component</code> whose west region is to be returned.
      * @return the bounds containing the west region of the specified <code>Component</code>. 
      */
     Rectangle getWestRegion(Component component);
@@ -102,7 +102,7 @@ public interface RegionChecker {
      * and <code>WEST_REGION</code>.  All other region values should result in this
      * method returning a <code>null</code> reference.
      * 
-     * @param c the <code>Component</code> whose region bounds are to be returned.
+     * @param component the <code>Component</code> whose region bounds are to be returned.
      * @param region the specified region that is to be examined.
      * @return the bounds containing the supplied region of the specified <code>Component</code>. 
      */
@@ -120,7 +120,7 @@ public interface RegionChecker {
      * and <code>WEST_REGION</code>.  All other region values should result in this
      * method returning the constant <code>DEFAULT_SIBLING_SIZE</code>.
      * 
-     * @param c the <code>Component</code> whose region is to be examined.
+     * @param component the <code>Component</code> whose region is to be examined.
      * @param region the specified region that is to be examined.
      * @return the percentage of the specified <code>Component</code> allotted for the specified region. 
      */
@@ -139,7 +139,7 @@ public interface RegionChecker {
      * and <code>WEST_REGION</code>.  All other region values should result in this
      * method returning the constant <code>DEFAULT_SIBLING_SIZE</code>. 
      * 
-     * @param c the <code>Component</code> whose sibling bounds are to be returned.
+     * @param component the <code>Component</code> whose sibling bounds are to be returned.
      * @param region the specified region that is to be examined.
      * @return the bounds containing the sibling bounds desired for <code>Components</code>
      * docked into the specified region of the of the specified <code>Component</code>.
@@ -160,7 +160,7 @@ public interface RegionChecker {
      * and <code>WEST_REGION</code>.  All other region values should result in this
      * method returning the constant <code>DEFAULT_SIBLING_SIZE</code>. 
      * 
-     * @param c the <code>Component</code> whose sibling proportions are to be returned.
+     * @param component the <code>Component</code> whose sibling proportions are to be returned.
      * @param region the specified region that is to be examined.
      * @return the percentage of the specified <code>Component</code> allotted for 
      * sibling <code>Components</code> that are to be docked into the specified region.

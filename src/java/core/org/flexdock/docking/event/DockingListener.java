@@ -50,9 +50,9 @@ public interface DockingListener extends EventListener {
 	 */
 	void dropStarted(DockingEvent evt);
 	
-	public void undockingComplete(DockingEvent evt);
+	void undockingComplete(DockingEvent evt);
 	
-	public void undockingStarted(DockingEvent evt);
+	void undockingStarted(DockingEvent evt);
 	
 	class Stub implements DockingListener {
 
@@ -69,4 +69,5 @@ public interface DockingListener extends EventListener {
 		public void undockingStarted(DockingEvent evt) {}
 		
 	}
+    
 }

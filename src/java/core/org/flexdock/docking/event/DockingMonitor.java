@@ -3,12 +3,15 @@
  */
 package org.flexdock.docking.event;
 
-
 /**
  * @author Christopher Butler
  */
 public interface DockingMonitor {
-	public void addDockingListener(DockingListener listener);
-	public void removeDockingListener(DockingListener listener);
-	public DockingListener[] getDockingListeners();
+    
+	void addDockingListener(DockingListener listener);
+
+    void removeDockingListener(DockingListener listener);
+	
+    DockingListener[] getDockingListeners();
+
 }
