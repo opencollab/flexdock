@@ -12,10 +12,10 @@ import org.flexdock.docking.DockingManager;
  * @author Christopher Butler
  */
 public class DockableNode extends DockingNode {
-	private String dockableId;
+
+    private String dockableId;
 	
 	public DockableNode() {
-		
 	}
 	
 	private DockableNode(String id) {
@@ -45,4 +45,5 @@ public class DockableNode extends DockingNode {
 	protected DockingNode shallowClone() {
 		return new DockableNode(dockableId);
 	}
+    
 }

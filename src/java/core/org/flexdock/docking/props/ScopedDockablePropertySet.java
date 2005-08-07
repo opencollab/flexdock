@@ -12,7 +12,8 @@ import java.util.Map;
  * @author Christopher Butler
  */
 public class ScopedDockablePropertySet extends BasicDockablePropertySet implements ScopedMap {
-	public static final RootDockablePropertySet ROOT_PROPS = new RootDockablePropertySet();
+
+    public static final RootDockablePropertySet ROOT_PROPS = new RootDockablePropertySet();
 	public static final List DEFAULTS = new ArrayList(0);
 	public static final List GLOBALS = new ArrayList(0);
 	private ArrayList locals;
@@ -35,11 +36,6 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
 	public ScopedDockablePropertySet(Map t) {
 		super(t);
 		init();
-	}
-	
-	private void init() {
-		locals = new ArrayList(1);
-		locals.add(this);
 	}
 	
 	public List getLocals() {
@@ -70,7 +66,6 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
 		return (Boolean)PropertyManager.getProperty(MOUSE_MOTION_DRAG_BLOCK, this);
 	}
 	
-	
 	public Float getRegionInset(String region) {
 		String key = getRegionInsetKey(region);
 		return key==null? null: (Float)PropertyManager.getProperty(key, this);
@@ -93,4 +88,10 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
 	public Float getPreviewSize() {
 		return (Float)PropertyManager.getProperty(PREVIEW_SIZE, this);
 	}
+
+    private void init() {
+        locals = new ArrayList(1);
+        locals.add(this);
+    }
+
 }
