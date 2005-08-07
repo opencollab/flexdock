@@ -1,271 +1,271 @@
 <?xml version="1.0"?>
 <project name="flexdock" basedir="." default="build.default">
 
-	<!-- Pull properties that are specific to the working copy environment.
-       For instance if your sdk is in a different location that C:\jdk1.5.0_03,
-       then specify where it is in this properties file.
-    -->
-	<property file="workingcopy.properties" />
+   <!-- Pull properties that are specific to the working copy environment.
+        For instance if your sdk is in a different location that C:\jdk1.5.0_03,
+        then specify where it is in this properties file.
+   -->
+   <property file="workingcopy.properties" />
 
    <!-- This is the default location of the JDK to compile native DLL/so against.
         If your JDK is in a different location then create a
         workingcopy.properties and set sdk.home to your preferred value there -->
    <property name="sdk.home" value="c:/jdk1.5.0._03"/>
 
-	<!-- build-source properties -->
-	<property name="java.src" value="${basedir}/src/java" />
-	<property name="lib.dir" value="${basedir}/lib" />
-	<property name="java.src.core" value="${java.src}/core" />
-	<property name="java.src.demo" value="${java.src}/demo" />
-	<property name="java.src.dockbar" value="${java.src}/dockbar" />
-	<property name="java.src.drag" value="${java.src}/drag" />
-	<property name="java.src.perspective" value="${java.src}/perspective" />
-	<property name="java.src.plaf" value="${java.src}/plaf" />
-	<property name="java.src.test" value="${java.src}/test" />
-	<property name="java.src.view" value="${java.src}/view" />
+   <!-- build-source properties -->
+   <property name="java.src" value="${basedir}/src/java" />
+   <property name="lib.dir" value="${basedir}/lib" />
+   <property name="java.src.core" value="${java.src}/core" />
+   <property name="java.src.demo" value="${java.src}/demo" />
+   <property name="java.src.dockbar" value="${java.src}/dockbar" />
+   <property name="java.src.drag" value="${java.src}/drag" />
+   <property name="java.src.perspective" value="${java.src}/perspective" />
+   <property name="java.src.plaf" value="${java.src}/plaf" />
+   <property name="java.src.test" value="${java.src}/test" />
+   <property name="java.src.view" value="${java.src}/view" />
 
-	<property name="resource.dir" value="${basedir}/resources" />
-	<property name="resource.dir.demo" value="${basedir}/resources" />
+   <property name="resource.dir" value="${basedir}/resources" />
+   <property name="resource.dir.demo" value="${basedir}/resources" />
 
-	<!-- build-output properties -->
-	<property name="doc.dir" value="${basedir}/docs" />
-	<property name="doc.api.dir" value="${doc.dir}/api" />
-	<property name="bin.dir" value="${basedir}/bin" />
-	<property name="bin.dir.demo" value="${basedir}/bin-demo" />
-	<property name="bin.dir.test" value="${basedir}/bin-test" />
-	<property name="dist.dir" value="${basedir}/dist" />
-	<property name="version" value="0.3.7" />
-	<property name="dist.jar.basename" value="${ant.project.name}-${version}" />
+   <!-- build-output properties -->
+   <property name="doc.dir" value="${basedir}/docs" />
+   <property name="doc.api.dir" value="${doc.dir}/api" />
+   <property name="bin.dir" value="${basedir}/bin" />
+   <property name="bin.dir.demo" value="${basedir}/bin-demo" />
+   <property name="bin.dir.test" value="${basedir}/bin-test" />
+   <property name="dist.dir" value="${basedir}/dist" />
+   <property name="version" value="0.3.7" />
+   <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
 
-	<!-- sourcepaths -->
-	<path id="sourcepath">
-		<pathelement location="${java.src.core}" />
-		<pathelement location="${java.src.dockbar}" />
-		<pathelement location="${java.src.drag}" />
-		<pathelement location="${java.src.perspective}" />
-		<pathelement location="${java.src.plaf}" />
-		<pathelement location="${java.src.view}" />
-	</path>
+   <!-- sourcepaths -->
+   <path id="sourcepath">
+      <pathelement location="${java.src.core}" />
+      <pathelement location="${java.src.dockbar}" />
+      <pathelement location="${java.src.drag}" />
+      <pathelement location="${java.src.perspective}" />
+      <pathelement location="${java.src.plaf}" />
+      <pathelement location="${java.src.view}" />
+   </path>
 
-	<!-- classpaths -->
-	<path id="javac.classpath">
-		<pathelement location="${bin.dir}" />
-		<fileset dir="${lib.dir}" includes="skinlf*.jar" />
-	</path>
-	<path id="javac.classpath.demo">
-		<path refid="javac.classpath" />
-		<pathelement location="${lib.dir}/jmf.jar" />
-	</path>
-	<path id="javac.classpath.test">
-		<path refid="javac.classpath" />
-		<pathelement location="${bin.dir.demo}" />
-	</path>
-	<path id="rt.classpath.demo">
-		<path refid="javac.classpath.demo" />
-		<pathelement location="${bin.dir.demo}" />
-	</path>
+   <!-- classpaths -->
+   <path id="javac.classpath">
+      <pathelement location="${bin.dir}" />
+      <fileset dir="${lib.dir}" includes="skinlf*.jar" />
+   </path>
+   <path id="javac.classpath.demo">
+      <path refid="javac.classpath" />
+      <pathelement location="${lib.dir}/jmf.jar" />
+   </path>
+   <path id="javac.classpath.test">
+      <path refid="javac.classpath" />
+      <pathelement location="${bin.dir.demo}" />
+   </path>
+   <path id="rt.classpath.demo">
+      <path refid="javac.classpath.demo" />
+      <pathelement location="${bin.dir.demo}" />
+   </path>
 
-	<!-- build targets -->
-	<target name="build.default" depends="clean, resources, compile, dist" />
-	<target name="build.with.dll" depends="clean, resources, compile, compile.dll, dist" />
+   <!-- build targets -->
+   <target name="build.default" depends="clean, resources, compile, dist" />
+   <target name="build.with.dll" depends="clean, resources, compile, compile.dll, dist" />
 
    <target name="clean">
-     <!-- This way of deleting will not fail if run repeatedly, will delete the dirs,
-          and will also fail if we are unable to delete a file or dir too. -->
-     <delete includeemptydirs="true" failonerror="true">
-       <fileset dir="${basedir}" defaultexcludes="no">
-         <include name="bin/**"/>
-         <include name="bin-demo/**"/>
-         <include name="bin-test/**"/>
-         <include name="dist/**"/>
-         <include name="docs/api/**"/> 
-       </fileset>
-     </delete>
+      <!-- This way of deleting will not fail if run repeatedly, will delete the dirs,
+           and will also fail if we are unable to delete a file or dir too. -->
+      <delete includeemptydirs="true" failonerror="true">
+         <fileset dir="${basedir}" defaultexcludes="no">
+            <include name="bin/**"/>
+            <include name="bin-demo/**"/>
+            <include name="bin-test/**"/>
+            <include name="dist/**"/>
+            <include name="docs/api/**"/>
+         </fileset>
+      </delete>
    </target>
 
-	<target name="init">
-		<mkdir dir="${bin.dir}" />
-		<mkdir dir="${bin.dir.demo}" />
-		<mkdir dir="${bin.dir.test}" />
-		<mkdir dir="${dist.dir}" />
-	</target>
+   <target name="init">
+      <mkdir dir="${bin.dir}" />
+      <mkdir dir="${bin.dir.demo}" />
+      <mkdir dir="${bin.dir.test}" />
+      <mkdir dir="${dist.dir}" />
+   </target>
 
-	<target name="resources" depends="init">
-		<copy todir="${bin.dir}">
-			<fileset dir="${resource.dir}/core" />
-			<fileset dir="${resource.dir}/plaf" />
-		</copy>
-		<copy todir="${bin.dir.demo}">
-			<fileset dir="${resource.dir}/demo" />
-		</copy>
+   <target name="resources" depends="init">
+      <copy todir="${bin.dir}">
+         <fileset dir="${resource.dir}/core" />
+         <fileset dir="${resource.dir}/plaf" />
+      </copy>
+      <copy todir="${bin.dir.demo}">
+         <fileset dir="${resource.dir}/demo" />
+      </copy>
 
-		<!-- remove the dev properties set from the build output -->
-		<delete failonerror="false" file="${bin.dir}/org/flexdock/util/dev-props.properties" />
-	</target>
+      <!-- remove the dev properties set from the build output -->
+      <delete failonerror="false" file="${bin.dir}/org/flexdock/util/dev-props.properties" />
+   </target>
 
-	<target name="compile" depends="init, resources">
-		<javac classpathref="javac.classpath" srcdir="${java.src.core}" destdir="${bin.dir}" />
+   <target name="compile" depends="init, resources">
+      <javac classpathref="javac.classpath" srcdir="${java.src.core}" destdir="${bin.dir}" />
 
-		<!-- these 3 are interdependent -->
-		<javac classpathref="javac.classpath" sourcepath="${java.src.plaf};${java.src.dockbar}" srcdir="${java.src.view}" destdir="${bin.dir}" />
-		<javac classpathref="javac.classpath" srcdir="${java.src.plaf}" destdir="${bin.dir}" />
-		<javac classpathref="javac.classpath" srcdir="${java.src.dockbar}" destdir="${bin.dir}" />
+      <!-- these 3 are interdependent -->
+      <javac classpathref="javac.classpath" sourcepath="${java.src.plaf};${java.src.dockbar}" srcdir="${java.src.view}" destdir="${bin.dir}" />
+      <javac classpathref="javac.classpath" srcdir="${java.src.plaf}" destdir="${bin.dir}" />
+      <javac classpathref="javac.classpath" srcdir="${java.src.dockbar}" destdir="${bin.dir}" />
 
-		<javac classpathref="javac.classpath" srcdir="${java.src.drag}" destdir="${bin.dir}" />
-		<javac classpathref="javac.classpath" srcdir="${java.src.perspective}" destdir="${bin.dir}" />
+      <javac classpathref="javac.classpath" srcdir="${java.src.drag}" destdir="${bin.dir}" />
+      <javac classpathref="javac.classpath" srcdir="${java.src.perspective}" destdir="${bin.dir}" />
 
-		<javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" />
-		<javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" />
+      <javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" />
+      <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" />
 
-	</target>
+   </target>
 
    <target name="native.init">
-     <available file="${sdk.home}" type="dir" property="sdk.home.available"/>
-     <fail unless="sdk.home.available">
+      <available file="${sdk.home}" type="dir" property="sdk.home.available"/>
+      <fail unless="sdk.home.available">
 
-ERROR:
-The sdk.home property is set to: ${sdk.home}
+         ERROR:
+         The sdk.home property is set to: ${sdk.home}
 
-This directory does not exist but is required in order to compile
-native libraries.  To set this property for your environment create
-a workingcopy.properties (copying from workingcopy.properties-sample)
-and edit the sdk.home property to reference your JDK's root directory.
-     </fail>
+         This directory does not exist but is required in order to compile
+         native libraries.  To set this property for your environment create
+         a workingcopy.properties (copying from workingcopy.properties-sample)
+         and edit the sdk.home property to reference your JDK's root directory.
+      </fail>
    </target>
 
-	<!--
-      This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
-      Also, it requires MinGW to compile the DLL.
-  -->
-	<target name="compile.dll" depends="init,native.init">
+   <!--
+       This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
+       Also, it requires MinGW to compile the DLL.
+   -->
+   <target name="compile.dll" depends="init,native.init">
 
-		<property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
-		<property name="dll.dir" value="${basedir}\bin\org\flexdock\docking\drag\outline\win32" />
-		
-		<!-- Cleanup existing DLL -->
-		<delete file="${dll.dir}/RubberBand.dll" failonerror="false" />
-		<!-- Create the object file -->
-		<exec executable="gcc">
-			<arg line='-c -I"${sdk.home}\include" -I"${sdk.home}\include\win32" -o ${java.io.tmpdir}\RubberBand.o ${c.dir}\RubberBand.c' />
-		</exec>
-		<!-- Link the shared resource -->
-		<exec executable="gcc">
-			<arg line="-mwindows -shared -o ${dll.dir}\RubberBand.dll ${java.io.tmpdir}\RubberBand.o ${c.dir}\RubberBand.def" />
-		</exec>
-	</target>
+      <property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
+      <property name="dll.dir" value="${basedir}\bin\org\flexdock\docking\drag\outline\win32" />
 
-	<target name="compile.unix.lib" depends="init,native.init">
-		<!--
-        gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux
-    -->
-	</target>
+      <!-- Cleanup existing DLL -->
+      <delete file="${dll.dir}/RubberBand.dll" failonerror="false" />
+      <!-- Create the object file -->
+      <exec executable="gcc">
+         <arg line='-c -I"${sdk.home}\include" -I"${sdk.home}\include\win32" -o ${java.io.tmpdir}\RubberBand.o ${c.dir}\RubberBand.c' />
+      </exec>
+      <!-- Link the shared resource -->
+      <exec executable="gcc">
+         <arg line="-mwindows -shared -o ${dll.dir}\RubberBand.dll ${java.io.tmpdir}\RubberBand.o ${c.dir}\RubberBand.def" />
+      </exec>
+   </target>
 
-	<!-- creates a source distribution -->
-	<target name="jar-src" depends="init">
-		<jar jarfile="${dist.dir}/${dist.jar.basename}-src.jar">
-			<fileset dir="${java.src.core}" />
-			<fileset dir="${java.src.demo}" />
-			<fileset dir="${java.src.dockbar}" />
-			<fileset dir="${java.src.drag}" />
-			<fileset dir="${java.src.perspective}" />
-			<fileset dir="${java.src.plaf}" />
-			<fileset dir="${java.src.test}" />
-			<fileset dir="${java.src.view}" />
-		</jar>
-	</target>
+   <target name="compile.unix.lib" depends="init,native.init">
+      <!--
+          gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux
+      -->
+   </target>
 
-	<!-- builds the javadoc excluding demos and tests -->
-	<target name="javadoc" depends="init">
-		<javadoc destdir="${doc.api.dir}" sourcepathref="sourcepath" classpathref="javac.classpath">
-			<packageset dir="${java.src.core}" />
-			<packageset dir="${java.src.dockbar}" />
-			<packageset dir="${java.src.drag}" />
-			<packageset dir="${java.src.perspective}" />
-			<packageset dir="${java.src.view}" />
-			<link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
-			<!-- add links to the j2se 1.4 docs -->
-		</javadoc>
-	</target>
+   <!-- creates a source distribution -->
+   <target name="jar-src" depends="init">
+      <jar jarfile="${dist.dir}/${dist.jar.basename}-src.jar">
+         <fileset dir="${java.src.core}" />
+         <fileset dir="${java.src.demo}" />
+         <fileset dir="${java.src.dockbar}" />
+         <fileset dir="${java.src.drag}" />
+         <fileset dir="${java.src.perspective}" />
+         <fileset dir="${java.src.plaf}" />
+         <fileset dir="${java.src.test}" />
+         <fileset dir="${java.src.view}" />
+      </jar>
+   </target>
 
-	<target name="dist" depends="init, resources, compile, javadoc">
-		<jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
+   <!-- builds the javadoc excluding demos and tests -->
+   <target name="javadoc" depends="init">
+      <javadoc destdir="${doc.api.dir}" sourcepathref="sourcepath" classpathref="javac.classpath">
+         <packageset dir="${java.src.core}" />
+         <packageset dir="${java.src.dockbar}" />
+         <packageset dir="${java.src.drag}" />
+         <packageset dir="${java.src.perspective}" />
+         <packageset dir="${java.src.view}" />
+         <link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
+         <!-- add links to the j2se 1.4 docs -->
+      </javadoc>
+   </target>
 
-		<zip destfile="${dist.dir}/${dist.jar.basename}.zip">
-			<fileset dir="${dist.dir}" includes="${dist.jar.basename}.jar" />
-			<fileset dir="." includes="docs/**" />
-		</zip>
-	</target>
+   <target name="dist" depends="init, resources, compile, javadoc">
+      <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
 
-
-	<target name="-runDemo">
-		<java fork="yes" dir="${bin.dir.demo}" classpathref="rt.classpath.demo" classname="${demo.classname}" />
-	</target>
-
-	<target name="demo.perspectives" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.perspective.PerspectivesDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.xmlperspectives" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.perspective.XMLPerspectivesDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.adapter" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.adapter.AdapterDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.border" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.border.BorderDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.compound" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.CompoundDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.elegant" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.elegant.ElegantDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.jmf" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.jmf.JMFDemo" />
-		</antcall>
-	</target>
-
-	<target name="demo.simple" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.SimpleDemo" />
-		</antcall>
-	</target>
+      <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
+         <fileset dir="${dist.dir}" includes="${dist.jar.basename}.jar" />
+         <fileset dir="." includes="docs/**" />
+      </zip>
+   </target>
 
 
-	<target name="demo.splitpane" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.SplitPaneDemo" />
-		</antcall>
-	</target>
+   <target name="-runDemo">
+      <java fork="yes" dir="${bin.dir.demo}" classpathref="rt.classpath.demo" classname="${demo.classname}" />
+   </target>
 
-	<target name="demo.tabbedpane" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.raw.TabbedPaneDemo" />
-		</antcall>
-	</target>
+   <target name="demo.perspectives" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.perspective.PerspectivesDemo" />
+      </antcall>
+   </target>
 
-	<target name="demo.view" depends="resources,compile">
-		<antcall target="-runDemo">
-			<param name="demo.classname" value="org.flexdock.demos.view.ViewDemo" />
-		</antcall>
-	</target>
+   <target name="demo.xmlperspectives" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.perspective.XMLPerspectivesDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.adapter" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.adapter.AdapterDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.border" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.border.BorderDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.compound" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.CompoundDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.elegant" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.elegant.ElegantDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.jmf" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.jmf.JMFDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.simple" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.SimpleDemo" />
+      </antcall>
+   </target>
+
+
+   <target name="demo.splitpane" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.SplitPaneDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.tabbedpane" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.raw.TabbedPaneDemo" />
+      </antcall>
+   </target>
+
+   <target name="demo.view" depends="resources,compile">
+      <antcall target="-runDemo">
+         <param name="demo.classname" value="org.flexdock.demos.view.ViewDemo" />
+      </antcall>
+   </target>
 
 </project>
