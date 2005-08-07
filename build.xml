@@ -191,6 +191,7 @@
       <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
 
       <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
+         <fileset dir="${basedir}" includes="LICENSE.txt"/>
          <fileset dir="${dist.dir}" includes="${dist.jar.basename}.jar" />
          <fileset dir="." includes="docs/**" />
       </zip>
