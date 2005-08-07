@@ -1224,17 +1224,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			return;
 		
 		JTabbedPane tabs = (JTabbedPane)docked;
-		int componentCount = tabs.getComponentCount();
+		int tabCount = tabs.getTabCount();
 		// we don't have to do anything special here if there is more than the
 		// minimum number of allowable tabs
 		int minTabs = isSingleTabAllowed()? 0: 1;
-		if(componentCount>minTabs) {
+		if(tabCount>minTabs) {
 			return;
 		}
 			
 		// otherwise, pull out the component in the remaining tab (if it exists), and 
 		// add it to ourselves as a direct child (ditching the JTabbedPane).
-		Component comp = componentCount==1? tabs.getComponent(0): null;
+		Component comp = tabCount==1? tabs.getComponentAt(0): null;
 		removeAll();
 		if(comp!=null)
 			setComponent(comp);
