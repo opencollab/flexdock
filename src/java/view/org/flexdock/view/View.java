@@ -40,8 +40,10 @@ import org.flexdock.view.tracking.ViewTracker;
  * @author Christopher Butler
  */
 public class View extends JComponent implements Dockable, DockingConstants, HierarchyListener {
-	static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
-	protected String id;
+
+    static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
+	
+    protected String id;
 	protected Titlebar titlepane;
 	protected Container contentPane;
 	protected boolean addRemoveAllowed;
@@ -104,18 +106,6 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		ViewListener.prime();
 	}
 	
-	protected Container createContentPane() {
-		return new JPanel();
-	}
-	
-	protected Titlebar createTitlebar() {
-		return new Titlebar();
-	}
-	
-	protected String getPreferredTitlebarUIName() {
-		return ui instanceof ViewUI? ((ViewUI)ui).getPreferredTitlebarUI(): null;		
-	}
-
 	public Container getContentPane() {
 		return contentPane;
 	}
@@ -168,6 +158,18 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		}
 	}
 	
+    protected Container createContentPane() {
+        return new JPanel();
+    }
+    
+    protected Titlebar createTitlebar() {
+        return new Titlebar();
+    }
+    
+    protected String getPreferredTitlebarUIName() {
+        return ui instanceof ViewUI? ((ViewUI)ui).getPreferredTitlebarUI(): null;       
+    }
+
 	private void removeImpl(Component c) {
 		if(c instanceof Titlebar)
 			((Titlebar)c).setView(null);
@@ -179,7 +181,6 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 			((Titlebar)c).setView(this);
 		super.add(c);
 	}
-
 
 	public void setTitlebar(Titlebar titlebar) {
 		if(titlebar!=null) {
@@ -237,7 +238,6 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		return tbar==null? null: tbar.getText();
 	}
 	
-	
 	public void doLayout() {
 		Component titlebar = getTitlePane();
 		int titleHeight = titlebar==null? 0: titlepane.getPreferredSize().height;
@@ -249,7 +249,6 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		contentPane.setBounds(0, titleHeight, w, h-titleHeight);
 	}
 
-	
     public void updateUI() {
         setUI(PlafManager.getUI(this));
     }
@@ -259,47 +258,56 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
 		return super.add(comp, index);
 	}
+    
 	public void add(Component comp, Object constraints, int index) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
 		super.add(comp, constraints, index);
 	}
+    
 	public void add(Component comp, Object constraints) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
 		super.add(comp, constraints);
 	}
+    
 	public Component add(Component comp) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
 		return super.add(comp);
 	}
+    
 	public Component add(String name, Component comp) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
 		return super.add(name, comp);
 	}
+    
 	public synchronized void add(PopupMenu popup) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
 		super.add(popup);
 	}
+    
 	public void remove(Component comp) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The remove() method is may not be called directly.");
 		super.remove(comp);
 	}
+    
 	public void remove(int index) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The remove() method is may not be called directly.");
 		
 		super.remove(index);
 	}
+    
 	public void removeAll() {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The remove() method is may not be called directly.");
 		super.removeAll();
 	}
+    
 	public synchronized void remove(MenuComponent popup) {
 		if(!addRemoveAllowed)
 			throw new RuntimeException("The remove() method is may not be called directly.");
@@ -391,21 +399,13 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		return DockingUtility.getMinimizedConstraint(this);
 	}
 
-	
-	
-	
-	
-
-
 	public void addDockingListener(DockingListener listener) {
 		dockingListeners.add(listener);
 	}
 
-
 	public DockingListener[] getDockingListeners() {
 		return (DockingListener[])dockingListeners.toArray(new DockingListener[0]);
 	}
-
 
 	public void removeDockingListener(DockingListener listener) {
 		dockingListeners.remove(listener);
@@ -487,4 +487,5 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 	public void hierarchyChanged(HierarchyEvent e) {
 		clearButtonRollovers();
 	}
+    
 }

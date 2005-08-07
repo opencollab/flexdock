@@ -14,7 +14,8 @@ import org.flexdock.view.View;
  * @author Christopher Butler
  */
 public class DefaultDisplayAction extends ViewAction {
-	public DefaultDisplayAction() {
+
+    public DefaultDisplayAction() {
 		
 	}
 	
@@ -28,4 +29,5 @@ public class DefaultDisplayAction extends ViewAction {
 	public void actionPerformed(View view, ActionEvent evt) {
 		DockingManager.display(view);
 	}
+    
 }

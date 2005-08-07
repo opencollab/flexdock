@@ -16,7 +16,9 @@ import org.flexdock.view.View;
  * @author Christopher Butler
  */
 public abstract class ViewAction extends AbstractAction {
-	public static final ViewAction EMPTY_ACTION = createDefault();
+
+    public static final ViewAction EMPTY_ACTION = createDefault();
+    
 	protected String viewId;
 	
 	protected View getView(ActionEvent evt) {
@@ -38,7 +40,7 @@ public abstract class ViewAction extends AbstractAction {
 	private static ViewAction createDefault() {
 		return new ViewAction() {
 			public void actionPerformed(View view, ActionEvent evt) {
-				
+			    
 			}
 		};
 	}
@@ -54,4 +56,5 @@ public abstract class ViewAction extends AbstractAction {
 	public void setViewId(String viewId) {
 		this.viewId = viewId;
 	}
+    
 }

@@ -28,7 +28,6 @@ public class DefaultPinAction extends ViewAction {
 		DockingManager.setMinimized(view, minimize);
 	}
 
-	
 	public void updateState(View view, DockingState info, Button button) {
 		button.getModel().setSelected(info.isMinimized());
 	}
@@ -45,4 +44,5 @@ public class DefaultPinAction extends ViewAction {
 			return info.isMinimized();
 		}
 	}
+    
 }
