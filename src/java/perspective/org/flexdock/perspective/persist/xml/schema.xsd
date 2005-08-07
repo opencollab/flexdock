@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: schema.xsd,v 1.3 2005-07-06 18:10:48 winnetou25 Exp $ -->
+<!-- $Id: schema.xsd,v 1.4 2005-08-07 12:36:05 winnetou25 Exp $ -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.flexdock.org" xmlns="http://www.flexdock.org">
 
 	<xs:simpleType name="dockingRegionType">
@@ -50,21 +50,21 @@
 			<xs:attribute name="dockableId" type="xs:string" use="required"/>
 			<xs:attribute name="dockingRegion" type="dockingRegionType" use="required"/>
 			<xs:attribute name="state" type="stateType" use="required"/>
-			<xs:attribute name="relativeParentId" name="xs:string" use="optional"/>
-			<xs:attribute name="splitRatio" name="xs:float" use="optional"/>
-			<xs:attribute name="floatingGroupName" name="xs:string" use="optional"/>
-			<xs:attribute name="minimizeConstraint" name="minimizeConstraintType" use="optional"/>
+			<xs:attribute name="relativeParentId" type="xs:string" use="optional"/>
+			<xs:attribute name="splitRatio" type="xs:float" use="optional"/>
+			<xs:attribute name="floatingGroupName" type="xs:string" use="optional"/>
+			<xs:attribute name="minimizeConstraint" type="minimizeConstraintType" use="optional"/>
 			<xs:element ref="Point" minOccurs="0" maxOccurs="1"/>
 			<xs:element ref="SplitNode" minOccurs="0" maxOccurs="unbounded"/>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
 	<xs:element name="Point">
 	    <xs:complexType>
 			<xs:attribute name="x" type="xs:nonNegativeInteger" use="required"/>
 			<xs:attribute name="y" type="xs:nonNegativeInteger" use="required"/>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
 	<xs:element name="DockingPath">
 	    <xs:complexType>
@@ -73,7 +73,7 @@
 			<xs:attribute name="siblingId" type="xs:string" use="optional"/>
 			<xs:element ref="SplitNode" minOccurs="0" maxOccurs="1"/>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
 	<xs:element name="SplitNode">
 	    <xs:complexType>
@@ -85,22 +85,22 @@
 			<xs:element ref="DockingPortNode" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="DockableNode" minOccurs="0" maxOccurs="unbounded"/>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
 	<xs:element name="DockingPortNode">
 	    <xs:complexType>
 			<xs:element ref="SplitNode" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element ref="DockableNode" minOccurs="0" maxOccurs="unbounded"/>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
 	<xs:element name="DockableNode">
 	    <xs:complexType>
 			<xs:attribute name="dockableId" type="xs:string" use="required"/>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
-	<xs:element name="FloatingGroup>
+	<xs:element name="FloatingGroup">
 		<xs:complexType>
 			<xs:attribute name="name" type="xs:string" use="required"/>
 			<xs:element name="Rectangle">
@@ -115,7 +115,7 @@
 			    </xs:complexType>
 			</xs:element>
 	    </xs:complexType>
-	<xs:element>
+	</xs:element>
 
 	<xs:element name="PerspectiveModel" minOccurs="1" maxOccurs="1">
         <xs:complexType>
