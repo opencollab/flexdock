@@ -70,10 +70,12 @@
    </path>
 
    <!-- build targets -->
-   <target name="build.default" depends="clean, resources, compile, dist" />
-   <target name="build.with.dll" depends="clean, resources, compile, compile.dll, dist" />
+   <target name="build.default" depends="clean, resources, compile"
+           description="Builds the project without compiling the DLL/so."/>
+   <target name="build.with.dll" depends="clean, resources, compile, compile.dll"
+           description="Builds the project including compiling the DLL/so."/>
 
-   <target name="clean">
+   <target name="clean" description="Removes all derived files.">
       <!-- This way of deleting will not fail if run repeatedly, will delete the dirs,
            and will also fail if we are unable to delete a file or dir too. -->
       <delete includeemptydirs="true" failonerror="true">
@@ -94,7 +96,8 @@
       <mkdir dir="${dist.dir}" />
    </target>
 
-   <target name="resources" depends="init">
+   <target name="resources" depends="init"
+           description="Copies non-compiled files from resource dirs to binXXX dirs.">
       <copy todir="${bin.dir}">
          <fileset dir="${resource.dir}/core" excludes="org/flexdock/util/dev-props.properties" />
          <fileset dir="${resource.dir}/plaf" />
@@ -104,7 +107,8 @@
       </copy>
    </target>
 
-   <target name="compile" depends="init, resources">
+   <target name="compile" depends="init, resources"
+           description="Compiles java sources for the framework, demos, and tests.">
       <javac classpathref="javac.classpath" destdir="${bin.dir}">
          <src path="${java.src.core}" />
          <!-- the next 3 are interdependent -->
@@ -136,7 +140,8 @@
        This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
        Also, it requires MinGW to compile the DLL.
    -->
-   <target name="compile.dll" depends="init,native.init">
+   <target name="compile.dll" depends="init,native.init"
+           description="Compile the DLL on a windows box.">
 
       <property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
       <property name="dll.dir" value="${basedir}\bin\org\flexdock\docking\drag\outline\win32" />
@@ -153,28 +158,17 @@
       </exec>
    </target>
 
-   <target name="compile.unix.lib" depends="init,native.init">
+   <target name="compile.unix.lib" depends="init,native.init"
+           description="Compile the *nix shared library.">
       <!--
           gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux
       -->
    </target>
 
-   <!-- creates a source distribution -->
-   <target name="jar-src" depends="init">
-      <jar jarfile="${dist.dir}/${dist.jar.basename}-src.jar">
-         <fileset dir="${java.src.core}" />
-         <fileset dir="${java.src.demo}" />
-         <fileset dir="${java.src.dockbar}" />
-         <fileset dir="${java.src.drag}" />
-         <fileset dir="${java.src.perspective}" />
-         <fileset dir="${java.src.plaf}" />
-         <fileset dir="${java.src.test}" />
-         <fileset dir="${java.src.view}" />
-      </jar>
-   </target>
 
    <!-- builds the javadoc excluding demos and tests -->
-   <target name="javadoc" depends="init">
+   <target name="javadoc" depends="init" unless="javadoc.skip"
+           description="Generate javadoc for the framework.">
       <javadoc destdir="${doc.api.dir}" sourcepathref="sourcepath" classpathref="javac.classpath">
          <packageset dir="${java.src.core}" />
          <packageset dir="${java.src.dockbar}" />
@@ -186,14 +180,41 @@
       </javadoc>
    </target>
 
-   <target name="dist" depends="init, resources, compile, javadoc">
-      <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
+   <target name="dist" depends="dist.src,dist.bin"
+           description="Builds the binary and source distributions."/>
 
-      <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
-         <fileset dir="${basedir}" includes="LICENSE.txt"/>
-         <fileset dir="${dist.dir}" includes="${dist.jar.basename}.jar" />
-         <fileset dir="." includes="docs/**" />
+   <!-- creates a source distribution -->
+   <target name="dist.src" depends="init"
+           description="Produce a zip and a tar.gz containing all sources necessary to build the project.">
+      <patternset id="srcfiles.pattern">
+      </patternset>
+      <zip destfile="${dist.dir}/${dist.jar.basename}-src.zip">
+         <fileset dir="${basedir}">
+            <exclude name="bin/**"/>
+            <exclude name="bin-demo/**"/>
+            <exclude name="bin-test/**"/>
+            <exclude name="dist/**"/>
+            <exclude name="docs/api/**"/>
+            <exclude name="workingcopy.properties"/>
+         </fileset>
       </zip>
+      <!-- TODO: ensure that ZIP has DOS EOLs if not built on Windows -->
+      <!-- TODO: build *NIX tar.gz -->
+   </target>
+
+   <target name="dist.bin" depends="init, resources, compile, javadoc"
+           description="Produce a zip and a tar.gz containing the build library, javadocs, and license.">
+      <!-- TODO: build a separate  pure-java version that has no native code in it -->
+      <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
+      <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
+         <fileset dir="${basedir}">
+            <include name="LICENSE.txt"/>
+            <include name="docs/**" />
+         </fileset>
+         <fileset dir="${dist.dir}" includes="${dist.jar.basename}.jar" />
+      </zip>
+      <!-- TODO: ensure that ZIP has DOS EOLs if not built on Windows -->
+      <!-- TODO: build *NIX tar.gz -->
    </target>
 
 
@@ -204,47 +225,47 @@
 
    <!-- Targets to run demos -->
 
-   <target name="demo.perspectives" depends="resources,compile">
+   <target name="demo.perspectives" depends="resources,compile" description="Run org.flexdock.demos.perspective.PerspectivesDemo">
       <java.demo classname="org.flexdock.demos.perspective.PerspectivesDemo" />
    </target>
 
-   <target name="demo.xmlperspectives" depends="resources,compile">
+   <target name="demo.xmlperspectives" depends="resources,compile" description="Run org.flexdock.demos.perspective.XMLPerspectivesDemo">
       <java.demo classname="org.flexdock.demos.perspective.XMLPerspectivesDemo" />
    </target>
 
-   <target name="demo.adapter" depends="resources,compile">
+   <target name="demo.adapter" depends="resources,compile" description="Run org.flexdock.demos.raw.adapter.AdapterDemo">
       <java.demo classname="org.flexdock.demos.raw.adapter.AdapterDemo" />
    </target>
 
-   <target name="demo.border" depends="resources,compile">
+   <target name="demo.border" depends="resources,compile" description="Run org.flexdock.demos.raw.border.BorderDemo">
       <java.demo classname="org.flexdock.demos.raw.border.BorderDemo" />
    </target>
 
-   <target name="demo.compound" depends="resources,compile">
+   <target name="demo.compound" depends="resources,compile" description="Run org.flexdock.demos.raw.CompoundDemo">
       <java.demo classname="org.flexdock.demos.raw.CompoundDemo" />
    </target>
 
-   <target name="demo.elegant" depends="resources,compile">
+   <target name="demo.elegant" depends="resources,compile" description="Run org.flexdock.demos.raw.elegant.ElegantDemo">
       <java.demo classname="org.flexdock.demos.raw.elegant.ElegantDemo" />
    </target>
 
-   <target name="demo.jmf" depends="resources,compile">
+   <target name="demo.jmf" depends="resources,compile" description="Run org.flexdock.demos.raw.jmf.JMFDemo">
       <java.demo classname="org.flexdock.demos.raw.jmf.JMFDemo" />
    </target>
 
-   <target name="demo.simple" depends="resources,compile">
+   <target name="demo.simple" depends="resources,compile" description="Run org.flexdock.demos.raw.SimpleDemo">
       <java.demo classname="org.flexdock.demos.raw.SimpleDemo" />
    </target>
 
-   <target name="demo.splitpane" depends="resources,compile">
+   <target name="demo.splitpane" depends="resources,compile" description="Run org.flexdock.demos.raw.SplitPaneDemo">
       <java.demo classname="org.flexdock.demos.raw.SplitPaneDemo" />
    </target>
 
-   <target name="demo.tabbedpane" depends="resources,compile">
+   <target name="demo.tabbedpane" depends="resources,compile" description="Run org.flexdock.demos.raw.TabbedPaneDemo">
       <java.demo classname="org.flexdock.demos.raw.TabbedPaneDemo" />
    </target>
 
-   <target name="demo.view" depends="resources,compile">
+   <target name="demo.view" depends="resources,compile" description="Run org.flexdock.demos.view.ViewDemo">
       <java.demo classname="org.flexdock.demos.view.ViewDemo" />
    </target>
 
@@ -256,31 +277,31 @@
 
    <!-- Targets to run tests -->
 
-   <target name="test.rubberband" depends="resources,compile">
+   <target name="test.rubberband" depends="resources,compile" description="Run org.flexdock.test.drag.RubberBandTest">
       <java.test classname="org.flexdock.test.drag.RubberBandTest" />
    </target>
 
-   <target name="test.basicdockbar" depends="resources,compile">
+   <target name="test.basicdockbar" depends="resources,compile" description="Run org.flexdock.test.dockbar.BasicDockbarTest">
       <java.test classname="org.flexdock.test.dockbar.BasicDockbarTest" />
    </target>
 
-   <target name="test.complexdockbar" depends="resources,compile">
+   <target name="test.complexdockbar" depends="resources,compile" description="Run org.flexdock.test.dockbar.ComplexDockbarTest">
       <java.test classname="org.flexdock.test.dockbar.ComplexDockbarTest" />
    </target>
 
-   <target name="test.viewrestoration" depends="resources,compile">
+   <target name="test.viewrestoration" depends="resources,compile" description="Run org.flexdock.test.perspective.ViewRestorationTest">
       <java.test classname="org.flexdock.test.perspective.ViewRestorationTest" />
    </target>
 
-   <target name="test.sibling" depends="resources,compile">
+   <target name="test.sibling" depends="resources,compile" description="Run org.flexdock.test.SiblingTest">
       <java.test classname="org.flexdock.test.SiblingTest" />
    </target>
 
-   <target name="test.viewframe" depends="resources,compile">
+   <target name="test.viewframe" depends="resources,compile" description="Run org.flexdock.test.view.ViewFrameTest">
       <java.test classname="org.flexdock.test.view.ViewFrameTest" />
    </target>
 
-   <target name="test.view" depends="resources,compile">
+   <target name="test.view" depends="resources,compile" description="Run org.flexdock.test.view.ViewTest">
       <java.test classname="org.flexdock.test.view.ViewTest" />
    </target>
 
