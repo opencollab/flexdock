@@ -11,6 +11,7 @@
         If your JDK is in a different location then create a
         workingcopy.properties and set sdk.home to your preferred value there -->
    <property name="sdk.home" value="c:/jdk1.5.0._03"/>
+   <property name="sdk.include" value="${sdk.home}/include"/> 
 
    <!-- build-source properties -->
    <property name="java.src" value="${basedir}/src/java" />
@@ -71,11 +72,18 @@
 
    <!-- build targets -->
    <target name="build.default" depends="clean, resources, compile"
-           description="Builds the project without compiling the DLL/so."/>
-   <target name="build.with.dll" depends="clean, resources, compile, compile.dll"
-           description="Builds the project including compiling the DLL/so."/>
+           description="Build the project without compiling the DLL/so"/>
+   <target name="build.with.native" depends="clean, resources, compile, compile.native"
+           description="Build the project including compiling the DLL/so"/>
 
-   <target name="clean" description="Removes all derived files.">
+   <target name="build.with.dll">
+     <fail>
+
+       Use the target build.with.native instead.
+     </fail>
+   </target>
+
+   <target name="clean" description="Remove all derived files">
       <!-- This way of deleting will not fail if run repeatedly, will delete the dirs,
            and will also fail if we are unable to delete a file or dir too. -->
       <delete includeemptydirs="true" failonerror="true">
@@ -94,10 +102,17 @@
       <mkdir dir="${bin.dir.demo}" />
       <mkdir dir="${bin.dir.test}" />
       <mkdir dir="${dist.dir}" />
+      
+      <condition property="os.windows">
+        <os family="windows"/>
+      </condition>
+      <condition property="os.unix">
+        <os family="unix"/>
+      </condition>
    </target>
 
    <target name="resources" depends="init"
-           description="Copies non-compiled files from resource dirs to binXXX dirs.">
+           description="Copy non-compiled files from resource dirs to binXXX dirs">
       <copy todir="${bin.dir}">
          <fileset dir="${resource.dir}/core" excludes="org/flexdock/util/dev-props.properties" />
          <fileset dir="${resource.dir}/plaf" />
@@ -108,7 +123,7 @@
    </target>
 
    <target name="compile" depends="init, resources"
-           description="Compiles java sources for the framework, demos, and tests.">
+           description="Compile java sources for the framework, demos, and tests">
       <javac classpathref="javac.classpath" destdir="${bin.dir}">
          <src path="${java.src.core}" />
          <!-- the next 3 are interdependent -->
@@ -122,22 +137,41 @@
       <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" />
    </target>
 
+
+   <target name="compile.native" depends="compile.dll,compile.unix.lib"
+           description="Compile the native code for the current platform"/>
+
    <target name="native.init" depends="init">
-      <available file="${sdk.home}" type="dir" property="sdk.home.available"/>
-      <fail unless="sdk.home.available">
+      <available file="${sdk.include}" type="dir" property="sdk.include.available"/>
+      <fail unless="sdk.include.available">
 
          ERROR:
-         The sdk.home property is set to: ${sdk.home}
+         The sdk.include property is set to: ${sdk.include}
 
          This directory does not exist but is required in order to compile
          native libraries.  To set this property for your environment create
          a workingcopy.properties (copying from workingcopy.properties-sample)
-         and edit the sdk.home property to reference your JDK's root directory.
+         and edit the sdk.home property to reference your JDK's root directory,
+         or if your JDK's include directory isn't located under the sdk.home dir
+         in the dir named include, then set sdk.include to reference the include
+         directory containing the jni.h file.
       </fail>
+
+      <!-- The following crazy logic builds a gcc -I arg for each dir in and under 
+           the sdk.include path.  This is avoid having to hard code OS/os-family specific
+           include subdir names.  For example, the only difference betwee linux and freebsd
+           compiles is the name of the include subdir. -->
+      <path id="sdk.include.dirset">
+        <dirset dir="${sdk.include}"/>
+      </path>
+      <pathconvert property="sdk.include.gcc.args.temp"
+                   refid="sdk.include.dirset"
+                   pathsep='" "-I'/>
+      <property name="sdk.include.gcc.args" value='"-I${sdk.include.gcc.args.temp}"'/>
    </target>
 
 
-   <target name="compile.dll.init" depends="native.init">
+   <target name="compile.dll.init" depends="native.init" if="os.windows">
       <available file="${mingw.home}" type="dir" property="mingw.home.available"/>
       <fail unless="mingw.home.available">
 
@@ -159,26 +193,27 @@
    </target>
 
    <!--
-       This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
+       This target compiles the RubberBand.dll.  It will only run if on Windows.
        It requires the version of gcc available from http://www.mingw.org/ to build.  It will
        not build with the version of gcc installed by cygwin with mingw support.
    -->
-   <target name="compile.dll" depends="compile.dll.init"
-           description="Compile the DLL on a windows box.">
+   <target name="compile.dll" depends="compile.dll.init" if="os.windows"
+           description="Compile the DLL if you're on Windows">
 
       <property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
       <property name="dll.dir" value="${basedir}\bin\org\flexdock\docking\drag\outline\win32" />
 
-      <!-- Cleanup existing DLL -->
+      <!-- Cleanup existing DLL or ensure the dir exists -->
       <delete file="${dll.dir}/RubberBand.dll" failonerror="false" />
+      <mkdir dir="${dll.dir}"/>
+
       <!-- Create the object file -->
       <gcc.mingw>
          <arg value='-c'/>
-         <arg value='-I${sdk.home}/include' />
-         <arg value='-I${sdk.home}/include/win32' />
          <arg value='-o'/>
          <arg value='${java.io.tmpdir}\RubberBand.o' />
          <arg value='${c.dir}\RubberBand.c' />
+         <arg line='${sdk.include.gcc.args}'/> <!-- potentially multiple include dirs -->
       </gcc.mingw>
       <!-- Link the shared resource -->
       <gcc.mingw>
@@ -191,17 +226,35 @@
       </gcc.mingw>
    </target>
 
-   <target name="compile.unix.lib" depends="native.init"
-           description="Compile the *nix shared library.">
-      <!--
-          gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux
-      -->
+   <!--
+       This target compiles the libRubberBand.so.  It will only run if on a UNIX os.
+       It requires that gcc and X11 includes and libraries  installed.
+   -->
+   <target name="compile.unix.lib" depends="native.init" if="os.unix"
+           description="Compile the shared library if you're on a UNIX of some sort">
+     <property name="c.dir" value="${basedir}/src/c/core/org/flexdock/docking/drag/outline/xlib"/>
+     <property name="so.dir" value="${basedir}/bin/org/flexdock/docking/drag/outline/xlib"/>
+
+     <!-- Cleanup existing .so or ensure the dir exists -->
+     <delete file="${so.dir}/libRubberBand.so" failonerror="false"/>
+     <mkdir dir="${so.dir}"/>
+
+     <exec executable="gcc" failonerror="true">
+       <arg value="-lX11"/>
+       <arg value="-L/usr/X11R6/lib"/>
+       <arg value="-I/usr/X11R6/include"/>
+       <arg value="-o"/>
+       <arg value="${so.dir}/libRubberBand.so"/>
+       <arg value="-shared"/>
+       <arg value="${c.dir}/RubberBand.c"/>
+       <arg line='${sdk.include.gcc.args}'/> <!-- potentially multiple include dirs -->
+     </exec>
    </target>
 
 
    <!-- builds the javadoc excluding demos and tests -->
    <target name="javadoc" depends="init" unless="javadoc.skip"
-           description="Generate javadoc for the framework.">
+           description="Generate javadoc for the framework">
       <javadoc destdir="${doc.api.dir}" sourcepathref="sourcepath" classpathref="javac.classpath">
          <packageset dir="${java.src.core}" />
          <packageset dir="${java.src.dockbar}" />
@@ -214,11 +267,11 @@
    </target>
 
    <target name="dist" depends="dist.src,dist.bin"
-           description="Builds the binary and source distributions."/>
+           description="Builds the binary and source distributions"/>
 
    <!-- creates a source distribution -->
    <target name="dist.src" depends="init"
-           description="Produce a zip and a tar.gz containing all sources necessary to build the project.">
+           description="Produce a zip containing all sources necessary to build the project">
       <patternset id="srcfiles.pattern">
       </patternset>
       <zip destfile="${dist.dir}/${dist.jar.basename}-src.zip">
@@ -236,7 +289,7 @@
    </target>
 
    <target name="dist.bin" depends="init, resources, compile, javadoc"
-           description="Produce a zip and a tar.gz containing the build library, javadocs, and license.">
+           description="Produce a zip containing the built library, javadocs, and license">
       <!-- TODO: build a separate  pure-java version that has no native code in it -->
       <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
       <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
