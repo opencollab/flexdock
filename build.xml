@@ -122,7 +122,7 @@
       <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" />
    </target>
 
-   <target name="native.init">
+   <target name="native.init" depends="init">
       <available file="${sdk.home}" type="dir" property="sdk.home.available"/>
       <fail unless="sdk.home.available">
 
@@ -136,11 +136,34 @@
       </fail>
    </target>
 
+
+   <target name="compile.dll.init" depends="native.init">
+      <available file="${mingw.home}" type="dir" property="mingw.home.available"/>
+      <fail unless="mingw.home.available">
+
+         ERROR:
+         The mingw.home property is set to: ${mingw.home}
+
+         This directory does not exist but is required in order to compile
+         native libraries.  To set this property for your environment create
+         a workingcopy.properties (copying from workingcopy.properties-sample)
+         and edit the mingw.home property to reference the location where you
+         installed MinGW 3.1.0 (see http://www.mingw.org for download).
+      </fail>
+      <property environment="env"/>
+      <presetdef name="gcc.mingw">
+         <exec executable="${mingw.home}/bin/gcc" failonerror="true">
+            <env key="Path" value="${mingw.home}/bin${path.separator}${env.Path}"/>
+         </exec>
+      </presetdef>
+   </target>
+
    <!--
        This target compiles the RubberBand.dll.  Obviously, it must only be run on Windows.
-       Also, it requires MinGW to compile the DLL.
+       It requires the version of gcc available from http://www.mingw.org/ to build.  It will
+       not build with the version of gcc installed by cygwin with mingw support.
    -->
-   <target name="compile.dll" depends="init,native.init"
+   <target name="compile.dll" depends="compile.dll.init"
            description="Compile the DLL on a windows box.">
 
       <property name="c.dir" value="${basedir}\src\c\core\org\flexdock\docking\drag\outline\win32" />
@@ -149,16 +172,26 @@
       <!-- Cleanup existing DLL -->
       <delete file="${dll.dir}/RubberBand.dll" failonerror="false" />
       <!-- Create the object file -->
-      <exec executable="gcc">
-         <arg line='-c -I"${sdk.home}\include" -I"${sdk.home}\include\win32" -o ${java.io.tmpdir}\RubberBand.o ${c.dir}\RubberBand.c' />
-      </exec>
+      <gcc.mingw>
+         <arg value='-c'/>
+         <arg value='-I${sdk.home}/include' />
+         <arg value='-I${sdk.home}/include/win32' />
+         <arg value='-o'/>
+         <arg value='${java.io.tmpdir}\RubberBand.o' />
+         <arg value='${c.dir}\RubberBand.c' />
+      </gcc.mingw>
       <!-- Link the shared resource -->
-      <exec executable="gcc">
-         <arg line="-mwindows -shared -o ${dll.dir}\RubberBand.dll ${java.io.tmpdir}\RubberBand.o ${c.dir}\RubberBand.def" />
-      </exec>
+      <gcc.mingw>
+         <arg value="-mwindows" />
+         <arg value="-shared" />
+         <arg value="-o" />
+         <arg value="${dll.dir}\RubberBand.dll" />
+         <arg value="${java.io.tmpdir}\RubberBand.o" />
+         <arg value="${c.dir}\RubberBand.def" />
+      </gcc.mingw>
    </target>
 
-   <target name="compile.unix.lib" depends="init,native.init"
+   <target name="compile.unix.lib" depends="native.init"
            description="Compile the *nix shared library.">
       <!--
           gcc -lX11 -L/usr/X11R6/lib RubberBand.c -o libRubberBand.so -shared -I/usr/java/j2sdk1.4.2_02/include/ -I/usr/java/j2sdk1.4.2_02/include/linux

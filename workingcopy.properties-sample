@@ -15,3 +15,7 @@
 # native FlexDock DLL or SO.  Change this value to match the 
 # current system setup.
 sdk.home=C:\\jdk1.5.0_03
+
+# MinGW install directory.  This is needed to compile FlexDock
+# DLL on Windows.  If you're not on windows it will be ignored
+mingw.home=C:\\MinGW
