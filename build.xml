@@ -11,7 +11,7 @@
         If your JDK is in a different location then create a
         workingcopy.properties and set sdk.home to your preferred value there -->
    <property name="sdk.home" value="c:/jdk1.5.0._03"/>
-   <property name="sdk.include" value="${sdk.home}/include"/> 
+   <property name="sdk.include" value="${sdk.home}/include"/>
 
    <!-- build-source properties -->
    <property name="java.src" value="${basedir}/src/java" />
@@ -26,15 +26,15 @@
    <property name="java.src.view" value="${java.src}/view" />
 
    <property name="resource.dir" value="${basedir}/resources" />
-   <property name="resource.dir.demo" value="${basedir}/resources" />
 
    <!-- build-output properties -->
-   <property name="doc.dir" value="${basedir}/docs" />
+   <property name="build.dir" value="${basedir}/build" />
+   <property name="doc.dir" value="${build.dir}/docs" />
    <property name="doc.api.dir" value="${doc.dir}/api" />
-   <property name="bin.dir" value="${basedir}/bin" />
-   <property name="bin.dir.demo" value="${basedir}/bin-demo" />
-   <property name="bin.dir.test" value="${basedir}/bin-test" />
-   <property name="dist.dir" value="${basedir}/dist" />
+   <property name="bin.dir" value="${build.dir}/bin" />
+   <property name="bin.dir.demo" value="${build.dir}/bin-demo" />
+   <property name="bin.dir.test" value="${build.dir}/bin-test" />
+   <property name="dist.dir" value="${build.dir}/dist" />
    <property name="version" value="0.3.7" />
    <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
 
@@ -61,13 +61,16 @@
       <path refid="javac.classpath" />
       <pathelement location="${bin.dir.demo}" />
    </path>
+
    <path id="rt.classpath.demo">
-      <path refid="javac.classpath.demo" />
-      <pathelement location="${bin.dir.demo}" />
+      <pathelement location="${bin.dir.demo}"/>
+      <pathelement location="${lib.dir}/jmf.jar"/><!-- needed only for JMF demo -->
+      <pathelement location="${bin.dir}"/>
    </path>
    <path id="rt.classpath.test">
-      <path refid="javac.classpath.test" />
-      <pathelement location="${bin.dir.test}" />
+      <pathelement location="${bin.dir.test}"/>
+      <pathelement location="${bin.dir}"/>
+      <pathelement location="${bin.dir.demo}"/> <!-- needed for a couple of the tests -->
    </path>
 
    <!-- build targets -->
@@ -77,10 +80,10 @@
            description="Build the project including compiling the DLL/so"/>
 
    <target name="build.with.dll">
-     <fail>
+      <fail>
 
-       Use the target build.with.native instead.
-     </fail>
+         Use the target build.with.native instead.
+      </fail>
    </target>
 
    <target name="clean" description="Remove all derived files">
@@ -88,11 +91,7 @@
            and will also fail if we are unable to delete a file or dir too. -->
       <delete includeemptydirs="true" failonerror="true">
          <fileset dir="${basedir}" defaultexcludes="no">
-            <include name="bin/**"/>
-            <include name="bin-demo/**"/>
-            <include name="bin-test/**"/>
-            <include name="dist/**"/>
-            <include name="docs/api/**"/>
+            <include name="build/**"/>
          </fileset>
       </delete>
    </target>
@@ -102,12 +101,12 @@
       <mkdir dir="${bin.dir.demo}" />
       <mkdir dir="${bin.dir.test}" />
       <mkdir dir="${dist.dir}" />
-      
+
       <condition property="os.windows">
-        <os family="windows"/>
+         <os family="windows"/>
       </condition>
       <condition property="os.unix">
-        <os family="unix"/>
+         <os family="unix"/>
       </condition>
    </target>
 
@@ -157,12 +156,12 @@
          directory containing the jni.h file.
       </fail>
 
-      <!-- The following crazy logic builds a gcc -I arg for each dir in and under 
+      <!-- The following crazy logic builds a gcc -I arg for each dir in and under
            the sdk.include path.  This is avoid having to hard code OS/os-family specific
            include subdir names.  For example, the only difference betwee linux and freebsd
            compiles is the name of the include subdir. -->
       <path id="sdk.include.dirset">
-        <dirset dir="${sdk.include}"/>
+         <dirset dir="${sdk.include}"/>
       </path>
       <pathconvert property="sdk.include.gcc.args.temp"
                    refid="sdk.include.dirset"
@@ -232,27 +231,33 @@
    -->
    <target name="compile.unix.lib" depends="native.init" if="os.unix"
            description="Compile the shared library if you're on a UNIX of some sort">
-     <property name="c.dir" value="${basedir}/src/c/core/org/flexdock/docking/drag/outline/xlib"/>
-     <property name="so.dir" value="${basedir}/bin/org/flexdock/docking/drag/outline/xlib"/>
+      <property name="c.dir" value="${basedir}/src/c/core/org/flexdock/docking/drag/outline/xlib"/>
+      <property name="so.dir" value="${basedir}/bin/org/flexdock/docking/drag/outline/xlib"/>
 
-     <!-- Cleanup existing .so or ensure the dir exists -->
-     <delete file="${so.dir}/libRubberBand.so" failonerror="false"/>
-     <mkdir dir="${so.dir}"/>
+      <!-- Cleanup existing .so or ensure the dir exists -->
+      <delete file="${so.dir}/libRubberBand.so" failonerror="false"/>
+      <mkdir dir="${so.dir}"/>
 
-     <exec executable="gcc" failonerror="true">
-       <arg value="-lX11"/>
-       <arg value="-L/usr/X11R6/lib"/>
-       <arg value="-I/usr/X11R6/include"/>
-       <arg value="-o"/>
-       <arg value="${so.dir}/libRubberBand.so"/>
-       <arg value="-shared"/>
-       <arg value="${c.dir}/RubberBand.c"/>
-       <arg line='${sdk.include.gcc.args}'/> <!-- potentially multiple include dirs -->
-     </exec>
+      <exec executable="gcc" failonerror="true">
+         <arg value="-lX11"/>
+         <arg value="-L/usr/X11R6/lib"/>
+         <arg value="-I/usr/X11R6/include"/>
+         <arg value="-o"/>
+         <arg value="${so.dir}/libRubberBand.so"/>
+         <arg value="-shared"/>
+         <arg value="${c.dir}/RubberBand.c"/>
+         <arg line='${sdk.include.gcc.args}'/> <!-- potentially multiple include dirs -->
+      </exec>
    </target>
 
+   <target name="doc" depends="init, javadoc"
+           description="Copy distributable docs to output docs dir and generate javadocs">
+      <copy todir="${doc.dir}">
+         <fileset dir="docs" includes="**/*.pdf"/>
+      </copy>
+      <copy todir="${build.dir}" file="${basedir}/LICENSE.txt"/>
+   </target>
 
-   <!-- builds the javadoc excluding demos and tests -->
    <target name="javadoc" depends="init" unless="javadoc.skip"
            description="Generate javadoc for the framework">
       <javadoc destdir="${doc.api.dir}" sourcepathref="sourcepath" classpathref="javac.classpath">
@@ -276,6 +281,7 @@
       </patternset>
       <zip destfile="${dist.dir}/${dist.jar.basename}-src.zip">
          <fileset dir="${basedir}">
+            <exclude name="build/**"/>
             <exclude name="bin/**"/>
             <exclude name="bin-demo/**"/>
             <exclude name="bin-test/**"/>
@@ -288,12 +294,12 @@
       <!-- TODO: build *NIX tar.gz -->
    </target>
 
-   <target name="dist.bin" depends="init, resources, compile, javadoc"
-           description="Produce a zip containing the built library, javadocs, and license">
+   <target name="dist.bin" depends="init, resources, compile, doc"
+           description="Produce a zip containing the built library, docs, javadocs, and license">
       <!-- TODO: build a separate  pure-java version that has no native code in it -->
       <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
       <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
-         <fileset dir="${basedir}">
+         <fileset dir="${build.dir}">
             <include name="LICENSE.txt"/>
             <include name="docs/**" />
          </fileset>

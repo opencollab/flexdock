@@ -4,18 +4,21 @@ Building Flexdock
 To build this project, obtain a copy of Apache's Ant from http://ant.apache.org.
 You must use version 1.6.0 or later.
 
-From this directory you should be able to build enverything just by running the command: ant
+From this directory you should be able to build everything just by running the command: ant
 
 This will generate output in the following directories:
 
-  bin       The compiled framework and required resource files.
-  bin-demo  The compiled demos and required resource files.
-  bin-test  The compiled tests and required resource files
-  docs/api  The javadoc for the framework.
-  dist      Contains:
-              - a jar containing just the framework code and it's resources
-              - a zip containing this jar, the license file, plus the javadoc (i.e. a binary distribution of the framework)
-
+  build/bin       The compiled framework and required resource files.
+  build/bin-demo  The compiled demos and required resource files.
+  build/bin-test  The compiled tests and required resource files
+  build/docs/api  The javadoc for the framework.
+  build/dist      Contains:
+                   - a jar containing just the framework code and
+                     it's resources
+                   - a zip containing this jar, the license file,
+                     plus the PDF docs and the javadoc (i.e. a binary
+                     distribution of the framework)
+ 
 
 Running The Demos
 --------------------------
@@ -38,16 +41,3 @@ To run a demo, choose the name of the demo target you wish to run and execute it
   ant demo.simple
 
 will run the simple demo.
-
-
-Running The Tests
---------------------------
-Similarly to the demos, there are a number of test targets that you can run:
-
-  test.basicdockbar
-  test.complexdockbar
-  test.rubberband
-  test.sibling
-  test.view
-  test.viewframe
-  test.viewrestoration
