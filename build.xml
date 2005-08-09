@@ -250,6 +250,23 @@
       </exec>
    </target>
 
+   <target name="jar" depends="init, resources, compile"
+           description="Produce a jar usable in the classpath of an app using the flexdock framework">
+
+      <condition property="jar.suffix" value="-generic">
+         <isset property="generic.jar"/>
+      </condition>
+      <condition property="jar.excludes" value="**/*.so,**/*.dll">
+         <!-- Will only exclude native code, the corresponding Java classes aren't being excluded for simplicity's sake
+              but EffectsFactory/Utilities can handle this properly -->
+         <isset property="generic.jar"/>
+      </condition>
+      <property name="jar.suffix" value=""/>
+      <property name="jar.excludes" value=""/>
+
+      <jar jarfile="${dist.dir}/${dist.jar.basename}${jar.suffix}.jar" basedir="${bin.dir}" excludes="${jar.excludes}"/>
+   </target>
+
    <target name="doc" depends="init, javadoc"
            description="Copy distributable docs to output docs dir and generate javadocs">
       <copy todir="${doc.dir}">
@@ -277,8 +294,6 @@
    <!-- creates a source distribution -->
    <target name="dist.src" depends="init"
            description="Produce a zip containing all sources necessary to build the project">
-      <patternset id="srcfiles.pattern">
-      </patternset>
       <zip destfile="${dist.dir}/${dist.jar.basename}-src.zip">
          <fileset dir="${basedir}">
             <exclude name="build/**"/>
@@ -294,10 +309,8 @@
       <!-- TODO: build *NIX tar.gz -->
    </target>
 
-   <target name="dist.bin" depends="init, resources, compile, doc"
+   <target name="dist.bin" depends="init,jar,doc"
            description="Produce a zip containing the built library, docs, javadocs, and license">
-      <!-- TODO: build a separate  pure-java version that has no native code in it -->
-      <jar jarfile="${dist.dir}/${dist.jar.basename}.jar" basedir="${bin.dir}" />
       <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
          <fileset dir="${build.dir}">
             <include name="LICENSE.txt"/>
