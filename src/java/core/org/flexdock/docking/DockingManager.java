@@ -39,6 +39,9 @@ import org.flexdock.docking.adapter.DockingAdapter;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.defaults.DockableComponentWrapper;
 import org.flexdock.docking.drag.DragManager;
+import org.flexdock.docking.drag.effects.DragPreview;
+import org.flexdock.docking.drag.effects.EffectsManager;
+import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.docking.event.DockingEventHandler;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
@@ -2321,7 +2324,16 @@ public class DockingManager implements DockingConstants {
 		getDockingManager().defaultSiblingSize = size;
 	}
     
+	public void setRubberBand(RubberBand rubberBand) {
+	    EffectsManager.setRubberBand(rubberBand);
+	}
+
+    public void setDragPreview(DragPreview dragPreview) {
+        EffectsManager.setPreview(dragPreview);
+    }
+    
     private static class AutoPersist extends Thread {
+        
         private boolean enabled;
         
         public void run() {
