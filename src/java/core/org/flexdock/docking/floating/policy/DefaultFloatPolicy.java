@@ -9,6 +9,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
+import org.flexdock.docking.floating.policy.FloatPolicy.NullFloatPolicy;
 
 /**
  * This class provides an implementation of the <code>FloatPolicy</code> interface
@@ -19,7 +20,7 @@ import org.flexdock.docking.floating.frames.FloatingDockingPort;
  * 
  * @author Christopher Butler
  */
-public class DefaultFloatPolicy extends FloatPolicy.Stub {
+public class DefaultFloatPolicy extends NullFloatPolicy {
 	
 	private static final DefaultFloatPolicy SINGLETON = new DefaultFloatPolicy();
 	
@@ -90,4 +91,5 @@ public class DefaultFloatPolicy extends FloatPolicy.Stub {
 		
 		return super.isFloatingAllowed(dockable);
 	}
+    
 }

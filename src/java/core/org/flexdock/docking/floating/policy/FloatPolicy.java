@@ -13,7 +13,8 @@ import org.flexdock.docking.event.DockingEvent;
  * @author Christopher Butler
  */
 public interface FloatPolicy {
-	/**
+
+    /**
 	 * Returns <code>true</code> if floating should be allowed for the specified 
 	 * <code>Dockable</code>.  This method will be invoked by the 
 	 * <code>FloatPolicyManager</code> at the beginning of a drag operation to determine
@@ -25,7 +26,7 @@ public interface FloatPolicy {
 	 * @return <code>true</code> if floating should be allowed for the specified 
 	 * <code>Dockable</code>; <code>false</code> otherwise.
 	 */
-	public boolean isFloatingAllowed(Dockable dockable);
+	boolean isFloatingAllowed(Dockable dockable);
 	
 	/**
 	 * Indicates whether floating should be allowed for the specified <code>DockingEvent</code>
@@ -38,13 +39,13 @@ public interface FloatPolicy {
 	 * @return <code>true</code> if floating should be allowed for the specified 
 	 * <code>DockingEvent</code>; <code>false</code> otherwise.
 	 */
-	public boolean isFloatDropAllowed(DockingEvent evt);
+	boolean isFloatDropAllowed(DockingEvent evt);
 	
 	/**
 	 * Provides a default implementation of the FloatPolicy interface. 
 	 * @author Christopher Butler
 	 */
-	public static class Stub implements FloatPolicy {
+	class NullFloatPolicy implements FloatPolicy {
 		/**
 		 * Returns <code>true</code>.
 		 * 
@@ -65,4 +66,5 @@ public interface FloatPolicy {
 			return true;
 		}
 	}
+    
 }

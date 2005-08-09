@@ -130,7 +130,8 @@ import org.flexdock.util.Utilities;
  *
  */
 public class DefaultDockingPort extends JPanel implements DockingPort, DockingConstants {
-	private static final WeakHashMap COMPONENT_TITLES = new WeakHashMap();
+
+    private static final WeakHashMap COMPONENT_TITLES = new WeakHashMap();
 	
 	protected ArrayList dockingListeners;
 	private Component dockedComponent;
@@ -141,7 +142,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	
 	private BufferedImage dragImage;
 
-	
 	/**
 	 * Creates a new <code>DefaultDockingPort</code> with a persistent ID equal to the 
 	 * <code>String</code> value of this <code>Object's</code> hash code.
@@ -235,7 +235,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		port.dock(c, CENTER_REGION);
 	}	
 
-	
 	/**
 	 * Returns <code>true</code> if docking is allowed for the specified <code>Component</code> 
 	 * within the supplied <code>region</code>, <code>false</code> otherwise.  It is important
@@ -297,7 +296,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		// as well as changing regions
 		return true;
 	}
-
 
 	/**
 	 * Checks the current state of the <code>DockingPort</code> and, if present, issues the appropriate
@@ -551,7 +549,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return DockingManager.getDockable(c);
 	}
 
-	
 	protected JTabbedPane createTabbedPane() {
 		Insets oldInsets = UIManager.getInsets(LookAndFeelSettings.TAB_PANE_BORDER_INSETS);
 		int tabPlacement = getInitTabPlacement();
@@ -574,7 +571,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 				break;
 		}
 
-		
 		UIManager.put(LookAndFeelSettings.TAB_PANE_BORDER_INSETS, newInsets);
 		JTabbedPane pane = new JTabbedPane();
 		pane.setTabPlacement(tabPlacement);
@@ -601,7 +597,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return DockingManager.getDockingStrategy(this);
 	}
 
-	
 	/**
 	 * Removes all <code>Dockables</code> from this <code>DockingPort</code>.  Internally, 
 	 * this method dispatches to <code>removeAll()</code>.  This ensures that not only 
@@ -757,8 +752,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return success;
 	}
 
-
-	
 	private void resetSplitDividerLocation() {
 		Component c = getDockedComponent();
 		if(c instanceof JSplitPane)
@@ -962,7 +955,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 */
 	public void setPersistentId(String id) {
 		if(id==null) {
-			id = String.valueOf(hashCode());
+			id = UUID.randomUUID().toString();
 		}
 		persistentId = id;
 		DockingPortTracker.updateIndex(this);
@@ -1063,7 +1056,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		getDockingProperties().setSingleTabsAllowed(allowed);
 	}
 
-	
 	/** 
 	 * Indicates whether or not the specified component is docked somewhere within this 
 	 * <code>DefaultDockingPort</code>.  This method returns <code>true</code> if the specified 
@@ -1160,8 +1152,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		evaluateDockingBorderStatus();
 	}
 	
-
-	
 	private void reevaluateDockingWrapper() {
 		Component docked = getDockedComponent();
 		Container parent = getParent();
@@ -1252,7 +1242,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		}
 	}
 	
-
 	/**
 	 * Overridden to decorate superclass method, keeping track of internal docked-component reference.
 	 * 
@@ -1371,10 +1360,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return true;
 	}
 	
-	
-	
-	
-	
 	/**
 	 * Returns all <code>Dockables</code> docked within this <code>DockingPort</code> and all
 	 * sub-<code>DockingPorts</code>.  The returned <code>Set</code> will contain
@@ -1390,8 +1375,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
     	// return ALL dockables, recursing to maximum depth
     	return getDockableSet(-1, 0, null);
 	}
-	
-	
 	
     protected Set getDockableSet(int depth, int level, Class desiredClass) {
         Component c = getDockedComponent();
@@ -1443,18 +1426,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
     	return desiredClass==null? DockingManager.getDockable(c)!=null:
 			desiredClass.isAssignableFrom(c.getClass());
     }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Adds a <code>DockingListener</code> to observe docking events for this 
@@ -1666,7 +1637,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			return;
 		
 		if(inProgress) {
-//			dragImage = SwingUtility.createImage(getDockedComponent());
 			dragImage = SwingUtility.createImage(this);
 		}
 		else {
@@ -1695,12 +1665,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		
 		g.drawImage(dragImage, 0, 0, this);
 	}
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * Returns a <code>LayoutNode</code> containing metadata that describes the current layout
@@ -1866,4 +1830,5 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			split.validate();
 		}
 	}
+    
 }
