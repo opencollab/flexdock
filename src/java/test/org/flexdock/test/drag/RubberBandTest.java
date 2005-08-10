@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.drag.effects.RubberBand;
 
 
@@ -30,7 +30,7 @@ public class RubberBandTest extends JFrame {
 	
 	private RubberBandTest() {
 		super("Rubber Band Test");
-		rubberBand = EffectsFactory.getRubberBand();
+		rubberBand = EffectsManager.getRubberBand();
 		setContentPane(createContentPane());
 	}
 	

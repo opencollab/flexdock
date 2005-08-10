@@ -16,7 +16,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
-import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.policy.FloatPolicyManager;
 import org.flexdock.event.EventManager;
@@ -39,7 +39,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 	
 	public static void prime() {
 		// execute static initializer to preload resources
-		EffectsFactory.prime();
+		EffectsManager.prime();
 	}
 	
 	public DragManager(Dockable dockable) {

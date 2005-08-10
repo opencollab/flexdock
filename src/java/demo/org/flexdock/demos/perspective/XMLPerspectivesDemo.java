@@ -23,7 +23,7 @@ import javax.swing.border.LineBorder;
 import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
-import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.drag.preview.GhostPreview;
 import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.perspective.LayoutSequence;
@@ -43,7 +43,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPerspectivesDemo.java,v 1.9 2005-08-06 20:48:40 winnetou25 Exp $
+ * @version $Id: XMLPerspectivesDemo.java,v 1.10 2005-08-10 18:38:41 winnetou25 Exp $
  */
 public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 	
@@ -115,7 +115,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 
 		JMenu perspectiveMenu = new JMenu("Perspective");
 		//pobieramy perspektywe nr 1
-      perspectiveMenu.add(new OpenPerspectiveAction(P1));
+		perspectiveMenu.add(new OpenPerspectiveAction(P1));
 //		perspectiveMenu.add(new OpenPerspectiveAction(P2));
 //		perspectiveMenu.add(new OpenPerspectiveAction(P3));
 		
@@ -129,7 +129,7 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
 		// setup the DockingManager to work with our application
 		DockingManager.setDockableFactory(new ViewFactory());
 		DockingManager.setFloatingEnabled(true);
-        EffectsFactory.setPreview(new GhostPreview());
+        EffectsManager.setPreview(new GhostPreview());
 		
 		// configure the perspective manager
 		PerspectiveManager.setFactory(new DemoPerspectiveFactory());

@@ -17,7 +17,7 @@ import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.drag.effects.DragPreview;
-import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.util.NestedComponents;
 import org.flexdock.util.RootWindow;
 
@@ -152,7 +152,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 	protected DragPreview getPreviewDelegate(Component dockable, DockingPort port) {
 		if(!previewInit) {
 			Dockable d = DockingManager.getDockable(dockable);
-			previewDelegate = EffectsFactory.getPreview(d, port);
+			previewDelegate = EffectsManager.getPreview(d, port);
 			previewInit = true;
 		}
 		return previewDelegate;

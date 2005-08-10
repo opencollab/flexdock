@@ -12,7 +12,7 @@ import java.util.HashMap;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
-import org.flexdock.docking.drag.effects.EffectsFactory;
+import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
@@ -33,7 +33,7 @@ public class DragPipeline {
 	
 	public DragPipeline() {
 		paneMonitor = new GlassPaneMonitor();
-		rubberBand = EffectsFactory.getRubberBand();
+		rubberBand = EffectsManager.getRubberBand();
 	}
 	
 	public boolean isOpen() {
