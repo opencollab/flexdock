@@ -6,13 +6,16 @@
  */
 package org.flexdock.dockbar.layout;
 
-import java.awt.Container;
+import java.awt.Component;
 import java.awt.Rectangle;
 
+import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
+import javax.swing.SwingUtilities;
 
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
+import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.util.RootWindow;
 
 /**
@@ -46,17 +49,43 @@ public class DockbarLayoutManager {
 	}
 	
 	public Rectangle getLayoutArea(DockbarManager mgr) {
+	    Rectangle rect = new Rectangle();
 		RootWindow window = mgr==null? null: mgr.getWindow();
 		if(window==null)
-			return new Rectangle(0, 0, 0, 0);
+			return rect;
 		
-		Container contentPane = window.getContentPane();
 		JLayeredPane layeredPane = window.getLayeredPane();
+		
+		Component leftEdge = getEdgeGuide(mgr, MinimizationManager.LEFT);
+		Component rightEdge = getEdgeGuide(mgr, MinimizationManager.RIGHT);
+		Component bottomEdge = getEdgeGuide(mgr, MinimizationManager.BOTTOM);
+		Component topEdge = window.getContentPane();
 
-		// no rectangle translation required because layeredPane is already the direct
-		// parent of contentPane.
-
-		Rectangle rect = contentPane.getBounds();
+		Rectangle leftBounds = SwingUtilities.convertRectangle(leftEdge.getParent(), leftEdge.getBounds(), layeredPane);
+		Rectangle rightBounds = SwingUtilities.convertRectangle(rightEdge.getParent(), rightEdge.getBounds(), layeredPane);
+		Rectangle bottomBounds = SwingUtilities.convertRectangle(bottomEdge.getParent(), bottomEdge.getBounds(), layeredPane);
+		
+		int rightX = rightBounds.x + rightBounds.width;
+		int bottomY = bottomBounds.y + bottomBounds.height;
+		
+		//TODO: There is some a flaw we're not accounting for here.  We're assuming that
+		// with the various different edge-guide components we're using, the leftEdge will 
+		// actually be to the left, rightEdge will actually be to the right, and so on.
+		// If the user does something unreasonable like specify a rightEdge component that is
+		// actually to the left of their leftEdge, then we're going to end up with some wacky, 
+		// unpredictable results.
+		
+		rect.x = leftBounds.x;
+		rect.y = topEdge.getBounds().y;
+		rect.width = rightX - rect.x;
+		rect.height = bottomY - rect.y;
 		return rect;
+	}
+	
+	public JComponent getEdgeGuide(DockbarManager mgr, int edge) {
+	    // default behavior is to return the contentPane for all edges
+	    RootWindow window = mgr==null? null: mgr.getWindow();
+	    Component comp = window==null? null: window.getContentPane();
+	    return comp instanceof JComponent? (JComponent)comp: null;
 	}
 }

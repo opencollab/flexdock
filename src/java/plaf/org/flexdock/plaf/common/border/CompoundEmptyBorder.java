@@ -13,8 +13,8 @@ import javax.swing.border.EmptyBorder;
  * @author Christopher Butler
  */
 public class CompoundEmptyBorder extends CompoundBorder {
-	private static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
-	private boolean inner;
+	protected static final Insets EMPTY_INSETS = new Insets(0, 0, 0, 0);
+	protected boolean inner;
 	
 	public static CompoundEmptyBorder create(Border border, boolean inner) {
 		return create(border, inner, null);
@@ -30,7 +30,7 @@ public class CompoundEmptyBorder extends CompoundBorder {
 		return new CompoundEmptyBorder(empty, border, inner);
 	}
 	
-	private CompoundEmptyBorder(Border outer, Border inner, boolean emptyInner) {
+	protected CompoundEmptyBorder(Border outer, Border inner, boolean emptyInner) {
 		super(outer, inner);
 		this.inner = emptyInner;
 	}
@@ -52,7 +52,11 @@ public class CompoundEmptyBorder extends CompoundBorder {
 		return empty.getInsetsCopy();
 	}
 	
-	private static class MutableEmptyBorder extends EmptyBorder {
+	public Border getWrappedBorder() {
+	    return inner? getOutsideBorder(): getInsideBorder();
+	}
+	
+	protected static class MutableEmptyBorder extends EmptyBorder {
 		public MutableEmptyBorder(int top, int left, int bottom, int right) {
 			super(top, left, bottom, right);
 		}

@@ -6,9 +6,7 @@ package org.flexdock.dockbar;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
@@ -18,10 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.WeakHashMap;
 
-import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
 import org.flexdock.dockbar.activation.ActivationQueue;
 import org.flexdock.dockbar.activation.Animation;
@@ -37,7 +33,6 @@ import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventManager;
-import org.flexdock.plaf.common.border.CompoundEmptyBorder;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.Utilities;
 
@@ -241,10 +236,6 @@ public class DockbarManager {
 		return viewPane;
 	}
 	
-
-	
-	
-	
 	
 	
 	
@@ -260,34 +251,11 @@ public class DockbarManager {
 	
 	public void validate() {
 		toggleDockbars();
-		updateInsets();
 		dockbarLayout.layout();
 		viewPane.revalidate();
 	}
 	
-	private void updateInsets() {
-		RootWindow window = getWindow();
-		Container content = window==null? null: window.getContentPane();
-		if(!(content instanceof JComponent))
-			return;
-	
-		JComponent contentPane = (JComponent)content;
-		Border contentBorder = contentPane.getBorder();
-		if(!(contentBorder instanceof CompoundEmptyBorder)) {
-			contentBorder = CompoundEmptyBorder.create(contentBorder, true, new Insets(-1, -1, -1, -1));
-			contentPane.setBorder(contentBorder);
-		}
-		
-		CompoundEmptyBorder border = (CompoundEmptyBorder)contentBorder;
-		Insets contentInsets = contentPane.getInsets();
-		int top = contentInsets==null? 0: contentInsets.top;
-		
-		Insets emptyInsets = getEmptyInsets();
-		boolean changed = border.setEmptyInsets(emptyInsets);
-		if(changed) {
-			contentPane.revalidate();
-		}
-	}
+
 	
 	private void toggleDockbars() {
 		leftBar.setVisible(leftBar.getComponentCount()!=0);
@@ -295,32 +263,7 @@ public class DockbarManager {
 		bottomBar.setVisible(bottomBar.getComponentCount()!=0);
 	}
 	
-	private Insets getEmptyInsets() {
-		return new Insets(0, getLeftInset(), getBottomInset(), getRightInset());
-	}
-	
-	private int getLeftInset() {
-		return getDockbarInset(leftBar);
-	}
-	
-	private int getRightInset() {
-		return getDockbarInset(rightBar);
-	}
-	
-	private int getBottomInset() {
-		return getDockbarInset(bottomBar);
-	}
-	
-	private int getDockbarInset(Dockbar dockbar) {
-		boolean visible = dockbar.isVisible();
-		if(!visible)
-			return 0;
-		
-		Dimension dim = dockbar.getPreferredSize();
-		if(dockbar==leftBar || dockbar==rightBar)
-			return dim.width;
-		return dim.height;
-	}
+
 
 	
 	private int findDockbarEdge(Dockable dockable) {
@@ -663,6 +606,10 @@ public class DockbarManager {
 	
 	private boolean isOwner(Dockable dockable) {
 		return dockable==null? false: dockables.containsKey(dockable.getPersistentId());
+	}
+	
+	public DockbarLayout getLayout() {
+	    return dockbarLayout;
 	}
 	
 }
