@@ -15,7 +15,7 @@ import java.beans.PropertyChangeListener;
  * TODO To change the template for this generated type comment go to
  * Window - Preferences - Java - Code Style - Code Templates
  */
-public class DefaultDockablePropertyHandler implements PropertyChangeListener {
+public class DockablePropertyChangeHandler implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
 //        System.out.println(evt.getSource() + ": " + evt.getOldValue() + " -> " + evt.getNewValue());

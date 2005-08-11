@@ -15,7 +15,7 @@ import javax.swing.JComponent;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.defaults.DefaultDockablePropertyHandler;
+import org.flexdock.docking.defaults.DockablePropertyChangeHandler;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.SwingUtility;
 
@@ -62,7 +62,7 @@ public class PropertyManager {
     
     private static void linkPropertySet(Dockable dockable, DockablePropertySet propertySet) {
         dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, propertySet);
-        propertySet.addPropertyChangeListener(new DefaultDockablePropertyHandler());
+        propertySet.addPropertyChangeListener(new DockablePropertyChangeHandler());
     }
     
     public static void removePropertySet(Dockable dockable) {
