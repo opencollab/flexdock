@@ -10,6 +10,7 @@ import javax.swing.SwingConstants;
  * @author Christopher Butler
  */
 public interface DockingConstants {
+    String DOCKING_ID = "docking-id";
     
 	float UNSPECIFIED_SIBLING_PREF = -1F;
 	int UNINITIALIZED = -1;

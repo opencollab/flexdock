@@ -7,34 +7,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.flexdock.docking.Dockable;
+
 
 /**
  * @author Christopher Butler
  */
 public class ScopedDockablePropertySet extends BasicDockablePropertySet implements ScopedMap {
 
-    public static final RootDockablePropertySet ROOT_PROPS = new RootDockablePropertySet();
+    public static final RootDockablePropertySet ROOT_PROPS = new RootDockablePropertySet(null);
 	public static final List DEFAULTS = new ArrayList(0);
 	public static final List GLOBALS = new ArrayList(0);
 	private ArrayList locals;
 
-	public ScopedDockablePropertySet() {
-		this(6);
+	public ScopedDockablePropertySet(Dockable dockable) {
+		this(6, dockable);
 		init();
 	}
 
-	public ScopedDockablePropertySet(int initialCapacity) {
-		super(initialCapacity);
+	public ScopedDockablePropertySet(int initialCapacity, Dockable dockable) {
+		super(initialCapacity, dockable);
 		init();
 	}
 
-	public ScopedDockablePropertySet(int initialCapacity, float loadFactor) {
-		super(initialCapacity, loadFactor);
+	public ScopedDockablePropertySet(int initialCapacity, float loadFactor, Dockable dockable) {
+		super(initialCapacity, loadFactor, dockable);
 		init();
 	}
 
-	public ScopedDockablePropertySet(Map t) {
-		super(t);
+	public ScopedDockablePropertySet(Map t, Dockable dockable) {
+		super(t, dockable);
 		init();
 	}
 	

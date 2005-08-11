@@ -3,6 +3,8 @@
  */
 package org.flexdock.docking.props;
 
+import java.beans.PropertyChangeListener;
+
 import javax.swing.Icon;
 
 /**
@@ -54,7 +56,7 @@ public interface DockablePropertySet {
 	
 	public Float getPreviewSize();
 
-	
+	public String getDockingId();
 	
 	
 	
@@ -83,5 +85,8 @@ public interface DockablePropertySet {
 	public Object put(Object key, Object value);
 	
 	public Object remove(Object key);
-
+	
+    public void addPropertyChangeListener(PropertyChangeListener listener);
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener);
 }

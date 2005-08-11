@@ -12,13 +12,13 @@ import org.flexdock.docking.props.ScopedDockablePropertySet;
 public class ViewProps extends ScopedDockablePropertySet {
 	public static final String ACTIVE_STATE_LOCKED = "View.ACTIVE_STATE_LOCKED";
 	
-	public ViewProps() {
-		super();
+	public ViewProps(View view) {
+		super(view);
 		init();
 	}
 
-	public ViewProps(int initialCapacity) {
-		super(initialCapacity);
+	public ViewProps(int initialCapacity, View view) {
+		super(initialCapacity, view);
 		init();
 	}
 	

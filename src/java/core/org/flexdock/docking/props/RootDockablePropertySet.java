@@ -5,6 +5,7 @@ package org.flexdock.docking.props;
 
 import java.util.HashSet;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.RegionChecker;
 
@@ -19,8 +20,8 @@ public class RootDockablePropertySet extends BasicDockablePropertySet {
 
 	private HashSet constraints;
 	
-	public RootDockablePropertySet() {
-		super(5);
+	public RootDockablePropertySet(Dockable dockable) {
+		super(5, dockable);
 		constraints = new HashSet(5);
 
 		constrain(DESCRIPTION, "null");

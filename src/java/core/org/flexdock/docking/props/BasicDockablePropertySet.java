@@ -3,18 +3,24 @@
  */
 package org.flexdock.docking.props;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Map;
 
 import javax.swing.Icon;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.util.TypedHashtable;
+import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
  */
 public class BasicDockablePropertySet extends TypedHashtable implements DockablePropertySet, DockingConstants {
-
+    private String dockingId;
+    private PropertyChangeSupport changeSupport;
+    
 	public static String getRegionInsetKey(String region) {
 		if(NORTH_REGION.equals(region))
 			return REGION_SIZE_NORTH;
@@ -53,22 +59,31 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 		return null;
 	}
 	
-	public BasicDockablePropertySet() {
+	public BasicDockablePropertySet(Dockable dockable) {
 		super();
+		init(dockable);
 	}
 
-	public BasicDockablePropertySet(int initialCapacity) {
+	public BasicDockablePropertySet(int initialCapacity, Dockable dockable) {
 		super(initialCapacity);
+		init(dockable);
 	}
 
-	public BasicDockablePropertySet(int initialCapacity, float loadFactor) {
+	public BasicDockablePropertySet(int initialCapacity, float loadFactor, Dockable dockable) {
 		super(initialCapacity, loadFactor);
+		init(dockable);
 	}
 
-	public BasicDockablePropertySet(Map t) {
+	public BasicDockablePropertySet(Map t, Dockable dockable) {
 		super(t);
+		init(dockable);
 	}
 	
+	private void init(Dockable dockable) {
+	    this.dockingId = dockable==null? null: dockable.getPersistentId();
+	    Object changeSrc = dockable==null? (Object)this: dockable;
+	    changeSupport = new PropertyChangeSupport(changeSrc);
+	}
 	
 	
 	
@@ -141,7 +156,9 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 	}
 	
 	public void setDockableDesc(String dockableDesc) {
+	    String oldValue = getDockableDesc();
 		put(DESCRIPTION, dockableDesc);
+		firePropertyChange(DESCRIPTION, oldValue, dockableDesc);
 	}
 	
 	public void setDockingEnabled(boolean enabled) {
@@ -188,4 +205,33 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 		put(PREVIEW_SIZE, previewSize);
 	}
 
+    /**
+     * @return Returns the dockingId.
+     */
+    public String getDockingId() {
+        return dockingId;
+    }
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.addPropertyChangeListener(listener);
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        changeSupport.removePropertyChangeListener(listener);
+    }
+    
+    protected void firePropertyChange(String property, Object oldValue, Object newValue) {
+        if(Utilities.isChanged(oldValue, newValue))
+            changeSupport.firePropertyChange(property, oldValue, newValue);
+    }
+    
+    protected void firePropertyChange(String property, int oldValue, int newValue) {
+        if(oldValue!=newValue)
+            changeSupport.firePropertyChange(property, oldValue, newValue);
+    }
+    
+    protected void firePropertyChange(String property, boolean oldValue, boolean newValue) {
+        if(oldValue!=newValue)
+            changeSupport.firePropertyChange(property, oldValue, newValue);
+    }
 }

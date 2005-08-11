@@ -4,6 +4,7 @@
 package org.flexdock.docking.props;
 
 import java.awt.Component;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -14,9 +15,9 @@ import javax.swing.JComponent;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.defaults.DefaultDockablePropertyHandler;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
@@ -53,9 +54,15 @@ public class PropertyManager {
         Object obj = dockable.getClientProperty(DOCKABLE_PROPERTIES_KEY);
         if(!(obj instanceof DockablePropertySet)) {
             obj = createDockablePropertySet(dockable);
-            dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, obj);
+            linkPropertySet(dockable, (DockablePropertySet)obj);
+            
         }
         return (DockablePropertySet)obj;
+    }
+    
+    private static void linkPropertySet(Dockable dockable, DockablePropertySet propertySet) {
+        dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, propertySet);
+        propertySet.addPropertyChangeListener(new DefaultDockablePropertyHandler());
     }
     
     public static void removePropertySet(Dockable dockable) {
@@ -142,7 +149,26 @@ public class PropertyManager {
     private static DockablePropertySet createDockablePropertySet(Dockable d) {
         Class key = d.getClass();
         Class c = DOCKABLE_PROPS_MAPPING.getClassMapping(key);
-        return (DockablePropertySet)Utilities.createInstance(c.getName());
+        
+        try {
+            // get the constructor with the Dockable 'dockable' parameter
+            Constructor[] constructors = c.getConstructors();
+            for(int i=0; i<constructors.length; i++) {
+                Class[] paramTypes = constructors[i].getParameterTypes();
+                if(paramTypes.length!=1)
+                    continue;
+                
+                Class param = paramTypes[0];
+                if(Dockable.class.isAssignableFrom(param)) {
+                    return (DockablePropertySet)constructors[i].newInstance(new Object[] {d});
+                }
+                
+            }
+            return null;
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
     
     private static Object getProperty(Object key, Object map) {

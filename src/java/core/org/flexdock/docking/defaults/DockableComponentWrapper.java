@@ -19,6 +19,7 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.docking.defaults;
 
 import java.awt.Component;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -494,4 +495,12 @@ public class DockableComponentWrapper implements Dockable {
 	public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
 		return DockingManager.dock(dockable, this, relativeRegion, ratio);
 	}
+	
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        getDockingProperties().addPropertyChangeListener(listener);
+    }
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        getDockingProperties().removePropertyChangeListener(listener);
+    }
 }

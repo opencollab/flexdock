@@ -696,12 +696,12 @@ public class DockingManager implements DockingConstants {
 		
 		// add the dockable as its own listener
 		dockable.addDockingListener(dockable);
-		
-		// make sure we have docking-properties initialized
-		DockablePropertySet props = PropertyManager.getDockablePropertySet(dockable);
-		
+
 		// cache the dockable by ID
 		DOCKABLES_BY_ID.put(dockable.getPersistentId(), dockable);
+		
+		// make sure we have docking-properties initialized (must come after ID-caching)
+		DockablePropertySet props = PropertyManager.getDockablePropertySet(dockable);
 		
 		// dispatch a registration event
 		EventManager.dispatch(new RegistrationEvent(dockable, DockingManager.SINGLETON, true));

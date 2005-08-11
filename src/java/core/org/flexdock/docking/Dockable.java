@@ -19,6 +19,7 @@
 package org.flexdock.docking;
 
 import java.awt.Component;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 import java.util.Set;
 
@@ -189,4 +190,8 @@ public interface Dockable extends DockingListener, DockingMonitor {
      */
     boolean dock(Dockable dockable, String relativeRegion, float ratio);
     
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener);
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener);
 }
