@@ -160,7 +160,9 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 	}
 	
 	public void setTabIcon(Icon icon) {
-		put(TAB_ICON, icon);
+	    Icon oldValue = getTabIcon();
+	    put(TAB_ICON, icon);
+		firePropertyChange(TAB_ICON, oldValue, icon);
 	}
 	
 	public void setDockableDesc(String dockableDesc) {
