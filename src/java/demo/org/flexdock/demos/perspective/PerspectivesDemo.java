@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -30,6 +31,7 @@ import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.actions.OpenPerspectiveAction;
 import org.flexdock.perspective.persist.FilePersistenceHandler;
 import org.flexdock.perspective.persist.PersistenceHandler;
+import org.flexdock.util.ResourceManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -39,7 +41,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.14 2005-07-09 16:25:12 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.15 2005-08-11 23:17:23 marius Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 
@@ -207,17 +209,17 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 			if(MAIN_VIEW.equals(dockableId))
 				return createMainView();
 			if(BIRD_VIEW.equals(dockableId))
-				return createView(BIRD_VIEW, "Bird View");
+				return createView(BIRD_VIEW, "Bird View", "birdView001.png");
 			if(MESSAGE_VIEW.equals(dockableId))
-				return createView(MESSAGE_VIEW, "Message Log");
+				return createView(MESSAGE_VIEW, "Message Log", "msgLog001.png");
 			if(PROBLEM_VIEW.equals(dockableId))
-				return createView(PROBLEM_VIEW, "Problems");
+				return createView(PROBLEM_VIEW, "Problems", "problems001.png");
 			if(CONSOLE_VIEW.equals(dockableId))
-				return createView(CONSOLE_VIEW, "Console");
+				return createView(CONSOLE_VIEW, "Console", "console001.png");
 			return null;
 		}
 		
-		private View createView(String id, String text) {
+		private View createView(String id, String text, String iconName) {
 			View view = new View(id, text);
 			//Dodajemy akcje close to tego view
 			view.addAction(DockingConstants.CLOSE_ACTION);
@@ -230,6 +232,9 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 			textField.setPreferredSize(new Dimension(100, 20));
 			panel.add(textField);
 			view.setContentPane(panel);
+			
+			Icon icon = ResourceManager.createIcon("org/flexdock/demos/view/" + iconName);
+			view.setTabIcon(icon);
 
 			return view;
 		}
