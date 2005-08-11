@@ -18,6 +18,6 @@ import java.beans.PropertyChangeListener;
 public class DefaultDockablePropertyHandler implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
-        System.out.println(evt.getSource() + ": " + evt.getOldValue() + " -> " + evt.getNewValue());
+//        System.out.println(evt.getSource() + ": " + evt.getOldValue() + " -> " + evt.getNewValue());
     }
 }
