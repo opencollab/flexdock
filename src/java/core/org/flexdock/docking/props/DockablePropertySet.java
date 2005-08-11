@@ -34,6 +34,7 @@ public interface DockablePropertySet {
 
 	public static final String TERRITORY_BLOCKED_CENTER = "Dockable.TERRITORY_BLOCKED_CENTER";
 	public static final String DOCKBAR_ICON = "Dockable.DOCKBAR_ICON";
+	public static final String TAB_ICON = "Dockable.TAB_ICON";
 	public static final String PREVIEW_SIZE = "Dockable.PREVIEW_SIZE";
 
 
@@ -53,6 +54,8 @@ public interface DockablePropertySet {
 	public Float getDragThreshold();
 	
 	public Icon getDockbarIcon();
+	
+	public Icon getTabIcon();
 	
 	public Float getPreviewSize();
 
@@ -79,6 +82,8 @@ public interface DockablePropertySet {
 	public void setDragTheshold(float threshold);
 	
 	public void setDockbarIcon(Icon icon);
+	
+	public void setTabIcon(Icon icon);
 	
 	public void setPreviewSize(float size);
 	

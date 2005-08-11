@@ -181,6 +181,8 @@ public class DockbarLabel extends JLabel implements MouseListener {
 		int orientation = getOrientation();
 		int rotation = ROTATIONS[orientation];
 		Icon dockIcon = p.getDockbarIcon();
+		if(dockIcon==null)
+		    dockIcon = p.getTabIcon();
 		String text = p.getDockableDesc();
 		
 		TextIcon icon = (TextIcon)obj;

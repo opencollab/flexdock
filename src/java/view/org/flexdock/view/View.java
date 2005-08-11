@@ -347,6 +347,10 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		getDockingProperties().setDockableDesc(tabText);
 	}
 	
+	public void setTabIcon(Icon icon) {
+	    getDockingProperties().setTabIcon(icon);
+	}
+	
 	public boolean dock(Dockable dockable) {
 		return dock(dockable, CENTER_REGION);
 	}

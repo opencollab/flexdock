@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -819,16 +820,28 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		// remove the currently docked component and add it to the tabbed pane
 		if(docked!=null) {
 			remove(docked);
-			tabs.add(docked, getValidTabTitle(tabs, docked));
+			addTab(tabs, docked);
 		}
 		
 		// add the new component to the tabbed pane
-		tabs.add(comp, getValidTabTitle(tabs, comp));
+		addTab(tabs, comp);
 		
 		// now add the tabbed pane back to the main container
 		setComponent(tabs);
 		tabs.setSelectedIndex(tabs.getTabCount()-1);
 		return true;
+	}
+	
+	private void addTab(JTabbedPane tabs, Component comp) {
+	    String tabText = getValidTabTitle(tabs, comp);
+	    tabs.add(comp, tabText);
+	    Dockable d = DockingManager.getDockable(comp);
+	    if(d==null)
+	        return;
+	    
+	    Icon icon = d.getDockingProperties().getTabIcon();
+	    int indx = tabs.getTabCount()-1;
+	    tabs.setIconAt(indx, icon);
 	}
 	
 	private boolean dockInOuterRegion(Component comp, String region) {

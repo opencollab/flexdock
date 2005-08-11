@@ -102,6 +102,10 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 	public Icon getDockbarIcon() {
 		return (Icon)get(DOCKBAR_ICON);
 	}
+	
+	public Icon getTabIcon() {
+		return (Icon)get(TAB_ICON);
+	}
 
 	public String getDockableDesc() {
 		return (String)get(DESCRIPTION);
@@ -153,6 +157,10 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 	
 	public void setDockbarIcon(Icon icon) {
 		put(DOCKBAR_ICON, icon);
+	}
+	
+	public void setTabIcon(Icon icon) {
+		put(TAB_ICON, icon);
 	}
 	
 	public void setDockableDesc(String dockableDesc) {
