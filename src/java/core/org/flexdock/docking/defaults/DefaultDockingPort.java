@@ -804,7 +804,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		
 		if(docked instanceof JTabbedPane) {
 			tabs = (JTabbedPane)docked;
-			tabs.add(comp, getValidTabTitle(tabs, comp));
+			addTab(tabs, comp);
 			tabs.revalidate();
 			tabs.setSelectedIndex(tabs.getTabCount()-1);
 			return true;
