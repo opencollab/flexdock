@@ -2324,11 +2324,11 @@ public class DockingManager implements DockingConstants {
 		getDockingManager().defaultSiblingSize = size;
 	}
     
-	public void setRubberBand(RubberBand rubberBand) {
+	public static void setRubberBand(RubberBand rubberBand) {
 	    EffectsManager.setRubberBand(rubberBand);
 	}
 
-    public void setDragPreview(DragPreview dragPreview) {
+    public static void setDragPreview(DragPreview dragPreview) {
         EffectsManager.setPreview(dragPreview);
     }
     
