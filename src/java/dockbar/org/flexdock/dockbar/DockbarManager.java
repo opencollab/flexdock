@@ -22,6 +22,7 @@ import javax.swing.SwingUtilities;
 import org.flexdock.dockbar.activation.ActivationQueue;
 import org.flexdock.dockbar.activation.Animation;
 import org.flexdock.dockbar.event.ActivationListener;
+import org.flexdock.dockbar.event.DockablePropertyChangeHandler;
 import org.flexdock.dockbar.event.DockbarEvent;
 import org.flexdock.dockbar.event.DockbarEventHandler;
 import org.flexdock.dockbar.event.DockbarListener;
@@ -30,6 +31,7 @@ import org.flexdock.dockbar.layout.DockbarLayout;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.floating.frames.DockingFrame;
+import org.flexdock.docking.props.PropertyChangeListenerFactory;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventManager;
@@ -67,6 +69,9 @@ public class DockbarManager {
 		Class c = DockingManager.class;
 		EventManager.addHandler(new DockbarEventHandler());
 		DockbarTracker.register();
+		
+		// setup to listen for Dockable property change events
+		PropertyChangeListenerFactory.addFactory(new DockablePropertyChangeHandler.Factory());
 	}
 	
 	public static DockbarManager getInstance(Component c) {

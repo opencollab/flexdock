@@ -49,7 +49,7 @@ public class Dockbar extends JPanel {
 	}
 
 	void undock(Dockable dockable) {
-		DockbarLabel label = findLabel(dockable);
+		DockbarLabel label = getLabel(dockable);
 		
 		remove(label);
 		mDocks.remove(label);
@@ -57,7 +57,7 @@ public class Dockbar extends JPanel {
 		repaint();
 	}
 
-	private DockbarLabel findLabel(Dockable dockable) {
+	public DockbarLabel getLabel(Dockable dockable) {
 		if(dockable==null)
 			return null;
 		
@@ -72,14 +72,14 @@ public class Dockbar extends JPanel {
 	}
 	
 	public boolean contains(Dockable dockable) {
-		return findLabel(dockable)!=null;
+		return getLabel(dockable)!=null;
 	}
 
 	public void dock(Dockable dockable) {
 		if(dockable==null)
 			return;
 		
-		DockbarLabel currentLabel = findLabel(dockable);
+		DockbarLabel currentLabel = getLabel(dockable);
 		if (currentLabel!=null) {
 			currentLabel.setActive(false);
 			return;

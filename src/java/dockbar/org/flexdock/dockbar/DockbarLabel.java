@@ -191,6 +191,28 @@ public class DockbarLabel extends JLabel implements MouseListener {
 		icon.setRotation(rotation);
 	}
 
+	public void setIcon(Icon icon) {
+		Icon currIcon = getIcon();
+		if(currIcon instanceof TextIcon) {
+		    ((TextIcon)currIcon).setIcon(icon);
+		}
+		else {
+		    super.setIcon(icon);
+		}
+		revalidate();
+	}
+
+	public void setText(String text) {
+		Icon currIcon = getIcon();
+		if(currIcon instanceof TextIcon) {
+		    ((TextIcon)currIcon).setText(text);
+		}
+		else {
+		    super.setText(text);
+		}
+		revalidate();
+	}
+	
 	
 	private void updateBorderInsets() {
 		Border border = super.getBorder();

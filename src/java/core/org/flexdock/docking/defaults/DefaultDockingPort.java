@@ -53,6 +53,7 @@ import org.flexdock.docking.event.DockingMonitor;
 import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.props.DockingPortPropertySet;
+import org.flexdock.docking.props.PropertyChangeListenerFactory;
 import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
@@ -142,6 +143,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	private boolean rootPort;
 	
 	private BufferedImage dragImage;
+	
+	static {
+	    // setup PropertyChangeListenerFactory to respond to DefaultDockingPort-specific
+	    // events
+	    PropertyChangeListenerFactory.addFactory(new DockablePropertyChangeHandler.Factory());
+	}
 
 	/**
 	 * Creates a new <code>DefaultDockingPort</code> with a persistent ID equal to the 

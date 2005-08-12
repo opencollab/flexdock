@@ -4,6 +4,7 @@
 package org.flexdock.docking.props;
 
 import java.awt.Component;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -15,7 +16,6 @@ import javax.swing.JComponent;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.defaults.DockablePropertyChangeHandler;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.SwingUtility;
 
@@ -62,7 +62,10 @@ public class PropertyManager {
     
     private static void linkPropertySet(Dockable dockable, DockablePropertySet propertySet) {
         dockable.putClientProperty(DOCKABLE_PROPERTIES_KEY, propertySet);
-        propertySet.addPropertyChangeListener(new DockablePropertyChangeHandler());
+        PropertyChangeListener[] listeners = PropertyChangeListenerFactory.getListeners();
+        for(int i=0; i<listeners.length; i++) {
+            propertySet.addPropertyChangeListener(listeners[i]);
+        }
     }
     
     public static void removePropertySet(Dockable dockable) {
