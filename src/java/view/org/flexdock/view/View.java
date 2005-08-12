@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -314,6 +315,11 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		super.remove(popup);
 	}
 
+	public AbstractButton getActionButton(String actionName) {
+	    Titlebar tbar = getTitlebar();
+	    return tbar==null? null: tbar.getActionButton(actionName);
+	}
+	
 	public Component getComponent() {
 		return this;
 	}
