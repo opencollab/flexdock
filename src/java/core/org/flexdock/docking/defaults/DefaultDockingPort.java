@@ -583,6 +583,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return pane;
 	}
 	
+    protected void updateTab(Dockable dockable) {
+        Component docked = getDockedComponent();
+        if(docked instanceof JTabbedPane) {
+            JTabbedPane tabs = (JTabbedPane)docked;
+            int index = tabs.indexOfComponent(dockable.getComponent());
+            if (index > -1) {
+                tabs.setIconAt(index, dockable.getDockingProperties().getTabIcon());
+                tabs.setTitleAt(index, dockable.getDockingProperties().getDockableDesc());
+            }
+        }
+    }
+    
 	/**
 	 * Returns the <code>DockingStrategy</code> used by this <code>DockingPort</code>.
 	 * This method dispatches to <code>getDockingStrategy(Object obj)</code>, passing
