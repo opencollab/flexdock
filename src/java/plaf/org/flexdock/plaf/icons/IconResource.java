@@ -12,16 +12,21 @@ import javax.swing.plaf.UIResource;
  */
 public class IconResource implements UIResource {
 	private Icon icon;
+	private Icon iconDisabled;
 	private Icon iconHover;
 	private Icon iconActive;
+	private Icon iconActiveDisabled;
 	private Icon iconActiveHover;
 	private Icon iconPressed;
 	
 	private Icon iconSelected;
+	private Icon iconSelectedDisabled;
 	private Icon iconSelectedHover;
 	private Icon iconSelectedActive;
 	private Icon iconSelectedActiveHover;
+	private Icon iconSelectedActiveDisabled;
 	private Icon iconSelectedPressed;
+	
 	
 	private Action action;
 	
@@ -138,4 +143,53 @@ public class IconResource implements UIResource {
 	public void setAction(Action action) {
 		this.action = action;
 	}
+    /**
+     * @return Returns the iconDisabled.
+     */
+    public Icon getIconDisabled() {
+        return iconDisabled;
+    }
+    /**
+     * @param iconDisabled The iconDisabled to set.
+     */
+    public void setIconDisabled(Icon iconDisabled) {
+        this.iconDisabled = iconDisabled;
+    }
+
+    /**
+     * @return Returns the iconActiveDisabled.
+     */
+    public Icon getIconActiveDisabled() {
+        return iconActiveDisabled;
+    }
+    /**
+     * @param iconActiveDisabled The iconActiveDisabled to set.
+     */
+    public void setIconActiveDisabled(Icon iconActiveDisabled) {
+        this.iconActiveDisabled = iconActiveDisabled;
+    }
+    /**
+     * @return Returns the iconSelectedActiveDisabled.
+     */
+    public Icon getIconSelectedActiveDisabled() {
+        return iconSelectedActiveDisabled;
+    }
+    /**
+     * @param iconSelectedActiveDisabled The iconSelectedActiveDisabled to set.
+     */
+    public void setIconSelectedActiveDisabled(Icon iconSelectedActiveDisabled) {
+        this.iconSelectedActiveDisabled = iconSelectedActiveDisabled;
+    }
+    /**
+     * @return Returns the iconSelectedDisabled.
+     */
+    public Icon getIconSelectedDisabled() {
+        return iconSelectedDisabled;
+    }
+    /**
+     * @param iconSelectedDisabled The iconSelectedDisabled to set.
+     */
+    public void setIconSelectedDisabled(Icon iconSelectedDisabled) {
+        this.iconSelectedDisabled = iconSelectedDisabled;
+    }
 }

@@ -130,12 +130,18 @@
 		<icon-resource name="win32.close" extends="default.close">
 			<property name="default" value="org/flexdock/plaf/titlebar/win32/close_default.png" />
 			<property name="active" value="org/flexdock/plaf/titlebar/win32/close_active.png" />
+			<property name="disabled" value="org/flexdock/plaf/titlebar/win32/close_disabled_default.png" />
+			<property name="active.disabled" value="org/flexdock/plaf/titlebar/win32/close_disabled_active.png" />
 		</icon-resource>
 		<icon-resource name="win32.pin" extends="default.pin">
 			<property name="default" value="org/flexdock/plaf/titlebar/win32/pin_default.png" />
+			<property name="disabled" value="org/flexdock/plaf/titlebar/win32/pin_disabled_default.png" />
 			<property name="default.selected" value="org/flexdock/plaf/titlebar/win32/pin_default_selected.png" />
 			<property name="active" value="org/flexdock/plaf/titlebar/win32/pin_active.png" />
+			<property name="active.disabled" value="org/flexdock/plaf/titlebar/win32/pin_disabled_active.png" />
 			<property name="active.selected" value="org/flexdock/plaf/titlebar/win32/pin_active_selected.png" />
+			<property name="disabled.selected" value="org/flexdock/plaf/titlebar/win32/pin_disabled_default_selected.png" />
+			<property name="active.disabled.selected" value="org/flexdock/plaf/titlebar/win32/pin_disabled_active_selected.png" />
 		</icon-resource>
 	</theme>
 	<!-- End Windows Classic -->

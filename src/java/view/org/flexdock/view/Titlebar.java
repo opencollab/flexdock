@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.Icon;
@@ -132,6 +133,10 @@ public class Titlebar extends JComponent {
 	
 	protected Button getButton(String key) {
 		return (Button)actionButtons.get(key);
+	}
+	
+	public AbstractButton getActionButton(String actionName) {
+	    return getButton(actionName);
 	}
 	
 	protected boolean hasAction(String key) {
