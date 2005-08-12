@@ -227,17 +227,11 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		if(deferred==null || deferred.size()==0)
 			return;
 		
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						restoreMinimizedDockables(deferred);
-					}
-				};
-				EventQueue.invokeLater(r);
+				restoreMinimizedDockables(deferred);
 			}
-		};
-		t.start();
+		});
 	}
 	
 	

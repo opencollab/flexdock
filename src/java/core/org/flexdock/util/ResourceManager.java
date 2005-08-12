@@ -28,16 +28,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * This class provides <code>static</code> convenience methods for resource management, including resource
@@ -354,11 +353,7 @@ public class ResourceManager {
 			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			return builder.parse(inStream);
-		} catch(IOException e) {
-			e.printStackTrace();
-		} catch(SAXException e) {
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		finally {
@@ -483,6 +478,23 @@ public class ResourceManager {
 		try {
 			if(out!=null)
 				out.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Calls <code>close()</code> on the specified <code>Socket</code>.  Any <code>Exceptions</code> encountered
+	 * will be printed to the <code>System.err</code>.  If <code>socket</code> is <code>null</code>, then no
+	 * <code>Exception</code> is thrown and no action is taken.
+	 * 
+	 * @param socket the <code>Socket</code> to close
+	 * @see Socket#close()
+	 */
+	public static void close(Socket socket) {
+		try {
+			if(socket!=null)
+			    socket.close();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

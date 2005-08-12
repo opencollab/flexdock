@@ -64,18 +64,12 @@ public class DockingStateListener extends DockingListener.Stub {
         } else {
             floatManager.removeFromGroup(dockable);
         }
-        
-        Thread t = new Thread() {
-            public void run() {
-                Runnable r = new Runnable() {
-                    public void run() {
-                        updateState(dockingEvent);
-                    }
-                };
-                EventQueue.invokeLater(r);
-            }
-        };
-        t.start();
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+			    updateState(dockingEvent);
+			}
+		});
     }
     
     public void undockingStarted(DockingEvent evt) {

@@ -43,18 +43,12 @@ public class ViewListener implements DockingConstants, PropertyChangeListener, C
 		PROP_EVENTS.add(PERMANENT_FOCUS_OWNER);
 		PROP_EVENTS.add(ACTIVE_WINDOW);
 		
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-						focusManager.addPropertyChangeListener(SINGLETON);
-					}
-				};
-				EventQueue.invokeLater(r);				
+				KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+				focusManager.addPropertyChangeListener(SINGLETON);
 			}
-		};
-		t.start();
+		});
 		
 		Toolkit.getDefaultToolkit().addAWTEventListener(SINGLETON, AWTEvent.MOUSE_EVENT_MASK);
 	}

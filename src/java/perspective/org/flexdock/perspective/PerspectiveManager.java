@@ -387,17 +387,11 @@ public class PerspectiveManager implements LayoutManager {
 				perspective.load(rootPort);
 		}
 		
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						cacheLayoutState(perspective, rootPort);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    cacheLayoutState(perspective, rootPort);
 			}
-		};
-		t.start();
+		});
 	}
 	
 	private void cacheLayoutState(Perspective p, DockingPort port) {
@@ -436,19 +430,13 @@ public class PerspectiveManager implements LayoutManager {
 		if(dockables==null)
 			return;
 			
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						for(int i=0; i<dockables.length; i++) {
-							UPDATE_LISTENER.updateState(dockables[i]);
-						}
-					}
-				};
-				EventQueue.invokeLater(r);
+				for(int i=0; i<dockables.length; i++) {
+					UPDATE_LISTENER.updateState(dockables[i]);
+				}
 			}
-		};
-		t.start();
+		});
 	}
 	
 	public synchronized boolean store() throws IOException, PersistenceException {

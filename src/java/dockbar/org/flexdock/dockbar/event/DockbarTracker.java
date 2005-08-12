@@ -27,25 +27,19 @@ import org.flexdock.util.SwingUtility;
 public class DockbarTracker implements DockingConstants, PropertyChangeListener, AWTEventListener {
 
 	public static void register() {
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						DockbarTracker tracker = new DockbarTracker();
-						// register a propertyChangeListener to update the 'currrent'
-						// DockbarManager each time the focused window changes
-						KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-						focusManager.addPropertyChangeListener(tracker);
-						
-						// register an AWTEventListener to handle low-level mouse events
-						long evtType = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
-						Toolkit.getDefaultToolkit().addAWTEventListener(tracker, evtType);
-					}
-				};
-				EventQueue.invokeLater(r);				
+				DockbarTracker tracker = new DockbarTracker();
+				// register a propertyChangeListener to update the 'currrent'
+				// DockbarManager each time the focused window changes
+				KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+				focusManager.addPropertyChangeListener(tracker);
+				
+				// register an AWTEventListener to handle low-level mouse events
+				long evtType = AWTEvent.MOUSE_MOTION_EVENT_MASK | AWTEvent.MOUSE_EVENT_MASK;
+				Toolkit.getDefaultToolkit().addAWTEventListener(tracker, evtType);
 			}
-		};
-		t.start();
+		});
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {

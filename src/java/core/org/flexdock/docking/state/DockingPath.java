@@ -366,17 +366,12 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		
 		final float percent = ctrlNode.getPercentage();
 		final Component docked = dockable.getComponent();
-		Thread t = new Thread() {
+		
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						resizeSplitPane(docked, percent);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    resizeSplitPane(docked, percent);
 			}
-		};
-		t.start();
+		});
 		return ret;
 	}
 	

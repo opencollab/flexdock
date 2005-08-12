@@ -160,17 +160,11 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 	
 	
 	private void deferPostPaint() {
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						postPaint(getGraphics());
-					}
-				};
-				EventQueue.invokeLater(r);
+			    postPaint(getGraphics());
 			}
-		};
-		t.start();
+		});
 	}
 	
 	

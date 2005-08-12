@@ -6,7 +6,6 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import org.flexdock.docking.DockingConstants;
@@ -49,26 +48,19 @@ public class DragPipeline {
 			return;
 		}
 
+		
 		final DragOperation dToken = token;
-		Thread t = new Thread() {
-			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						openImpl(dToken);
-					}
-				};
-				try {
-					EventQueue.invokeAndWait(r);
-					// for now, just catch the errors and print the stacktrace.
-					// we'll see about alternate error handling later as needed.
-				} catch(InvocationTargetException e) {
-					e.printStackTrace();
-				} catch(InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		t.start();
+		try {
+		    EventQueue.invokeAndWait(new Runnable() {
+		        public void run() {
+		            openImpl(dToken);
+		        }
+		    });
+		} catch(Exception e) {
+			// for now, just catch the errors and print the stacktrace.
+			// we'll see about alternate error handling later as needed.
+		    e.printStackTrace();
+		}
 	}
 	
 	private void openImpl(DragOperation operation) {
@@ -148,17 +140,11 @@ public class DragPipeline {
 		}
 		
 		final MouseEvent evt = me;
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						processDragEventImpl(evt);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    processDragEventImpl(evt);
 			}
-		};
-		t.start();
+		});
 	}
 	
 	private void processDragEventImpl(MouseEvent me) {
@@ -260,18 +246,13 @@ public class DragPipeline {
 		};
 	}
 	private void deferRubberBandDrawing(final Rectangle rect) {
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						drawRubberBand(rect);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    drawRubberBand(rect);
 			}
-		};
-		t.start();
+		});
 	}
+	
 	private void drawRubberBand(Rectangle rect) {
 		paintRubberBand(rect);
 	}

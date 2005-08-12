@@ -6,12 +6,13 @@ package org.flexdock.docking.drag.outline.x11;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Properties;
+
+import org.flexdock.util.ResourceManager;
 
 /**
  * @author Christopher Butler
@@ -41,9 +42,9 @@ public class Connection {
 	}
 	
 	public void close() {
-		close(dataOut);
-		close(dataIn);
-		close(socket);
+		ResourceManager.close(dataOut);
+		ResourceManager.close(dataIn);
+		ResourceManager.close(socket);
 	}
 	
 	public void sendRequest(DataBuffer req) throws IOException {
@@ -154,33 +155,6 @@ public class Connection {
 		} catch(Exception e) {
 			e.printStackTrace();
 			return new Properties();
-		}
-	}
-
-	public static void close(InputStream in) {
-		try {
-			if(in!=null)
-				in.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void close(OutputStream out) {
-		try {
-			if(out!=null)
-				out.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void close(Socket socket) {
-		try {
-			if(socket!=null)
-				socket.close();
-		} catch(IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

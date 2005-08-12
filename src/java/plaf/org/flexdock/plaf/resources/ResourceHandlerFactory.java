@@ -114,13 +114,7 @@ public class ResourceHandlerFactory implements XMLConstants {
 
 			return new ConstructorHandler(constructor);
 			
-		} catch(ClassNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch(NoSuchMethodException e) {
-			e.printStackTrace();
-			return null;
-		} catch(IllegalArgumentException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
 		}

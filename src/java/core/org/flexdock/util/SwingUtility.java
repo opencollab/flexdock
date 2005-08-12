@@ -435,18 +435,11 @@ public class SwingUtility {
 			return;
 		}
 		
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						setSplitDivider(split, percent);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    setSplitDivider(split, percent);
 			}
-		};
-		t.start();
-			
+		});
 	}
 	
 	public static boolean isSkinLFInstalled() {

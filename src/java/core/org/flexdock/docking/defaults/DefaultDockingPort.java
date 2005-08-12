@@ -779,17 +779,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		
 		// otherwise, defer applying the divider location reset until
 		// the split pane is rendered.
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						deferSplitDividerReset(splitPane);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    deferSplitDividerReset(splitPane);
 			}
-		};
-		t.start();
+		});
 	}
 	
 	private void applySplitDividerLocation(JSplitPane splitPane) {

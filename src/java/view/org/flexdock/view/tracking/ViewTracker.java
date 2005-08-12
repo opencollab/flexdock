@@ -88,17 +88,11 @@ public class ViewTracker {
 		// make sure the window is currently active
 		SwingUtility.activateWindow(c);
 		
-		Thread t = new Thread() {
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				Runnable r = new Runnable() {
-					public void run() {
-						focusView(c, view);
-					}
-				};
-				EventQueue.invokeLater(r);
+			    focusView(c, view);
 			}
-		};
-		t.start();
+		});
 	}
 	
 	private static void focusView(Component child, View parentView) {
