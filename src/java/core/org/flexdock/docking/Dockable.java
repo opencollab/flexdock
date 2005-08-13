@@ -190,8 +190,8 @@ public interface Dockable extends DockingListener, DockingMonitor {
      */
     boolean dock(Dockable dockable, String relativeRegion, float ratio);
     
+    void addPropertyChangeListener(PropertyChangeListener listener);
     
-    public void addPropertyChangeListener(PropertyChangeListener listener);
+    void removePropertyChangeListener(PropertyChangeListener listener);
     
-    public void removePropertyChangeListener(PropertyChangeListener listener);
 }
