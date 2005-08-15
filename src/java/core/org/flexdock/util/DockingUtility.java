@@ -8,6 +8,7 @@ import java.awt.Container;
 import java.awt.Point;
 
 import javax.swing.JComponent;
+import javax.swing.JRootPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -640,5 +641,27 @@ public class DockingUtility implements DockingConstants {
 		}
 		
 		return false;
+	}
+	
+	public static Dockable getAncestorDockable(Component comp) {
+	    if(comp==null)
+	        return null;
+	    
+	    if(isDockable(comp))
+	        return DockingManager.getDockable(comp);
+	    
+	    Container parent = comp.getParent();
+	    while(parent!=null && !(parent instanceof JRootPane)) {
+	        if(isDockable(parent))
+	            return DockingManager.getDockable(parent);
+	        parent = parent.getParent();
+	    }
+	    return null;
+	}
+	
+	public static boolean isActive(Dockable dockable) {
+	    if(dockable==null)
+	        return false;
+	    return dockable.getDockingProperties().isActive().booleanValue();
 	}
 }

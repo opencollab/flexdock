@@ -27,6 +27,7 @@ public class RootDockablePropertySet extends BasicDockablePropertySet {
 		constrain(DESCRIPTION, "null");
 		constrain(DOCKING_ENABLED, Boolean.TRUE);
 		constrain(MOUSE_MOTION_DRAG_BLOCK, Boolean.TRUE);
+		constrain(ACTIVE, Boolean.FALSE);
 		
 		constrain(REGION_SIZE_NORTH, DEFAULT_REGION_INSETS);
 		constrain(REGION_SIZE_SOUTH, DEFAULT_REGION_INSETS);

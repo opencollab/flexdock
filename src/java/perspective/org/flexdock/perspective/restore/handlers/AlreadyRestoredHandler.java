@@ -22,16 +22,16 @@ import java.util.Map;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.activation.ActiveDockableTracker;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * Created on 2005-04-15
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: AlreadyRestoredHandler.java,v 1.3 2005-06-07 05:10:19 marius Exp $
+ * @version $Id: AlreadyRestoredHandler.java,v 1.4 2005-08-15 02:23:29 marius Exp $
  */
 public class AlreadyRestoredHandler implements RestorationHandler {
 
@@ -39,7 +39,7 @@ public class AlreadyRestoredHandler implements RestorationHandler {
 		if (!DockingManager.isDocked(dockable))
 			return false;
 
-		ViewTracker.requestViewActivation(dockable.getComponent());
+		ActiveDockableTracker.requestDockableActivation(dockable.getComponent());
 		SwingUtility.focus(dockable.getComponent());
 		
 		return true;

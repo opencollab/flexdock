@@ -20,6 +20,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.dockbar.activation.ActivationQueue;
+import org.flexdock.dockbar.activation.ActiveDockableHandler;
 import org.flexdock.dockbar.activation.Animation;
 import org.flexdock.dockbar.event.ActivationListener;
 import org.flexdock.dockbar.event.DockablePropertyChangeHandler;
@@ -72,6 +73,9 @@ public class DockbarManager {
 		
 		// setup to listen for Dockable property change events
 		PropertyChangeListenerFactory.addFactory(new DockablePropertyChangeHandler.Factory());
+		
+		// update behavior of active Dockable changes
+		EventManager.addListener(new ActiveDockableHandler());
 	}
 	
 	public static DockbarManager getInstance(Component c) {

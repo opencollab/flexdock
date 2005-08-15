@@ -36,6 +36,8 @@ public interface DockablePropertySet {
 	public static final String DOCKBAR_ICON = "Dockable.DOCKBAR_ICON";
 	public static final String TAB_ICON = "Dockable.TAB_ICON";
 	public static final String PREVIEW_SIZE = "Dockable.PREVIEW_SIZE";
+	
+	public static final String ACTIVE = "Dockable.ACTIVE";
 
 
 
@@ -61,7 +63,7 @@ public interface DockablePropertySet {
 
 	public String getDockingId();
 	
-	
+	public Boolean isActive();
 	
 	
 	
@@ -86,6 +88,8 @@ public interface DockablePropertySet {
 	public void setTabIcon(Icon icon);
 	
 	public void setPreviewSize(float size);
+	
+	public void setActive(boolean active);
 	
 	public Object put(Object key, Object value);
 	

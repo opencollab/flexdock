@@ -34,8 +34,6 @@ import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.view.tracking.ViewListener;
-import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * @author Christopher Butler
@@ -49,7 +47,7 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 	protected Container contentPane;
 	protected boolean addRemoveAllowed;
 	protected ArrayList dockingListeners;
-	protected boolean active;
+//	protected boolean active;
 	protected ArrayList dragSources;
 	protected HashSet frameDragSources;
 	private transient HashSet blockedActions;
@@ -104,7 +102,7 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		updateUI();
 		
 		DockingManager.registerDockable((Dockable)this);
-		ViewListener.prime();
+		
 	}
 	
 	public Container getContentPane() {
@@ -387,14 +385,11 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 	}
 	
 	public void setActive(boolean b) {
-		if(!isActiveStateLocked() && b!=active) {
-			active = b;
-			repaint();
-		}
+		getViewProperties().setActive(b);
 	}
 	
 	public boolean isActive() {
-		return active;
+		return getViewProperties().isActive().booleanValue();
 	}
 	
 	public void setActiveStateLocked(boolean b) {
@@ -432,10 +427,6 @@ public class View extends JComponent implements Dockable, DockingConstants, Hier
 		setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
 		if(titlepane!=null)
 			titlepane.revalidate();
-		
-		DockingPort port = getDockingPort();
-		if(port instanceof Component && ((Component)port).isShowing())
-			ViewTracker.requestViewActivation(this);
 	}
 
 	public void dragStarted(DockingEvent evt) {

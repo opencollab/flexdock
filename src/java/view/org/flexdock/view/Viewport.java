@@ -12,11 +12,9 @@ import javax.swing.JTabbedPane;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.activation.ActiveDockableListener;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 import org.flexdock.docking.defaults.StandardBorderManager;
-import org.flexdock.docking.event.DockingEvent;
-import org.flexdock.view.tracking.ViewListener;
-import org.flexdock.view.tracking.ViewTracker;
 
 /**
  * @author Christopher Butler
@@ -83,7 +81,7 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
 	
 	protected JTabbedPane createTabbedPane() {
 		JTabbedPane pane = super.createTabbedPane();
-		pane.addChangeListener(ViewListener.getInstance());
+		pane.addChangeListener(ActiveDockableListener.getInstance());
 		return pane;
 	}
 	
@@ -96,14 +94,6 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
     	// return all views, including subviews up to the specified depth
     	return getDockableSet(depth, 0, View.class);
     }
-	
-	public void dockingComplete(DockingEvent evt) {
-		Object src = evt.getSource();
-		if(!(src instanceof View) || !isShowing() || evt.getNewDockingPort()!=this)
-			return;
-
-		ViewTracker.requestViewActivation((View)src);
-	}
 	
 	public String toString() {
 		String id = getPersistentId();

@@ -47,6 +47,7 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.RegionChecker;
+import org.flexdock.docking.activation.ActiveDockableTracker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.DockingMonitor;
@@ -1510,13 +1511,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	}
 	
 	/**
-	 * No operation.  Provided as a method stub to fulfull the <code>DockingListener<code> interface
-	 * contract.
+	 * Requests activation for the newly docked Dockable.
 	 * 
 	 * @param evt the <code>DockingEvent</code> to respond to.
 	 * @see DockingListener#dockingComplete(DockingEvent)
 	 */
 	public void dockingComplete(DockingEvent evt) {
+		Dockable dockable = evt.getDockable();
+		if(dockable==null || !isShowing() || evt.getNewDockingPort()!=this)
+			return;
+
+		ActiveDockableTracker.requestDockableActivation(dockable.getComponent());
 	}
 
 	/**

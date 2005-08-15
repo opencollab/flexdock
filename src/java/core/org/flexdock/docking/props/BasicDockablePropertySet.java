@@ -115,6 +115,10 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 		return getBoolean(DOCKING_ENABLED);
 	}
 
+	public Boolean isActive() {
+		return getBoolean(ACTIVE);
+	}
+	
 	public Boolean isMouseMotionListenersBlockedWhileDragging() {
 		return getBoolean(MOUSE_MOTION_DRAG_BLOCK);
 	}
@@ -174,6 +178,15 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 	
 	public void setDockingEnabled(boolean enabled) {
 		put(DOCKING_ENABLED, enabled);
+	}
+	
+	public void setActive(boolean active) {
+	    Boolean oldValue = isActive();
+	    if(oldValue==null)
+	        oldValue = Boolean.FALSE;
+	    
+		put(ACTIVE, active);
+		firePropertyChange(ACTIVE, oldValue.booleanValue(), active);
 	}
 	
 	public void setMouseMotionListenersBlockedWhileDragging(boolean blocked) {

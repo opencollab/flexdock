@@ -1,7 +1,7 @@
 /*
  * Created on Mar 18, 2005
  */
-package org.flexdock.view.tracking;
+package org.flexdock.docking.activation;
 
 import java.awt.AWTEvent;
 import java.awt.Component;
@@ -21,15 +21,17 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
+import org.flexdock.docking.DockingManager;
+import org.flexdock.util.DockingUtility;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.view.View;
 
 /**
  * @author Christopher Butler
  */
-public class ViewListener implements DockingConstants, PropertyChangeListener, ChangeListener, AWTEventListener {
-	private static final ViewListener SINGLETON = new ViewListener();
+public class ActiveDockableListener implements DockingConstants, PropertyChangeListener, ChangeListener, AWTEventListener {
+	private static final ActiveDockableListener SINGLETON = new ActiveDockableListener();
 	private static HashSet PROP_EVENTS = new HashSet();
 
 	static {
@@ -53,11 +55,11 @@ public class ViewListener implements DockingConstants, PropertyChangeListener, C
 		Toolkit.getDefaultToolkit().addAWTEventListener(SINGLETON, AWTEvent.MOUSE_EVENT_MASK);
 	}
 	
-	public static ViewListener getInstance() {
+	public static ActiveDockableListener getInstance() {
 		return SINGLETON;
 	}
 	
-	private ViewListener() {
+	private ActiveDockableListener() {
 	}
 	
 	public void eventDispatched(AWTEvent event) {
@@ -77,8 +79,8 @@ public class ViewListener implements DockingConstants, PropertyChangeListener, C
 			c = SwingUtilities.getDeepestComponentAt(c, p.x, p.y);
 		}
 		
-		// request activation of the view that encloses this component
-		ViewTracker.requestViewActivation(c);
+		// request activation of the dockable that encloses this component
+		ActiveDockableTracker.requestDockableActivation(c);
 	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -97,11 +99,11 @@ public class ViewListener implements DockingConstants, PropertyChangeListener, C
 	}
 	
 	private void handleWindowChange(PropertyChangeEvent evt, Component oldVal, Component newVal, boolean activate) {
-		// notify the ViewTracker of the window change
-		ViewTracker.windowActivated(newVal);
+		// notify the ActiveDockableTracker of the window change
+		ActiveDockableTracker.windowActivated(newVal);
 		
 		Component srcComponent = activate? newVal: oldVal;
-		ViewTracker tracker = ViewTracker.getTracker(srcComponent);
+		ActiveDockableTracker tracker = ActiveDockableTracker.getTracker(srcComponent);
 		if(tracker!=null)
 			tracker.setActive(activate);
 	}
@@ -116,13 +118,13 @@ public class ViewListener implements DockingConstants, PropertyChangeListener, C
 	}
 	
 	private void activateComponent(Component c) {
-		View view = c instanceof View? (View)c: (View)SwingUtilities.getAncestorOfClass(View.class, c);
-		if(view==null)
+		Dockable dockable = DockingUtility.getAncestorDockable(c);
+		if(dockable==null)
 			return;
 
-		ViewTracker tracker = ViewTracker.getTracker(view);
+		ActiveDockableTracker tracker = ActiveDockableTracker.getTracker(dockable.getComponent());
 		if(tracker!=null) {
-			tracker.setActive(view);
+			tracker.setActive(dockable);
 		}
 	}
 
@@ -132,9 +134,32 @@ public class ViewListener implements DockingConstants, PropertyChangeListener, C
 		if(obj instanceof JTabbedPane) {
 			JTabbedPane pane = (JTabbedPane)obj;
 			Component c = pane.getSelectedComponent();
-			if(c instanceof View)
-				activateComponent(c);
+			Dockable dockable = DockingManager.getDockable(c);
+			if(dockable!=null) {
+				activateComponent(dockable.getComponent());
+				udpateTabChangeFocus(dockable);
+			}
 		}
+	}
+	
+	private void udpateTabChangeFocus(final Dockable dockable) {
+	    KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+	    Dockable focusParent = DockingUtility.getAncestorDockable(mgr.getFocusOwner());
+	    if(focusParent==null || focusParent==dockable)
+	        return;
+	    
+	    // the current focusParent-dockable is different than the currently active dockable.
+	    // we'll need to update the focus component
+	    final Component comp = dockable.getComponent();
+	    final Component deep = SwingUtilities.getDeepestComponentAt(comp, comp.getWidth()/2, comp.getHeight()/2);
+	    // invokeLater because the new tab may not yet be showing, meaning the enumeration of its 
+	    // focus-cycle will return empty.  the parent dockable in the new tab must be showing.
+	    EventQueue.invokeLater(new Runnable() {
+	        public void run() {
+	            ActiveDockableTracker.focusDockable(deep, dockable, true);
+	        }
+	    });
+	    
 	}
 
 }

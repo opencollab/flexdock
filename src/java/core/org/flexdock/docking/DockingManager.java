@@ -34,6 +34,7 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
+import org.flexdock.docking.activation.ActiveDockableListener;
 import org.flexdock.docking.adapter.AdapterFactory;
 import org.flexdock.docking.adapter.DockingAdapter;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
@@ -150,6 +151,10 @@ public class DockingManager implements DockingConstants {
 		// set the layout manager
 		mgr.defaultLayoutManagerClass = config.getProperty(LAYOUT_MANAGER); 
 		setLayoutManager(mgr.defaultLayoutManagerClass);
+		
+		// setup tracking for the currently active dockable
+		ActiveDockableListener.prime();
+		
 		// setup the default sibling size
 		float siblingSize = Utilities.getFloat(System.getProperty(RegionChecker.DEFAULT_SIBLING_SIZE_KEY), RegionChecker.DEFAULT_SIBLING_SIZE);
 		setDefaultSiblingSize(siblingSize);

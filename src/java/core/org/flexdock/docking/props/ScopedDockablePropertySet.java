@@ -64,6 +64,10 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
 		return (Boolean)PropertyManager.getProperty(DOCKING_ENABLED, this);
 	}
 
+	public Boolean isActive() {
+		return (Boolean)PropertyManager.getProperty(ACTIVE, this);
+	}
+	
 	public Boolean isMouseMotionListenersBlockedWhileDragging() {
 		return (Boolean)PropertyManager.getProperty(MOUSE_MOTION_DRAG_BLOCK, this);
 	}

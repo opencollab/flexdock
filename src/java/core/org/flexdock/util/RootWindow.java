@@ -52,6 +52,7 @@ public class RootWindow {
 	private LayoutManager maxedLayout;	
 	private Integer maximizationLayer;
 	private Component root;
+	private HashMap clientProperties;
 	
 	private static Component getRoot(Component c) {
 		if(c==null)
@@ -131,6 +132,7 @@ public class RootWindow {
 	protected RootWindow(Component root) {
 		setMaximizationLayer(DEFAULT_MAXED_LAYER);
 		setRootContainer(root);
+		clientProperties = new HashMap();
 	} 
 	
 	/**
@@ -404,5 +406,19 @@ public class RootWindow {
 		else if(root instanceof JDialog)
 			return ((JDialog)root).getBounds();
 		return null;
+	}
+	
+	public void putClientProperty(Object key, Object value) {
+	    if(key==null)
+	        return;
+	    
+	    if(value==null)
+	        clientProperties.remove(key);
+	    else
+	        clientProperties.put(key, value);
+	}
+	
+	public Object getClientProperty(Object key) {
+	    return key==null? null: clientProperties.get(key);
 	}
 }
