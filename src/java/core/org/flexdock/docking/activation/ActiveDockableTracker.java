@@ -23,7 +23,7 @@ import org.flexdock.util.SwingUtility;
  * @author Christopher Butler
  */
 public class ActiveDockableTracker {
-    private static final String CURRENT_DOCKABLE = "ActiveDockableTracker.CURRENT_DOCKABLE";
+    public static final String CURRENT_DOCKABLE = "ActiveDockableTracker.CURRENT_DOCKABLE";
     private static final String KEY = "ActiveDockableTracker.KEY";
 	private static ActiveDockableTracker currentTracker;
 	private static final Object LOCK = new Object();
