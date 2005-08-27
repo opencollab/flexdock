@@ -27,6 +27,7 @@ public class OsInfo {
     private String osArch;
     private List osNameList;
     private List osLibraryList;
+    private List prefixOsLibraryList;
     
     public static OsInfo getInstance() {
         return SINGLETON;
@@ -45,12 +46,20 @@ public class OsInfo {
         osNameList = Collections.unmodifiableList(getOSChain(doc, systemProps));
         
         ArrayList libList = new ArrayList(osNameList.size());
+        ArrayList prefixLibList = new ArrayList(osNameList.size());
         for(Iterator it=osNameList.iterator(); it.hasNext();) {
             String osName = (String)it.next();
             libList.add(osName + "-" + osArch);
         }
         libList.addAll(osNameList);
+
+        for(Iterator it=libList.iterator(); it.hasNext();) {
+            String prefixed = "-" + it.next();
+            prefixLibList.add(prefixed);
+        }
+        
         osLibraryList = Collections.unmodifiableList(libList);
+        prefixOsLibraryList = Collections.unmodifiableList(prefixLibList);
     }
     
     private String getSystemArch(Document doc, Properties systemProps) {
@@ -121,6 +130,13 @@ public class OsInfo {
     public List getLibraryKeys() {
         return osLibraryList;
     }
+    
+    /**
+     * @return Returns the prefixOsLibraryList.
+     */
+    public List getPrefixLibraryKeys() {
+        return prefixOsLibraryList;
+    }
     /**
      * @return Returns the osNameList.
      */
@@ -130,6 +146,10 @@ public class OsInfo {
     
     public String getLibraryKey() {
         return (String)getLibraryKeys().get(0);
+    }
+    
+    public String getPrefixLibraryKey() {
+        return (String)getPrefixLibraryKeys().get(0);
     }
     
     public static void main(String[] args) {

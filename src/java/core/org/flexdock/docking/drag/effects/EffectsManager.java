@@ -5,31 +5,42 @@ package org.flexdock.docking.drag.effects;
 
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.util.OsInfo;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.Utilities;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * 
  * @author Christopher Butler
  */
 public class EffectsManager {
-    
-    private static final String CONFIG_URI = "org/flexdock/docking/drag/effects/drag-effects.properties";
-    private static final String DEFAULT_PREVIEW_KEY = "default.preview";
+    private static final String CONFIG_URI = "org/flexdock/docking/drag/effects/drag-effects.xml";
     private static final Object LOCK = new Object();
-    private static final Properties PROPERTIES = loadConfig();
-    private static final DragPreview DEFAULT_PREVIEW = loadDefaultPreview();
+    
+    private static DragPreview DEFAULT_PREVIEW;
     private static DragPreview CUSTOM_PREVIEW;
-    private static final RubberBand DEFAULT_RUBBERBAND = loadSystemRubberband();
+    private static RubberBand DEFAULT_RUBBERBAND;
     private static RubberBand CUSTOM_RUBBERBAND;
     
+    static {
+        prime();
+    }
+    
     public static void prime() {
-        // no-op.  just a public means of allowing our static initializers to run
+        Document config = ResourceManager.getDocument(CONFIG_URI);
+        DEFAULT_PREVIEW = loadDefaultPreview(config);
+        DEFAULT_RUBBERBAND = loadSystemRubberband(config);
     }
     
     public static RubberBand getRubberBand() {
@@ -74,34 +85,8 @@ public class EffectsManager {
         }		
     }
     
-    private static final Properties loadConfig() {
-        Properties p = ResourceManager.getProperties(CONFIG_URI);
-        return p==null? new Properties(): p;
-    }
-    
-    private static RubberBand loadSystemRubberband() {
-        RubberBand rb = null;
-        for(int i=0; rb==null && i<Utilities.OS_CHAIN.length; i++) {
-            String systemKey = Utilities.OS_CHAIN[i];
-            String implClass = PROPERTIES.getProperty(systemKey);
-            if(implClass!=null)
-                rb = createRubberBand(implClass);
-        }
-        
-        return rb==null? new RubberBand(): rb;
-    }
-    
-    private static final DragPreview loadDefaultPreview() {
-        String previewClass = PROPERTIES.getProperty(DEFAULT_PREVIEW_KEY);
-        DragPreview preview = createPreview(previewClass);
-        if(preview!=null)
-            return preview;
-        // unable to load the preview class.  return a no-op preview delegate instead.
-        return new DefaultPreview() {
-            public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {
-                // noop
-            }
-        };
+    private static final Document loadConfig() {
+        return ResourceManager.getDocument(CONFIG_URI);
     }
     
     private static RubberBand createRubberBand(String implClass) {
@@ -111,6 +96,67 @@ public class EffectsManager {
     
     private static DragPreview createPreview(String implClass) {
         return (DragPreview)Utilities.createInstance(implClass, DragPreview.class);
+    }
+    
+    
+    
+    private static HashMap loadRubberBandInfoByOS(Document config) {
+        HashMap map = new HashMap();
+        
+        Element root = (Element)config.getElementsByTagName("rubber-bands").item(0);
+        map.put("default", root.getAttribute("default"));
+        NodeList nodes = root.getElementsByTagName("os");
+        
+        for(int i=0; i<nodes.getLength(); i++) {
+            Element osElem = (Element)nodes.item(i);
+            String osName = osElem.getAttribute("name");
+            NodeList items = osElem.getElementsByTagName("rubber-band");
+            ArrayList classes = new ArrayList(items.getLength());
+            map.put(osName, classes);
+            for(int j=0; j<items.getLength(); j++) {
+                Element classElem = (Element)items.item(j);
+                String className = classElem.getAttribute("class");
+                classes.add(className);
+            }
+        }
+        return map;
+    }
+    
+    private static RubberBand loadSystemRubberband(Document config) {
+        List osList = OsInfo.getInstance().getOsNames();
+        HashMap info = loadRubberBandInfoByOS(config);
+        
+        for(Iterator it=osList.iterator(); it.hasNext();) {
+            String osName = (String)it.next();
+            List classes = (List)info.get(osName);
+            if(classes==null)
+                continue;
+            
+            for(Iterator it2=classes.iterator(); it2.hasNext();) {
+                String implClass = (String)it2.next();
+                RubberBand rb = createRubberBand(implClass);
+                if(rb!=null)
+                    return rb;
+            }
+        }
+        
+        String implClass = (String)info.get("default");
+        RubberBand rb = createRubberBand(implClass);
+        return rb==null? new RubberBand(): rb;
+    }
+    
+    private static DragPreview loadDefaultPreview(Document config) {
+        Element root = (Element)config.getElementsByTagName("drag-previews").item(0);
+        String previewClass = root.getAttribute("default");
+        DragPreview preview = createPreview(previewClass);
+        if(preview!=null)
+            return preview;
+        // unable to load the preview class.  return a no-op preview delegate instead.
+        return new DefaultPreview() {
+            public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {
+                // noop
+            }
+        };
     }
     
 }

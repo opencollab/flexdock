@@ -7,23 +7,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-
 
 
 /**
  * @author Christopher Butler
  */
 public class Utilities {
-	private static final String OS_FAMILIES_URI = "org/flexdock/util/os-families.xml";
-	private static final String UNKNOWN_FAMILY = "unknown";
-	private static final String FAMILY_KEY = "family";
-	private static final String OS_KEY = "os";
-	private static final String NAME_KEY = "name";
-	public static final String OS_FAMILY = loadOSFamily();
-	public static final String[] OS_CHAIN = loadOSChain();
 	
 	public static final boolean JAVA_1_4 = isJavaVersion("1.4");
 	public static final boolean JAVA_1_5 = isJavaVersion("1.5");
@@ -88,34 +77,6 @@ public class Utilities {
 		return data==null? true: data.trim().length()==0;
 	}
 	
-	private static String loadOSFamily() {
-		Document document = ResourceManager.getDocument(OS_FAMILIES_URI);
-		if(document==null)
-			return UNKNOWN_FAMILY;
-		
-		String osName = System.getProperty("os.name");
-		
-		NodeList systems = document.getElementsByTagName(OS_KEY);
-		for(int i=0; i<systems.getLength(); i++) {
-			Element osElem = (Element)systems.item(i);
-			String testName = osElem.getAttribute(NAME_KEY);
-			if(osName.equals(testName)) {
-				Element familyElem = (Element)osElem.getParentNode();
-				return familyElem.getAttribute(NAME_KEY);
-			}
-		}
-		return UNKNOWN_FAMILY;
-	}
-	
-	private static String[] loadOSChain() {
-		String osName = System.getProperty("os.name");
-		String arch = System.getProperty("os.arch");
-		String fullName = osName + "." + arch;
-		
-		return new String[] {
-			fullName, osName, OS_FAMILY	
-		};
-	}
 	
 	/**
 	 * Returns an instance of the specified class name.  If <code>className</code> is <code>null</code>, 
