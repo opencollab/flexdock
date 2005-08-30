@@ -154,7 +154,7 @@ public class OsInfo {
     
     public static void main(String[] args) {
         Properties props = new Properties();
-        props.setProperty("os.name", "freebsd");
+        props.setProperty("os.name", System.getProperty("os.name"));
         props.setProperty("os.arch", System.getProperty("os.arch"));
         
         OsInfo info = new OsInfo(props);

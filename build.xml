@@ -62,6 +62,9 @@
       <pathelement location="${bin.dir.demo}" />
    </path>
 
+   <path id="rt.classpath">
+      <pathelement location="${bin.dir}"/>
+   </path>
    <path id="rt.classpath.demo">
       <pathelement location="${bin.dir.demo}"/>
       <pathelement location="${lib.dir}/jmf.jar"/><!-- needed only for JMF demo -->
@@ -105,8 +108,11 @@
       <condition property="os.windows">
          <os family="windows"/>
       </condition>
-      <condition property="os.unix">
-         <os family="unix"/>
+      <condition property="os.unixWithXlib">
+         <and>
+            <os family="unix"/>
+            <available file="/usr/X11R6/include/X11/Xlib.h"/>
+         </and>
       </condition>
    </target>
 
@@ -132,6 +138,7 @@
          <src path="${java.src.drag}"/>
          <src path="${java.src.perspective}"/>
       </javac>
+      <javac classpathref="javac.classpath" srcdir="${java.src.ant}" destdir="${bin.dir.ant}" debug="true"/>
       <javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" debug="true"/>
       <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" debug="true"/>
    </target>
@@ -225,17 +232,57 @@
       </gcc.mingw>
    </target>
 
+   <target name="showOsLibraryKeychain">
+      <java fork="yes" dir="${bin.dir}" classpathref="rt.classpath" classname="org.flexdock.util.OsInfo"/>
+   </target>
+
+
+
+   
+   <macrodef name="getprefixlibrarykey" description="Invokes org.flexdock.util.OsInfo then parses the default library key from the output into the property named in the property attribute of this macro.">
+      <!--
+          This macro could be done via an ant task, but I opted to
+          do it this way to cut down on the complexity by not creating an
+          ant source dir, having to compile it, and run the task in process,
+          not to mention deal with the issues of getting it to build cleanly
+          in a variety of different eclipse versions. -->
+      <attribute name="property"/>
+      <sequential>
+         <tempfile property="@{property}~temp.file" destdir="${build.dir}" prefix=".osinfo-"/>
+         <java fork="yes"
+               dir="${bin.dir}" classpathref="rt.classpath"
+               classname="org.flexdock.util.OsInfo"
+               output="${@{property}~temp.file}" failonerror="true"/>
+         <loadfile property="@{property}" srcFile="${@{property}~temp.file}">
+            <filterchain>
+               <linecontains>
+                  <contains value="Default Library Key"/>
+               </linecontains>
+               <tokenfilter>
+                  <filetokenizer/>
+                  <replaceregex pattern=".*Key:\s+(.+)[\n\r]+" replace="-\1" flags="s"/>
+               </tokenfilter>
+            </filterchain>
+         </loadfile>
+         <delete file="${@{property}~temp.file}"/>
+      </sequential>
+   </macrodef>
+
    <!--
        This target compiles the libRubberBand.so.  It will only run if on a UNIX os.
        It requires that gcc and X11 includes and libraries  installed.
    -->
-   <target name="compile.unix.lib" depends="native.init" if="os.unix"
+   <target name="compile.unix.lib" depends="native.init,compile,resources" if="os.unixWithXlib" 
            description="Compile the shared library if you're on a UNIX of some sort">
+
+      <getprefixlibrarykey property="library.key"/>
+
       <property name="c.dir" value="${basedir}/src/c/core/org/flexdock/docking/drag/outline/xlib"/>
-      <property name="so.dir" value="${basedir}/bin/org/flexdock/docking/drag/outline/xlib"/>
+      <property name="so.dir" value="${build.dir}/bin/org/flexdock/docking/drag/outline/xlib"/>
+
 
       <!-- Cleanup existing .so or ensure the dir exists -->
-      <delete file="${so.dir}/libRubberBand.so" failonerror="false"/>
+      <delete file="${so.dir}/libRubberBand${library.key}.so" failonerror="false"/>
       <mkdir dir="${so.dir}"/>
 
       <exec executable="gcc" failonerror="true">
@@ -243,7 +290,7 @@
          <arg value="-L/usr/X11R6/lib"/>
          <arg value="-I/usr/X11R6/include"/>
          <arg value="-o"/>
-         <arg value="${so.dir}/libRubberBand.so"/>
+         <arg value="${so.dir}/libRubberBand${library.key}.so"/>
          <arg value="-shared"/>
          <arg value="${c.dir}/RubberBand.c"/>
          <arg line='${sdk.include.gcc.args}'/> <!-- potentially multiple include dirs -->
