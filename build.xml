@@ -138,7 +138,6 @@
          <src path="${java.src.drag}"/>
          <src path="${java.src.perspective}"/>
       </javac>
-      <javac classpathref="javac.classpath" srcdir="${java.src.ant}" destdir="${bin.dir.ant}" debug="true"/>
       <javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" debug="true"/>
       <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" debug="true"/>
    </target>
