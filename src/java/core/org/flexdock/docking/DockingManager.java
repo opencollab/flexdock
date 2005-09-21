@@ -166,7 +166,6 @@ public class DockingManager implements DockingConstants {
 	private DockingManager() {
 		defaultDocker = new DefaultDockingStrategy();
 		autoPersister = new AutoPersist();
-		
 	}
 	
 	private static DockingManager getDockingManager() {
@@ -2264,6 +2263,10 @@ public class DockingManager implements DockingConstants {
 
 		return false; //TODO think of changing it to runtime exception I don't see a situation
 		//when there would be no default docker.
+	}
+
+	public static boolean undock(final Component dockable) {
+	    return undock(resolveDockable(dockable));
 	}
 	
 	/**
