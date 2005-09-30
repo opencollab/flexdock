@@ -41,7 +41,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.15 2005-08-11 23:17:23 marius Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.16 2005-09-30 13:43:59 winnetou25 Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 
@@ -55,8 +55,6 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 	private static final String P1 = "p1";
 	private static final String P2 = "p2";
 	private static final String P3 = "p3";
-	
-	
 	
 	public static void main(String[] args) {
 		SwingUtility.setPlaf(UIManager.getSystemLookAndFeelClassName());
