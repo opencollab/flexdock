@@ -31,29 +31,33 @@ import org.flexdock.util.DockingUtility;
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: RelativeHandler.java,v 1.3 2005-06-04 16:42:21 winnetou25 Exp $
+ * @version $Id: RelativeHandler.java,v 1.4 2005-10-04 22:03:14 winnetou25 Exp $
  */
 public class RelativeHandler implements RestorationHandler {
 
-	public boolean restore(Dockable dockable, DockingState info, Map context) {
-		Dockable parent = info==null? null: info.getRelativeParent();
+	public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
+		final Dockable parent = dockingState==null? null: dockingState.getRelativeParent();
+
 		// in order to do a relative docking, the parent dockable
 		// must already be docked.
-		if(!DockingManager.isDocked(parent))
+		if(!DockingManager.isDocked(parent)) {
 			return false;
+		}
 		
 		// we can only do relative docking if the parent is embedded.
 		// no relative docking if the parent is floating or minimized.
-		DockingState parentInfo = PerspectiveManager.getInstance().getDockingState(parent);
-		if(parentInfo==null || parentInfo.isFloating() || parentInfo.isMinimized())
+		final DockingState parentDockingState = PerspectiveManager.getInstance().getDockingState(parent);
+		if(parentDockingState==null || parentDockingState.isFloating() || parentDockingState.isMinimized()) {
 			return false;
-		
-		float ratio = info.getSplitRatio();
-		boolean ret = DockingUtility.dockRelative(parent, dockable, info.getRegion(), info.getSplitRatio());
-		if(ret) {
-			DockingUtility.setSplitProportion(dockable, ratio);
 		}
-		return ret;
+		
+		final float splitRatio = dockingState.getSplitRatio();
+		final String dockingRegion = dockingState.getRegion();
+		boolean dockingOperationResult = DockingUtility.dockRelative(dockable, parent, dockingRegion, splitRatio);
+		if(dockingOperationResult) {
+			DockingUtility.setSplitProportion(dockable, splitRatio);
+		}
+		return dockingOperationResult;
     }
 
 }

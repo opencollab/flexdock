@@ -33,15 +33,18 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.props.PropertyChangeListenerFactory;
+import org.flexdock.docking.state.DockingPath;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.MinimizationManager;
 import org.flexdock.event.EventManager;
+import org.flexdock.perspective.RestorationManager;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
  * @author Bobby Rosenberger
+ * @author Mateusz Szczap
  */
 public class DockbarManager {
 	private static final WeakHashMap MANAGERS_BY_WINDOW = new WeakHashMap();
@@ -426,19 +429,28 @@ public class DockbarManager {
 	}
 	
 	
-	public void restore(Dockable dockable) {
-		if(dockable==null)
+	public void restore(final Dockable dockable) {
+		if(dockable == null) {
 			return;
-		
-		// remove the dockable from the dockbar
-		remove(dockable);
-		
-		// remove the dockable reference
-		dockables.remove(dockable.getPersistentId());
+		}
 		
 		// now restore to the current layout
-		DockingState info = DockingManager.getDockingState(dockable);
-		info.getPath().restore(dockable);
+		final DockingState dockingState = DockingManager.getDockingState(dockable);
+		final DockingPath dockingPath = dockingState.getPath();
+		boolean restoreResult = false;
+		
+		if (dockingPath != null) {
+			restoreResult = dockingPath.restore(dockable);
+		} else {
+			restoreResult = RestorationManager.getInstance().restore(dockable);
+		}
+		
+		if (restoreResult) {
+			// remove the dockable from the dockbar
+			remove(dockable);
+			// remove the dockable reference
+			dockables.remove(dockable.getPersistentId());
+		}
 	}
 	
 	public boolean remove(Dockable dockable) {
