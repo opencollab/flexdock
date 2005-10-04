@@ -355,14 +355,9 @@ public class PerspectiveManager implements LayoutManager {
 		loadPerspective(perspectiveId, rootPort, false);
 	}
 	
-	public void loadPerspective(final String perspectiveId, final DockingPort rootPort, final boolean reset) {
-		if (perspectiveId == null) {
+	public void loadPerspective(String perspectiveId, DockingPort rootPort, boolean reset) {
+		if(perspectiveId==null || perspectiveId.equals(getCurrentPerspectiveName()))
 			return;
-		}
-		if (!reset && perspectiveId.equals(getCurrentPerspectiveName())) {
-			return;
-		}
-
 		loadPerspectiveImpl(perspectiveId, rootPort, reset);
 	}
 	
