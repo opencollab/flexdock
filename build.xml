@@ -231,12 +231,10 @@
       </gcc.mingw>
    </target>
 
-   <target name="showOsLibraryKeychain">
+   <target name="showOsLibraryKeychain"
+           description="Demonstrates the lookup order for .so libraries by listing the suffix appended to the base file name when attempting to locate the most appropriate library." >
       <java fork="yes" dir="${bin.dir}" classpathref="rt.classpath" classname="org.flexdock.util.OsInfo"/>
    </target>
-
-
-
    
    <macrodef name="getprefixlibrarykey" description="Invokes org.flexdock.util.OsInfo then parses the default library key from the output into the property named in the property attribute of this macro.">
       <!--
@@ -456,4 +454,8 @@
       <java.test classname="org.flexdock.test.view.ViewTest" />
    </target>
 
+
+   <target name="cvs.up">
+      <cvs command="up -d -P"/>
+   </target>
 </project>
