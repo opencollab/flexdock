@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -115,8 +116,8 @@ public class TabbedPaneDemo extends JPanel implements DockingConstants {
 		JFrame f = new JFrame("Custom Conatainers Docking Demo");
 		f.setContentPane(createContentPane());
 		f.setSize(600, 400);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
+		DemoUtility.setCloseOperation(f);
+        f.setVisible(true);
 	}
 
 	

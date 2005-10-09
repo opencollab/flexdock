@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -109,7 +110,7 @@ public class CompoundDemo extends JPanel implements DockingConstants {
 		JFrame f = new JFrame("Compound Docking Demo");
 		f.setContentPane(createContentPane());
 		f.setSize(600, 400);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoUtility.setCloseOperation(f);
 		f.setVisible(true);
 	}
 }

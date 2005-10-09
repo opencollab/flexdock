@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.DockableFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -41,7 +42,7 @@ import org.flexdock.view.actions.DefaultDisplayAction;
  * Created on 2005-04-17
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectivesDemo.java,v 1.16 2005-09-30 13:43:59 winnetou25 Exp $
+ * @version $Id: PerspectivesDemo.java,v 1.17 2005-10-09 21:09:39 eeaston Exp $
  */
 public class PerspectivesDemo extends JFrame implements DockingConstants {
 
@@ -75,7 +76,7 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
 		PerspectivesDemo flexDockDemo = new PerspectivesDemo();
 		flexDockDemo.setSize(800, 600);
 		SwingUtility.centerOnScreen(flexDockDemo);
-		flexDockDemo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoUtility.setCloseOperation(flexDockDemo);
 		// load the current layout state into the application frame
 		DockingManager.restoreLayout();
 		// now show the frame

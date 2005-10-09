@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.demos.util.Titlepane;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -35,7 +36,7 @@ public class AdapterDemo extends JFrame {
 	private static void createAndShowGui() {
 		JFrame frame = new AdapterDemo();
 		frame.setSize(500, 500);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoUtility.setCloseOperation(frame);
 		frame.setVisible(true);
 	}
 	

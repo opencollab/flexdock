@@ -1,0 +1,101 @@
+Building Flexdock
+--------------------------
+
+To build this project, obtain a copy of Apache's Ant from
+http://ant.apache.org. You must use version 1.6.0 or later.
+
+From this directory you should be able to build everything by running
+the command:
+
+  ant dist
+
+This will generate output in the following directories:
+
+  build/bin       The compiled framework and required resource files.
+  build/bin-demo  The compiled demos and required resource files.
+  build/bin-test  The compiled tests and required resource files
+  build/docs      The PDF documentation
+  build/docs/api  The framework javadocs
+  build/dist      Contains:
+                   - a jar containing just the framework code and
+                     it's resources
+                   - a zip containing this jar, the license file,
+                     plus the PDF docs and the javadoc (i.e. a binary
+                     distribution of the framework)
+
+
+If you just want to build the build/binxxx dirs, you can run just: ant
+
+To do this plus build the jar: ant jar
+
+If you want to build a jar without any native code in it, run:
+
+  ant jar -Dgeneric.jar=T
+
+The generated jar will have a -generic.jar suffix.
+
+To clean up everything build by ant, delete the build dir or run: ant clean
+
+
+Building Native Code
+---------------------
+Flexdock is distributed with native libraries for Windows and for linux x86
+which allow rubberband drawing support when dragging dockables outside of
+the Java window.
+
+If you want to rebuild these or would like to build libraries for a different
+platform then read on.
+
+Prerequisites on UNIX:
+  - gcc installed and in your path
+  - X11 with Xlib support in /usr/X11R6
+  - a JDK with JNI headers installed
+
+Prerequisites on Windows:
+  -  MINGW 3.1 gcc (see http://www.mingw.org).  The one distributed with
+     cygwin will not work
+  - a JDK with JNI headers installed
+
+You can currently only build the native code for the platform you're building
+on.  To do so run:
+
+  ant build.with.native
+
+This will do the same as just running ant with no targets plus it will build
+the DLL or .so file under the build/bin dir.  On unix the library name will
+include the name and chip architecture of the os.  The native libraries will
+be included in in the jar.
+
+Note that you may need to set sdk.home in your workingcopy.properties file
+to build the native code.  On windows you'll also need to set mingw.home.
+If these is not set or are set improperly, ant will produce error messages
+instructing you what to do.
+
+
+Running The Demos via Ant
+--------------------------
+
+There are several ant targets for running the demo applications:
+
+  demo         <-- this one is a generic launcher for all the others
+  demo.adapter
+  demo.border
+  demo.compound
+  demo.elegant
+  demo.jmf
+  demo.perspective
+  demo.simple
+  demo.splitpane
+  demo.tabbedpane
+  demo.view
+
+To run a demo, choose the name of the demo target you wish to run
+and execute it via ant.  For example,
+
+  ant demo
+
+will run the generic demo launcher and
+
+  ant demo.simple
+
+will run the simple demo.

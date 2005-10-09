@@ -37,6 +37,7 @@
    <property name="dist.dir" value="${build.dir}/dist" />
    <property name="version" value="0.3.7" />
    <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
+   <property name="dist.demo.jar.basename" value="${ant.project.name}-demo-${version}" />
 
    <!-- sourcepaths -->
    <path id="sourcepath">
@@ -308,7 +309,15 @@
       <property name="jar.suffix" value=""/>
       <property name="jar.excludes" value=""/>
 
-      <jar jarfile="${dist.dir}/${dist.jar.basename}${jar.suffix}.jar" basedir="${bin.dir}" excludes="${jar.excludes}"/>
+      <jar jarfile="${dist.dir}/${dist.jar.basename}${jar.suffix}.jar" basedir="${bin.dir}" excludes="${jar.excludes}" index="true"/>
+
+      <!-- don't try to make a generic jar, there shouldn't be native code in the demos -->
+      <jar jarfile="${dist.dir}/${dist.demo.jar.basename}.jar" basedir="${bin.dir.demo}" excludes="${jar.excludes}" index="true">
+         <manifest>
+            <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
+            <attribute name="Class-Path" value="${dist.jar.basename}${jar.suffix}.jar"/> <!-- matches core jar name -->
+         </manifest>
+      </jar>
    </target>
 
    <target name="doc" depends="init, javadoc"
@@ -358,9 +367,17 @@
       <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
          <fileset dir="${build.dir}">
             <include name="LICENSE.txt"/>
+         </fileset>
+         <fileset dir="${basedir}">
+            <include name="README"/>
+         </fileset>
+         <fileset dir="${dist.dir}">
+            <include name="${dist.jar.basename}.jar"/>
+            <include name="${dist.demo.jar.basename}.jar"/>
+         </fileset>
+         <fileset dir="${build.dir}">
             <include name="docs/**" />
          </fileset>
-         <fileset dir="${dist.dir}" includes="${dist.jar.basename}.jar" />
       </zip>
       <!-- TODO: ensure that ZIP has DOS EOLs if not built on Windows -->
       <!-- TODO: build *NIX tar.gz -->
@@ -373,6 +390,10 @@
    </presetdef>
 
    <!-- Targets to run demos -->
+
+   <target name="demo" depends="resources,compile" description="Run org.flexdock.demos.AllDemos">
+      <java.demo classname="org.flexdock.demos.AllDemos" />
+   </target>
 
    <target name="demo.perspectives" depends="resources,compile" description="Run org.flexdock.demos.perspective.PerspectivesDemo">
       <java.demo classname="org.flexdock.demos.perspective.PerspectivesDemo" />

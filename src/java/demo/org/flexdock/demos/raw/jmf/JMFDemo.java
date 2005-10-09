@@ -8,6 +8,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -34,6 +35,7 @@ public class JMFDemo extends JFrame {
 		JFrame frame = new JMFDemo();
 		frame.setSize(500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoUtility.setCloseOperation(frame);
 		frame.setVisible(true);
 	}
 	

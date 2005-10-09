@@ -4,6 +4,7 @@ import java.awt.Container;
 
 import javax.swing.JFrame;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
@@ -112,7 +113,7 @@ public class ElegantDemo extends JFrame implements DockingConstants {
 	
 	public static void main(String[] args) {
 		ElegantDemo demo = new ElegantDemo();
-		demo.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoUtility.setCloseOperation(demo);
 		demo.setSize(800, 600);
 		demo.setVisible(true);
 	}

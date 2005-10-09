@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.demos.util.VSNetStartPage;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -44,8 +45,8 @@ public class ViewDemo extends JFrame implements DockingConstants {
 		JFrame f = new ViewDemo();
 		f.setSize(800, 600);
 		SwingUtility.centerOnScreen(f);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
+        DemoUtility.setCloseOperation(f);
+        f.setVisible(true);
 	}
 
 	public ViewDemo() {

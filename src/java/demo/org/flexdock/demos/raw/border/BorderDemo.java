@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 
@@ -48,7 +49,7 @@ public class BorderDemo extends JFrame implements DockingConstants {
 	public static void main(String[] args) {
 		JFrame f = new BorderDemo();
 		f.setSize(600, 400);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        DemoUtility.setCloseOperation(f);
 		f.setVisible(true);
 	}
 }
