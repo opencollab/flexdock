@@ -55,7 +55,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * the list returned by <code>getDragSources()</code>.
      * <br/>
      * The framework performs indexing on the underlying <code>Component</code>.  Consequently, 
-     * this method may <b>not</code> return a <code>null</code> reference.
+     * this method may <b>not</b> return a <code>null</code> reference.
      */
     Component getComponent();
     
@@ -92,7 +92,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * its ID can be remembered from session to session.
      * <br/>
      * The framework performs indexing on the persistent ID.  Consequently, this method may 
-     * <b>not</code> return a <code>null</code> reference.
+     * <b>not</b> return a <code>null</code> reference.
      */		
     String getPersistentId();
     

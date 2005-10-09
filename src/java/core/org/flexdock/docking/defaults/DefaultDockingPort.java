@@ -690,7 +690,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * tab within the tabbed pane.  In this case, subsequent calls to 
 	 * <code>getDockedComponent()</code> will return the <code>JTabbedPane</code>.
 	 * <br/>
-	 * If the <code>DockingPort</code> is <b>not</code> empty, and the specified region is
+	 * If the <code>DockingPort</code> is <b>not</b> empty, and the specified region is
 	 * <code>CENTER_REGION</code>, then the dockable <code>Component</code> will be added to the
 	 * <code>JTabbedPane</code> returned by <code>getDockedComponent()</code>.  If this 
 	 * <code>DockingPort</code> only contained a single dockable <code>Component</code> without
@@ -699,7 +699,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * the new one are added to the <code>JTabbedPane</code>.  In this case, subsequent calls to 
 	 * <code>getDockedComponent()</code> will return the <code>JTabbedPane</code>.
 	 * <br/>
-	 * If the <code>DockingPort</code> is <b>not</code> empty, and the specified region is
+	 * If the <code>DockingPort</code> is <b>not</b> empty, and the specified region is
 	 * <code>NORTH_REGION</code>, <code>SOUTH_REGION</code>, <code>EAST_REGION</code>, or 
 	 * <code>WEST_REGION</code>, then the currently docked <code>Component</code> is removed and
 	 * replaced with a <code>JSplitPane</code>.  Two new <code>DefaultDockingPorts</code> are 

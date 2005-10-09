@@ -24,7 +24,7 @@ public interface DockingStub {
 	 * its ID can be remembered from session to session.
 	 * <br/>
 	 * The framework performs indexing on the persistent ID.  Consequently, this method may 
-	 * <b>not</code> return a <code>null</code> reference.
+	 * <b>not</b> return a <code>null</code> reference.
 	 */		
 	String getPersistentId();
 	
