@@ -3,33 +3,61 @@
     <title>FlexDock Project Home</title>
   </head>
   <body>
+</div>
      <p>
-        FlexDock is a Java docking framework for use in Swing applications.
-        It is based on the Eleritec docking framework 0.3.
+        FlexDock is a Java docking framework for use in cross-platform
+        Swing applications.  It offers features:
+     </p>
+     <ul>
+        <li>Tabbed and Split Layouts</li>
+        <li>Drag-n-Drop capability (with native drag rubber band painting on some platforms)</li>
+        <li>Floating windows</li>
+        <li>Collapsible Containers to Save Real Estate</li>
+        <li>Layout Persistence</li>
+     </ul>
+     <p>
         It is released using the <a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a>.
      </p>
+     
+     <h3>History</h3>
      <p>
-         We are looking for developers to improve upon the groundwork laid by Eleritec and our 0.4.0 release.
+        FlexDock is an open source framework based on the Eleritec docking framework version 0.3.  
      </p>
      <p>
+        Version 0.4 of flexdock has been in development since about August 2004 when Eleritic opensourced their framework
         Initial work as been done by Claudio Romano to provide support in <a href="http://www.springframework.org/spring-rcp">Spring Rich Client</a> for FlexDock.
         It is in the Spring Rich roadmap to offer official integration with docking frameworks through a common set of windowing abstractions.
         The basic abstractions are in place and people are extending them as in Claudio's case with FlexDock.
      </p>
-     <h2>Downloads</h2>
-     <h3>Flexdock 0.4.0 (October 21, 2005)</h3>
+     <p>
+        We are looking for developers to improve upon the groundwork laid by Eleritec and our 0.4.0 release.
+     </p>
+     <p>
+
+
+     <h3><a name="DEMO">Demo</a></h3>
+     <ol>
+       <li>Download the <a href="/files/documents/2037/22795/flexdock-0.4.0.zip">0.4.0 Binary Release</a> (for all downloads see <a href="#DOWNLOADS">below</a>)</li>
+       <li>Create a new directory where you want to install flexdock</li>
+       <li>Expand the zip file in that directory</li>
+       <li>run <code>java -jar flexdock-demo-0.4.0.jar</code from that dir using a 1.5 JVM</li>
+     </ol>
+
+     
+     <h3><a name="DOWNLOADS">Downloads</a></h3>
+     <h4>Flexdock 0.4.0 (October 21, 2005)</h4>
      <p>
         Our current release is 0.4.0.
      </p>
      <ul>
-        <li><a href="/files/documents/2037/22795/flexdock-0.4.0.zip">0.4.0 Binary Release</a> - includes framework, javadoc, demos (consult the README after expanding)</li>
+        <li><a href="/files/documents/2037/22795/flexdock-0.4.0.zip">0.4.0 Binary Release</a> - includes framework, javadoc, user guide, demos (consult the README after expanding)</li>
         <li><a href="/files/documents/2037/22796/flexdock-0.4.0-src.zip">0.4.0 Source Release</a> - includes all sources required to build the binary release without using CVS (consult the README-BUILD after expanding)</li>
      </ul>
-     <h3>CVS</h3>
+     <h4>CVS</h4>
      <p>
         If you'd prefer to pull CVS sources, select the "<a href="/source/browse/flexdock/">Version control - CVS</a>" link in the project tools bar.  After setting up a working copy consult the README-BUILD file for instructions on how to build flexdock.
      </p>
-     <h3>Eleritec docking framework 0.3</h3>
+     <h4>Eleritec docking framework 0.3</h4>
      <p>
         If you are interested in seeing the original donated code on which flexdock is based, then you can download version 0.3 of the Eleritec docking framework from <a href="http://www.eleritec.net/projects/docking.html">Eleritec's  website</a>.
         The documentation for this relesae can be found at: 
@@ -37,7 +65,17 @@
      </p>
 
      
-     <h2>Screenshot</h2>
+     <h3>Screenshot</h3>
+     <p>Example of floating windows (running on OS X)</p>
+     <div>
      <img src="flexdock-alpha.gif"/>
+     </div>
+
+     <p>Viewport demo app (running on Windows XP with classic UI)</p>
+     <div>
+     <img src="flexdock-viewport-demo.jpg"/>
+     </div>
+     
+     <div>
   </body>
 </html>
