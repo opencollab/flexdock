@@ -113,6 +113,7 @@ public class AllDemos extends JFrame {
             }
         } catch (Throwable t) {
             t.printStackTrace();
+            System.exit(-1);
         }
     }
 }

@@ -35,7 +35,7 @@
    <property name="bin.dir.demo" value="${build.dir}/bin-demo" />
    <property name="bin.dir.test" value="${build.dir}/bin-test" />
    <property name="dist.dir" value="${build.dir}/dist" />
-   <property name="version" value="0.3.7" />
+   <property name="version" value="0.4.0" />
    <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
    <property name="dist.demo.jar.basename" value="${ant.project.name}-demo-${version}" />
 
@@ -309,13 +309,18 @@
       <property name="jar.suffix" value=""/>
       <property name="jar.excludes" value=""/>
 
-      <jar jarfile="${dist.dir}/${dist.jar.basename}${jar.suffix}.jar" basedir="${bin.dir}" excludes="${jar.excludes}" index="true"/>
+
+
+      <jar jarfile="${dist.dir}/${dist.jar.basename}${jar.suffix}.jar" basedir="${bin.dir}" excludes="${jar.excludes}"/>
 
       <!-- don't try to make a generic jar, there shouldn't be native code in the demos -->
-      <jar jarfile="${dist.dir}/${dist.demo.jar.basename}.jar" basedir="${bin.dir.demo}" excludes="${jar.excludes}" index="true">
+      <jar jarfile="${dist.dir}/${dist.demo.jar.basename}.jar" basedir="${bin.dir.demo}" excludes="${jar.excludes}">
+         <!-- NOTE: don't use index="true", the classpath lookup of the other jar will not work.
+              See: http://forum.java.sun.com/thread.jspa?forumID=22&threadID=568620,
+              I believe this BUG is the cause: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4490798 -->
          <manifest>
-            <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
             <attribute name="Class-Path" value="${dist.jar.basename}${jar.suffix}.jar"/> <!-- matches core jar name -->
+            <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
          </manifest>
       </jar>
    </target>
