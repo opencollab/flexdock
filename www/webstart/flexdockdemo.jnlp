@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<jnlp spec="1.0+" codebase="http://flexdock.dev.java.net/webstart/" href="flexdockdemo.jnlp">
+<jnlp spec="1.0+" codebase="https://flexdock.dev.java.net/webstart/" href="flexdockdemo.jnlp">
    <information>
       <title>FlexDock Demo</title>
       <vendor>flexdock.dev.java.net</vendor>
