@@ -12,8 +12,8 @@
    </security>
    <resources>
       <j2se version="1.4+" initial-heap-size="20m" max-heap-size="384m"/>
-      <jar href="flexdock-demo-0.4.1.jar"/>
-      <jar href="flexdock-0.4.1.jar"/>
+      <jar href="flexdock-demo-0.4.0.jar"/>
+      <jar href="flexdock-0.4.0.jar"/>
    </resources>
    <application-desc main-class="org.flexdock.demos.AllDemos"/>
 </jnlp>
