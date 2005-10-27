@@ -3,8 +3,6 @@ package org.flexdock.demos;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,9 +10,6 @@ import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.flexdock.demos.util.DemoUtility;
@@ -82,16 +77,9 @@ public class AllDemos extends JFrame {
             Log.debug("Launching using: " + m);
             m.invoke(null, new Object[] { null });
         } catch (Throwable t) {
-            Log.debug("Error occurred when calling main(String[]) on class " + full_class_name);
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            t.printStackTrace(pw);
-            pw.flush();
-            
-            JTextArea ta = new JTextArea(sw.toString(), 15, 60);
-            JScrollPane sp = new JScrollPane(ta);
-            JOptionPane.showMessageDialog(this, sp, "Error launching "+full_class_name, JOptionPane.ERROR_MESSAGE);
+            String message = "Error occurred when calling main(String[]) on class " + full_class_name;
+            Log.error(message, t);
+            DemoUtility.showErrorDialog(this, message, t);
         }
     }
 

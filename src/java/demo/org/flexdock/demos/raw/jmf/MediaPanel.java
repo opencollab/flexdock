@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Label;
 import java.awt.Panel;
+import java.awt.TextArea;
 import java.net.URL;
 
 import javax.media.ControllerEvent;
@@ -30,32 +31,46 @@ public class MediaPanel extends Panel implements DockingStub {
 	private String dockingId;
 	
 	public MediaPanel(String id, String title, String mediaFileName) {
-		dockingId = id;
-		setLayout(new BorderLayout());
-		player = createPlayer(mediaFileName);
-		
-		titlebar = new Label(title);
-		titlebar.setBackground(new Color(183, 201, 217));
-		Component viewscreen = player.getVisualComponent();
-		Component controls = player.getControlPanelComponent();
+        dockingId = id;
+        setLayout(new BorderLayout());
 
-		add(titlebar, BorderLayout.NORTH);
-		add(viewscreen, BorderLayout.CENTER);
-		add(controls, BorderLayout.SOUTH);
-	}
+        titlebar = new Label(title);
+        titlebar.setBackground(new Color(183, 201, 217));
+        add(titlebar, BorderLayout.NORTH);
+
+        player = createPlayer(mediaFileName);
+        if (player != null) {
+            Component viewscreen = player.getVisualComponent();
+            Component controls = player.getControlPanelComponent();
+
+            if (viewscreen != null) {
+                add(viewscreen, BorderLayout.CENTER);
+            } else {
+                TextArea ta = new TextArea("No JMF video playback support for '" + mediaFileName + "'");
+                ta.setEditable(false);
+                add(ta, BorderLayout.CENTER);
+            }
+            if (controls != null)
+                add(controls, BorderLayout.SOUTH);
+        } else {
+            TextArea ta = new TextArea("No JMF decoder support for '" + mediaFileName + "'");
+            ta.setEditable(false);
+            add(ta, BorderLayout.CENTER);
+        }
+    }
 	
-	private Player createPlayer(String mediaUri) {
+	private static synchronized Player createPlayer(String mediaUri) {
 		try {
 			URL url = ResourceManager.getResource(mediaUri);
 			MediaLocator locator = new MediaLocator(url);
-			Player mediaPlayer = Manager.createRealizedPlayer(locator);
+			final Player mediaPlayer = Manager.createRealizedPlayer(locator);
 			
 			// add a listener to put us in an infinite loop
 			mediaPlayer.addControllerListener(new ControllerListener() {
 				public void controllerUpdate(ControllerEvent evt) {
 					if(evt instanceof EndOfMediaEvent) {
-						player.setMediaTime(new Time(0));
-						player.start();
+						mediaPlayer.setMediaTime(new Time(0));
+						mediaPlayer.start();
 					}
 				}
 			});

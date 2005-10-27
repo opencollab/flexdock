@@ -6,6 +6,7 @@ package org.flexdock.demos.raw.jmf;
 import java.awt.Container;
 import java.awt.EventQueue;
 
+import javax.swing.JLabel;
 import javax.swing.JFrame;
 
 import org.flexdock.demos.util.DemoUtility;
@@ -13,6 +14,7 @@ import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -26,7 +28,16 @@ public class JMFDemo extends JFrame {
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				createAndShowGui();
+            try
+            {
+               createAndShowGui();
+            }
+            catch(Throwable t)
+            {
+                String message = "Unable to initialize JMFDemo";
+                Log.error(message, t);
+                DemoUtility.showErrorDialog(null, message, t);
+            }
 			}
 		});
 	}
