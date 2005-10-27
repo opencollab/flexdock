@@ -2,7 +2,7 @@
 <jnlp spec="1.0+" codebase="http://flexdock.dev.java.net/webstart/" href="flexdockdemo.jnlp">
    <information>
       <title>FlexDock Demo</title>
-      <vendor>felxdock.dev.java.net</vendor>
+      <vendor>flexdock.dev.java.net</vendor>
       <homepage href="http://flexdock.dev.java.net/"/>
       <description>FlexDock is a Swing-based Java docking framework distributed under the MIT license.</description>
       <offline-allowed/>
