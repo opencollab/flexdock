@@ -6,7 +6,6 @@ package org.flexdock.demos.raw.jmf;
 import java.awt.Container;
 import java.awt.EventQueue;
 
-import javax.swing.JLabel;
 import javax.swing.JFrame;
 
 import org.flexdock.demos.util.DemoUtility;
@@ -57,11 +56,11 @@ public class JMFDemo extends JFrame {
 	
 	private Container createContentPane() {
 		port = new DefaultDockingPort();
-		MediaPanel pane1 = new MediaPanel("video.1", "Video 1", "fish.mpg");
-		MediaPanel pane2 = new MediaPanel("video.2", "Video 2", "lung02a.mpg");
-		MediaPanel pane3 = new MediaPanel("video.3", "Video 3", "fish.mpg");
-		MediaPanel pane4 = new MediaPanel("video.4", "Video 4", "lung02a.mpg");
-		MediaPanel pane5 = new MediaPanel("video.5", "Video 5", "fish.mpg");
+		MediaPanel pane1 = new MediaPanel("video.1", "Video 1", "fish.mov");
+		MediaPanel pane2 = new MediaPanel("video.2", "Video 2", "lung02a.mov");
+		MediaPanel pane3 = new MediaPanel("video.3", "Video 3", "fish.mov");
+		MediaPanel pane4 = new MediaPanel("video.4", "Video 4", "lung02a.mov");
+		MediaPanel pane5 = new MediaPanel("video.5", "Video 5", "fish.mov");
 		
 		DockingManager.dock(pane1, (DockingPort)port);
 		DockingManager.dock(pane2, pane1, DockingConstants.NORTH_REGION, 0.3f);
