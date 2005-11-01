@@ -58,7 +58,7 @@
    </path>
    <path id="javac.classpath.demo">
       <path refid="javac.classpath" />
-      <pathelement location="${lib.dir}/jmf.jar" />
+      <pathelement location="${lib.dir}/jmf/lib/jmf.jar" />
    </path>
    <path id="javac.classpath.test">
       <path refid="javac.classpath" />
@@ -320,20 +320,25 @@
 
 
 
-      <jar jarfile="${dist.dir}/${dist.jar.name}" basedir="${bin.dir}" excludes="${jar.excludes}"/>
+      <jar jarfile="${build.dir}/${dist.jar.name}" basedir="${bin.dir}" excludes="${jar.excludes}"/>
 
       <!-- Don't try to make a generic demo jar, 
            here shouldn't be native code in the demos. -->
-      <jar jarfile="${dist.dir}/${dist.demo.jar.name}" basedir="${bin.dir.demo}" excludes="${jar.excludes}">
+      <jar jarfile="${build.dir}/${dist.demo.jar.name}" basedir="${bin.dir.demo}" excludes="${jar.excludes}">
          <!-- NOTE: don't use index="true", the classpath lookup of the other jar will not work.
               See: http://forum.java.sun.com/thread.jspa?forumID=22&threadID=568620,
               I believe this BUG is the cause: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4490798 -->
          <manifest>
             <!-- matches core jar name -->
-            <attribute name="Class-Path" value="${dist.jar.name}"/> 
+            <attribute name="Class-Path" value="${dist.jar.name} jmf/lib/jmf.jar"/> 
             <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
          </manifest>
       </jar>
+
+      <mkdir dir="${build.dir}/jmf"/>
+      <copy todir="${build.dir}/jmf">
+         <fileset dir="${lib.dir}/jmf"/>
+      </copy>
    </target>
 
    <target name="doc" depends="init, javadoc"
@@ -387,9 +392,10 @@
          <fileset dir="${basedir}">
             <include name="README"/>
          </fileset>
-         <fileset dir="${dist.dir}">
+         <fileset dir="${build.dir}">
             <include name="${dist.jar.basename}.jar"/>
             <include name="${dist.demo.jar.basename}.jar"/>
+            <include name="jmf/**"/> 
          </fileset>
          <fileset dir="${build.dir}">
             <include name="docs/**" />
