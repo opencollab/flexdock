@@ -550,13 +550,17 @@ The signing.properties file must specify all of the following properties:
             <filter token="VERSION" value="${version}"/>
             <filter token="DEMO_JAR_NAME" value="${dist.demo.jar.name}"/>
             <filter token="FRAMEWORK_JAR_NAME" value="${dist.jar.name}"/>
+            <filter token="JMF_JAR_NAME" value="jmf.jar"/>
          </filterset>
       </copy>
       <mysignjar
-          jarname="${dist.dir}/${dist.jar.name}"
+          jarname="${build.dir}/${dist.jar.name}"
           sjarname="${bin.dir.webstart}/${dist.jar.name}"/>
       <mysignjar
-          jarname="${dist.dir}/${dist.demo.jar.name}"
+          jarname="${build.dir}/${dist.demo.jar.name}"
           sjarname="${bin.dir.webstart}/${dist.demo.jar.name}"/>
+      <mysignjar
+          jarname="${build.dir}/jmf/lib/jmf.jar"
+          sjarname="${bin.dir.webstart}/jmf.jar"/>
    </target>
 </project>

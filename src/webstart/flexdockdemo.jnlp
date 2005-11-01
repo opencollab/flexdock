@@ -14,6 +14,7 @@
       <j2se version="1.4+" initial-heap-size="20m" max-heap-size="384m"/>
       <jar href="@DEMO_JAR_NAME@"/>
       <jar href="@FRAMEWORK_JAR_NAME@"/>
+      <jar href="@JMF_JAR_NAME@" download="lazy"/>
    </resources>
    <application-desc main-class="org.flexdock.demos.AllDemos"/>
 </jnlp>
