@@ -377,6 +377,8 @@
             <exclude name="dist/**"/>
             <exclude name="docs/api/**"/>
             <exclude name="workingcopy.properties"/>
+            <exclude name="signing.properties"/>
+            <exclude name="www/**"/>
          </fileset>
       </zip>
       <!-- TODO: ensure that ZIP has DOS EOLs if not built on Windows -->
