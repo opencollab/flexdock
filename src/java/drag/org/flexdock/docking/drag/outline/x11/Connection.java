@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 import org.flexdock.util.ResourceManager;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -82,7 +83,7 @@ public class Connection {
 			in.close();
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -153,7 +154,7 @@ public class Connection {
 			}
 			return p;
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 			return new Properties();
 		}
 	}

@@ -11,6 +11,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import org.flexdock.logging.Log;
+
 /**
  * @author Christopher Butler
  */
@@ -77,7 +79,7 @@ public class MappingReader {
 			try {
 				setter.invoke(mapping, new Object[] {clientMethod});
 			} catch(Exception e) {
-				e.printStackTrace();
+				Log.warn(e.getMessage(), e);
 			}
 		}
 		

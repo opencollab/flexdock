@@ -9,6 +9,7 @@ import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.event.EventManager;
 import org.flexdock.util.Utilities;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -122,7 +123,7 @@ public class ActivationListener {
 			try {
 				Thread.sleep(1000);
 			} catch(InterruptedException e) {
-				e.printStackTrace();
+				Log.debug(e.getMessage(), e);
 			}
 			
 			if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&

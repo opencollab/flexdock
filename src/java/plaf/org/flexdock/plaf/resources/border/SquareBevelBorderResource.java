@@ -13,6 +13,7 @@ import javax.swing.plaf.ColorUIResource;
 
 import org.flexdock.plaf.resources.ColorResourceHandler;
 import org.flexdock.plaf.resources.ResourceHandler;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -34,7 +35,7 @@ public class SquareBevelBorderResource extends ResourceHandler {
 		try {
 			return Integer.parseInt(data);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return 1;
 		}
 	}

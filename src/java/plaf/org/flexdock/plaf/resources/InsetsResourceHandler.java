@@ -5,6 +5,8 @@ package org.flexdock.plaf.resources;
 
 import java.awt.Insets;
 
+import org.flexdock.logging.Log;
+
 /**
  * @author Claudio Romano
  */
@@ -30,7 +32,7 @@ public class InsetsResourceHandler extends ResourceHandler {
 		try {
 			return Integer.parseInt(data);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return 0;
 		}
 	}

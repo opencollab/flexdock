@@ -4,6 +4,7 @@
 package org.flexdock.plaf.resources;
 
 import org.flexdock.util.ResourceManager;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -13,7 +14,7 @@ public class ImageIconResourceHandler extends ResourceHandler {
 		try {
 			return ResourceManager.createIcon(url);
 		} catch(NullPointerException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}
 	}

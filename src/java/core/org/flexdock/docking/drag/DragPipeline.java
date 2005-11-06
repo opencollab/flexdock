@@ -16,6 +16,7 @@ import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
+import org.flexdock.logging.Log;
 
 public class DragPipeline {
 	private GlassPaneMonitor paneMonitor;
@@ -57,9 +58,7 @@ public class DragPipeline {
 		        }
 		    });
 		} catch(Exception e) {
-			// for now, just catch the errors and print the stacktrace.
-			// we'll see about alternate error handling later as needed.
-		    e.printStackTrace();
+			Log.warn(e.getMessage(), e);
 		}
 	}
 	

@@ -17,6 +17,8 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.border.Border;
 
+import org.flexdock.logging.Log;
+
 /**
  * @author Christopher Butler
  */
@@ -98,7 +100,7 @@ public class PropertySet {
 		try {
 			return Integer.parseInt(string);
 		} catch(NumberFormatException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -123,7 +125,7 @@ public class PropertySet {
 		try {
 			return Boolean.valueOf( string).booleanValue();
 		} catch(NumberFormatException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 			return false;
 		}
 	}

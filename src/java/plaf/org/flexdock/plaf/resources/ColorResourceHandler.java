@@ -6,6 +6,7 @@ package org.flexdock.plaf.resources;
 import javax.swing.plaf.ColorUIResource;
 
 import org.flexdock.plaf.Configurator;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -34,7 +35,7 @@ public class ColorResourceHandler extends ResourceHandler {
 			int color = Integer.parseInt(sb.toString(), 16);
 			return new ColorUIResource(color);
 		} catch(NumberFormatException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}		
 	}

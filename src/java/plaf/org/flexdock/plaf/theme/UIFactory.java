@@ -11,6 +11,8 @@ import org.flexdock.plaf.IFlexViewComponentUI;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.XMLConstants;
+import org.flexdock.logging.Log;
+
 import org.w3c.dom.Element;
 
 /**
@@ -105,7 +107,7 @@ public class UIFactory implements XMLConstants {
 		} catch(Exception e) {
 			// we use public, no-argument constructors, so if this happens, we
 			// have a configuration error.
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}
 	}
@@ -122,8 +124,7 @@ public class UIFactory implements XMLConstants {
 				implClass = null;
 			}
 		} catch(ClassNotFoundException e) {
-			System.err.println("Unable to load " + classname + ".  Using '" + rootClass + "' instead.");
-			e.printStackTrace();
+			Log.debug("Unable to load " + classname + ".  Using '" + rootClass + "' instead.",e);
 			implClass = null;
 		}
 		return implClass==null? rootClass: implClass;

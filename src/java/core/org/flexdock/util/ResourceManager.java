@@ -38,6 +38,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
+import org.flexdock.logging.Log;
+
 /**
  * This class provides <code>static</code> convenience methods for resource management, including resource
  * lookups and image, icon, and cursor creation.
@@ -89,7 +91,7 @@ public class ResourceManager {
 				if(file.exists())
 					url = file.toURL();
 			} catch(MalformedURLException e) {
-				e.printStackTrace();
+                Log.warn(e.getMessage(), e);
 				url = null;
 			}
 		}
@@ -354,7 +356,7 @@ public class ResourceManager {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			return builder.parse(inStream);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.warn(e.getMessage(), e);
 		}
 		finally {
 			close(inStream);
@@ -441,7 +443,7 @@ public class ResourceManager {
 			return p;
 		} catch(Exception e) {
 			if(!failSilent)
-				e.printStackTrace();
+				Log.warn(e.getMessage(), e);
 			return null;
 		}
 		finally {
@@ -462,7 +464,7 @@ public class ResourceManager {
 			if(in!=null)
 				in.close();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -479,7 +481,7 @@ public class ResourceManager {
 			if(out!=null)
 				out.close();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -496,7 +498,7 @@ public class ResourceManager {
 			if(socket!=null)
 			    socket.close();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.warn(e.getMessage(), e);
 		}
 	}
 }

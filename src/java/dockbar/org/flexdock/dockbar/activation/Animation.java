@@ -10,6 +10,7 @@ import javax.swing.Timer;
 
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
+import org.flexdock.logging.Log;
 
 
 
@@ -96,7 +97,7 @@ public class Animation implements Runnable, ActionListener {
 			try {
 				lock.wait();
 			} catch(InterruptedException e) {
-				e.printStackTrace();
+				Log.debug(e.getMessage(), e);
 			}
 		}
 	}

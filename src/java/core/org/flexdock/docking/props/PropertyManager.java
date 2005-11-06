@@ -18,6 +18,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.SwingUtility;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -169,7 +170,7 @@ public class PropertyManager {
             }
             return null;
         } catch(Exception e) {
-            e.printStackTrace();
+            Log.debug(e.getMessage(), e);
             return null;
         }
     }

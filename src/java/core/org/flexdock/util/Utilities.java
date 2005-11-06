@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.flexdock.logging.Log;
 
 
 /**
@@ -288,7 +289,7 @@ public class Utilities {
 			return c.newInstance();
 		} catch(Throwable e) {
 			if(!failSilent)
-				e.printStackTrace();
+				Log.warn(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -514,7 +515,7 @@ public class Utilities {
 		try {
 			Thread.sleep(millis);
 		} catch(InterruptedException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 		}
 	}
 	

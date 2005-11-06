@@ -8,6 +8,7 @@ import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.resources.paint.Painter;
 import org.flexdock.plaf.resources.paint.PainterResource;
+import org.flexdock.logging.Log;
 
 /**
  * @author Claudio Romano
@@ -33,7 +34,7 @@ public class PainterResourceHandler extends ResourceHandler {
 		try {
 			return (Painter)clazz.newInstance();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}
 	}

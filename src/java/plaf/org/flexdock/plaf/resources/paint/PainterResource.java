@@ -6,6 +6,7 @@ package org.flexdock.plaf.resources.paint;
 import java.awt.Color;
 
 import org.flexdock.plaf.PropertySet;
+import org.flexdock.logging.Log;
 
 /**
  * @author Claudio Romano
@@ -65,7 +66,7 @@ public class PainterResource extends PropertySet{
             return resolveClass(getString( CLASSNAME));
         }
         catch( Exception e) {
-            e.printStackTrace();
+            Log.debug(e.getMessage(),e);
         }
         
         return null;

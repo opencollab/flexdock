@@ -12,6 +12,8 @@ import java.util.List;
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.XMLConstants;
+import org.flexdock.logging.Log;
+
 import org.w3c.dom.Element;
 
 /**
@@ -58,7 +60,7 @@ public class ResourceHandlerFactory implements XMLConstants {
 			Class clazz = Class.forName(className);
 			return (ResourceHandler)clazz.newInstance();
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}
 	}
@@ -115,7 +117,7 @@ public class ResourceHandlerFactory implements XMLConstants {
 			return new ConstructorHandler(constructor);
 			
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}
 	}

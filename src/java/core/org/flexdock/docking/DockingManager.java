@@ -62,7 +62,7 @@ import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
-
+import org.flexdock.logging.Log;
 
 /**
  * This class is used as a public facade into the framework docking system.  It provides a straightforward
@@ -1175,11 +1175,11 @@ public class DockingManager implements DockingConstants {
 			return restoreLayout(false);
 		} catch(IOException e) {
 			// shouldn't happen since we're not intending to load from storage
-			e.printStackTrace();
+            Log.debug(e.getMessage(), e);
 			return false;
 		} catch (PersistenceException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Log.debug(e.getMessage(), e);
             return false;
 		}
 	}
@@ -2353,9 +2353,9 @@ public class DockingManager implements DockingConstants {
                 if(isEnabled())
                     storeLayoutModel();
             } catch(IOException e) {
-                e.printStackTrace();
+                Log.warn(e.getMessage(), e);
             } catch (PersistenceException e) {
-                e.printStackTrace();
+                Log.warn(e.getMessage(), e);
             }
         }
         

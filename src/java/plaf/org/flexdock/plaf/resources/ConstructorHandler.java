@@ -7,6 +7,8 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.flexdock.logging.Log;
+
 /**
  * @author Christopher Butler
  */
@@ -22,7 +24,7 @@ public class ConstructorHandler extends ResourceHandler {
 		try {
 			return constructor.newInstance(arguments);
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(),e);
 			return null;
 		}
 	}

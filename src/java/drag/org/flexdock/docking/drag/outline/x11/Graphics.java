@@ -8,6 +8,7 @@ import java.io.IOException;
 
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.Utilities;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -52,7 +53,7 @@ public class Graphics {
 			ConnectionResponse reply = new ConnectionResponse(replyBuffer);
 			return new Graphics(conn, reply);
 		} catch(IOException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -214,7 +215,7 @@ public class Graphics {
 		try {
 			connection.sendRequest(buffer);
 		} catch(IOException e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 		}
 	}
 	
@@ -239,7 +240,7 @@ public class Graphics {
 					cleanup();
 				} catch(Throwable t) {
 					if(Utilities.sysTrue(RubberBand.DEBUG_OUTPUT))
-						t.printStackTrace();
+						Log.debug(t.getMessage(), t);
 				}
 			}
 		});

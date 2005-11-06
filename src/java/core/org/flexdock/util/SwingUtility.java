@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.logging.Log;
 
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
@@ -166,7 +167,7 @@ public class SwingUtility {
     	try {
     		UIManager.setLookAndFeel(lookAndFeelClassName);
     	} catch(Exception e) {
-    		e.printStackTrace();
+    		Log.debug(e.getMessage(), e);
     	}
     }
 
@@ -180,7 +181,7 @@ public class SwingUtility {
 			UIManager.setLookAndFeel(SkinLookAndFeel.class.getName());
 			return true;
 		} catch(Exception e) {
-			e.printStackTrace();
+			Log.debug(e.getMessage(), e);
 			return false;
 		}
     }

@@ -25,6 +25,7 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.SwingUtility;
+import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
@@ -327,7 +328,8 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 		// if 'docked' is not a split pane, then I don't know what it is.  let's print a
 		// stacktrace and see who sends in an error report.
 		if(!(docked instanceof JSplitPane)) {
-			new Throwable().printStackTrace();
+			Throwable t = new Throwable();
+            Log.warn(t.getMessage(), t);
 			return false;
 		}
 		

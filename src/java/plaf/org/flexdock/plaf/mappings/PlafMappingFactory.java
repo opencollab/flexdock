@@ -13,6 +13,8 @@ import javax.swing.UIManager;
 
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.XMLConstants;
+import org.flexdock.logging.Log;
+
 import org.w3c.dom.Element;
 
 /**
@@ -79,8 +81,7 @@ public class PlafMappingFactory implements XMLConstants {
 			// must be a type of PlafBasedViewResolver
 			resolver = (RefResolver)clazz.newInstance();
 		} catch(Exception e) {
-			System.err.println("Error trying to create new instance of '" +resolverName + "'.");
-			e.printStackTrace();
+            Log.debug("Error trying to create new instance of '" +resolverName + "'.", e);
 			return refName;
 		}
 
