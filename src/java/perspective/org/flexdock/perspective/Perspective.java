@@ -31,9 +31,17 @@ public class Perspective implements Cloneable, Serializable {
 		this(persistentId, perspectiveName, false);
 	}
 	
+	/**
+     * @param persistentId
+     * @param perspectiveName
+     * @param defaultMode
+     * @throws IllegalArgumentException
+     *             if {@code persistentId} or {@code perspectiveName} is
+     *             {@code null}.
+     */
 	public Perspective(String persistentId, String perspectiveName, boolean defaultMode) {
-		if (persistentId == null) throw new NullPointerException("persistentId cannot be null");
-		if (perspectiveName == null) throw new NullPointerException("perspectiveName cannot be null");
+		if (persistentId == null) throw new IllegalArgumentException("persistentId cannot be null");
+		if (perspectiveName == null) throw new IllegalArgumentException("perspectiveName cannot be null");
 		m_persistentId = persistentId;
 		m_perspectiveName = perspectiveName;
 		m_layout = new Layout();
