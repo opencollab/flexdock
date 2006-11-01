@@ -19,14 +19,17 @@ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 
 package org.flexdock.docking.floating.frames;
 
+import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
+import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -53,9 +56,10 @@ public class DockingFrame extends JDialog implements DockingConstants {
 		
 		if(window instanceof Frame)
 			return new DockingFrame((Frame)window, groupName);
-		if(window instanceof Dialog)
-			return new DockingFrame((Dialog)window, groupName);		
-		
+        if(window instanceof Dialog)
+            return new DockingFrame((Dialog)window, groupName);
+        if(window instanceof Applet)
+            return new DockingFrame(SwingUtilities.windowForComponent(window), groupName);
 		return null;
 	}
 	
@@ -66,6 +70,11 @@ public class DockingFrame extends JDialog implements DockingConstants {
     }
 
     public DockingFrame(Dialog owner, String groupName) {
+        super(owner);
+        initialize(groupName);
+    }
+
+    public DockingFrame(Window owner, String groupName) {
         super(owner);
         initialize(groupName);
     }
