@@ -87,10 +87,10 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		
 		DockingState info = null;
 		synchronized(dockingInfo) {
-			info = (DockingState)dockingInfo.get(dockableId);
-			// return if we're already managing this dockable
-			if(info!=null)
-				return;
+            // return if we're already managing this dockable
+            if (dockingInfo.containsKey(dockableId)) {
+                return;
+            }
 			
 			// create and add dockingstateinfo here
 			info = new DockingState(dockableId);

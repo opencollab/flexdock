@@ -180,7 +180,20 @@ public class PerspectiveManager implements LayoutManager {
 				}
 		};
 		
-		return perspectiveFactory==null? null: perspectiveFactory.getPerspective(perspectiveId);
+        Perspective p = null;
+        
+        if (perspectiveFactory != null) {
+            p = perspectiveFactory.getPerspective(perspectiveId);
+            
+            //this code ensures that perspective factory create perspectives that return the correct id
+            //otherwise a NPE appears extremely far away in the code during the first docking operation
+            if (!p.getPersistentId().equals(perspectiveId)) {
+                //TODO create a good exception for this
+                throw new IllegalStateException("Factory created perspective does not match intended ID: " + perspectiveId);
+            }
+        }
+        
+		return p;
 	}
 	
 	public Perspective[] getPerspectives() {
