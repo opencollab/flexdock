@@ -325,15 +325,19 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 	private boolean dockExtendedPath(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
 		Component docked = port.getDockedComponent();
 		
+        //I don't think this code will matter any more, given the null check, but leaving for now.
+        //null is returned when a dockingport is empty, so we need to dock to an empty port
+        
 		// if 'docked' is not a split pane, then I don't know what it is.  let's print a
 		// stacktrace and see who sends in an error report.
-		if(!(docked instanceof JSplitPane)) {
-			Throwable t = new Throwable();
+		if(docked != null && !(docked instanceof JSplitPane)) {
+			Throwable t = new Throwable("Docked: " + docked);
             Log.warn(t.getMessage(), t);
 			return false;
 		}
-		
-		
+				
+        //begin code that matters.
+        
 		SplitNode lastNode = getLastNode();
 		String lastSibling = lastNode==null? null: lastNode.getSiblingId();
 		
