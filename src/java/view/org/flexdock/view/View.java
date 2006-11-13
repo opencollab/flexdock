@@ -5,10 +5,14 @@ package org.flexdock.view;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.MenuComponent;
-import java.awt.PopupMenu;
+import java.awt.Dimension;
+import java.awt.Insets;
+import java.awt.LayoutManager;
+import java.awt.LayoutManager2;
+import java.awt.Rectangle;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,461 +40,606 @@ import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
 
 /**
+ * The {@code View} class is slightly incompatible with {@code JComponent}.
+ * Similar to JFC/Swing top-level containers, a {@code View} contains only a
+ * content pane {@code Container} and a {@code Titlebar}. The <b>content pane</b>
+ * should contain all the components displayed by the {@code View}. As a
+ * convenience {@code add} and its variants, {@code remove(Component)} and
+ * {@code setLayout} have been overridden to forward to the
+ * {@code contentPane} as necessary. This means you can write:
+ * 
+ * <pre>
+ * view.add(child);
+ * </pre>
+ * 
+ * And the child will be added to the contentPane. The content pane will always
+ * be non-null. Attempting to set it to null will cause the View to throw an
+ * exception. The default content pane will not have a layout manager set.
+ * 
+ * @see javax.swing.JFrame
+ * @see javax.swing.JRootPane
+ * 
  * @author Christopher Butler
+ * @author Karl Schaefer
  */
-public class View extends JComponent implements Dockable, DockingConstants, HierarchyListener {
+public class View extends JComponent implements Dockable, DockingConstants {
+    protected class ViewLayout implements LayoutManager2, Serializable {
+        /**
+         * Returns the amount of space the layout would like to have.
+         * 
+         * @param parent
+         *            the Container for which this layout manager is being used
+         * @return a Dimension object containing the layout's preferred size
+         */
+        public Dimension preferredLayoutSize(Container parent) {
+            Dimension rd, tpd;
+            Insets i = getInsets();
+
+            if (contentPane != null) {
+                rd = contentPane.getPreferredSize();
+            } else {
+                rd = parent.getSize();
+            }
+            if (titlepane != null && titlepane.isVisible()) {
+                tpd = titlepane.getPreferredSize();
+            } else {
+                tpd = new Dimension(0, 0);
+            }
+            return new Dimension(Math.max(rd.width, tpd.width) + i.left
+                    + i.right, rd.height + tpd.height + i.top + i.bottom);
+        }
+
+        /**
+         * Returns the minimum amount of space the layout needs.
+         * 
+         * @param parent
+         *            the Container for which this layout manager is being used
+         * @return a Dimension object containing the layout's minimum size
+         */
+        public Dimension minimumLayoutSize(Container parent) {
+            Dimension rd, tpd;
+            Insets i = getInsets();
+            if (contentPane != null) {
+                rd = contentPane.getMinimumSize();
+            } else {
+                rd = parent.getSize();
+            }
+            if (titlepane != null && titlepane.isVisible()) {
+                tpd = titlepane.getMinimumSize();
+            } else {
+                tpd = new Dimension(0, 0);
+            }
+            return new Dimension(Math.max(rd.width, tpd.width) + i.left
+                    + i.right, rd.height + tpd.height + i.top + i.bottom);
+        }
+
+        /**
+         * Returns the maximum amount of space the layout can use.
+         * 
+         * @param target
+         *            the Container for which this layout manager is being used
+         * @return a Dimension object containing the layout's maximum size
+         */
+        public Dimension maximumLayoutSize(Container target) {
+            Dimension rd, tpd;
+            Insets i = getInsets();
+            if (titlepane != null && titlepane.isVisible()) {
+                tpd = titlepane.getMaximumSize();
+            } else {
+                tpd = new Dimension(0, 0);
+            }
+            if (contentPane != null) {
+                rd = contentPane.getMaximumSize();
+            } else {
+                // This is silly, but should stop an overflow error
+                rd = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE - i.top
+                        - i.bottom - tpd.height - 1);
+            }
+            return new Dimension(Math.min(rd.width, tpd.width) + i.left
+                    + i.right, rd.height + tpd.height + i.top + i.bottom);
+        }
+
+        /**
+         * Instructs the layout manager to perform the layout for the specified
+         * container.
+         * 
+         * @param parent
+         *            the Container for which this layout manager is being used
+         */
+        public void layoutContainer(Container parent) {
+            Rectangle b = parent.getBounds();
+            Insets i = getInsets();
+            int contentY = 0;
+            int w = b.width - i.right - i.left;
+            int h = b.height - i.top - i.bottom;
+
+            // Note: This is laying out the children in the layeredPane,
+            // technically, these are not our children.
+            if (titlepane != null && titlepane.isVisible()) {
+                Dimension mbd = titlepane.getPreferredSize();
+                titlepane.setBounds(0, 0, w, mbd.height);
+                contentY += mbd.height;
+            }
+            if (contentPane != null) {
+                contentPane.setBounds(0, contentY, w, h - contentY);
+            }
+        }
+
+        public void addLayoutComponent(String name, Component comp) {
+        }
+
+        public void removeLayoutComponent(Component comp) {
+        }
+
+        public void addLayoutComponent(Component comp, Object constraints) {
+        }
+
+        public float getLayoutAlignmentX(Container target) {
+            return 0.0f;
+        }
+
+        public float getLayoutAlignmentY(Container target) {
+            return 0.0f;
+        }
+
+        public void invalidateLayout(Container target) {
+        }
+    }
 
     static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
-	
-    protected String id;
-	protected Titlebar titlepane;
-	protected Container contentPane;
-	protected boolean addRemoveAllowed;
-	protected ArrayList dockingListeners;
-//	protected boolean active;
-	protected ArrayList dragSources;
-	protected HashSet frameDragSources;
-	private transient HashSet blockedActions;
-	
-	static {
-		DockingManager.setDockingStrategy(View.class, VIEW_DOCKING_STRATEGY);
-		PropertyManager.setDockablePropertyType(View.class, ViewProps.class);
-	}
-	
-	private static DockingStrategy createDockingStrategy() {
-		return new DefaultDockingStrategy() {
-			protected DockingPort createDockingPortImpl(DockingPort base) {
-				return new Viewport();
-			}
-		};
-	}
-	
-	public static View getInstance(String viewId) {
-		Dockable view = DockingManager.getDockable(viewId);
-		return view instanceof View? (View)view: null;
-	}
-	
-	public View(String name) {
-		this(name, null);
-	}
-	
-	public View(String name, String title) {
-		this(name, title, null);
-	}
-	
-	public View(String name, String title, String tabText) {
-		if(name==null)
-			throw new IllegalArgumentException("The 'name' parameter cannot be null.");
 
-		addHierarchyListener(this);
-		
-		if(title==null)
-			title = "";
-		if(tabText==null)
-			tabText = title;
-		
-		dragSources = new ArrayList(1);
-		frameDragSources = new HashSet(1);
-		dockingListeners = new ArrayList(1);
-		
-		id = name;
-		setTabText(tabText);
-		setLayout(null);
-		setTitlebar(createTitlebar());
-		setTitle(title);
-		setContentPane(createContentPane());
-		updateUI();
-		
-		DockingManager.registerDockable((Dockable)this);
-		
-	}
-	
-	public Container getContentPane() {
-		return contentPane;
-	}
+    private String persistentId;
 
-	public Titlebar getTitlebar() {
-		return titlepane;
-	}
-	
-	public DockablePropertySet getDockingProperties() {
-		return PropertyManager.getDockablePropertySet(this);
-	}
-	
-	public ViewProps getViewProperties() {
-		return (ViewProps)getDockingProperties();
-	}
-	
-	public void addAction(Action action) {
-		if(titlepane!=null)
-			titlepane.addAction(action);
-	}
-	
-	public void addAction(String action) {
-		if(titlepane!=null)
-			titlepane.addAction(action);
-	}
-	
-	public void setIcon(Icon icon) {
-		if(titlepane!=null)
-			titlepane.setIcon(icon);
-	}
-	
-	public void setIcon(String imgUri) {
-		Icon icon = imgUri==null? null: ResourceManager.createIcon(imgUri);
-		setIcon(icon);
-	}
+    protected Titlebar titlepane;
 
-	public void setContentPane(Container c) {
-		if(c==null)
-			throw new NullPointerException("Unable to set a null content pane.");
-		if(c==titlepane)
-			throw new IllegalArgumentException("Cannot use the same component as both content pane and titlebar.");
+    protected Container contentPane;
 
-		synchronized(this) {
-			addRemoveAllowed = true;
-			if(contentPane!=null)
-				removeImpl(contentPane);
-			addImpl(c);
-			contentPane = c;
-			addRemoveAllowed = false;			
-		}
-	}
-	
+    protected boolean contentPaneCheckingEnabled;
+
+    protected ArrayList dockingListeners;
+
+    // protected boolean active;
+    protected ArrayList dragSources;
+
+    protected HashSet frameDragSources;
+
+    private transient HashSet blockedActions;
+
+    static {
+        DockingManager.setDockingStrategy(View.class, VIEW_DOCKING_STRATEGY);
+        PropertyManager.setDockablePropertyType(View.class, ViewProps.class);
+    }
+
+    public View(String persistentId) {
+        this(persistentId, null);
+    }
+
+    public View(String persistentId, String title) {
+        this(persistentId, title, null);
+    }
+
+    public View(String persistentId, String title, String tabText) {
+        if (persistentId == null)
+            throw new IllegalArgumentException(
+                    "The 'persistentId' parameter cannot be null.");
+
+        this.persistentId = persistentId;
+
+        dragSources = new ArrayList(1);
+        frameDragSources = new HashSet(1);
+        dockingListeners = new ArrayList(1);
+
+        setContentPane(createContentPane());
+        setTitlebar(createTitlebar());
+        setLayout(createLayout());
+        setContentPaneCheckingEnabled(true);
+
+        if (title == null)
+            title = "";
+        setTitle(title);
+
+        if (tabText == null)
+            tabText = title;
+        setTabText(tabText);
+
+        addHierarchyListener(new HierarchyListener() {
+            public void hierarchyChanged(HierarchyEvent e) {
+                clearButtonRollovers();
+            }
+        });
+
+        updateUI();
+
+        DockingManager.registerDockable((Dockable) this);
+    }
+
+    private static DockingStrategy createDockingStrategy() {
+        return new DefaultDockingStrategy() {
+            protected DockingPort createDockingPortImpl(DockingPort base) {
+                return new Viewport();
+            }
+        };
+    }
+
+    public static View getInstance(String viewId) {
+        Dockable view = DockingManager.getDockable(viewId);
+        return view instanceof View ? (View) view : null;
+    }
+
     protected Container createContentPane() {
         return new JPanel();
     }
-    
+
+    protected LayoutManager createLayout() {
+        return new ViewLayout();
+    }
+
     protected Titlebar createTitlebar() {
         return new Titlebar();
     }
-    
-    protected String getPreferredTitlebarUIName() {
-        return ui instanceof ViewUI? ((ViewUI)ui).getPreferredTitlebarUI(): null;       
+
+    public Container getContentPane() {
+        return contentPane;
     }
 
-	private void removeImpl(Component c) {
-		if(c instanceof Titlebar)
-			((Titlebar)c).setView(null);
-		super.remove(c);
-	}
-	
-	private void addImpl(Component c) {
-		if(c instanceof Titlebar)
-			((Titlebar)c).setView(this);
-		super.add(c);
-	}
+    public Titlebar getTitlebar() {
+        return titlepane;
+    }
 
-	public void setTitlebar(Titlebar titlebar) {
-		if(titlebar!=null) {
-			if(titlebar==contentPane)
-				throw new IllegalArgumentException("Cannot use the same component as both content pane and titlebar.");
-			if(!(titlebar instanceof Component))
-				throw new IllegalArgumentException("Titlebar must be a type of java.awt.Component.");
-		}
+    public DockablePropertySet getDockingProperties() {
+        return PropertyManager.getDockablePropertySet(this);
+    }
 
-		synchronized(this) {
-			addRemoveAllowed = true;
-			removeTitlebarImpl();
-			addTitlebarImpl(titlebar);
-			titlepane = titlebar;
-			addRemoveAllowed = false;
-		}
-	}
-	
-	protected void addTitlebarImpl(Titlebar titlebar) {
-		if(titlebar!=null) {
-			addImpl(titlebar);
-			dragSources.add(titlebar);
-			frameDragSources.add(titlebar);
-			DockingManager.updateDragListeners(this);
-		}
-	}
-	
-	protected void removeTitlebarImpl() {
-		if(titlepane!=null) {
-			removeImpl(titlepane);
-			dragSources.remove(titlepane);
-			frameDragSources.remove(titlepane);
-			DockingManager.removeDragListeners(titlepane);
-		}
-	}
-	
-	protected Component getTitlePane() {
-		return (Component)titlepane;
-	}
-	
-	public void setTitle(String title) {
-		setTitle(title, false);
-	}
-	
-	public void setTitle(String title, boolean alsoTabText) {
-		Titlebar tbar = getTitlebar();
-		if(tbar!=null)
-			tbar.setText(title);
-		if(alsoTabText)
-			setTabText(title);
-	}
+    public ViewProps getViewProperties() {
+        return (ViewProps) getDockingProperties();
+    }
 
-	public String getTitle() {
-		Titlebar tbar = getTitlebar();
-		return tbar==null? null: tbar.getText();
-	}
-	
-	public void doLayout() {
-		Component titlebar = getTitlePane();
-		int titleHeight = titlebar==null? 0: titlepane.getPreferredSize().height;
-		int w = getWidth();
-		int h = getHeight();
-		if(titlepane!=null) {
-			((Component)titlepane).setBounds(0, 0, w, titleHeight);
-		}
-		contentPane.setBounds(0, titleHeight, w, h-titleHeight);
-	}
+    public void addAction(Action action) {
+        if (titlepane != null)
+            titlepane.addAction(action);
+    }
+
+    public void addAction(String action) {
+        if (titlepane != null)
+            titlepane.addAction(action);
+    }
+
+    public void setIcon(Icon icon) {
+        if (titlepane != null)
+            titlepane.setIcon(icon);
+    }
+
+    public void setIcon(String imgUri) {
+        Icon icon = imgUri == null ? null : ResourceManager.createIcon(imgUri);
+        setIcon(icon);
+    }
+
+    /**
+     * Sets the content pane for this view.
+     * 
+     * @param c
+     *            the container to use as the content pane.
+     * @throws IllegalArgumentException
+     *             if {@code c} is {@code null} or if {@code c} is the
+     *             {@code titlepane}.
+     * @see #titlepane
+     * @see #getTitlePane()
+     */
+    public void setContentPane(Container c) throws IllegalArgumentException {
+        if (c == null)
+            throw new IllegalArgumentException(
+                    "Unable to set a null content pane.");
+        if (c == titlepane)
+            throw new IllegalArgumentException(
+                    "Cannot use the same component as both content pane and titlebar.");
+
+        if (contentPane != null) {
+            remove(contentPane);
+        }
+        contentPane = c;
+        if (contentPane != null) {
+            boolean checkingEnabled = isContentPaneCheckingEnabled();
+            try {
+                setContentPaneCheckingEnabled(false);
+                add(contentPane);
+            } finally {
+                setContentPaneCheckingEnabled(checkingEnabled);
+            }
+        }
+    }
+
+    protected String getPreferredTitlebarUIName() {
+        return ui instanceof ViewUI ? ((ViewUI) ui).getPreferredTitlebarUI()
+                : null;
+    }
+
+    public void setTitlebar(Titlebar titlebar) {
+        if (titlebar != null && titlebar == contentPane) {
+            throw new IllegalArgumentException(
+                    "Cannot use the same component as both content pane and titlebar.");
+        }
+
+        if (titlepane != null) {
+            remove(titlepane);
+            titlepane.setView(null);
+            dragSources.remove(titlepane);
+            frameDragSources.remove(titlepane);
+            DockingManager.removeDragListeners(titlepane);
+        }
+        titlepane = titlebar;
+        if (titlepane != null) {
+            boolean checkingEnabled = isContentPaneCheckingEnabled();
+            try {
+                setContentPaneCheckingEnabled(false);
+                add(titlepane);
+            } finally {
+                setContentPaneCheckingEnabled(checkingEnabled);
+            }
+
+            dragSources.add(titlepane);
+            frameDragSources.add(titlepane);
+            DockingManager.updateDragListeners(this);
+        }
+
+    }
+
+    protected Component getTitlePane() {
+        return titlepane;
+    }
+
+    public void setTitle(String title) {
+        if (titlepane != null) {
+            titlepane.setText(title);
+        }
+    }
+
+    public void setTitle(String title, boolean alsoTabText) {
+        setTitle(title);
+
+        if (alsoTabText) {
+            setTabText(title);
+        }
+    }
+
+    public String getTitle() {
+        Titlebar tbar = getTitlebar();
+        return tbar == null ? null : tbar.getText();
+    }
 
     public void updateUI() {
         setUI(PlafManager.getUI(this));
     }
-    
-	public Component add(Component comp, int index) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
-		return super.add(comp, index);
-	}
-    
-	public void add(Component comp, Object constraints, int index) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
-		super.add(comp, constraints, index);
-	}
-    
-	public void add(Component comp, Object constraints) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
-		super.add(comp, constraints);
-	}
-    
-	public Component add(Component comp) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
-		return super.add(comp);
-	}
-    
-	public Component add(String name, Component comp) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
-		return super.add(name, comp);
-	}
-    
-	public synchronized void add(PopupMenu popup) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The add() method is may not be called directly.  Use setContentPane() instead.");
-		super.add(popup);
-	}
-    
-	public void remove(Component comp) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The remove() method is may not be called directly.");
-		super.remove(comp);
-	}
-    
-	public void remove(int index) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The remove() method is may not be called directly.");
-		
-		super.remove(index);
-	}
-    
-	public void removeAll() {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The remove() method is may not be called directly.");
-		super.removeAll();
-	}
-    
-	public synchronized void remove(MenuComponent popup) {
-		if(!addRemoveAllowed)
-			throw new RuntimeException("The remove() method is may not be called directly.");
-		super.remove(popup);
-	}
 
-	public AbstractButton getActionButton(String actionName) {
-	    Titlebar tbar = getTitlebar();
-	    return tbar==null? null: tbar.getActionButton(actionName);
-	}
-	
-	public Component getComponent() {
-		return this;
-	}
-	
-	public List getDragSources() {
-		return dragSources;
-	}
-	
-	public Set getFrameDragSources() {
-		return frameDragSources;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    protected void addImpl(Component comp, Object constraints, int index) {
+        if (comp instanceof Titlebar)
+            ((Titlebar) comp).setView(this);
 
-	public String getPersistentId() {
-		return id;
-	}
+        if (isContentPaneCheckingEnabled()) {
+            getContentPane().add(comp, constraints, index);
+        } else {
+            super.addImpl(comp, constraints, index);
+        }
+    }
 
-	public boolean isTerritoryBlocked(Dockable dockable, String region) {
-		return getDockingProperties().isTerritoryBlocked(region).booleanValue();
-	}
-	
-	public void setTerritoryBlocked(String region, boolean blocked) {
-		getDockingProperties().setTerritoryBlocked(region, blocked);
-	}
+    public void remove(Component comp) {
+        if (comp == contentPane) {
+            super.remove(comp);
+        } else {
+            getContentPane().remove(comp);
+        }
+    }
 
-	public String getTabText() {
-		String txt = getDockingProperties().getDockableDesc();
-		return txt==null? getTitle():  txt;
-	}
+    public AbstractButton getActionButton(String actionName) {
+        Titlebar tbar = getTitlebar();
+        return tbar == null ? null : tbar.getActionButton(actionName);
+    }
 
-	public void setTabText(String tabText) {
-		getDockingProperties().setDockableDesc(tabText);
-	}
-	
-	public Icon getTabIcon() {
-	    return getDockingProperties().getTabIcon();
-	}
-	
-	public void setTabIcon(Icon icon) {
-	    getDockingProperties().setTabIcon(icon);
-	}
-	
-	public boolean dock(Dockable dockable) {
-		return dock(dockable, CENTER_REGION);
-	}
-	
-	public DockingPort getDockingPort() {
-		return DockingManager.getDockingPort((Dockable)this);
-	}
-	
-	public Dockable getSibling(String region) {
-		return DefaultDockingStrategy.getSibling(this, region);
-	}
-	
-	public Viewport getViewport() {
-		DockingPort port = getDockingPort();
-		return port instanceof Viewport? (Viewport)port: null;
-	}
-	
-	public boolean dock(Dockable dockable, String relativeRegion) {
-		return DockingManager.dock(dockable, this, relativeRegion);
-	}
-	
-	public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
-		return DockingManager.dock(dockable, this, relativeRegion, ratio);
-	}
-	
-	public void setActive(boolean b) {
-		getViewProperties().setActive(b);
-	}
-	
-	public boolean isActive() {
-		return getViewProperties().isActive().booleanValue();
-	}
-	
-	public void setActiveStateLocked(boolean b) {
-		getViewProperties().setActiveStateLocked(b);
-	}
-	
-	public boolean isActiveStateLocked() {
-		return getViewProperties().isActiveStateLocked().booleanValue();
-	}
-	
-	public boolean isMinimized() {
-		return DockingUtility.isMinimized(this);
-	}
-	
-	public int getMinimizedConstraint() {
-		return DockingUtility.getMinimizedConstraint(this);
-	}
+    public Component getComponent() {
+        return this;
+    }
 
-	public void addDockingListener(DockingListener listener) {
-		dockingListeners.add(listener);
-	}
+    public List getDragSources() {
+        return dragSources;
+    }
 
-	public DockingListener[] getDockingListeners() {
-		return (DockingListener[])dockingListeners.toArray(new DockingListener[0]);
-	}
+    public Set getFrameDragSources() {
+        return frameDragSources;
+    }
 
-	public void removeDockingListener(DockingListener listener) {
-		dockingListeners.remove(listener);
-	}
-	
-	public void dockingCanceled(DockingEvent evt) {
-	}
+    public String getPersistentId() {
+        return persistentId;
+    }
 
-	public void dockingComplete(DockingEvent evt) {
-		setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
-		if(titlepane!=null)
-			titlepane.revalidate();
-	}
+    public boolean isTerritoryBlocked(Dockable dockable, String region) {
+        return getDockingProperties().isTerritoryBlocked(region).booleanValue();
+    }
 
-	public void dragStarted(DockingEvent evt) {
-	}
-	
-	public void dropStarted(DockingEvent evt) {
-	}
-	
-	public void undockingComplete(DockingEvent evt) {
-		clearButtonRollovers();
-	}
-	
-	public void undockingStarted(DockingEvent evt) {
-	}
-	
-	private void clearButtonRollovers() {
-		if(titlepane==null)
-			return;
-		
-		Component[] comps = titlepane.getComponents();
-		for(int i=0; i<comps.length; i++) {
-			Button button = comps[i] instanceof Button? (Button)comps[i]: null;
-			if(button!=null) {
-				button.getModel().setRollover(false);
-			}
-		}
-	}
-	
-	public void setActionBlocked(String actionName, boolean blocked) {
-		if(actionName==null)
-			return;
-		
-		Set actions = getBlockedActions();
-		if(blocked)
-			actions.add(actionName);
-		else {
-			if(actions!=null)
-				actions.remove(actionName);
-		}
-	}
-	
-	public boolean isActionBlocked(String actionName) {
-		return actionName==null || blockedActions==null? false: blockedActions.contains(actionName);
-	}
-	
-	private HashSet getBlockedActions() {
-		if(blockedActions==null)
-			blockedActions = new HashSet(1);
-		return blockedActions;
-	}
-	
-	public boolean isFloating() {
-		return DockingUtility.isFloating(this);
-	}
-	
-	/**
-	 * @see java.awt.Component#toString()
-	 */
-	public String toString() {
-		return "View[Id="+this.id+"]";
-	}
+    public void setTerritoryBlocked(String region, boolean blocked) {
+        getDockingProperties().setTerritoryBlocked(region, blocked);
+    }
 
-	public void hierarchyChanged(HierarchyEvent e) {
-		clearButtonRollovers();
-	}
-    
+    public String getTabText() {
+        String txt = getDockingProperties().getDockableDesc();
+        return txt == null ? getTitle() : txt;
+    }
+
+    public void setTabText(String tabText) {
+        getDockingProperties().setDockableDesc(tabText);
+    }
+
+    public Icon getTabIcon() {
+        return getDockingProperties().getTabIcon();
+    }
+
+    public void setTabIcon(Icon icon) {
+        getDockingProperties().setTabIcon(icon);
+    }
+
+    public boolean dock(Dockable dockable) {
+        return dock(dockable, CENTER_REGION);
+    }
+
+    public DockingPort getDockingPort() {
+        return DockingManager.getDockingPort((Dockable) this);
+    }
+
+    public Dockable getSibling(String region) {
+        return DefaultDockingStrategy.getSibling(this, region);
+    }
+
+    public Viewport getViewport() {
+        DockingPort port = getDockingPort();
+        return port instanceof Viewport ? (Viewport) port : null;
+    }
+
+    public boolean dock(Dockable dockable, String relativeRegion) {
+        return DockingManager.dock(dockable, this, relativeRegion);
+    }
+
+    public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
+        return DockingManager.dock(dockable, this, relativeRegion, ratio);
+    }
+
+    public void setActive(boolean b) {
+        getViewProperties().setActive(b);
+    }
+
+    public boolean isActive() {
+        return getViewProperties().isActive().booleanValue();
+    }
+
+    public void setActiveStateLocked(boolean b) {
+        getViewProperties().setActiveStateLocked(b);
+    }
+
+    public boolean isActiveStateLocked() {
+        return getViewProperties().isActiveStateLocked().booleanValue();
+    }
+
+    public boolean isMinimized() {
+        return DockingUtility.isMinimized(this);
+    }
+
+    public int getMinimizedConstraint() {
+        return DockingUtility.getMinimizedConstraint(this);
+    }
+
+    public void addDockingListener(DockingListener listener) {
+        dockingListeners.add(listener);
+    }
+
+    public DockingListener[] getDockingListeners() {
+        return (DockingListener[]) dockingListeners
+                .toArray(new DockingListener[0]);
+    }
+
+    public void removeDockingListener(DockingListener listener) {
+        dockingListeners.remove(listener);
+    }
+
+    public void dockingCanceled(DockingEvent evt) {
+    }
+
+    public void dockingComplete(DockingEvent evt) {
+        setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
+        if (titlepane != null)
+            titlepane.revalidate();
+    }
+
+    public void dragStarted(DockingEvent evt) {
+    }
+
+    public void dropStarted(DockingEvent evt) {
+    }
+
+    public void undockingComplete(DockingEvent evt) {
+        clearButtonRollovers();
+    }
+
+    public void undockingStarted(DockingEvent evt) {
+    }
+
+    private void clearButtonRollovers() {
+        if (titlepane == null)
+            return;
+
+        Component[] comps = titlepane.getComponents();
+        for (int i = 0; i < comps.length; i++) {
+            Button button = comps[i] instanceof Button ? (Button) comps[i]
+                    : null;
+            if (button != null) {
+                button.getModel().setRollover(false);
+            }
+        }
+    }
+
+    public void setActionBlocked(String actionName, boolean blocked) {
+        if (actionName == null)
+            return;
+
+        Set actions = getBlockedActions();
+        if (blocked)
+            actions.add(actionName);
+        else {
+            if (actions != null)
+                actions.remove(actionName);
+        }
+    }
+
+    public boolean isActionBlocked(String actionName) {
+        return actionName == null || blockedActions == null ? false
+                : blockedActions.contains(actionName);
+    }
+
+    private HashSet getBlockedActions() {
+        if (blockedActions == null)
+            blockedActions = new HashSet(1);
+        return blockedActions;
+    }
+
+    public boolean isFloating() {
+        return DockingUtility.isFloating(this);
+    }
+
+    /**
+     * @see java.awt.Component#toString()
+     */
+    public String toString() {
+        return "View[Id=" + this.persistentId + "]";
+    }
+
+    /**
+     * @return the contentPaneCheckingEnabled
+     */
+    protected boolean isContentPaneCheckingEnabled() {
+        return contentPaneCheckingEnabled;
+    }
+
+    /**
+     * @param contentPaneCheckingEnabled
+     *            the contentPaneCheckingEnabled to set
+     */
+    protected void setContentPaneCheckingEnabled(
+            boolean contentPaneCheckingEnabled) {
+        this.contentPaneCheckingEnabled = contentPaneCheckingEnabled;
+    }
+
+    /**
+     * Sets the <code>LayoutManager</code>. Overridden to conditionally
+     * forward the call to the <code>contentPane</code>.
+     * 
+     * @param manager
+     *            the <code>LayoutManager</code>
+     * @see #setContentPaneCheckingEnabled
+     */
+    public void setLayout(LayoutManager manager) {
+        if (isContentPaneCheckingEnabled()) {
+            getContentPane().setLayout(manager);
+        } else {
+            super.setLayout(manager);
+        }
+    }
 }

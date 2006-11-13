@@ -25,8 +25,11 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.LayoutManager;
+import java.awt.LayoutManager2;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -65,7 +68,6 @@ import org.flexdock.util.LookAndFeelSettings;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.UUID;
 import org.flexdock.util.Utilities;
-
 
 /**
  * This is a <code>Container</code> that implements the <code>DockingPort</code> interface.  It provides
@@ -133,6 +135,99 @@ import org.flexdock.util.Utilities;
  *
  */
 public class DefaultDockingPort extends JPanel implements DockingPort, DockingConstants {
+    protected class PortLayout implements LayoutManager2, Serializable
+    {
+        /**
+         * Returns the amount of space the layout would like to have.
+         *
+         * @param parent the Container for which this layout manager
+         * is being used
+         * @return a Dimension object containing the layout's preferred size
+         */ 
+        public Dimension preferredLayoutSize(Container parent) {
+            Dimension dd;
+            Insets i = getInsets();
+        
+            if(dockedComponent != null) {
+                dd = dockedComponent.getPreferredSize();
+            } else {
+                dd = parent.getSize();
+            }
+            
+            return new Dimension(dd.width + i.left + i.right, 
+                                        dd.height + i.top + i.bottom);
+        }
+
+        /**
+         * Returns the minimum amount of space the layout needs.
+         *
+         * @param parent the Container for which this layout manager
+         * is being used
+         * @return a Dimension object containing the layout's minimum size
+         */ 
+        public Dimension minimumLayoutSize(Container parent) {
+            Dimension dd;
+            Insets i = getInsets();
+        
+            if(dockedComponent != null) {
+                dd = dockedComponent.getMinimumSize();
+            } else {
+                dd = parent.getSize();
+            }
+            
+            return new Dimension(dd.width + i.left + i.right, 
+                                        dd.height + i.top + i.bottom);
+        }
+
+        /**
+         * Returns the maximum amount of space the layout can use.
+         *
+         * @param target the Container for which this layout manager
+         * is being used
+         * @return a Dimension object containing the layout's maximum size
+         */ 
+        public Dimension maximumLayoutSize(Container target) {
+            Dimension dd;
+            Insets i = getInsets();
+        
+            if(dockedComponent != null) {
+                dd = dockedComponent.getMaximumSize();
+            } else {
+                // This is silly, but should stop an overflow error
+                dd = new Dimension(Integer.MAX_VALUE, 
+                        Integer.MAX_VALUE - i.top - i.bottom);
+            }
+            
+            return new Dimension(dd.width + i.left + i.right, 
+                                        dd.height + i.top + i.bottom);
+        }
+        
+        /**
+         * Instructs the layout manager to perform the layout for the specified
+         * container.
+         *
+         * @param parent the Container for which this layout manager
+         * is being used
+         */ 
+        public void layoutContainer(Container parent) {
+            Rectangle b = parent.getBounds();
+            Insets i = getInsets();
+            Insets insets = getInsets();
+            int w = b.width - i.right - i.left;
+            int h = b.height - i.top - i.bottom;
+        
+            if(dockedComponent != null) {
+                dockedComponent.setBounds(insets.left, insets.top, w, h);
+            }
+        }
+        
+        public void addLayoutComponent(String name, Component comp) {}
+        public void removeLayoutComponent(Component comp) {}
+        public void addLayoutComponent(Component comp, Object constraints) {}
+        public float getLayoutAlignmentX(Container target) { return 0.0f; }
+        public float getLayoutAlignmentY(Container target) { return 0.0f; }
+        public void invalidateLayout(Container target) {}
+    }
 
     private static final WeakHashMap COMPONENT_TITLES = new WeakHashMap();
 	
@@ -181,8 +276,15 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		
 		// start out as a root dockingport
 		rootPort = true;
+        
+        //configure layout
+        setLayout(createLayout());
 	}
 
+    protected LayoutManager createLayout() {
+        return new PortLayout();
+    }
+    
 	/**
 	 * Overridden to set the currently docked component.  Should not be called by application code.
 	 * 
@@ -875,17 +977,26 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		addCmp(oldContent, docked);
 		dockCmp(newContent, comp);
 		
-		// put the ports in the correct order and add them to a new wrapper panel
+        JSplitPane newDockedContent = strategy.createSplitPane(this, region);
+
+        // put the ports in the correct order and add them to a new wrapper panel
 		DockingPort[] ports = putPortsInOrder(oldContent, newContent, region);
-		setPreferredSize(ports[0], halfSize);
-		setPreferredSize(ports[1], halfSize);
-		JSplitPane newDockedContent = strategy.createSplitPane(this, region);
+
+        if (ports[0] instanceof JComponent) {
+            ((JComponent) ports[0]).setMinimumSize(new Dimension(0, 0));
+        }
+        if (ports[1] instanceof JComponent) {
+            ((JComponent) ports[1]).setMinimumSize(new Dimension(0, 0));
+        }
 
 		if(ports[0] instanceof Component)
 			newDockedContent.setLeftComponent((Component)ports[0]);
 		if(ports[1] instanceof Component)
 			newDockedContent.setRightComponent((Component)ports[1]);
 
+        //set the split in the middle
+        newDockedContent.setDividerLocation(.5);
+        
 		// now set the wrapper panel as the currently docked component
 		setComponent(newDockedContent);
 		// if we're currently showing, then we can exit now
@@ -899,25 +1010,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		SwingUtility.putClientProperty((Component)newContent, DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(1f-proportion));
 		
 		return true;
-	}
-
-	/**
-	 * Overridden to expand the docked component to fill the entire available region, minus insets.
-	 * Since this method implements the layout directly, <code>setLayout(LayoutManager mgr)</code>
-	 * has been obviated and has been overridden to do nothing.
-	 * 
-	 * @see Container#doLayout()
-	 * @see #setLayout(LayoutManager)
-	 */
-	public void doLayout() {
-		Component docked = getDockedComponent();
-		if(docked==null)
-			return;
-			
-		Insets insets = getInsets();
-		int w = getWidth() - insets.left - insets.right;
-		int h = getHeight() - insets.top - insets.bottom;
-		docked.setBounds(insets.left, insets.top, w, h);
 	}
 	
 	/**
@@ -1329,23 +1421,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		dockedComponent = c;
 		Component ret = super.add(dockedComponent);
 		return ret;
-	}
-	
-	/**
-	 * Overridden to do nothing.  <code>doLayout()</code> has been overridden in this class to 
-	 * implement the <code>DockingPort</code> layout directly, so this method has been obviated
-	 * on this class.
-	 * 
-	 * @param mgr the specified layout manager to set
-	 * @see #doLayout()
-	 * @see Container#setLayout(java.awt.LayoutManager)
-	 */
-	public void setLayout(LayoutManager mgr) {
-	}
-	
-	private void setPreferredSize(DockingPort port, Dimension pref) {
-		if(port instanceof JComponent)
-			((JComponent)port).setPreferredSize(pref);
 	}
 	
 	/**
@@ -1861,5 +1936,4 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			split.validate();
 		}
 	}
-    
 }
