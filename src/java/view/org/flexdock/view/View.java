@@ -303,7 +303,6 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public void addAction(String action) {
-        System.err.println("Adding action " + action + " to " + titlepane);
         if (titlepane != null)
             titlepane.addAction(action);
     }
@@ -362,7 +361,6 @@ public class View extends JComponent implements Dockable, DockingConstants {
             throw new IllegalArgumentException(
                     "Cannot use the same component as both content pane and titlebar.");
         }
-System.err.println("In setTitlebar: " + titlebar);
         if (titlepane != null) {
             remove(titlepane);
             titlepane.setView(null);
