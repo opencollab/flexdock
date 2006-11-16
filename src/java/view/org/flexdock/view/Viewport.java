@@ -95,9 +95,7 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
     	return getDockableSet(depth, 0, View.class);
     }
 	
-	public String toString() {
-		String id = getPersistentId();
-		return "ViewPort[id=" + id + "]";
-	}
-    
+    protected String paramString() {
+        return "id=" + getPersistentId() + "," + super.paramString();
+    }
 }
