@@ -660,6 +660,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
             divider.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                        //TODO should be not override, but placed logic here
                         ((JSplitPane) divider.getParent()).resetToPreferredSizes();
                     }
                 }

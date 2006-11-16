@@ -73,6 +73,8 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             if (extraSpace >= 0) {
                 setDividerLocation(i.top + topH + ((int) (extraSpace * getResizeWeight() + .5)));
             }
+            
+            //TODO implement shrinking excess space to ensure that one has preferred and nothing more
         } else {
             int w = getWidth() - i.left - i.right - getDividerSize();
             int leftH = getLeftComponent().getPreferredSize().width;
@@ -83,6 +85,8 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             if (extraSpace >= 0) {
                 setDividerLocation(i.left + leftH + ((int) (extraSpace * getResizeWeight() + .5)));
             }
+
+            //TODO implement shrinking excess space to ensure that one has preferred and nothing more
         }
     }
     
