@@ -8,17 +8,20 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class JMFDemo extends JFrame {
+    private static Log log = LogFactory.getLog(JMFDemo.class);
+    
 	private DefaultDockingPort port;
 	
 	public static void main(String[] args) {
@@ -34,7 +37,7 @@ public class JMFDemo extends JFrame {
             catch(Throwable t)
             {
                 String message = "Unable to initialize JMFDemo";
-                Log.error(message, t);
+                log.error(message, t);
                 DemoUtility.showErrorDialog(null, message, t);
             }
 			}

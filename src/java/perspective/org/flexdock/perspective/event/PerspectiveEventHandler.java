@@ -5,6 +5,8 @@ package org.flexdock.perspective.event;
 
 import java.util.EventListener;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.event.Event;
 import org.flexdock.event.EventHandler;
 
@@ -12,6 +14,8 @@ import org.flexdock.event.EventHandler;
  * @author Christopher Butler
  */
 public class PerspectiveEventHandler extends EventHandler {
+    private static Log log = LogFactory.getLog(PerspectiveEventHandler.class);
+    
 	private static final PerspectiveEventHandler SINGLETON = new PerspectiveEventHandler();
 	
 	public static PerspectiveEventHandler getInstance() {
@@ -40,6 +44,9 @@ public class PerspectiveEventHandler extends EventHandler {
 			case PerspectiveEvent.RESET:
 				consumer.perspectiveReset(event);
 				break;
+            default:
+                log.warn("Event not handled: unknown type " + eventType);
+                break;
 		}
 	}
 	

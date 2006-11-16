@@ -6,14 +6,17 @@ package org.flexdock.docking.drag.outline.x11;
 import java.awt.Rectangle;
 import java.io.IOException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.Utilities;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class Graphics {
+    private static Log log = LogFactory.getLog(Graphics.class);
+    
 	public static final char MOST_SIGNIFICANT_BIT_FIRST = 'B';
 	public static final int MAJOR_VERSION = 11;
 	public static final int MINOR_VERSION = 0;
@@ -53,7 +56,7 @@ public class Graphics {
 			ConnectionResponse reply = new ConnectionResponse(replyBuffer);
 			return new Graphics(conn, reply);
 		} catch(IOException e) {
-			Log.debug(e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -215,7 +218,7 @@ public class Graphics {
 		try {
 			connection.sendRequest(buffer);
 		} catch(IOException e) {
-			Log.debug(e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 		}
 	}
 	
@@ -240,7 +243,7 @@ public class Graphics {
 					cleanup();
 				} catch(Throwable t) {
 					if(Utilities.sysTrue(RubberBand.DEBUG_OUTPUT))
-						Log.debug(t.getMessage(), t);
+						log.debug(t.getMessage(), t);
 				}
 			}
 		});

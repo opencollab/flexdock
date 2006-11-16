@@ -34,6 +34,8 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.docking.activation.ActiveDockableListener;
 import org.flexdock.docking.adapter.AdapterFactory;
 import org.flexdock.docking.adapter.DockingAdapter;
@@ -62,7 +64,6 @@ import org.flexdock.util.ResourceManager;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
-import org.flexdock.logging.Log;
 
 /**
  * This class is used as a public facade into the framework docking system.  It provides a straightforward
@@ -100,6 +101,7 @@ import org.flexdock.logging.Log;
  * @author Christopher Butler
  */
 public class DockingManager implements DockingConstants {
+    private static Log log = LogFactory.getLog(DockingManager.class);
 	
     public static final String MINIMIZE_MANAGER = "minimize.manager";
 	public static final String LAYOUT_MANAGER = "layout.manager";
@@ -1175,11 +1177,11 @@ public class DockingManager implements DockingConstants {
 			return restoreLayout(false);
 		} catch(IOException e) {
 			// shouldn't happen since we're not intending to load from storage
-            Log.debug(e.getMessage(), e);
+            log.debug(e.getMessage(), e);
 			return false;
 		} catch (PersistenceException e) {
             // TODO Auto-generated catch block
-            Log.debug(e.getMessage(), e);
+            log.debug(e.getMessage(), e);
             return false;
 		}
 	}
@@ -2353,9 +2355,9 @@ public class DockingManager implements DockingConstants {
                 if(isEnabled())
                     storeLayoutModel();
             } catch(IOException e) {
-                Log.warn(e.getMessage(), e);
+                log.warn(e.getMessage(), e);
             } catch (PersistenceException e) {
-                Log.warn(e.getMessage(), e);
+                log.warn(e.getMessage(), e);
             }
         }
         

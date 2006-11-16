@@ -5,6 +5,8 @@ package org.flexdock.logging;
  * All log statements are sent to <code>System.err</code>.
  * Since this class inherits from <code>SimpleLogger</code>,
  * only warnings and errors are logged, no debug messages.
+ * 
+ * @deprecated
  */
 class DefaultLogger extends SimpleLogger {
 

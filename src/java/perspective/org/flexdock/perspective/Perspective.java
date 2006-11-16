@@ -15,7 +15,9 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.LayoutNode;
+import org.flexdock.event.EventManager;
 import org.flexdock.perspective.event.LayoutListener;
+import org.flexdock.perspective.event.PerspectiveEvent;
 
 /**
  * @author Mateusz Szczap
@@ -137,16 +139,19 @@ public class Perspective implements Cloneable, Serializable {
 			m_initalSequence.apply(port);
 			
 			Layout layout = getLayout();
-			if(layout!=null)
+			if(layout!=null) {
 				layout.update(m_initalSequence);
+                EventManager.getInstance().dispatchEvent(new PerspectiveEvent(this, null, PerspectiveEvent.RESET));
+            }
 		}
 	}
 	
 	public void load(DockingPort port) {
 		Layout layout = getLayout();
-		if(layout.isInitialized())
+		if(layout.isInitialized()) {
 			layout.apply(port);
-		else {
+			EventManager.getInstance().dispatchEvent(new PerspectiveEvent(this, null, PerspectiveEvent.RESET));
+        } else {
 			reset(port);
 		}
 	}

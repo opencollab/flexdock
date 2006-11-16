@@ -37,7 +37,7 @@
    <property name="bin.dir.test" value="${build.dir}/bin-test" />
    <property name="bin.dir.webstart" value="${build.dir}/webstart" />
    <property name="dist.dir" value="${build.dir}/dist" />
-   <property name="version" value="0.4.1" />
+   <property name="version" value="0.5.0" />
    <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
    <property name="dist.demo.jar.basename" value="${ant.project.name}-demo-${version}" />
 
@@ -55,6 +55,7 @@
    <path id="javac.classpath">
       <pathelement location="${bin.dir}" />
       <fileset dir="${lib.dir}" includes="skinlf*.jar" />
+	  <fileset dir="${lib.dir}" includes="commons-logging*.jar" />
    </path>
    <path id="javac.classpath.demo">
       <path refid="javac.classpath" />
@@ -72,11 +73,14 @@
       <pathelement location="${bin.dir.demo}"/>
       <pathelement location="${lib.dir}/jmf.jar"/><!-- needed only for JMF demo -->
       <pathelement location="${bin.dir}"/>
+	  <pathelement location="${lib.dir}/commons-logging-1.1.jar"/>
    </path>
    <path id="rt.classpath.test">
       <pathelement location="${bin.dir.test}"/>
       <pathelement location="${bin.dir}"/>
       <pathelement location="${bin.dir.demo}"/> <!-- needed for a couple of the tests -->
+	  <pathelement location="${lib.dir}/commons-logging-1.1.jar"/>
+	  <pathelement location="${lib.dir}/skinlf-1.2.11.jar"/>
    </path>
 
    <!-- build targets -->
@@ -330,7 +334,7 @@
               I believe this BUG is the cause: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4490798 -->
          <manifest>
             <!-- matches core jar name -->
-            <attribute name="Class-Path" value="${dist.jar.name} jmf/lib/jmf.jar"/> 
+            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar jmf/lib/jmf.jar"/> 
             <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
          </manifest>
       </jar>
@@ -399,6 +403,10 @@
             <include name="${dist.demo.jar.basename}.jar"/>
             <include name="jmf/**"/> 
          </fileset>
+      	<fileset dir="${basedir}">
+      		<include name="lib/commons-logging*.jar" />
+      		<include name="lib/LICENSE.txt" />
+      	</fileset>
          <fileset dir="${build.dir}">
             <include name="docs/**" />
          </fileset>

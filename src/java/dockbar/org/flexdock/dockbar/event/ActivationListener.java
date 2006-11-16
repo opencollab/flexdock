@@ -5,16 +5,19 @@ package org.flexdock.dockbar.event;
 
 import java.awt.Point;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.event.EventManager;
 import org.flexdock.util.Utilities;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class ActivationListener {
+    private static Log log = LogFactory.getLog(ActivationListener.class);
+    
 	private DockbarManager manager;
 	private Deactivator deactivator;
 	private boolean enabled;
@@ -123,7 +126,7 @@ public class ActivationListener {
 			try {
 				Thread.sleep(1000);
 			} catch(InterruptedException e) {
-				Log.debug(e.getMessage(), e);
+				log.debug(e.getMessage(), e);
 			}
 			
 			if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&

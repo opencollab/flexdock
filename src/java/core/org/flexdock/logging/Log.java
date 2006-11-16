@@ -3,6 +3,8 @@ package org.flexdock.logging;
 /**
  * This class provides static log methods that should be used for logging
  * from inside other flexdock classes.
+ * 
+ * @deprecated
  */
 public class Log {
 

@@ -5,6 +5,8 @@ package org.flexdock.logging;
  * logging statements are written it should supply an instance of this
  * interface to {@link org.flexdock.logging.Log#setLogger(Logger)} at
  * application startup time.
+ * 
+ * @deprecated
  */
 public interface Logger {
 

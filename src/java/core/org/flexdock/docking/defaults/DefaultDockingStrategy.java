@@ -8,9 +8,12 @@ import java.awt.Container;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Map;
 
 import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
@@ -25,6 +28,7 @@ import org.flexdock.docking.drag.DragOperation;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
+import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.event.EventManager;
 import org.flexdock.util.DockingUtility;
@@ -648,11 +652,20 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 		   return split;
 
 		//  grab the divider from the UI and remove the border from it
-		BasicSplitPaneDivider divider =
+		final BasicSplitPaneDivider divider =
 					   ((BasicSplitPaneUI) split.getUI()).getDivider();
-		if (divider != null)
-		   divider.setBorder(null);
-
+		if (divider != null) {
+		    divider.setBorder(null);
+        
+            divider.addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                        ((JSplitPane) divider.getParent()).resetToPreferredSizes();
+                    }
+                }
+            });
+        }
+        
 		return split;
 	}
 	

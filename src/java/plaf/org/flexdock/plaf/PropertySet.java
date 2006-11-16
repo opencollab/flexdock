@@ -17,12 +17,15 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.border.Border;
 
-import org.flexdock.logging.Log;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Christopher Butler
  */
 public class PropertySet {
+    private static Log log = LogFactory.getLog(PropertySet.class);
+    
 	private HashMap properties;
 	private String name;
 	
@@ -100,7 +103,7 @@ public class PropertySet {
 		try {
 			return Integer.parseInt(string);
 		} catch(NumberFormatException e) {
-			Log.debug(e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 			return 0;
 		}
 	}
@@ -125,7 +128,7 @@ public class PropertySet {
 		try {
 			return Boolean.valueOf( string).booleanValue();
 		} catch(NumberFormatException e) {
-			Log.debug(e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 			return false;
 		}
 	}

@@ -43,6 +43,7 @@ import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.event.EventManager;
 import org.flexdock.event.RegistrationEvent;
 import org.flexdock.perspective.event.LayoutEventHandler;
+import org.flexdock.perspective.event.PerspectiveEvent;
 import org.flexdock.perspective.event.PerspectiveEventHandler;
 import org.flexdock.perspective.event.PerspectiveListener;
 import org.flexdock.perspective.event.RegistrationHandler;
@@ -394,10 +395,11 @@ public class PerspectiveManager implements LayoutManager {
 		
 		synchronized(this) {
 			setCurrentPerspectiveName(perspectiveId);
-			if(reset)
+			if(reset) {
 				perspective.reset(rootPort);
-			else
+            } else {
 				perspective.load(rootPort);
+            }
 		}
 		
 		EventQueue.invokeLater(new Runnable() {

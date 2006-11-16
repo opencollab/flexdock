@@ -8,6 +8,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
@@ -16,9 +18,10 @@ import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
-import org.flexdock.logging.Log;
 
 public class DragPipeline {
+    private static Log log = LogFactory.getLog(DragPipeline.class);
+    
 	private GlassPaneMonitor paneMonitor;
 	private RootWindow[] windows;
 	private HashMap rootWindowsByBounds;
@@ -58,7 +61,7 @@ public class DragPipeline {
 		        }
 		    });
 		} catch(Exception e) {
-			Log.warn(e.getMessage(), e);
+			log.warn(e.getMessage(), e);
 		}
 	}
 	

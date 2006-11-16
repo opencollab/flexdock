@@ -8,16 +8,19 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.dockbar.ViewPane;
-import org.flexdock.logging.Log;
 
 
 
 /**
  * @author Christopher Butler
  */
-public class Animation implements Runnable, ActionListener { 
+public class Animation implements Runnable, ActionListener {
+    private static Log log = LogFactory.getLog(Animation.class);
+    
 	private static int ANIMATION_INTERVAL = 20;
 	private static int TOTAL_FRAME_COUNT = 5;
 	
@@ -97,7 +100,7 @@ public class Animation implements Runnable, ActionListener {
 			try {
 				lock.wait();
 			} catch(InterruptedException e) {
-				Log.debug(e.getMessage(), e);
+				log.debug(e.getMessage(), e);
 			}
 		}
 	}

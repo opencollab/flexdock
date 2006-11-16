@@ -12,13 +12,16 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class Connection {
+    private static Log log = LogFactory.getLog(Connection.class);
+    
 	public static final String LOCALHOST = "127.0.0.1";
 	public static final String DISPLAY_VAR = "DISPLAY";
 	private static final ConnectionInfo CONNECTION_INFO = getConnectionInfo();
@@ -83,7 +86,7 @@ public class Connection {
 			in.close();
 			return true;
 		} catch (Exception e) {
-			Log.debug(e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -154,7 +157,7 @@ public class Connection {
 			}
 			return p;
 		} catch(Exception e) {
-			Log.debug(e.getMessage(), e);
+			log.debug(e.getMessage(), e);
 			return new Properties();
 		}
 	}

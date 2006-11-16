@@ -6,6 +6,8 @@ package org.flexdock.logging;
  * and errors.<br>
  * All debug messages are swallowed, all warnings and errors are passed on
  * to the abstract method {@link #log(String, Throwable)}.
+ * 
+ * @deprecated
  */
 public abstract class SimpleLogger implements Logger {
 

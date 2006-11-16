@@ -11,11 +11,15 @@ The contents of the binary distributions are:
   flexdock-demo-<version>.jar   runnable jar containing demo apps
   docs\*                        user/developer documentation
   docs\apis\...                 javadocs
-
+  jmf\*							Java Media Framework used by the demo
+  lib\*							libraries used by this distribution
 
 Running the Demos
 ---------------------
-As long as the two jars are inthe same directory, run the demo jar using:
+The demo jar requires both the flexdock-<version>.jar and lib\*.jar.  The
+manifest for the demo expects the flexdock-<version>.jar to be in the same
+directory and all other dependencies to be located in a subdirectory lib.
+If you do not move any of the jars, you can run the demo jar using:
 
   java -jar flexdock-demo-<version>.jar
 

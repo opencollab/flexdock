@@ -6,19 +6,21 @@ package org.flexdock.plaf.theme;
 import java.util.HashMap;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.IFlexViewComponentUI;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.XMLConstants;
-import org.flexdock.logging.Log;
-
 import org.w3c.dom.Element;
 
 /**
  * @author Christopher Butler
  */
 public class UIFactory implements XMLConstants {
+    private static Log log = LogFactory.getLog(UIFactory.class);
+    
 	public static final String DEFAULT = "default";
 	public static final String THEME_KEY = "theme";
 	public static final String VIEW_KEY = "view-ui";
@@ -107,7 +109,7 @@ public class UIFactory implements XMLConstants {
 		} catch(Exception e) {
 			// we use public, no-argument constructors, so if this happens, we
 			// have a configuration error.
-			Log.debug(e.getMessage(),e);
+			log.debug(e.getMessage(), e);
 			return null;
 		}
 	}
@@ -120,11 +122,11 @@ public class UIFactory implements XMLConstants {
 		try {
 			implClass = Class.forName(classname);
 			if(!rootClass.isAssignableFrom(implClass)) {
-				System.err.println("Invalid UI class " + implClass + ".  Using '" + rootClass + "' instead.");
+				log.warn("Invalid UI class " + implClass + ".  Using '" + rootClass + "' instead.");
 				implClass = null;
 			}
 		} catch(ClassNotFoundException e) {
-			Log.debug("Unable to load " + classname + ".  Using '" + rootClass + "' instead.",e);
+			log.debug("Unable to load " + classname + ".  Using '" + rootClass + "' instead.", e);
 			implClass = null;
 		}
 		return implClass==null? rootClass: implClass;

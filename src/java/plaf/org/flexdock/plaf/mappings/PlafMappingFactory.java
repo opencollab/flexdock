@@ -11,16 +11,18 @@ import java.util.List;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.XMLConstants;
-import org.flexdock.logging.Log;
-
 import org.w3c.dom.Element;
 
 /**
  * @author Christopher Butler
  */
 public class PlafMappingFactory implements XMLConstants {
+    private static Log log = LogFactory.getLog(PlafMappingFactory.class);
+    
 	public static final String PLAF_KEY = "plaf";
 	private static final HashMap PLAF_MAPPINGS = loadPlafMappings();
 	
@@ -81,7 +83,7 @@ public class PlafMappingFactory implements XMLConstants {
 			// must be a type of PlafBasedViewResolver
 			resolver = (RefResolver)clazz.newInstance();
 		} catch(Exception e) {
-            Log.debug("Error trying to create new instance of '" +resolverName + "'.", e);
+            log.debug("Error trying to create new instance of '" +resolverName + "'.", e);
 			return refName;
 		}
 

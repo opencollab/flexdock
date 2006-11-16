@@ -11,14 +11,17 @@ import java.awt.Insets;
 import javax.swing.border.Border;
 import javax.swing.plaf.ColorUIResource;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.plaf.resources.ColorResourceHandler;
 import org.flexdock.plaf.resources.ResourceHandler;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class SquareBevelBorderResource extends ResourceHandler {
+    private static Log log = LogFactory.getLog(SquareBevelBorderResource.class);
+    
 	private static final ColorUIResource DEFAULT_COLOR = new ColorUIResource(Color.WHITE);
 	
 	public Object getResource(String data) {
@@ -35,7 +38,7 @@ public class SquareBevelBorderResource extends ResourceHandler {
 		try {
 			return Integer.parseInt(data);
 		} catch(Exception e) {
-			Log.debug(e.getMessage(),e);
+			log.debug(e.getMessage(), e);
 			return 1;
 		}
 	}

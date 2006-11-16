@@ -14,16 +14,18 @@ import java.util.Map;
 
 import javax.swing.JComponent;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.ClassMapping;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class PropertyManager {
+    private static Log log = LogFactory.getLog(PropertyManager.class);
     
     public static final String DOCKABLE_PROPERTIES_KEY = DockablePropertySet.class.getName();
     public static final String DOCKINGPORT_PROPERTIES_KEY = DockingPortPropertySet.class.getName();
@@ -170,7 +172,7 @@ public class PropertyManager {
             }
             return null;
         } catch(Exception e) {
-            Log.debug(e.getMessage(), e);
+            log.debug(e.getMessage(), e);
             return null;
         }
     }

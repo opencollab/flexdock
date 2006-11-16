@@ -36,9 +36,9 @@ import javax.swing.ImageIcon;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Document;
-
-import org.flexdock.logging.Log;
 
 /**
  * This class provides <code>static</code> convenience methods for resource management, including resource
@@ -47,6 +47,8 @@ import org.flexdock.logging.Log;
  * @author Chris Butler
  */
 public class ResourceManager {
+    private static Log log = LogFactory.getLog(ResourceManager.class);
+    
 	/**
 	 * Defines the file extension used by native shared libraries on the current system.
 	 */
@@ -91,7 +93,7 @@ public class ResourceManager {
 				if(file.exists())
 					url = file.toURL();
 			} catch(MalformedURLException e) {
-                Log.warn(e.getMessage(), e);
+                log.warn(e.getMessage(), e);
 				url = null;
 			}
 		}
@@ -356,7 +358,7 @@ public class ResourceManager {
 			DocumentBuilder builder = factory.newDocumentBuilder();
 			return builder.parse(inStream);
 		} catch(Exception e) {
-			Log.warn(e.getMessage(), e);
+			log.warn(e.getMessage(), e);
 		}
 		finally {
 			close(inStream);
@@ -443,7 +445,7 @@ public class ResourceManager {
 			return p;
 		} catch(Exception e) {
 			if(!failSilent)
-				Log.warn(e.getMessage(), e);
+				log.warn(e.getMessage(), e);
 			return null;
 		}
 		finally {
@@ -464,7 +466,7 @@ public class ResourceManager {
 			if(in!=null)
 				in.close();
 		} catch(Exception e) {
-			Log.warn(e.getMessage(), e);
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -481,7 +483,7 @@ public class ResourceManager {
 			if(out!=null)
 				out.close();
 		} catch(Exception e) {
-			Log.warn(e.getMessage(), e);
+			log.warn(e.getMessage(), e);
 		}
 	}
 	
@@ -498,7 +500,7 @@ public class ResourceManager {
 			if(socket!=null)
 			    socket.close();
 		} catch(Exception e) {
-			Log.warn(e.getMessage(), e);
+			log.warn(e.getMessage(), e);
 		}
 	}
 }

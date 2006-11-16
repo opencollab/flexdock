@@ -4,13 +4,13 @@
 package org.flexdock.docking.defaults;
 
 import java.awt.Component;
+import java.awt.Insets;
 
 import javax.swing.JSplitPane;
 
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.docking.DockingStrategy;
 import org.flexdock.util.DockingUtility;
 
 /**
@@ -23,21 +23,26 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 	protected boolean controllerInTopLeft;
 	
 	/**
-	 * Creates a new <code>DockingSplitPane</code> for the specified <code>DockingPort</code> with
-	 * the understanding that the resulting <code>DockingSplitPane</code> will be used for docking
-	 * a <code>Dockable</code> into the <code>DockingPort's</code> specified <code>region</code>.
-	 * Neither <code>port</code> or <code>region</code> may be <code>null</code>.  <code>region</code>
-	 * must be a valid docking region as defined by 
-	 * <code>isValidDockingRegion(String region)</code>.
-	 * 
-	 * @param port the <code>DockingPort</code> for which this <code>DockingSplitPane</code> is to
-	 * be created. 
-	 * @param region the region within the specified <code>DockingPort</code> for which this 
-	 * <code.DockingSplitPane</code> is to be created.
-	 * @throws <code>IllegalArgumentException</code> if wither <code>port</code> or </code>region</code>
-	 * are <code>null</code>, or if <code>region</code> is not a valid docking region.
-	 * @see DockingManager#isValidDockingRegion(String)
-	 */
+     * Creates a new <code>DockingSplitPane</code> for the specified
+     * <code>DockingPort</code> with the understanding that the resulting
+     * <code>DockingSplitPane</code> will be used for docking a
+     * <code>Dockable</code> into the <code>DockingPort's</code> specified
+     * <code>region</code>. Neither <code>port</code> or
+     * <code>region</code> may be <code>null</code>. <code>region</code>
+     * must be a valid docking region as defined by
+     * <code>isValidDockingRegion(String region)</code>.
+     * 
+     * @param port
+     *            the <code>DockingPort</code> for which this
+     *            <code>DockingSplitPane</code> is to be created.
+     * @param region
+     *            the region within the specified <code>DockingPort</code> for
+     *            which this {@code DockingSplitPane} is to be created.
+     * @throws <code>IllegalArgumentException</code> if either <code>port</code>
+     *             is {@code null} or </code>region</code> is <code>null</code>
+     *             or invalid.
+     * @see DockingManager#isValidDockingRegion(String)
+     */
 	public DockingSplitPane(DockingPort port, String region) {
 		if(port==null)
 			throw new IllegalArgumentException("'port' cannot be null.");
@@ -55,6 +60,32 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 		setResizeWeight(weight);
 	}
 
+    public void resetToPreferredSizes() {
+        Insets i = getInsets();
+        
+        if (getOrientation() == VERTICAL_SPLIT) {
+            int h = getHeight() - i.top - i.bottom - getDividerSize();
+            int topH = getTopComponent().getPreferredSize().height;
+            int bottomH =  getBottomComponent().getPreferredSize().height;
+            int extraSpace = h - topH - bottomH;
+            
+            //we have more space than necessary; resize to give each at least preferred size
+            if (extraSpace >= 0) {
+                setDividerLocation(i.top + topH + ((int) (extraSpace * getResizeWeight() + .5)));
+            }
+        } else {
+            int w = getWidth() - i.left - i.right - getDividerSize();
+            int leftH = getLeftComponent().getPreferredSize().width;
+            int rightH =  getRightComponent().getPreferredSize().width;
+            int extraSpace = w - leftH - rightH;
+            
+            //we have more space than necessary; resize to give each at least preferred size
+            if (extraSpace >= 0) {
+                setDividerLocation(i.left + leftH + ((int) (extraSpace * getResizeWeight() + .5)));
+            }
+        }
+    }
+    
 	protected boolean isDividerSizeProperlyDetermined() {
 		if (getDividerLocation() != 0)
 			return true;
@@ -155,17 +186,10 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 		if (!isDividerSizeProperlyDetermined()) {
 			// make sure this can only run once so we don't get a StackOverflow
 			dividerLocDetermined = true;
-			Component controller = getElderComponent();
-			resetDividerLocation();
+			setDividerLocation(.5);
 		}
 		// continue the layout
 		super.doLayout();
-	}
-	
-	protected void resetDividerLocation() {
-		DockingStrategy strategy = DockingManager.getDockingStrategy(dockingPort);
-		int loc = strategy.getInitialDividerLocation(dockingPort, this);
-		setDividerLocation(loc);
 	}
 	
 	/**

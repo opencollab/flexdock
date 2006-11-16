@@ -34,7 +34,7 @@ If you want to build a jar without any native code in it, run:
 
 The generated jar will have a -generic.jar suffix.
 
-To clean up everything build by ant, delete the build dir or run: ant clean
+To clean up everything built by ant, delete the build dir or run: ant clean
 
 
 Building Native Code

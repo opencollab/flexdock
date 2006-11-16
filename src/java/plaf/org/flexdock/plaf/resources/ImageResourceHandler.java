@@ -3,18 +3,21 @@
  */
 package org.flexdock.plaf.resources;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.flexdock.util.ResourceManager;
-import org.flexdock.logging.Log;
 
 /**
  * @author Christopher Butler
  */
 public class ImageResourceHandler extends ResourceHandler {
+    private static Log log = LogFactory.getLog(ImageResourceHandler.class);
+    
 	public Object getResource(String url) {
 		try {
 			return ResourceManager.createImage(url);
 		} catch(NullPointerException e) {
-			Log.debug(e.getMessage(),e);
+			log.debug(e.getMessage(), e);
 			return null;
 		}
 	}
