@@ -153,8 +153,6 @@ public class View extends JComponent implements Dockable, DockingConstants {
             int w = b.width - i.right - i.left;
             int h = b.height - i.top - i.bottom;
 
-            // Note: This is laying out the children in the layeredPane,
-            // technically, these are not our children.
             if (titlepane != null && titlepane.isVisible()) {
                 Dimension mbd = titlepane.getPreferredSize();
                 titlepane.setBounds(0, 0, w, mbd.height);
@@ -606,13 +604,10 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return DockingUtility.isFloating(this);
     }
 
-    /**
-     * @see java.awt.Component#toString()
-     */
-    public String toString() {
-        return "View[Id=" + this.persistentId + "]";
+    protected String paramString() {
+        return "id=" + getPersistentId() + "," + super.paramString();
     }
-
+    
     /**
      * @return the contentPaneCheckingEnabled
      */
