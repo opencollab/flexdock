@@ -210,14 +210,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
          * is being used
          */ 
         public void layoutContainer(Container parent) {
-            Rectangle b = parent.getBounds();
+            Rectangle b = getBounds();
             Insets i = getInsets();
-            Insets insets = getInsets();
             int w = b.width - i.right - i.left;
             int h = b.height - i.top - i.bottom;
         
             if(dockedComponent != null) {
-                dockedComponent.setBounds(insets.left, insets.top, w, h);
+                dockedComponent.setBounds(i.left, i.top, w, h);
             }
         }
         
@@ -978,7 +977,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		dockCmp(newContent, comp);
 		
         JSplitPane newDockedContent = strategy.createSplitPane(this, region);
-
+        
         // put the ports in the correct order and add them to a new wrapper panel
 		DockingPort[] ports = putPortsInOrder(oldContent, newContent, region);
 
@@ -1001,8 +1000,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		setComponent(newDockedContent);
 		// if we're currently showing, then we can exit now
 		if(isShowing())
-			return true;
-		
+            return true;
+
 		// otherwise, we have unrealized components whose sizes cannot be determined until
 		// after we're visible.  cache the desired size values now for use later during rendering.
 		double proportion = strategy.getDividerProportion(this, newDockedContent);
@@ -1420,6 +1419,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			
 		dockedComponent = c;
 		Component ret = super.add(dockedComponent);
+
+        //calling doLayout here to properly set the component's size
+        //validate throws an error
+        doLayout();
+        
 		return ret;
 	}
 	
