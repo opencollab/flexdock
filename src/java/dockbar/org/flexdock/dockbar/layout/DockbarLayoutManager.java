@@ -59,11 +59,13 @@ public class DockbarLayoutManager {
 		Component leftEdge = getEdgeGuide(mgr, MinimizationManager.LEFT);
 		Component rightEdge = getEdgeGuide(mgr, MinimizationManager.RIGHT);
 		Component bottomEdge = getEdgeGuide(mgr, MinimizationManager.BOTTOM);
-		Component topEdge = window.getContentPane();
+        Component topEdge = getEdgeGuide(mgr, MinimizationManager.TOP);
+
 
 		Rectangle leftBounds = SwingUtilities.convertRectangle(leftEdge.getParent(), leftEdge.getBounds(), layeredPane);
 		Rectangle rightBounds = SwingUtilities.convertRectangle(rightEdge.getParent(), rightEdge.getBounds(), layeredPane);
 		Rectangle bottomBounds = SwingUtilities.convertRectangle(bottomEdge.getParent(), bottomEdge.getBounds(), layeredPane);
+        Rectangle topBounds = SwingUtilities.convertRectangle(topEdge.getParent(), topEdge.getBounds(), layeredPane);
 		
 		int rightX = rightBounds.x + rightBounds.width;
 		int bottomY = bottomBounds.y + bottomBounds.height;
@@ -76,7 +78,7 @@ public class DockbarLayoutManager {
 		// unpredictable results.
 		
 		rect.x = leftBounds.x;
-		rect.y = topEdge.getBounds().y;
+        rect.y = topBounds.y;
 		rect.width = rightX - rect.x;
 		rect.height = bottomY - rect.y;
 		return rect;
