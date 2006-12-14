@@ -5,6 +5,7 @@ package org.flexdock.perspective;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,24 +21,19 @@ import org.flexdock.util.DockingUtility;
  */
 public class LayoutSequence implements Cloneable, Serializable, DockingConstants {
 
-    private ArrayList sequence;  // contains DockingState objects
+    private List sequence;  // contains DockingState objects
 	
 	public LayoutSequence() {
-		sequence = new ArrayList();
+		this(new ArrayList());
 	}
 	
 	public LayoutSequence(DockingState[] dockingStates) {
-		if(dockingStates==null)
-			dockingStates = new DockingState[0];
-		
-		ArrayList list = new ArrayList(dockingStates.length);
-		for(int i=0; i<dockingStates.length; i++) {
-			list.add(dockingStates[i]);
-		}
-		sequence = list;
+		this(dockingStates == null
+                ? new ArrayList()
+                : Arrays.asList(dockingStates));
 	}
 	
-	private LayoutSequence(ArrayList list) {
+	private LayoutSequence(List list) {
 		sequence = list;
 	}
 	
@@ -128,7 +124,7 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
 	}
 	
 	public Object clone() {
-		return new LayoutSequence(getSequenceClone());
+        return new LayoutSequence(getSequenceClone());
 	}
 	
 }
