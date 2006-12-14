@@ -495,7 +495,8 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 		
 		if(rootWin != null) {
 			SwingUtility.revalidate(rootWin.getContentPane());
-	}
+            SwingUtility.repaint(rootWin.getContentPane());
+		}
 	
 		if (success) {
 			dockingEvent = new DockingEvent(dockable, dockingPort, dockingPort, DockingEvent.UNDOCKING_COMPLETE, dragContext);
