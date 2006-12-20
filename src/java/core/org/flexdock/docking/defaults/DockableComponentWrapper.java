@@ -257,7 +257,6 @@ public class DockableComponentWrapper implements Dockable {
 	 * <code>null</code> arguments are ignored.
 	 * 
 	 * @param listener the <code>DockingListener</code> to add to this <code>Dockable</code>.
-	 * @see DockingMonitor#addDockingListener(DockingListener)
 	 * @see #getDockingListeners()
 	 * @see #removeDockingListener(DockingListener)
 	 */
@@ -272,7 +271,6 @@ public class DockableComponentWrapper implements Dockable {
 	 * array is returned.
 	 * 
 	 * @return an array of all <code>DockingListeners</code> added to this <code>Dockable</code>.
-	 * @see DockingMonitor#getDockingListeners()
 	 * @see #addDockingListener(DockingListener)
 	 * @see #removeDockingListener(DockingListener)
 	 */
@@ -286,8 +284,7 @@ public class DockableComponentWrapper implements Dockable {
 	 * has not previously been added to this <code>Dockable</code>, then no <code>Exception</code>
 	 * is thrown and no action is taken.
 	 * 
-	 * @param the <code>DockingListener</code> to remove from this <code>Dockable</code>
-	 * @see DockingMonitor#removeDockingListener(DockingListener)
+	 * @param listener the <code>DockingListener</code> to remove from this <code>Dockable</code>
 	 * @see #addDockingListener(DockingListener)
 	 * @see #getDockingListeners()
 	 */
@@ -421,7 +418,6 @@ public class DockableComponentWrapper implements Dockable {
      * 
      * @return the <code>DockablePropertySet</code> associated with this <code>Dockable</code>.  This
      * method will not return a <code>null</code> reference.
-     * @see org.flexdock.docking.props.DockablePropertySet#
      * @see Dockable#getDockingProperties()
      * @see org.flexdock.docking.props.PropertyManager#getDockablePropertySet(Dockable)
      */

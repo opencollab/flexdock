@@ -43,7 +43,7 @@ public class PainterResource extends PropertySet{
     }
     
     /**
-     * @param bgColorActiv The bgColorActiv to set.
+     * @param bgColorActive The bgColorActive to set.
      */
     public void setBgColorActive(Color bgColorActive) {
         setProperty( BACKGROUND_COLOR_ACTIVE, bgColorActive);

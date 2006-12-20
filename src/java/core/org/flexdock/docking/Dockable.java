@@ -115,7 +115,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * 
      * @return the <code>DockablePropertySet</code> associated with this <code>Dockable</code>  This
      * method may not return a <code>null</code> reference.
-     * @see org.flexdock.docking.props.DockablePropertySet#
+     * @see org.flexdock.docking.props.DockablePropertySet
      * @see org.flexdock.docking.props.PropertyManager#getDockablePropertySet(Dockable)
      */
     DockablePropertySet getDockingProperties();

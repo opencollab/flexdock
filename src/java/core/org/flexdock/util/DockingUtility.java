@@ -43,7 +43,7 @@ public class DockingUtility implements DockingConstants {
 	 * of these conditions cannot be satisfied, then this method returns a <code>null</code> 
 	 * reference.
 	 * 
-	 * @param dockable the <code>Dockable</code> whose parent <code>DockingPort</code> is to 
+	 * @param d the <code>Dockable</code> whose parent <code>DockingPort</code> is to 
 	 * be returned.
 	 * @return the imediate parent <code>DockingPort</code> that contains the specified 
 	 * <code>Dockable</code>.
@@ -66,9 +66,9 @@ public class DockingUtility implements DockingConstants {
 	 * of these conditions cannot be satisfied, then this method returns a <code>null</code> 
 	 * reference.
 	 * 
-	 * @param dockable the <code>Component</code> whose parent <code>DockingPort</code> is to 
+	 * @param comp the <code>Component</code> whose parent <code>DockingPort</code> is to 
 	 * be returned.
-	 * @return the imediate parent <code>DockingPort</code> that contains the specified 
+	 * @return the immediate parent <code>DockingPort</code> that contains the specified 
 	 * <code>Component</code>.
 	 */
 	public static DockingPort getParentDockingPort(Component comp) {
@@ -84,7 +84,7 @@ public class DockingUtility implements DockingConstants {
 	 * <code>false</code> otherwise.  If the specified <code>DockingPort</code> is <code>null</code>, then this
 	 * method returns <code>false</code>.
 	 * 
-	 * @param the <code>DockingPort</code> to check for an ancestor port
+	 * @param dockingPort the <code>DockingPort</code> to check for an ancestor port
 	 * @return <code>true</code> if the specified <code>DockingPort</code> has an ancestor <code>DockingPort</code>; 
 	 * <code>false</code> otherwise.
 	 * @see SwingUtilities#getAncestorOfClass(java.lang.Class, java.awt.Component)
@@ -110,7 +110,7 @@ public class DockingUtility implements DockingConstants {
 	 *@param container the <code>Container</code> within which to find a <code>DockingPort</code>.
 	 *@param location the point within the specified <code>Container</code> at which to search for a 
 	 *<code>DockingPort</code>.
-	 *@returnthe deepest <code>DockingPort</code> within the specified <code>Container</code> at the 
+	 *@return the deepest <code>DockingPort</code> within the specified <code>Container</code> at the 
 	 * specified <code>location</code>.
 	 * @see SwingUtilities#getDeepestComponentAt(java.awt.Component, int, int)
 	 * @see SwingUtilities#getAncestorOfClass(java.lang.Class, java.awt.Component)
@@ -266,7 +266,7 @@ public class DockingUtility implements DockingConstants {
 	 * Returns <code>true</code> if the specified <code>region</code> is equal to either <code>NORTH_REGION</code>
 	 * or <code>WEST_REGION</code>.  Returns <code>false</code> otherwise.
 	 * 
-	 * @param the <code>region</code> to check for top or left equivalency
+	 * @param region the <code>region</code> to check for top or left equivalency
 	 * @return <code>true</code> if the specified <code>region</code> is equal to either <code>NORTH_REGION</code>
 	 * or <code>WEST_REGION</code>; <code>false</code> otherwise.
 	 * @see DockingConstants#NORTH_REGION

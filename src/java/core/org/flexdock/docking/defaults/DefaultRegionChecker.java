@@ -250,7 +250,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	 * @param region the specified region that is to be examined.
 	 * @return the bounds representing the allotted sibling area for the supplied region of the 
 	 * specified <code>Component</code>.
-	 * @see RegionChecker#getSiblingBounds(Component, String)(Component, String)
+	 * @see RegionChecker#getSiblingBounds(Component, String)
 	 * @see #getSiblingSize(Component, String) 
 	 */
 	public Rectangle getSiblingBounds(Component c, String region) {
@@ -305,7 +305,6 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	 * @see DockingManager#getDockable(Component)
 	 * @see #getRegionPreference(Dockable, String)
 	 * @see Dockable#getDockingProperties()
-	 * @see DockablePropertySet#getRegionInset(String)
 	 */
 	public float getRegionSize(Component c, String region) {
 		Dockable d = DockingManager.getDockable(c);
@@ -334,11 +333,9 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	 * @param region the specified region that is to be examined.
 	 * @return the percentage of the specified <code>Component</code> allotted for the siblings 
 	 * within the specified region.
-	 * @see RegionChecker#getSiblingSize(Component, String)(Component, String)
 	 * @see DockingManager#getDockable(Component)
-	 * @see #getSiblingPreference(Dockable, String)(Dockable, String)
+	 * @see #getSiblingPreference(Dockable, String)
 	 * @see Dockable#getDockingProperties()
-	 * @see DockablePropertySet#getSiblingSize(String)
 	 */
 	public float getSiblingSize(Component c, String region) {
 		Dockable d = DockingManager.getDockable(c);
@@ -402,7 +399,6 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	 * @return a percentage (0.0F through 1.0F) representing the amount of space allotted for the 
 	 * specified region within the specified <code>Dockable</code>.
 	 * @see Dockable#getDockingProperties()
-	 * @see DockablePropertySet#getRegionInset(String)
 	 * @see RegionChecker#DEFAULT_REGION_SIZE
 	 * @see #validateRegionSize(float)
 	 */
@@ -430,7 +426,6 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 	 * sibling <code>Components</code> docked to the specified region within the 
 	 * specified <code>Dockable</code>.
 	 * @see Dockable#getDockingProperties()
-	 * @see DockablePropertySet#getSiblingSize(String)
 	 * @see RegionChecker#DEFAULT_SIBLING_SIZE
 	 * @see #validateSiblingSize(float)
 	 */

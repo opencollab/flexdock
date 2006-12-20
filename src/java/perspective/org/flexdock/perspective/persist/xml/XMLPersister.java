@@ -61,12 +61,12 @@ import org.xml.sax.SAXException;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: XMLPersister.java,v 1.22 2005-07-06 18:10:49 winnetou25 Exp $
+ * @version $Id: XMLPersister.java,v 1.23 2006-12-20 20:55:21 kschaefe Exp $
  */
 public class XMLPersister implements Persister {
     
     /**
-     * @see org.flexdock.perspective.persist.Persister#store(java.lang.String, org.flexdock.perspective.persist.PerspectiveInfo)
+     * {@inheritDoc}
      */
     public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException, PersistenceException {
         DocumentBuilder documentBuilder = createDocumentBuilder();
@@ -103,7 +103,7 @@ public class XMLPersister implements Persister {
     }
     
     /**
-     * @see org.flexdock.perspective.persist.Persister#load(java.lang.String)
+     * {@inheritDoc}
      */
     public PerspectiveModel load(InputStream is) throws IOException, PersistenceException {
         try {

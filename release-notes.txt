@@ -9,6 +9,11 @@ New Features:
 	  with Perspectives.
 	- the ability to resize components by double-clicking on the divider.
 	
+Deprecated:
+	- the org.flexdock.logging package.  Use the Apache Commons Logging instead.
+	- org.flexdock.util.Utilities.sysTrue(String) method.  Use 
+	  Boolean.getBoolean(String) instead.
+	
 Fixed:
 	- the dockbar layout when attached to the NORTH side of the frame.
 	- null appearing in tab text.

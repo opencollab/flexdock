@@ -242,7 +242,7 @@ public class Graphics {
 				try {
 					cleanup();
 				} catch(Throwable t) {
-					if(Utilities.sysTrue(RubberBand.DEBUG_OUTPUT))
+					if(Boolean.getBoolean(RubberBand.DEBUG_OUTPUT))
 						log.debug(t.getMessage(), t);
 				}
 			}

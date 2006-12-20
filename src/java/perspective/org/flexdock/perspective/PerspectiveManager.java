@@ -117,16 +117,10 @@ public class PerspectiveManager implements LayoutManager {
 		loadPerspective(m_defaultPerspective, (DockingPort)null);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective)
-	 */
 	public void add(Perspective perspective) {
 		add(perspective, false);
 	}
 
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspective(java.lang.String, org.flexdock.view.perspective.IPerspective, boolean)
-	 */
 	public void add(Perspective perspective, boolean isDefault) {
 		if (perspective == null) throw new NullPointerException("perspective cannot be null");
 		
@@ -137,9 +131,6 @@ public class PerspectiveManager implements LayoutManager {
 		EventManager.dispatch(new RegistrationEvent(perspective, this, true));
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#removePerspective(java.lang.String)
-	 */
 	public void remove(String perspectiveId) {
 		if (perspectiveId == null) throw new NullPointerException("perspectiveId cannot be null");
 		
@@ -156,9 +147,6 @@ public class PerspectiveManager implements LayoutManager {
 		EventManager.dispatch(new RegistrationEvent(perspective, this, false));
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#getPerspective()
-	 */
 	public Perspective getPerspective(String perspectiveId) {
 		if (perspectiveId == null)
 			return null;
@@ -205,30 +193,18 @@ public class PerspectiveManager implements LayoutManager {
 		
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#addPerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
-	 */
 	public void addListener(PerspectiveListener perspectiveListener) {
 		EventManager.addListener(perspectiveListener);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#removePerspectiveListener(org.flexdock.view.perspective.PerspectiveListener)
-	 */
 	public void removeListener(PerspectiveListener perspectiveListener) {
 		EventManager.removeListener(perspectiveListener);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.event.PerspectiveMonitor#getPerspectiveListners()
-	 */
 	public PerspectiveListener[] getPerspectiveListeners() {
 		return PerspectiveEventHandler.getInstance().getListeners();
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#setDefaultPerspective(org.flexdock.view.perspective.IPerspective)
-	 */
 	public void setDefaultPerspective(String perspectiveId) {
 		m_defaultPerspective = perspectiveId;
 	}
@@ -252,9 +228,6 @@ public class PerspectiveManager implements LayoutManager {
 			setDefaultPerspective(perspectiveId);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspectiveManager#getDefaultPerspective()
-	 */
 	public Perspective getDefaultPerspective() {
 		return getPerspective(m_defaultPerspective);
 	}

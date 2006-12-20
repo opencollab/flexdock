@@ -25,7 +25,7 @@ public class Utilities {
 	 * <code>Integer.parseInt(String s)</code> and returns the resulting <code>int</code> value.
 	 * If any <code>Exception</code> is thrown, this method returns a value of <code>0</code>.
 	 * 
-	 * @param a <code>String</code> containing the <code>int</code> representation to be parsed
+	 * @param data a {@code String} containing the {@code int} representation to be parsed
 	 * @return the integer value represented by the argument in decimal
 	 * @see #getInt(String, int)
 	 * @see Integer#parseInt(java.lang.String)
@@ -40,7 +40,7 @@ public class Utilities {
 	 * If any <code>Exception</code> is thrown, this method returns the value supplied by the
 	 * <code>defaultValue</code> parameter.
 	 * 
-	 * @param a <code>String</code> containing the <code>int</code> representation to be parsed.
+     * @param data a {@code String} containing the {@code int} representation to be parsed
 	 * @param defaultValue the value to return if an <code>Exception</code> is encountered.
 	 * @return the integer value represented by the argument in decimal
 	 * @see Integer#parseInt(java.lang.String)
@@ -174,8 +174,6 @@ public class Utilities {
 	 * <code>System.err</code>.  A <code>null</code> reference will be returned if any problems are encountered.
 	 * 
 	 * @param className the fully qualified name of the desired class.
-	 * @param failSilent <code>true</code> if the stack trace should <b>not</b> be printed to the 
-	 * <code>System.err</code> when a <code>Throwable</code> is caught, <code>false</code> otherwise.
 	 * @return an instance of the specified class
 	 * @see #createInstance(String, Class, boolean)
 	 * @see Class#forName(java.lang.String)
@@ -348,11 +346,12 @@ public class Utilities {
 	 * value is inequal to "true", this method returns <code>false</code>.  This method returns <code>false</code>
 	 * if the specified <code>key</code> parameter is <code>null</code>.
 	 * 
-	 * @param the key for the <code>System</code> property to be tested.
+	 * @param key the <code>System</code> property to test.
 	 * @return <code>true</code> if there is currently a <code>System</code> property with the specified 
 	 * <code>key</code> whose value is "true".
 	 * @see System#getProperty(java.lang.String)
 	 * @see String#equals(java.lang.Object)
+     * @deprecated Use {@link Boolean#getBoolean(String)}.
 	 */
 	public static boolean sysTrue(String key) {
 		String value = key==null? null: System.getProperty(key);
@@ -419,8 +418,8 @@ public class Utilities {
 	 * @see Object#getClass()
 	 * @see Class#getDeclaredField(java.lang.String)
 	 * @see Field#isAccessible()
-	 * @see Field#setAccessible()
-	 * @see Field#set(java.lang.Object)
+	 * @see Field#setAccessible(boolean)
+	 * @see Field#set(Object, Object)
 	 */
 	public static boolean setValue(Object obj, String fieldName, Object value) {
 		if(obj==null || fieldName==null)
@@ -476,7 +475,7 @@ public class Utilities {
 	 * @see Object#getClass()
 	 * @see Class#getDeclaredField(java.lang.String)
 	 * @see Field#isAccessible()
-	 * @see Field#setAccessible()
+	 * @see Field#setAccessible(boolean)
 	 * @see Field#get(java.lang.Object)
 	 * @see IllegalAccessException#getCause()
 	 */

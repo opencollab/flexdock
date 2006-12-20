@@ -90,7 +90,7 @@ public class EffectsManager {
     }
     
     private static RubberBand createRubberBand(String implClass) {
-        boolean failSilent = !Utilities.sysTrue(RubberBand.DEBUG_OUTPUT);
+        boolean failSilent = !Boolean.getBoolean(RubberBand.DEBUG_OUTPUT);
         return (RubberBand)Utilities.createInstance(implClass, RubberBand.class, failSilent);
     }
     

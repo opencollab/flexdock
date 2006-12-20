@@ -1381,7 +1381,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	/**
 	 * Overridden to decorate superclass method, keeping track of internal docked-component reference.
 	 * 
-	 * @param the index of the component to be removed.
+	 * @param index the index of the component to be removed.
 	 * @see Container#remove(int)
 	 */
 	public void remove(int index) {
@@ -1587,7 +1587,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 	 * has not previously been added to this <code>DockingPort</code>, then no <code>Exception</code>
 	 * is thrown and no action is taken.
 	 * 
-	 * @param the <code>DockingListener</code> to remove from this <code>DockingPort</code>
+	 * @param listener the <code>DockingListener</code> to remove from this <code>DockingPort</code>
 	 * @see DockingMonitor#removeDockingListener(DockingListener)
 	 * @see #addDockingListener(DockingListener)
 	 * @see #getDockingListeners()

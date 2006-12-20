@@ -124,7 +124,7 @@ public class NestedComponents {
 	 * Returns <code>true</code> if both <code>child</code> and <code>parent</code> fields
 	 * are non-<code>null</code>; <code>false</code> otherwise.
 	 * 
-	 * @return<code>true</code> if both <code>child</code> and <code>parent</code> fields
+	 * @return <code>true</code> if both <code>child</code> and <code>parent</code> fields
 	 * are non-<code>null</code>; <code>false</code> otherwise.
 	 */
 	public boolean isFull() {
@@ -150,7 +150,7 @@ public class NestedComponents {
    	 * field references (==) as this <code>NestedComponents</code> for field
    	 * <code>searchSrc</code>, <code>child</code>, and <code>parent</code>.
    	 * 
-   	 * @param the <code>Object</code> to test for equality
+   	 * @param obj the <code>Object</code> to test for equality
    	 * @return <code>true</code> if the specified <code>Object</code> is "equal" to
    	 * this <code>NestedComponents</code> instance; <code>false</code> otherwise.
    	 */

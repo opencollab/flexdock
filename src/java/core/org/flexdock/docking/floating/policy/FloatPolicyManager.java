@@ -69,7 +69,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
 	private FloatPolicyManager() {
 		policies = new Vector();
 		addPolicy(DefaultFloatPolicy.getInstance());
-		globalFloatingEnabled = Utilities.sysTrue(GLOBAL_FLOATING_ENABLED);
+		globalFloatingEnabled = Boolean.getBoolean(GLOBAL_FLOATING_ENABLED);
 	}
 	
 	/**

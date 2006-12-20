@@ -434,8 +434,8 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     /**
-     * @param painterResource
-     *            The painterResource to set.
+     * @param painter
+     *            The painter to set.
      */
     public void setPainter(Painter painter) {
         this.painter = painter;
@@ -464,8 +464,8 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     /**
-     * @param antialiasing
-     *            The antialiasing to set.
+     * @param antialias
+     *            The antialias to set.
      */
     public void setAntialiasing(boolean antialias) {
         antialiasing = antialias ? RenderingHints.VALUE_ANTIALIAS_ON : 

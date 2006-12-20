@@ -29,12 +29,12 @@ import org.w3c.dom.NodeList;
  * Created on 2005-06-03
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
- * @version $Id: PerspectiveSerializer.java,v 1.8 2005-07-06 18:10:48 winnetou25 Exp $
+ * @version $Id: PerspectiveSerializer.java,v 1.9 2006-12-20 20:55:21 kschaefe Exp $
  */
 public class PerspectiveSerializer implements ISerializer {
 
     /**
-     * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(java.lang.Object)
+     * {@inheritDoc}
      */
     public Element serialize(Document document, Object object) {
         Perspective perspective = (Perspective) object;
@@ -57,6 +57,9 @@ public class PerspectiveSerializer implements ISerializer {
         return perspectiveElement;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object deserialize(Element element) {
         String perspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_ID);
         String perspectiveName = element.getAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_NAME);

@@ -49,9 +49,6 @@ public class Perspective implements Cloneable, Serializable {
 		m_layout = new Layout();
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#getPerspectiveName()
-	 */
 	public String getName() {
 		return m_perspectiveName;
 	}
@@ -60,23 +57,14 @@ public class Perspective implements Cloneable, Serializable {
 		return m_persistentId;
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#addDockable(java.lang.String, org.flexdock.view.Dockable)
-	 */
 	public void addDockable(String dockableId) {
 		getLayout().add(dockableId);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#removeDockable(java.lang.String)
-	 */
 	public boolean removeDockable(String dockableId) {
 		return (getLayout().remove(dockableId) != null);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#getDockable(java.lang.String)
-	 */
 	public Dockable getDockable(String dockableId) {
 		return (Dockable) getLayout().getDockable(dockableId);
 	}
@@ -89,9 +77,6 @@ public class Perspective implements Cloneable, Serializable {
 		getLayout().removeListener(listener);
 	}
 	
-	/**
-	 * @see org.flexdock.view.perspective.IPerspective#getDockableIds()
-	 */
 	public Dockable[] getDockables() {
 		return getLayout().getDockables();
 	}

@@ -67,7 +67,7 @@ public class DragPipeline {
 	
 	private void openImpl(DragOperation operation) {
 		// check to see if we're going to support heavyweight dockables for this operation
-		heavyweightDockableSupportted = Utilities.sysTrue(DockingConstants.HEAVYWEIGHT_DOCKABLES);
+		heavyweightDockableSupportted = Boolean.getBoolean(DockingConstants.HEAVYWEIGHT_DOCKABLES);
 		
 		this.dragToken = operation;
 

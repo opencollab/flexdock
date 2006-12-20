@@ -1878,7 +1878,7 @@ public class DockingManager implements DockingConstants {
 	 * @param dockable the <code>Dockable</code> whose minimzed state is to be modified
 	 * @param minimized <code>true</code> if the specified <code>Dockable</code> should be
 	 * minimized, <code>false</code> otherwise.
-	 * @param the <code>Component</code> whose root window will be used by the underlying 
+	 * @param window the <code>Component</code> whose root window will be used by the underlying 
 	 * <code>MinimizationManager</code> for rendering the <code>Dockable</code> in its new
 	 * minimized state.
 	 * @see #setMinimized(Dockable, boolean, Component, int)
@@ -1911,7 +1911,7 @@ public class DockingManager implements DockingConstants {
 	 * <code>Exception</code> is thrown and no action is taken.
 	 * 
 	 * @param dockable the <code>Dockable</code> whose minimzed state is to be modified
-	 * @param minimized <code>true</code> if the specified <code>Dockable</code> should be
+	 * @param minimizing <code>true</code> if the specified <code>Dockable</code> should be
 	 * minimized, <code>false</code> otherwise.
 	 * @param constraint a value to indicate to the <code>MinimizationManager</code> desired
 	 * rendering of the minimized <code>Dockable</code>
@@ -1949,9 +1949,9 @@ public class DockingManager implements DockingConstants {
 	 * theoretically be valid for <code>constraint</code>.
 	 * 
 	 * @param dockable the <code>Dockable</code> whose minimzed state is to be modified
-	 * @param minimized <code>true</code> if the specified <code>Dockable</code> should be
+	 * @param minimizing <code>true</code> if the specified <code>Dockable</code> should be
 	 * minimized, <code>false</code> otherwise.
-	 * @param the <code>Component</code> whose root window will be used by the underlying 
+	 * @param window the <code>Component</code> whose root window will be used by the underlying 
 	 * <code>MinimizationManager</code> for rendering the <code>Dockable</code> in its new
 	 * minimized state.
 	 * @param constraint a value to indicate to the <code>MinimizationManager</code> desired
@@ -2030,7 +2030,7 @@ public class DockingManager implements DockingConstants {
 	 * is passed into this method, the default <code>MinimizationManager</code> provided by
 	 * the framework is used instead.
 	 * 
-	 * @param the <code>MinimizationManager</code> to be installed
+	 * @param mgr the <code>MinimizationManager</code> to be installed
 	 * @see MinimizationManager
 	 * @see #getMinimizeManager()
 	 * @see #setMinimizeManager(String)
@@ -2090,7 +2090,7 @@ public class DockingManager implements DockingConstants {
 	 * Defers processing to 
 	 * <code>FloatPolicyManager.setGlobalFloatingEnabled(boolean globalFloatingEnabled)</code>.
 	 * 
-	 * @param <code>true</code> if global floating support should be enabled, 
+	 * @param enabled <code>true</code> if global floating support should be enabled, 
 	 * <code>false</code> otherwise.
 	 * @see FloatPolicyManager#setGlobalFloatingEnabled(boolean)
 	 * @see FloatPolicyManager#isGlobalFloatingEnabled()
@@ -2117,7 +2117,7 @@ public class DockingManager implements DockingConstants {
 	 * <code>org.flexdock.docking.props.PropertyManager.getDockingPortRoot()</code>.  As such, 
 	 * there are multiple "scopes" at which this property may be overridden.
 	 * 
-	 * @param <code>true</code> if the default setting for <code>DockingPorts</code> should allow
+	 * @param allowed <code>true</code> if the default setting for <code>DockingPorts</code> should allow
 	 * a tabbed layout for a single <code>Dockable</code> in the CENTER region; <code>false</code>
 	 * otherwise.
 	 * @see PropertyManager#getDockingPortRoot()

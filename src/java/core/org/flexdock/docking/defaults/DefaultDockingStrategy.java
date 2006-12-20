@@ -235,7 +235,6 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 	 * @param region the region of the specified <code>DockingPort</code> into which we wish to dock.
 	 * @return <code>true</code> if the docking operation was successful, <code>false</code. otherwise.
 	 * @see #dock(Dockable, DockingPort, String, DragOperation)
-	 * @see DockingPort#isDockingAllowed(String, Component)
 	 * @see Dockable#getDockingProperties()
 	 * @see DockablePropertySet#isTerritoryBlocked(String)
 	 */
@@ -280,7 +279,6 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 	 * @param region the region of the specified <code>DockingPort</code> into which we wish to dock.
 	 * @return <code>true</code> if the docking operation was successful, <code>false</code. otherwise.
 	 * @see #dock(Dockable, DockingPort, String, DragOperation)
-	 * @see DockingPort#isDockingAllowed(String, Component)
 	 * @see Dockable#getDockingProperties()
 	 * @see DockablePropertySet#isTerritoryBlocked(String)
 	 */

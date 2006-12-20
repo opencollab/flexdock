@@ -152,7 +152,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * 
      * @return the <code>DockingPortPropertySet</code> associated with this <code>DockingPort</code>  
      * This method may not return a <code>null</code> reference.
-     * @see org.flexdock.docking.props.DockingPortPropertySet#
+     * @see org.flexdock.docking.props.DockingPortPropertySet
      * @see org.flexdock.docking.props.PropertyManager#getDockingPortPropertySet(DockingPort)
      */
     DockingPortPropertySet getDockingProperties();
@@ -193,7 +193,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * contained within the supplied <code>LayoutNode</code>
      * 
      * @param node the <code>LayoutNode</code> describing the layout to construct
-     * @see org.flexdock.docking.state.LayoutNode#
+     * @see org.flexdock.docking.state.LayoutNode
      * @see #exportLayout()
      */
     void importLayout(LayoutNode node);
@@ -207,7 +207,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * 
      * @return a <code>LayoutNode</code> representing the current layout state within this 
      * <code>DockingPort</code>
-     * @see org.flexdock.docking.state.LayoutNode#
+     * @see org.flexdock.docking.state.LayoutNode
      * @see #importLayout(LayoutNode)
      */
     LayoutNode exportLayout();

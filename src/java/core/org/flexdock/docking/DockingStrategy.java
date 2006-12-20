@@ -49,8 +49,8 @@ public interface DockingStrategy {
 	 * as opposed to docking as a result of drag-events.
 	 *
 	 * @param dockable the <code>Dockable</code> we wish to dock
-	 * @param port the <code>DockingPort</code> into which we wish to dock
-	 * @param region the region of the specified <code>DockingPort</code> into which we wish to dock.
+	 * @param dockingPort the <code>DockingPort</code> into which we wish to dock
+	 * @param dockingRegion the region of the specified <code>DockingPort</code> into which we wish to dock.
 	 * @return whether or not the docking operation was successful.
 	 */
 	boolean dock(Dockable dockable, DockingPort dockingPort, String dockingRegion);
@@ -61,8 +61,8 @@ public interface DockingStrategy {
 	 * If docking is not possible for the specified parameters, then the method returns <code>false</code> and no action is taken.  
 	 *
 	 * @param dockable the <code>Dockable</code> we wish to dock
-	 * @param port the <code>DockingPort</code> into which we wish to dock
-	 * @param region the region of the specified <code>DockingPort</code> into which we wish to dock.
+	 * @param dockingPort the <code>DockingPort</code> into which we wish to dock
+	 * @param dockingRegion the region of the specified <code>DockingPort</code> into which we wish to dock.
 	 * @param operation the <code>DragOperation</code> describing the state of the application/mouse 
 	 * at the point in time in which we're attempting to dock.
 	 * @return whether or not the docking operation was successful.
@@ -110,7 +110,7 @@ public interface DockingStrategy {
 	 * within the specified <code>DockingPort</code> and that is has been validated and its
 	 * current dimensions are non-zero.
 	 * 
-	 * @param port the <code>DockingPort</code> that contains, or will contain the specified <code>JSplitPane</code>.
+	 * @param dockingPort the <code>DockingPort</code> that contains, or will contain the specified <code>JSplitPane</code>.
 	 * @param splitPane the <code>JSplitPane</code> whose initial divider location is to be determined.
 	 * @return the desired divider location of the supplied <code>JSplitPane</code>.
 	 */
@@ -122,10 +122,9 @@ public interface DockingStrategy {
 	 * embedded within the specified <code>DockingPort</code>.  This method does <b>not</b> assume that 
 	 * the <code>JSplitPane</code> has been validated and that it's current dimensions are non-zero.
 	 * 
-	 * @param port the <code>DockingPort</code> that contains, or will contain the specified <code>JSplitPane</code>.
+	 * @param dockingPort the <code>DockingPort</code> that contains, or will contain the specified <code>JSplitPane</code>.
 	 * @param splitPane the <code>JSplitPane</code> whose initial divider location is to be determined.
 	 * @return the desired divider proportion of the supplied <code>JSplitPane</code>.
 	 */
 	double getDividerProportion(DockingPort dockingPort, JSplitPane splitPane);
-    
 }
