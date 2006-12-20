@@ -247,7 +247,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 
 	/**
 	 * Creates a new <code>DefaultDockingPort</code> with a persistent ID equal to the 
-	 * <code>String</code> value of this <code>Object's</code> hash code.
+	 * <code>String</code> value of this a random UUID.
+     * 
+     * @see org.flexdock.util.UUID
 	 */
 	public DefaultDockingPort() {
 		this(UUID.randomUUID().toString());
@@ -659,6 +661,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 		return DockingManager.getDockable(c);
 	}
 
+	/**
+     * If this method returns <code>null</code>, implementations may throw
+     * NullPointerExceptions. Do not expect NPE checking.
+     * 
+     * @return a valid JTabbedPane.
+     */
 	protected JTabbedPane createTabbedPane() {
 		Insets oldInsets = UIManager.getInsets(LookAndFeelSettings.TAB_PANE_BORDER_INSETS);
 		int tabPlacement = getInitTabPlacement();
@@ -994,7 +1002,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort, DockingCo
 			newDockedContent.setRightComponent((Component)ports[1]);
 
         //set the split in the middle
-        newDockedContent.setDividerLocation(.5);
+		double ratio = .5;
+        
+        if (docked instanceof Dockable && newDockedContent instanceof DockingSplitPane) {
+			Float siblingRatio = ((Dockable)docked).getDockingProperties().getSiblingSize(region);
+			if (siblingRatio != null) {
+				ratio = siblingRatio.doubleValue();
+			}
+			
+			((DockingSplitPane) newDockedContent).setInitialDividerRatio(ratio);
+		}
+        newDockedContent.setDividerLocation(ratio);
         
 		// now set the wrapper panel as the currently docked component
 		setComponent(newDockedContent);

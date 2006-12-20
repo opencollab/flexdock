@@ -21,6 +21,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 	protected String region;
 	protected boolean dividerLocDetermined;
 	protected boolean controllerInTopLeft;
+	protected double initialDividerRatio = .5;
 	
 	/**
      * Creates a new <code>DockingSplitPane</code> for the specified
@@ -190,7 +191,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 		if (!isDividerSizeProperlyDetermined()) {
 			// make sure this can only run once so we don't get a StackOverflow
 			dividerLocDetermined = true;
-			setDividerLocation(.5);
+			setDividerLocation(initialDividerRatio);
 		}
 		// continue the layout
 		super.doLayout();
@@ -204,8 +205,20 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 	public void cleanup() {
 		dockingPort = null;
 	}
-	
-	
+
+    /**
+     * Sets the initial divider ration for creating split panes.  The default value is <code>0.5</code>.
+     * @exception IllegalArgumentException if <code>ratio</code> is less than 0.0 or greater than 1.0.
+     * @param ratio a ratio for determining weighting between the two sides of a split pane.
+     */
+    public void setInitialDividerRatio(double ratio) {
+        if (ratio < 0.0 || ratio > 1.0) {
+            throw new IllegalArgumentException("ratio (" + ratio
+                    + ") must be between [0.0,1,0] inclusive");
+        }
+        initialDividerRatio = ratio;
+    }
+    
 	protected void finalize() throws Throwable {
 		cleanup();
 		super.finalize();
