@@ -397,8 +397,12 @@ public class PerspectiveManager implements LayoutManager {
 			setCurrentPerspectiveName(perspectiveId);
 			if(reset) {
 				perspective.reset(rootPort);
+                EventManager.dispatch(new PerspectiveEvent(perspective, current,
+                        PerspectiveEvent.RESET));
             } else {
 				perspective.load(rootPort);
+                EventManager.dispatch(new PerspectiveEvent(perspective, current,
+                        PerspectiveEvent.CHANGED));
             }
 		}
 		
