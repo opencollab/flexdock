@@ -69,16 +69,16 @@ public class RestorationManager {
 	
 	
 	public boolean restore(Dockable dockable) {
-		if(dockable==null)
-			return false;
-
-		DockingState info = PerspectiveManager.getInstance().getDockingState(dockable, true);
-		HashMap context = new HashMap();
-		for(Iterator it=restorationHandlers.iterator(); it.hasNext();) {
-			RestorationHandler handler = (RestorationHandler)it.next();
-			if(handler.restore(dockable, info, context))
-				return true;
-		}
+		if(dockable != null) {
+    		DockingState info = PerspectiveManager.getInstance().getDockingState(dockable, true);
+    		HashMap context = new HashMap();
+    		for(Iterator it=restorationHandlers.iterator(); it.hasNext();) {
+    			RestorationHandler handler = (RestorationHandler)it.next();
+    			if(handler.restore(dockable, info, context))
+    				return true;
+    		}
+        }
+        
 		return false;
 	}
 	

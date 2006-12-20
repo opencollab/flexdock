@@ -28,10 +28,11 @@ import org.flexdock.docking.state.DockingState;
  * 
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @author <a href="mailto:marius@eleritec.net">Christopher Butler</a>
- * @version $Id: RestorationHandler.java,v 1.3 2005-06-04 16:42:22 winnetou25 Exp $
+ * @version $Id: RestorationHandler.java,v 1.4 2006-12-20 17:34:56 kschaefe Exp $
  */
 public interface RestorationHandler {
 
+    //TODO context is never used; remove?
 	boolean restore(Dockable dockable, DockingState dockingState, Map context);
 	
 }
