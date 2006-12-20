@@ -63,13 +63,9 @@ public abstract class AbstractDockable implements Dockable {
 		persistentId = id;
 		dockingListeners = new ArrayList(2);
 		dragListeners = new ArrayList();
+        clientProperties = new Hashtable(2);
+        
 		dragListeners.add(getComponent());
-	}
-	
-	private Hashtable getInternalClientProperties() {
-		if(clientProperties==null)
-			clientProperties = new Hashtable(2);
-		return clientProperties;
 	}
 	
 	/**
@@ -275,7 +271,7 @@ public abstract class AbstractDockable implements Dockable {
 		if(c instanceof JComponent)
 			return ((JComponent)c).getClientProperty(key);
 		
-		return getInternalClientProperties().get(key);
+		return clientProperties.get(key);
 	}
 
     /**
@@ -303,7 +299,7 @@ public abstract class AbstractDockable implements Dockable {
 			SwingUtility.putClientProperty(c, key, value);
 		}
 		else {
-			Utilities.put(getInternalClientProperties(), key, value);
+			Utilities.put(clientProperties, key, value);
 		}
 	}
 

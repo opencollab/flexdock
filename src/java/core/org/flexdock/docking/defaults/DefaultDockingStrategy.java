@@ -126,8 +126,7 @@ public class DefaultDockingStrategy implements DockingStrategy, DockingConstants
 			return findDockable(superPort, self, region, startRegion);
 		}
 		
-		JSplitPane split = (JSplitPane)docked;
-		Component sibling = port.getComponent(region);
+        Component sibling = port.getComponent(region);
 		if(sibling==self) {
 			if(!(self instanceof JSplitPane)) {
 				DockingPort superPort = DockingManager.getDockingPort((Component)port);
