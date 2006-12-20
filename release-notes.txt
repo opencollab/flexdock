@@ -1,0 +1,27 @@
+flexdock 0.5 RELEASE NOTES:
+
+CHANGES FROM 0.4:
+New Features:
+	- flexdock now uses Apache Commons Logging for all internal logging 
+	  operations.  ACL is included in the flexdock download.  The old logging 
+	  package exists, but is now deprecated.
+	- added PerspectiveEvents.  These events now fire during various actions 
+	  with Perspectives.
+	- the ability to resize components by double-clicking on the divider.
+	
+Fixed:
+	- the dockbar layout when attached to the NORTH side of the frame.
+	- null appearing in tab text.
+	- a problem with the application shrinking when a L&F was changed.
+	- a problem where flexdock would "freeze" when the last view was closed.
+	- a problem where the docking ratios were not honored.
+
+Partially fixed:
+	- JApplet throwing a NullPointerException when floating a dockable.  The 
+	  NPE is no longer thrown and the dockables can now float; however, there 
+	  is no way to place the dockable back into the JApplet.
+	- Perspective drawing problem when switching between 0 and 1 view 
+	  perspectives.  Switching between single view perspectives now works and 
+	  going from single view to no view also works.  Changing from no view to 
+	  single view perspectives does not correctly redraw the single view 
+	  perspective.
