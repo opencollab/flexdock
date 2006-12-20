@@ -187,8 +187,11 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 		// restore the layout
 		boolean listening = PerspectiveManager.isDockingStateListening();
 		PerspectiveManager.setDockingStateListening(false);
-		dockingPort.importLayout(restorationLayout);
-		PerspectiveManager.setDockingStateListening(listening);
+        try {
+            dockingPort.importLayout(restorationLayout);
+        } finally {
+            PerspectiveManager.setDockingStateListening(listening);
+        }
 		
 		// not restore floating and minimized layouts
 		Dockable[] dockables = getDockables();
