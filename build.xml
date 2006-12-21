@@ -334,14 +334,14 @@
               I believe this BUG is the cause: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4490798 -->
          <manifest>
             <!-- matches core jar name -->
-            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar jmf/lib/jmf.jar"/> 
+            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar lib/jmf/lib/jmf.jar"/> 
             <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
          </manifest>
       </jar>
 
-      <mkdir dir="${build.dir}/jmf"/>
-      <copy todir="${build.dir}/jmf">
-         <fileset dir="${lib.dir}/jmf"/>
+      <mkdir dir="${build.dir}/lib"/>
+      <copy todir="${build.dir}/lib">
+         <fileset dir="${lib.dir}"/>
       </copy>
    </target>
 
@@ -392,22 +392,15 @@
    <target name="dist.bin" depends="init,jar,doc"
            description="Produce a zip containing the built library, docs, javadocs, and license">
       <zip destfile="${dist.dir}/${dist.jar.basename}.zip">
-         <fileset dir="${build.dir}">
-            <include name="LICENSE.txt"/>
-         </fileset>
          <fileset dir="${basedir}">
+            <include name="LICENSE.txt"/>
             <include name="README"/>
+         	<include name="release-notes.txt"/>
+      		<include name="lib/**"/> 
          </fileset>
          <fileset dir="${build.dir}">
             <include name="${dist.jar.basename}.jar"/>
             <include name="${dist.demo.jar.basename}.jar"/>
-            <include name="jmf/**"/> 
-         </fileset>
-      	<fileset dir="${basedir}">
-      		<include name="lib/commons-logging*.jar" />
-      		<include name="lib/LICENSE.txt" />
-      	</fileset>
-         <fileset dir="${build.dir}">
             <include name="docs/**" />
          </fileset>
       </zip>
