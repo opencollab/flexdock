@@ -11,15 +11,22 @@ import org.flexdock.docking.DockingConstants;
  * @author Christopher Butler
  */
 public class Event extends EventObject implements DockingConstants {
-	private int eventType;
-	private Object target;
-	
-	public Event(Object src, int evtType) {
-		super(src);
-		eventType = evtType;
-	}
-	
-	public int getEventType() {
-		return eventType;
-	}
+    private int eventType;
+
+    /**
+     * An event object.
+     * 
+     * @param src
+     *            the source of the event.
+     * @param evtType
+     *            the type of the event.
+     */
+    public Event(Object src, int evtType) {
+        super(src);
+        eventType = evtType;
+    }
+
+    public int getEventType() {
+        return eventType;
+    }
 }

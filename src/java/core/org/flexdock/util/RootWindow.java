@@ -1,21 +1,21 @@
 /* Copyright (c) 2004 Christopher M Butler
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of 
-this software and associated documentation files (the "Software"), to deal in the 
-Software without restriction, including without limitation the rights to use, 
-copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
-Software, and to permit persons to whom the Software is furnished to do so, subject 
-to the following conditions:
+ Permission is hereby granted, free of charge, to any person obtaining a copy of 
+ this software and associated documentation files (the "Software"), to deal in the 
+ Software without restriction, including without limitation the rights to use, 
+ copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
+ Software, and to permit persons to whom the Software is furnished to do so, subject 
+ to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all 
-copies or substantial portions of the Software.
+ The above copyright notice and this permission notice shall be included in all 
+ copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
-INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
-CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
-OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.util;
 
 import java.awt.Component;
@@ -35,390 +35,375 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JRootPane;
 import javax.swing.JWindow;
+import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
 
-
 /**
- * This class provides an abstraction of root containers used in Swing.  It allows transparent use of 
- * methods common to <code>JFrame</code>, <code>JApplet</code>, <code>JWindow</code>, and 
- * <code>JDialog</code> without making an outward distinction between the different container types.  This
- * is accomplished by wrapping the root component.
+ * This class provides an abstraction of root containers used in Swing. It
+ * allows transparent use of methods common to {@code JFrame}, {@code JApplet},
+ * {@code JWindow}, and {@code JDialog} without making an outward distinction
+ * between the different container types. This is accomplished by wrapping the
+ * root component.
  * 
  * @author Chris Butler
  */
 public class RootWindow {
-	public static final Integer DEFAULT_MAXED_LAYER = new Integer(JLayeredPane.PALETTE_LAYER.intValue() - 10);
-	private static final HashMap MAP_BY_ROOT_CONTAINER = new HashMap();
-	private LayoutManager maxedLayout;	
-	private Integer maximizationLayer;
-	private Component root;
-	private HashMap clientProperties;
-	
-	private static Component getRoot(Component c) {
-		if(c==null)
-			return null;
-			
-		if(isValidRootContainer(c))
-			return c;
-			
-		Container parent = c.getParent();
-		while(parent!=null && !isValidRootContainer(parent)) 
-			parent = parent.getParent();
-			
-		return parent;
-	}
-	
+    public static final Integer DEFAULT_MAXED_LAYER = new Integer(
+            JLayeredPane.PALETTE_LAYER.intValue() - 10);
 
-	/**
-	 * Traverses the container hierarchy to locate the root container and returns corresponding 
-	 * <code>RootSwingContainer</code>.  If <code>c</code> is <code>null</code>, a <code>null</code>
-	 * reference is returned.
-	 * @param c the container whose root we wish to find
-	 * @return the enclosing <code>RootSwingcontainer</code>
-	 */
-	public static RootWindow getRootContainer(Component c) {
-		Component root = getRoot(c);
-		if(!isValidRootContainer(root))
-			return null;
-			
-		RootWindow container = (RootWindow)MAP_BY_ROOT_CONTAINER.get(root);
-		if(container==null) {
-			container = new RootWindow(root);
-			MAP_BY_ROOT_CONTAINER.put(root, container);
-		}
-		
-		if(container.getRootContainer()!=root)
-			container.setRootContainer(root);
-			
-		return container;
-	}
+    private static final HashMap MAP_BY_ROOT_CONTAINER = new HashMap();
 
-	/**
-	 * Indicates whether the supplied <code>Component</code> is, in fact, a root Swing container.
-	 * 
-	 * @param c the <code>Component</code> we wish to check 
-	 */		
-	public static boolean isValidRootContainer(Component c) {
-		return c!=null && (c instanceof JFrame || c instanceof JApplet || 
-					c instanceof JWindow || c instanceof JDialog);
-	}
+    private LayoutManager maxedLayout;
 
+    private Integer maximizationLayer;
 
+    private Component root;
 
-	public static RootWindow[] getVisibleWindows() {
-		Frame[] frames = Frame.getFrames();
-		HashSet cache = new HashSet(frames.length);
-		for(int i=0; i<frames.length; i++) 
-			populateWindowList(new RootWindow(frames[i]), cache, true);
-		return (RootWindow[])cache.toArray(new RootWindow[0]);
-	}
-	
-	private static void populateWindowList(RootWindow win, HashSet winCache, boolean visOnly) {
-		if(win==null || winCache.contains(win))
-			return;
-		
-		if(visOnly && !win.getRootContainer().isVisible())
-			return;
-		
-		winCache.add(win);
-		Window[] children = win.getOwnedWindows();
-		for(int i=0; i<children.length; i++) 
-			populateWindowList(new RootWindow(children[i]), winCache, visOnly);
-	}
+    private HashMap clientProperties;
 
-	/**
-	 * Creates a new <code>RootSwingContainer</code> wrapping the specified component.
-	 */	
-	protected RootWindow(Component root) {
-		setMaximizationLayer(DEFAULT_MAXED_LAYER);
-		setRootContainer(root);
-		clientProperties = new HashMap();
-	} 
-	
-	/**
-	 * Returns the <code>contentPane</code> object for the wrapped component.
-	 * @return the <code>contentPane</code> property
-	 */
-	public Container getContentPane() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getContentPane();
-		if(root instanceof JApplet)
-			return ((JApplet)root).getContentPane();
-		if(root instanceof JWindow)
-			return ((JWindow)root).getContentPane();
-		if(root instanceof JDialog)
-			return ((JDialog)root).getContentPane();
-		return null;	
-	}
-	
-	/**
-	 * Returns the <code>glassPane</code> object for the wrapped component.
-	 * @return the <code>glassPane</code> property
-	 */
-	public Component getGlassPane() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getGlassPane();
-		if(root instanceof JApplet)
-			return ((JApplet)root).getGlassPane();
-		if(root instanceof JWindow)
-			return ((JWindow)root).getGlassPane();
-		if(root instanceof JDialog)
-			return ((JDialog)root).getGlassPane();
-		return null;	
-	}
-	
-	/**
-	 * Returns the <code>layeredPane</code> object for the wrapped component.
-	 * @return the <code>layeredPane</code> property
-	 */
-	public JLayeredPane getLayeredPane() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getLayeredPane();
-		if(root instanceof JApplet)
-			return ((JApplet)root).getLayeredPane();
-		if(root instanceof JWindow)
-			return ((JWindow)root).getLayeredPane();
-		if(root instanceof JDialog)
-			return ((JDialog)root).getLayeredPane();
-		return null;	
-	}
-	
-	/**
-	 * Gets the location of the wrapped component in the form of a point
-	 * specifying the component's top-left corner in the screen's
-	 * coordinate space.
-	 * @return An instance of <code>Point</code> representing
-	 * the top-left corner of the component's bounds in the
-	 * coordinate space of the screen.
-	 */
-	public Point getLocationOnScreen() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getLocationOnScreen();
-		else if(root instanceof JApplet)
-			return ((JApplet)root).getLocationOnScreen();
-		else if(root instanceof JWindow)
-			return ((JWindow)root).getLocationOnScreen();
-		else if(root instanceof JDialog)
-			return ((JDialog)root).getLocationOnScreen();
-		return null;
-	}
+    private static Component getRoot(Component c) {
+        if (c == null)
+            return null;
 
-	/**
-	 * Returns the layer associated with <code>Component</code> maximization within the 
-	 * <code>RootSwingContainer</code>.
-	 * 
-	 * @return an <code>Integer</code> indicating the maximization layer property
-	 */	
-	public Integer getMaximizationLayer() {
-		return maximizationLayer;
-	}
+        if (isValidRootContainer(c))
+            return c;
 
-	/**
-	 * Returns the <code>LayoutManager</code> associated with <code>Component</code> maximization within the 
-	 * <code>RootSwingContainer</code>.
-	 * 
-	 * @return a <code>LayoutManager</code> indicating the maximization layout property
-	 */	
-	public LayoutManager getMaximizedLayout() {
-		return maxedLayout;
-	}
-	
-	/**
-	 * Returns the the wrapped component.  (<code>JFrame</code>, <code>JApplet</code>, etc...)
-	 * @return the wrapped root container 
-	 */
-	public Component getRootContainer() {
-		return root;
-	}
-	
-	/**
-	 * Returns the <code>rootPane</code> object for the wrapped component.
-	 * @return the <code>rootPane</code> property
-	 */
-	public JRootPane getRootPane() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getRootPane();
-		else if(root instanceof JApplet)
-			return ((JApplet)root).getRootPane();
-		else if(root instanceof JWindow)
-			return ((JWindow)root).getRootPane();
-		else if(root instanceof JDialog)
-			return ((JDialog)root).getRootPane();
-		return null;
-	}
-	
-	
-	/**
-	 * Convenience method that calls <code>revalidate()</code> on the current content pane 
-	 * if it is a <code>JComponent</code>. If not, no action is taken.
-	 */
-	public void revalidateContentPane() {
-		Container c = getContentPane();
-		if(c instanceof JComponent)
-			((JComponent)c).revalidate();
-	}
-	
-	
-	/**
-	 * Sets the <code>contentPane</code> property for the wrapped component. 
-	 *
-	 * @param contentPane the <code>contentPane</code> object for the wrapped component
-	 */
-	public void setContentPane(Container contentPane) {
-		if(root instanceof JFrame)
-			((JFrame)root).setContentPane(contentPane);
-		else if(root instanceof JApplet)
-			((JApplet)root).setContentPane(contentPane);
-		else if(root instanceof JWindow)
-			((JWindow)root).setContentPane(contentPane);
-		else if(root instanceof JDialog)
-			((JDialog)root).setContentPane(contentPane);
-	}
-	
-	/**
-	 * Sets the <code>glassPane</code> property for the wrapped component. 
-	 *
-	 * @param glassPane the <code>glassPane</code> object for the wrapped component
-	 */
-	public void setGlassPane(Component glassPane) {
-		if(root instanceof JFrame)
-			((JFrame)root).setGlassPane(glassPane);
-		else if(root instanceof JApplet)
-			((JApplet)root).setGlassPane(glassPane);
-		else if(root instanceof JWindow)
-			((JWindow)root).setGlassPane(glassPane);
-		else if(root instanceof JDialog)
-			((JDialog)root).setGlassPane(glassPane);
-	}
-	
-	/**
-	 * Sets the <code>layeredPane</code> property for the wrapped component. 
-	 *
-	 * @param layeredPane the <code>layeredPane</code> object for the wrapped component
-	 */
-	public void setLayeredPane(JLayeredPane layeredPane) {
-		if(root instanceof JFrame)
-			((JFrame)root).setLayeredPane(layeredPane);
-		else if(root instanceof JApplet)
-			((JApplet)root).setLayeredPane(layeredPane);
-		else if(root instanceof JWindow)
-			((JWindow)root).setLayeredPane(layeredPane);
-		else if(root instanceof JDialog)
-			((JDialog)root).setLayeredPane(layeredPane);
-	}
-	
-	public Window[] getOwnedWindows() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getOwnedWindows();
-		else if(root instanceof JWindow)
-			return ((JWindow)root).getOwnedWindows();
-		else if(root instanceof JDialog)
-			return ((JDialog)root).getOwnedWindows();
-		else
-			return new Window[0];
+        Container parent = c.getParent();
+        while (parent != null && !isValidRootContainer(parent))
+            parent = parent.getParent();
 
-	}
-	
-	/**
-	 * Sets the layer associated with <code>Component</code> maximization within the 
-	 * <code>RootSwingContainer</code>.  If <code>layer</code> is <code>null</code>, 
-	 * DEFAULT_MAXED_LAYER is used instead.
-	 * 
-	 * @param layer an <code>Integer</code> indicating the maximization layer property
-	 */
-	public void setMaximizationLayer(Integer layer) {
-		if(layer==null)
-			layer = DEFAULT_MAXED_LAYER;
-		maximizationLayer = layer;
-	}
-	
-	/**
-	 * Sets the <code>LayoutManager</code> associated with <code>Component</code> maximization within the 
-	 * <code>RootSwingContainer</code>.
-	 * 
-	 * @param mgr the <code>LayoutManager</code> associated with <code>Component</code> maximization 
-	 * within the <code>RootSwingContainer</code>.
-	 */
-	public void setMaximizedLayout(LayoutManager mgr) {
-		maxedLayout = mgr;
-	}
-	
-	
-	/**
-	 * Sets the wrapped root container.
-	 *
-	 * @param root the new wrapped root container
-	 */
-	protected void setRootContainer(Component root) {
-		this.root = root;
-	}
-	
-	public void updateComponentTreeUI() {
-		SwingUtilities.updateComponentTreeUI(root);
-		pack();
-	}
-	
-	public void pack() {
-		if(root instanceof JFrame)
-			((JFrame)root).pack();
-		else if(root instanceof JWindow)
-			((JWindow)root).pack();
-		else if(root instanceof JDialog)
-			((JDialog)root).pack();
-	}
-	
-	public void toFront() {
-		if(root instanceof JFrame)
-			((JFrame)root).toFront();
-		else if(root instanceof JWindow)
-			((JWindow)root).toFront();
-		else if(root instanceof JDialog)
-			((JDialog)root).toFront();
-	}
-	
-	public boolean isActive() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).isActive();
-		else if(root instanceof JWindow)
-			return ((JWindow)root).isActive();
-		else if(root instanceof JDialog)
-			return ((JDialog)root).isActive();
-		return false;
-	}
-	
-	public Window getOwner() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getOwner();
-		else if(root instanceof JWindow)
-			return ((JWindow)root).getOwner();
-		else if(root instanceof JDialog)
-			return ((JDialog)root).getOwner();
-		return null;		
-	}
-	
-	public Rectangle getBounds() {
-		if(root instanceof JFrame)
-			return ((JFrame)root).getBounds();
-		if(root instanceof JApplet)
-			return ((JApplet)root).getBounds();
-		else if(root instanceof JWindow)
-			return ((JWindow)root).getBounds();
-		else if(root instanceof JDialog)
-			return ((JDialog)root).getBounds();
-		return null;
-	}
-	
-	public void putClientProperty(Object key, Object value) {
-	    if(key==null)
-	        return;
-	    
-	    if(value==null)
-	        clientProperties.remove(key);
-	    else
-	        clientProperties.put(key, value);
-	}
-	
-	public Object getClientProperty(Object key) {
-	    return key==null? null: clientProperties.get(key);
-	}
+        return parent;
+    }
+
+    /**
+     * Traverses the container hierarchy to locate the root container and
+     * returns corresponding {@code RootSwingContainer}. If {@code c} is
+     * {@code null}, a {@code null} reference is returned.
+     * 
+     * @param c
+     *            the container whose root we wish to find
+     * @return the enclosing {@code RootSwingcontainer}
+     */
+    public static RootWindow getRootContainer(Component c) {
+        Component root = getRoot(c);
+        if (!isValidRootContainer(root))
+            return null;
+
+        RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
+        if (container == null) {
+            container = new RootWindow(root);
+            MAP_BY_ROOT_CONTAINER.put(root, container);
+        }
+
+        if (container.getRootContainer() != root)
+            container.setRootContainer(root);
+
+        return container;
+    }
+
+    /**
+     * Indicates whether the supplied {@code Component} is, in fact, a root
+     * Swing container.
+     * 
+     * @param c
+     *            the {@code Component} we wish to check
+     */
+    public static boolean isValidRootContainer(Component c) {
+        return c != null
+                && (c instanceof JFrame || c instanceof JApplet
+                        || c instanceof JWindow || c instanceof JDialog);
+    }
+
+    public static RootWindow[] getVisibleWindows() {
+        Frame[] frames = Frame.getFrames();
+        HashSet cache = new HashSet(frames.length);
+        for (int i = 0; i < frames.length; i++)
+            populateWindowList(new RootWindow(frames[i]), cache, true);
+        return (RootWindow[]) cache.toArray(new RootWindow[0]);
+    }
+
+    private static void populateWindowList(RootWindow win, HashSet winCache,
+            boolean visOnly) {
+        if (win == null || winCache.contains(win))
+            return;
+
+        if (visOnly && !win.getRootContainer().isVisible())
+            return;
+
+        winCache.add(win);
+        Window[] children = win.getOwnedWindows();
+        for (int i = 0; i < children.length; i++)
+            populateWindowList(new RootWindow(children[i]), winCache, visOnly);
+    }
+
+    /**
+     * Creates a new {@code RootSwingContainer} wrapping the specified
+     * component.
+     */
+    protected RootWindow(Component root) {
+        setMaximizationLayer(DEFAULT_MAXED_LAYER);
+        setRootContainer(root);
+        clientProperties = new HashMap();
+    }
+
+    /**
+     * Returns the {@code contentPane} object for the wrapped component.
+     * 
+     * @return the {@code contentPane} property
+     */
+    public Container getContentPane() {
+        Container c = null;
+
+        if (root instanceof RootPaneContainer) {
+            c = ((RootPaneContainer) root).getContentPane();
+        }
+
+        return c;
+    }
+
+    /**
+     * Returns the {@code glassPane} object for the wrapped component.
+     * 
+     * @return the {@code glassPane} property
+     */
+    public Component getGlassPane() {
+        Component c = null;
+
+        if (root instanceof RootPaneContainer) {
+            c = ((RootPaneContainer) root).getGlassPane();
+        }
+
+        return c;
+    }
+
+    /**
+     * Returns the {@code layeredPane} object for the wrapped component.
+     * 
+     * @return the {@code layeredPane} property
+     */
+    public JLayeredPane getLayeredPane() {
+        JLayeredPane pane = null;
+
+        if (root instanceof RootPaneContainer) {
+            pane = ((RootPaneContainer) root).getLayeredPane();
+        }
+
+        return pane;
+    }
+
+    /**
+     * Gets the location of the wrapped component in the form of a point
+     * specifying the component's top-left corner in the screen's coordinate
+     * space.
+     * 
+     * @return An instance of {@code Point} representing the top-left corner of
+     *         the component's bounds in the coordinate space of the screen.
+     */
+    public Point getLocationOnScreen() {
+        return getRootContainer().getLocationOnScreen();
+    }
+
+    /**
+     * Returns the layer associated with {@code Component} maximization.
+     * 
+     * @return an {@code Integer} indicating the maximization layer property
+     */
+    public Integer getMaximizationLayer() {
+        return maximizationLayer;
+    }
+
+    /**
+     * Returns the {@code LayoutManager} associated with {@code Component}
+     * maximization within the {@code RootSwingContainer}.
+     * 
+     * @return a {@code LayoutManager} indicating the maximization layout
+     *         property
+     */
+    public LayoutManager getMaximizedLayout() {
+        return maxedLayout;
+    }
+
+    /**
+     * Returns the the wrapped component. ({@code JFrame}, {@code JApplet},
+     * etc...)
+     * 
+     * @return the wrapped root container
+     */
+    public Component getRootContainer() {
+        return root;
+    }
+
+    /**
+     * Returns the {@code rootPane} object for the wrapped component.
+     * 
+     * @return the {@code rootPane} property
+     */
+    public JRootPane getRootPane() {
+        JRootPane pane = null;
+
+        if (root instanceof RootPaneContainer) {
+            pane = ((RootPaneContainer) root).getRootPane();
+        }
+
+        return pane;
+    }
+
+    /**
+     * Convenience method that calls {@code revalidate()} on the current content
+     * pane if it is a {@code JComponent}. If not, no action is taken.
+     */
+    public void revalidateContentPane() {
+        Container c = getContentPane();
+        if (c instanceof JComponent)
+            ((JComponent) c).revalidate();
+    }
+
+    /**
+     * Sets the {@code contentPane} property for the wrapped component.
+     * 
+     * @param contentPane
+     *            the {@code contentPane} object for the wrapped component
+     */
+    public void setContentPane(Container contentPane) {
+        if (root instanceof RootPaneContainer) {
+            ((RootPaneContainer) root).setContentPane(contentPane);
+        }
+    }
+
+    /**
+     * Sets the {@code glassPane} property for the wrapped component.
+     * 
+     * @param glassPane
+     *            the {@code glassPane} object for the wrapped component
+     */
+    public void setGlassPane(Component glassPane) {
+        if (root instanceof RootPaneContainer) {
+            ((RootPaneContainer) root).setGlassPane(glassPane);
+        }
+    }
+
+    /**
+     * Sets the {@code layeredPane} property for the wrapped component.
+     * 
+     * @param layeredPane
+     *            the {@code layeredPane} object for the wrapped component
+     */
+    public void setLayeredPane(JLayeredPane layeredPane) {
+        if (root instanceof RootPaneContainer) {
+            ((RootPaneContainer) root).setLayeredPane(layeredPane);
+        }
+    }
+
+    /**
+     * Return an array containing all the windows this window currently owns.
+     * 
+     * @return all the windows currently owned by this root window.
+     */
+    public Window[] getOwnedWindows() {
+        if (root instanceof JFrame)
+            return ((JFrame) root).getOwnedWindows();
+        else if (root instanceof JWindow)
+            return ((JWindow) root).getOwnedWindows();
+        else if (root instanceof JDialog)
+            return ((JDialog) root).getOwnedWindows();
+        else
+            return new Window[0];
+    }
+
+    /**
+     * Sets the layer associated with {@code Component} maximization within the
+     * {@code RootSwingContainer}. If {@code layer} is {@code null},
+     * DEFAULT_MAXED_LAYER is used instead.
+     * 
+     * @param layer
+     *            an {@code Integer} indicating the maximization layer property
+     */
+    public void setMaximizationLayer(Integer layer) {
+        if (layer == null)
+            layer = DEFAULT_MAXED_LAYER;
+        maximizationLayer = layer;
+    }
+
+    /**
+     * Sets the {@code LayoutManager} associated with {@code Component}
+     * maximization within the {@code RootSwingContainer}.
+     * 
+     * @param mgr
+     *            the {@code LayoutManager} associated with {@code Component}
+     *            maximization within the {@code RootSwingContainer}.
+     */
+    public void setMaximizedLayout(LayoutManager mgr) {
+        maxedLayout = mgr;
+    }
+
+    /**
+     * Sets the wrapped root container.
+     * 
+     * @param root
+     *            the new wrapped root container
+     */
+    protected void setRootContainer(Component root) {
+        this.root = root;
+    }
+
+    public void updateComponentTreeUI() {
+        SwingUtilities.updateComponentTreeUI(root);
+        pack();
+    }
+
+    public void pack() {
+        if (root instanceof JFrame)
+            ((JFrame) root).pack();
+        else if (root instanceof JWindow)
+            ((JWindow) root).pack();
+        else if (root instanceof JDialog)
+            ((JDialog) root).pack();
+    }
+
+    public void toFront() {
+        if (root instanceof JFrame)
+            ((JFrame) root).toFront();
+        else if (root instanceof JWindow)
+            ((JWindow) root).toFront();
+        else if (root instanceof JDialog)
+            ((JDialog) root).toFront();
+    }
+
+    public boolean isActive() {
+        if (root instanceof JFrame)
+            return ((JFrame) root).isActive();
+        else if (root instanceof JWindow)
+            return ((JWindow) root).isActive();
+        else if (root instanceof JDialog)
+            return ((JDialog) root).isActive();
+        return false;
+    }
+
+    public Window getOwner() {
+        if (root instanceof JFrame)
+            return ((JFrame) root).getOwner();
+        else if (root instanceof JWindow)
+            return ((JWindow) root).getOwner();
+        else if (root instanceof JDialog)
+            return ((JDialog) root).getOwner();
+        return null;
+    }
+
+    public Rectangle getBounds() {
+        return getRootContainer().getBounds();
+    }
+
+    public void putClientProperty(Object key, Object value) {
+        if (key == null)
+            return;
+
+        if (value == null)
+            clientProperties.remove(key);
+        else
+            clientProperties.put(key, value);
+    }
+
+    public Object getClientProperty(Object key) {
+        return key == null ? null : clientProperties.get(key);
+    }
 }
