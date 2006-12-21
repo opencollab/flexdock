@@ -57,12 +57,25 @@ public interface DockableFactory {
      */
     Dockable getDockable(String dockableId);
 
+    /**
+     * An empty implementation of {@code DockableFactory}.
+     */
     public static class Stub implements DockableFactory {
 
+        /**
+         * {@inheritDoc}
+         * 
+         * @return {@code null}.
+         */
         public Dockable getDockable(String dockableId) {
             return null;
         }
 
+        /**
+         * {@inheritDoc}
+         * 
+         * @return {@code null}.
+         */
         public Component getDockableComponent(String dockableId) {
             return null;
         }

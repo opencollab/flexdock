@@ -1,21 +1,24 @@
-/* Copyright (c) 2004 Christopher M Butler
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy of 
- this software and associated documentation files (the "Software"), to deal in the 
- Software without restriction, including without limitation the rights to use, 
- copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
- Software, and to permit persons to whom the Software is furnished to do so, subject 
- to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in all 
- copies or substantial portions of the Software.
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
- CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
- OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+/*
+ * Copyright (c) 2004 Christopher M Butler
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.flexdock.docking;
 
 import java.awt.Component;
@@ -37,6 +40,9 @@ import org.flexdock.docking.props.DockablePropertySet;
  */
 public interface Dockable extends DockingListener, DockingMonitor {
 
+    /**
+     * A constant property key to signify that a component is dockable. 
+     */
     String DOCKABLE_INDICATOR = "Dockable.DOCKABLE_INDICATOR";
 
     /**
@@ -58,12 +64,18 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * The framework performs indexing on the underlying {@code Component}.
      * Consequently, this method may <b>not</b> return a {@code null}
      * reference.
+     * 
+     * @return the component wrapped by this dockable.
      */
     Component getComponent();
 
     /**
      * Returns the DockingPort within which this Dockable is currently docked.
      * If not currently docked, this method will return null.
+     * 
+     * @return the docking port this dockable resides in, or {@code null} if the
+     *         dockable is not currently docked (i.e. in the middle of a drag
+     *         operation).
      */
     DockingPort getDockingPort();
 
@@ -71,6 +83,9 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * Returns a {@code List} of the {@code Components} that are event sources
      * for drag operations. The list may or may not include the Component
      * returned by {@code getComponent()}.
+     * 
+     * @return a list containing the components that may be used to drag this
+     *         dockable.
      */
     List getDragSources();
 
@@ -84,6 +99,9 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * the Set returned by this method and the List returned by
      * {@code getDragSources()}, the "frame reposition" behavior will supercede
      * any "drag-to-dock" behavior while the Dockable is in a floating state.
+     * 
+     * @return a set containing the components that may be used to drag the
+     *         frame this dockable resides in, if the dockable is floating.
      */
     Set getFrameDragSources();
 
@@ -100,6 +118,9 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * <p>
      * The framework performs indexing on the persistent ID. Consequently, this
      * method may <b>not</b> return a {@code null} reference.
+     * 
+     * @return the persistence id for this dockable. This id ensures that only
+     *         one copy of a given dockable will exist.
      */
     String getPersistentId();
 
@@ -107,6 +128,11 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * Adds an arbitrary key/value "client property" to this {@code Dockable}.
      * {@code null} values are allowed.
      * 
+     * @param key
+     *            the new client property key.
+     * @param value
+     *            the new client property value; if <code>null</code> this
+     *            method will remove the property.
      * @see javax.swing.JComponent#putClientProperty(java.lang.Object,
      *      java.lang.Object)
      */
