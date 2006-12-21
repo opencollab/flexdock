@@ -2,6 +2,7 @@ flexdock 0.5 RELEASE NOTES:
 
 CHANGES FROM 0.4:
 New Features:
+	- release notes.  Hey, this is a new feature.
 	- flexdock now uses Apache Commons Logging for all internal logging 
 	  operations.  ACL is included in the flexdock download.  The old logging 
 	  package exists, but is now deprecated.
@@ -30,3 +31,7 @@ Partially fixed:
 	  going from single view to no view also works.  Changing from no view to 
 	  single view perspectives does not correctly redraw the single view 
 	  perspective.
+	- began the long process to upgrade the JavaDoc on classes.  As classes are
+	  touched, the documentation is being style modified and missing comments 
+	  are added.  Current comments are not yet being checked for validity, but 
+	  some that were noticed to be out of date have been updated.
