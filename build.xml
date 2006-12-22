@@ -91,7 +91,6 @@
 
    <target name="build.with.dll">
       <fail>
-
          Use the target build.with.native instead.
       </fail>
    </target>
@@ -531,7 +530,7 @@ The signing.properties file must specify all of the following properties:
 
   alias=[the alias to sign the jar with]
   keystore.file=[the location of the keystore]
-  keystore.passwd=the password for accessing the keystore]
+  keystore.passwd=[the password for accessing the keystore]
   key.passwd=[the password of the private key in the keystore]
          </fail>
 
@@ -546,7 +545,7 @@ The signing.properties file must specify all of the following properties:
       </sequential>
    </macrodef>
 
-   <target name="webstartapp" depends="init,jar">
+   <target name="webstartapp" depends="init,jar" description="Create Web Start Version">
       <copy todir="${bin.dir.webstart}">
          <fileset dir="${webstart.src}"/>
          <filterset begintoken="@" endtoken="@">
@@ -563,7 +562,10 @@ The signing.properties file must specify all of the following properties:
           jarname="${build.dir}/${dist.demo.jar.name}"
           sjarname="${bin.dir.webstart}/${dist.demo.jar.name}"/>
       <mysignjar
-          jarname="${build.dir}/jmf/lib/jmf.jar"
+          jarname="${build.dir}/lib/jmf/lib/jmf.jar"
           sjarname="${bin.dir.webstart}/jmf.jar"/>
+      <mysignjar
+          jarname="${build.dir}/lib/commons-logging-1.1.jar"
+          sjarname="${bin.dir.webstart}/commons-logging-1.1.jar"/>
    </target>
 </project>
