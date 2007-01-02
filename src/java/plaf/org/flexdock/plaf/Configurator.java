@@ -15,10 +15,14 @@ import org.w3c.dom.NodeList;
 /**
  * @author Christopher Butler
  */
-public class Configurator implements XMLConstants {
+public final class Configurator implements XMLConstants {
 	public static final String DEFAULT_PREFS_URI = "org/flexdock/plaf/flexdock-themes-default.xml";
 	public static final String PREFS_URI = "flexdock-themes.xml";
 	
+        private Configurator() {
+            //does nothing
+        }
+        
 	public static Document loadUserPrefs() {
 		return ResourceManager.getDocument(PREFS_URI);
 	}
@@ -160,7 +164,6 @@ public class Configurator implements XMLConstants {
 
 
 	public static boolean isNull(String data) {
-		data = data==null? null: data.trim();
-		return data==null || data.length()==0;
-	}
+            return data == null || data.trim().length() == 0;
+    }
 }

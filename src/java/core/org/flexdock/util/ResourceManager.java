@@ -88,6 +88,10 @@ public class ResourceManager {
      * @return a {@code URL} representing the resource that has been looked up.
      */
     public static URL getResource(String uri) {
+        if (uri == null) {
+            return null;
+        }
+        
         URL url = ResourceManager.class.getResource(uri);
         if (url == null)
             url = ClassLoader.getSystemResource(uri);

@@ -15,6 +15,7 @@ import javax.swing.Icon;
 /**
  * @author Christopher Butler
  */
+//TODO shouldn't this implement Dockable?
 public class DockingAdapter {
 	private static final Class[] EMPTY_PARAMS = {};
 	private static final Object[] EMPTY_ARGS = {};
