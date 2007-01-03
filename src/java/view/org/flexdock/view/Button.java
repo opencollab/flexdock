@@ -7,6 +7,7 @@ import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.view.model.ViewButtonModel;
@@ -15,6 +16,8 @@ import org.flexdock.view.model.ViewButtonModel;
  * @author Christopher Butler
  */
 public class Button extends JToggleButton {
+
+  public static final String uiClassID = "Flexdock.titlebar.button";
 	
 	public Button(Action action) {
 		setAction(action);
@@ -28,10 +31,20 @@ public class Button extends JToggleButton {
 		super.setModel(newModel);
 	}
 	
-	public void updateUI() {
-		setUI(PlafManager.getUI(this));
-	}
-	
+    public void updateUI() {             
+      //zw, try to get and install UI provided by UIManager uiClassID 
+      if (UIManager.get(uiClassID) != null)
+        setUI(UIManager.getUI(this));
+      else 
+        setUI(PlafManager.getUI(this));
+    }
+
+    @Override
+    public String getUIClassID()
+    {
+      return uiClassID;
+    }
+    
 	public View getView() {
 		return (View)SwingUtilities.getAncestorOfClass(View.class, this);
 	}
