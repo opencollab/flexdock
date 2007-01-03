@@ -15,6 +15,7 @@ import javax.swing.ButtonModel;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.TitlebarUI;
@@ -25,6 +26,8 @@ import org.flexdock.view.model.ViewButtonModel;
  * @author Christopher Butler
  */
 public class Titlebar extends JComponent {
+    public static final String uiClassID = "Flexdock.titlebar";
+
     private Icon titleIcon;
 
     private String titleText;
@@ -264,7 +267,17 @@ public class Titlebar extends JComponent {
     }
 
     public void updateUI() {
+      // install UI-delegate provided by UIManager if available
+      if (UIManager.get(uiClassID) != null)
+        setUI(UIManager.getUI(this));
+      else 
         setUI(PlafManager.getUI(this));
+    }
+
+    @Override
+    public String getUIClassID() 
+    {
+      return uiClassID;
     }
 
     public View getView() {
