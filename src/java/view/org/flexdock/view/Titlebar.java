@@ -279,7 +279,6 @@ public class Titlebar extends JComponent {
         setUI(PlafManager.getUI(this));
     }
 
-    @Override
     public String getUIClassID() 
     {
       return uiClassID;

@@ -39,7 +39,6 @@ public class Button extends JToggleButton {
         setUI(PlafManager.getUI(this));
     }
 
-    @Override
     public String getUIClassID()
     {
       return uiClassID;

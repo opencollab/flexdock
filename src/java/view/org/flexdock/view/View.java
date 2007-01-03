@@ -417,7 +417,6 @@ public class View extends JComponent implements Dockable, DockingConstants {
             setUI(PlafManager.getUI(this));
     }
 
-    @Override
     public String getUIClassID()
     {
         return uiClassID;
