@@ -266,6 +266,11 @@ public class Titlebar extends JComponent {
         }
     }
 
+    public void doLayout() {
+        if (ui instanceof TitlebarUI)
+            ((TitlebarUI) ui).layoutComponents(this);
+    }
+
     public void updateUI() {
       // install UI-delegate provided by UIManager if available
       if (UIManager.get(uiClassID) != null)
