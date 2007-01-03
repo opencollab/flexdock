@@ -271,8 +271,10 @@ public class SwingUtility {
 			focusRoot = c.getFocusCycleRootAncestor();
 		
 		Component focuser = null;
-		if(focusRoot!=null)
-			focuser = focusRoot.getFocusTraversalPolicy().getLastComponent(focusRoot);
+		if (focusRoot != null)
+                    //zw, remarked - selected component should become focused 
+                    //focuser = focusRoot.getFocusTraversalPolicy().getLastComponent(focusRoot);
+                   focuser = c; //zw, added - selected component should become focused
 		
 		// restore the desiredRoot to its previous state
 		if(desiredRoot!=null && !cachedFocusCycleRoot) {
