@@ -182,7 +182,7 @@ public class DockbarManager {
 		
 		leftBar = new Dockbar(this, MinimizationManager.LEFT);
 		rightBar = new Dockbar(this, MinimizationManager.RIGHT);
-		bottomBar = new Dockbar(this, MinimizationManager.BOTTOM);
+        bottomBar = new StatusDockbar(this, MinimizationManager.BOTTOM);
 		viewPane = new ViewPane(this);
 
 		windowRef = new WeakReference(window);
