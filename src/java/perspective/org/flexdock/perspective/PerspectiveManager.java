@@ -277,7 +277,65 @@ public class PerspectiveManager implements LayoutManager {
 	public void reset(DockingPort rootPort) {
 		loadPerspectiveImpl(getCurrentPerspectiveName(), rootPort, true);
 	}
-	
+    
+    /**
+     * PerspectiveManager#getMainApplicationWindow returns the first
+     * window where #getOwner == null. This is especially a problem for apps with
+     * multiple frames. To display a perspective for a specified window
+     * it is highly recommended to use #reload(Window w) instead of #reload()
+     * which is the same as DockingManager#restoreLayout().
+     * You can use #restoreLayout when the application does not need multiple
+     * independent docking windows. 
+     */    
+    public void reload(Window w) {
+      reload(w, true);
+    }
+    
+    // use to load parentless frames 
+    public void reload(Window w, boolean reset) {
+        String current = getCurrentPerspectiveName();
+        // if the current perspective is null, use the default value
+        String key = current == null ? m_defaultPerspective : current;
+
+        // null-out the current perspective name to force a reload
+        // otherwise, the loadPerspective() call will short-circuit since 
+        // it'll detect that the requested perspective is already loaded.
+        setCurrentPerspectiveName(null);
+
+        DockingPort port = DockingManager.getRootDockingPort(w);
+        for (Perspective p : getPerspectives())
+        {  
+          String id = p.getPersistentId();
+          if (!id.equals(EMPTY_PERSPECTIVE))
+          {  
+            //TODO reset layout, maybe there is a better way
+            if (reset)
+              p.getLayout().setRestorationLayout(null);
+            //p.unload();
+            //p.reset(port);
+          }  
+        } 
+        loadPerspectiveImpl(key, port, reset);
+        
+        // if perspective load fails, then rollback the perspective name
+        // to its previous value (instead of null)
+        if(!Utilities.isEqual(getCurrentPerspectiveName(), key))
+          setCurrentPerspectiveName(current);
+    }
+    
+    public void restore(Window w) throws IOException, PersistenceException {
+        reload(w, true);
+        load();
+        reload(w, false);
+        /*DockingPort port = DockingManager.getRootDockingPort(w);
+        String current = getCurrentPerspectiveName();
+        String key = current == null ? m_defaultPerspective : current;
+        setCurrentPerspectiveName(null);
+        loadPerspectiveImpl(key, port, false);
+        if(!Utilities.isEqual(getCurrentPerspectiveName(), key))
+          setCurrentPerspectiveName(current);*/
+    }
+        	
 	public void reload() {
 		String current = getCurrentPerspectiveName();
 		// if the current perspective is null, the use the default value
@@ -483,8 +541,9 @@ public class PerspectiveManager implements LayoutManager {
 	public static void setRestoreFloatingOnLoad(boolean restoreFloatingOnLoad) {
 		getInstance().restoreFloatingOnLoad = restoreFloatingOnLoad;
 	}
-	
-	public static RootWindow getMainApplicationWindow() {
+		
+    //FIXME returns wrong window (first found) for multiple frames
+    public static RootWindow getMainApplicationWindow() {
 		RootWindow[] windows = DockingManager.getDockingWindows();
 		// if the DockingManager couldn't resolve any windows using the 
 		// standard mechanism, we can try our own custom search
