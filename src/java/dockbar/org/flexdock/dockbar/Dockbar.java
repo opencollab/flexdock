@@ -20,9 +20,9 @@ import org.flexdock.plaf.common.border.SlideoutBorder;
  * @author Christopher Butler
  */
 public class Dockbar extends JPanel {
-	private int orientation;
-	private DockbarManager manager;
-	private ArrayList mDocks = new ArrayList();
+	protected int orientation;
+    protected DockbarManager manager;
+    protected ArrayList mDocks = new ArrayList();
 	
 	static {
 		// make sure DockbarLabel is initialized
