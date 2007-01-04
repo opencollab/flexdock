@@ -49,10 +49,8 @@ public class SlideoutBorder implements Border, DockingConstants {
 	public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
 		Color outer = Color.BLACK;
 		Color inner = Color.GRAY;
-		if(orientation==RIGHT || orientation==BOTTOM) {
-			outer = WIN32_GRAY;
-			inner = Color.WHITE;
-		}
+		outer = WIN32_GRAY;
+		inner = Color.WHITE;
 		
 		Color base = g.getColor();
 		
