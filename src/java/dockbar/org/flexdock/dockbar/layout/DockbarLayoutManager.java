@@ -44,8 +44,8 @@ public class DockbarLayoutManager {
 	    
 		Rectangle leftBar = mgr.getLeftBar().getBounds();
 		Rectangle bottomBar = mgr.getBottomBar().getBounds();
-		
-		return new Rectangle(leftBar.x + leftBar.width, leftBar.y, bottomBar.width, leftBar.height);
+        Rectangle rightBar = mgr.getRightBar().getBounds();		
+        return new Rectangle(leftBar.x + leftBar.width, leftBar.y, bottomBar.width-leftBar.width-rightBar.width, leftBar.height);
 	}
 	
 	public Rectangle getLayoutArea(DockbarManager mgr) {
