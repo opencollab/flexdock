@@ -59,12 +59,12 @@ public class DockbarLayout {
 		Dimension rightPref = rightBar.getPreferredSize();
 		Dimension bottomPref = bottomBar.getPreferredSize();
 		
-		// set the dockbar bounds
+		// set the dockbar bounds        
 		leftBar.setBounds(rect.x, rect.y, leftPref.width, rect.height-bottomPref.height);
 		rightBar.setBounds(rightX-rightPref.width, rect.y, rightPref.width, rect.height-bottomPref.height);
-		bottomBar.setBounds(rect.x+leftPref.width, bottomY-bottomPref.height, rect.width-leftPref.width-rightPref.width, bottomPref.height);
-
-		layoutViewpane();
+        // use complete window width for proper statusbar support
+        bottomBar.setBounds(rect.x, bottomY-bottomPref.height, rect.width, bottomPref.height);
+        layoutViewpane();
 	}
 
 	
@@ -81,7 +81,7 @@ public class DockbarLayout {
 		int edge = manager.getActiveEdge();
 		if(edge==MinimizationManager.LEFT || edge==MinimizationManager.RIGHT) {
 			return (int)(((float)rect.width)*viewSize);
-		}
+		}        
 		return (int)(((float)rect.height)*viewSize);
 	}
 	
@@ -111,7 +111,6 @@ public class DockbarLayout {
 			}
 			rect.height = viewpaneSize;
 		}
-		
 		viewPane.setBounds(rect);
 	}
 	
