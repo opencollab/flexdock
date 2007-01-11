@@ -46,6 +46,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.Border;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -699,10 +700,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         }
 
         // we already checked the tabbed layout and split layout. all that's
-        // left is
-        // the direct-child component itself. this will only ever exist in the
-        // CENTER,
-        // so return it if they requested the CENTER region.
+        // left is the direct-child component itself. this will only ever
+        // exist in the CENTER, so return it if they requested the CENTER
+        // region.
         return CENTER_REGION.equals(region) ? docked : null;
     }
 
@@ -964,14 +964,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         if (success) {
             evaluateDockingBorderStatus();
             // if we docked in an outer region, then there is a new JSplitPane.
-            // We'll
-            // want to divide it in half. this is done after
-            // evaluateDockingBorderStatus(),
-            // so we'll know any border modification that took place has already
-            // happened,
-            // and we can be relatively safe about assumptions regarding our
-            // current
-            // insets.
+            // We'll want to divide it in half. this is done after
+            // evaluateDockingBorderStatus(), so we'll know any border
+            // modification that took place has already happened, and we can be
+            // relatively safe about assumptions regarding our current insets.
             if (!CENTER_REGION.equals(region))
                 resetSplitDividerLocation();
         }
@@ -988,8 +984,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         applySplitDividerLocation(splitPane);
         // we don't need to defer split divider location reset until after
         // a DockingSplitPane has rendered, since that class is able to figure
-        // out
-        // its proper divider location by itself.
+        // out its proper divider location by itself.
         if (splitPane instanceof DockingSplitPane) {
             return;
         }
@@ -1032,10 +1027,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
         tabs = createTabbedPane();
         // createTabbedPane() is protected and may be overridden, so we'll have
-        // to check for a
-        // possible null case here. Though why anyone would return a null, I
-        // don't know. Maybe
-        // we should throw a NullPointerException instead.
+        // to check for a possible null case here. Though why anyone would
+        // return a null, I don't know. Maybe we should throw a
+        // NullPointerException instead.
         if (tabs == null)
             return false;
 
@@ -1124,9 +1118,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             return true;
 
         // otherwise, we have unrealized components whose sizes cannot be
-        // determined until
-        // after we're visible. cache the desired size values now for use later
-        // during rendering.
+        // determined until after we're visible. cache the desired size
+        // values now for use later during rendering.
         double proportion = strategy.getDividerProportion(this,
                 newDockedContent);
         SwingUtility.putClientProperty((Component) oldContent,
@@ -1342,8 +1335,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             return true;
 
         // if the component is directly inside our docked component, then we're
-        // also
-        // considered its parent dockingPort
+        // also considered its parent dockingPort
         return parent == getDockedComponent();
     }
 
@@ -1419,30 +1411,26 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         Container grandParent = parent == null ? null : parent.getParent();
 
         // added grandparent check up here so we will be able to legally embed a
-        // DefaultDockingPort
-        // within a plain JSplitPane without triggering an unnecessary remove()
+        // DefaultDockingPort within a plain JSplitPane without triggering an
+        // unnecessary remove()
         if (docked == null && parent instanceof JSplitPane
                 && grandParent instanceof DefaultDockingPort) {
             // in this case, the docked component has disappeared (removed) and
-            // our parent component
-            // is a wrapper for us and our child so that we can share the root
-            // docking port with
-            // another component. since our child is gone, there's no point in
-            // our being here
-            // anymore and our sibling component shouldn't have to share screen
-            // real estate with us
-            // anymore. we'll remove ourselves and notify the root docking port
-            // that the component
-            // tree has been modified.
+            // our parent component is a wrapper for us and our child so that we
+            // can share the root docking port with another component. since our
+            // child is gone, there's no point in our being here anymore and our
+            // sibling component shouldn't have to share screen real estate with
+            // us anymore. we'll remove ourselves and notify the root docking
+            // port that the component tree has been modified.
             parent.remove(this);
             ((DefaultDockingPort) grandParent).reevaluateContainerTree(); // LABEL
             // 1
         } else if (docked instanceof JSplitPane) {
             // in this case, we're the parent of a docking wrapper. this implies
-            // that we're splitting
-            // our real estate between two components. (in practice, we're
-            // actually the parent that was
-            // called above at LABEL 1).
+            // that we're splitting our real estate between two components. (in
+            // practice, we're actually the parent that was called above at
+            // LABEL
+            // 1).
             JSplitPane wrapper = (JSplitPane) docked;
             Component left = wrapper.getLeftComponent();
             Component right = wrapper.getRightComponent();
@@ -1462,7 +1450,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
             // if we got here, then one of our components has been removed (i.e.
             // LABEL 1). In this
-            // case, we want to pull the remaining component out of its
+            // case, we want to pull the remaining content out of its
             // split-wrapper and add it
             // as a direct child to ourselves.
             Component comp = left == null ? right : left;
@@ -1497,8 +1485,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         }
 
         // otherwise, pull out the component in the remaining tab (if it
-        // exists), and
-        // add it to ourselves as a direct child (ditching the JTabbedPane).
+        // exists), and add it to ourselves as a direct child (ditching the
+        // JTabbedPane).
         Component comp = tabCount == 1 ? tabs.getComponentAt(0) : null;
         removeAll();
         if (comp != null)
@@ -1507,10 +1495,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         Container parent = getParent();
         Container grandParent = parent == null ? null : parent.getParent();
         // if our TabbedPane's last component was removed, then the TabbedPane
-        // itself has now been removed.
-        // if we're a child port within a JSplitPane within another DockingPort,
-        // then we ourselved need to be
-        // removed from the component tree, since we don't have any content.
+        // itself has now been removed. if we're a child port within a
+        // JSplitPane
+        // within another DockingPort, then we ourselved need to be removed from
+        // the component tree, since we don't have any content.
         if (comp == null && parent instanceof JSplitPane
                 && grandParent instanceof DefaultDockingPort) {
             parent.remove(this);
@@ -1676,12 +1664,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         HashSet set = new HashSet(1);
 
         // if we have a split-layout, then we need to decide whether to get the
-        // child
-        // viewSets. If 'depth' is less then zero, then it's implied we want to
-        // recurse
-        // to get ALL child viewsets no matter how deep. If 'depth' is greater
-        // than or
-        // equal to zero, we only want to go as deep as the specified depth.
+        // child viewSets. If 'depth' is less then zero, then it's implied we
+        // want to recurse to get ALL child viewsets no matter how deep. If
+        // 'depth' is greater than or equal to zero, we only want to go as deep
+        // as the specified depth.
         if (c instanceof JSplitPane && (depth < 0 || level <= depth)) {
             JSplitPane pane = (JSplitPane) c;
             Component sub1 = pane.getLeftComponent();
@@ -2046,9 +2032,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     private void constructLayout(LayoutNode node, ArrayList splitPaneResizeList) {
         // load the user object. this object isn't used here, but
         // LayoutNode should have a lazy-load mechanism for loading of
-        // userObject
-        // at runtime. we just want to make sure the userObject has been loaded
-        // before we proceed.
+        // userObject at runtime. we just want to make sure the userObject has
+        // been loaded before we proceed.
         Object obj = node.getUserObject();
         if (node instanceof SplitNode)
             splitPaneResizeList.add(node);
@@ -2153,6 +2138,149 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
                 ((DefaultDockingPort) port).evaluateDockingBorderStatus();
 
             split.validate();
+        }
+    }
+
+    // --- maximization
+
+    // remember information to restore state after maximized dockable has left
+    // us again
+    private MaximizationInstallInfo maximizationInstallInfo;
+
+    public void installMaximizedDockable(Dockable dockable) {
+        if (maximizationInstallInfo != null) {
+            throw new IllegalStateException("Already maximized");
+        }
+        maximizationInstallInfo = new MaximizationInstallInfo(
+                getDockedComponent(), getBorder());
+
+        Component newComponent = dockable.getComponent();
+        setComponent(newComponent);
+        evaluateDockingBorderStatus();
+        revalidate();
+    }
+
+    public void uninstallMaximizedDockable() {
+        if (maximizationInstallInfo == null) {
+            throw new IllegalStateException("No dockable maximized.");
+        }
+
+        setComponent(maximizationInstallInfo.getContent());
+        setBorder(maximizationInstallInfo.getBorder());
+        maximizationInstallInfo = null;
+        revalidate();
+    }
+
+    // remember necessary information to restore state after maximized dockable
+    // returns
+    private MaximizationReleaseInfo maximizationReleaseInfo;
+
+    public void releaseForMaximization(Dockable dockable) {
+        if (maximizationReleaseInfo != null) {
+            throw new IllegalStateException(
+                    "Already released a Dockable for maximization.");
+        }
+
+        Component comp = dockable.getComponent();
+        Border border = null;
+        if (comp instanceof JComponent) {
+            border = ((JComponent) comp).getBorder();
+        }
+        maximizationReleaseInfo = new MaximizationReleaseInfo(comp, border);
+
+        Component docked = getDockedComponent();
+        if (docked == null) {
+            throw new IllegalStateException("DefaultDockingPort is empty.");
+        } else if (docked instanceof JSplitPane) {
+            // this should never happen since in that case this DockingPort
+            // can't
+            // be the direct parent of any dockable requesting maximization
+            throw new IllegalStateException(
+                    "DefaultDockingPort does not directly contain a Dockable");
+        } else if (docked instanceof JTabbedPane) {
+            // this is the tricky case, we have to store layout of tabbed pane
+            // to restore later
+            JTabbedPane tabs = (JTabbedPane) docked;
+            maximizationReleaseInfo.setTabIndex(getTabIndex(tabs, comp));
+            tabs.remove(comp);
+        } else {
+            // check if our component is the one that requested maximization
+            if (comp != docked) {
+                throw new IllegalStateException(
+                        "Dockable requesting maximization is not the one docked in this DefaultDockingPort.");
+            }
+            remove(comp);
+        }
+
+    }
+
+    private int getTabIndex(JTabbedPane tabs, Component comp) {
+        int tabCount = tabs.getTabCount();
+        for (int i = 0; i < tabCount; i++) {
+            if (tabs.getComponentAt(i) == comp) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public void returnFromMaximization() {
+
+        Component comp = maximizationReleaseInfo.getContent();
+        if (comp instanceof JComponent) {
+            ((JComponent) comp).setBorder(maximizationReleaseInfo.getBorder());
+        }
+        int tabIndex = maximizationReleaseInfo.getTabIndex();
+        maximizationReleaseInfo = null;
+
+        Component docked = getDockedComponent();
+        if (docked != null && docked instanceof JTabbedPane) {
+            // return dockable to its original (TODO) position in the
+            // JTabbedPane
+            JTabbedPane tabs = (JTabbedPane) docked;
+            tabs.add(comp, getValidTabTitle(tabs, comp), tabIndex);
+            tabs.setSelectedIndex(tabIndex);
+        } else {
+            // return dockable as direct child
+            setComponent(comp);
+        }
+
+        revalidate();
+    }
+
+    private static class MaximizationInstallInfo {
+        private final Component content;
+
+        private final Border border;
+
+        public MaximizationInstallInfo(Component content, Border border) {
+            this.content = content;
+            this.border = border;
+        }
+
+        public Border getBorder() {
+            return border;
+        }
+
+        public Component getContent() {
+            return content;
+        }
+    }
+
+    private static class MaximizationReleaseInfo extends
+            MaximizationInstallInfo {
+        private int tabIndex;
+
+        public MaximizationReleaseInfo(Component content, Border border) {
+            super(content, border);
+        }
+
+        public int getTabIndex() {
+            return tabIndex;
+        }
+
+        public void setTabIndex(int tabIndex) {
+            this.tabIndex = tabIndex;
         }
     }
 }

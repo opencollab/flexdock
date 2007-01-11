@@ -419,6 +419,10 @@
       <java.demo classname="org.flexdock.demos.AllDemos" />
    </target>
 
+   <target name="demo.maximizing" depends="resources,compile" description="Run org.flexdock.demos.maximizing.MaximizationDemo">
+      <java.demo classname="org.flexdock.demos.perspective.MaximizationDemo" />
+   </target>
+
    <target name="demo.perspectives" depends="resources,compile" description="Run org.flexdock.demos.perspective.PerspectivesDemo">
       <java.demo classname="org.flexdock.demos.perspective.PerspectivesDemo" />
    </target>

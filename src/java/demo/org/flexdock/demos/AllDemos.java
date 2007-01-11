@@ -26,6 +26,7 @@ public class AllDemos extends JFrame {
     private static Log log = LogFactory.getLog(AllDemos.class);
     
     private static final String[] DEMO_CLASS_NAMES = new String[] {
+            "org.flexdock.demos.maximizing.MaximizationDemo",
             "org.flexdock.demos.perspective.PerspectivesDemo",
             "org.flexdock.demos.perspective.XMLPerspectivesDemo",
             "org.flexdock.demos.raw.adapter.AdapterDemo",

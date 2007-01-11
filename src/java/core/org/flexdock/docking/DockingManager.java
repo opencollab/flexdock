@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -119,6 +120,9 @@ public class DockingManager implements DockingConstants {
     private static final ClassMapping DOCKING_STRATEGIES = new ClassMapping(
             DefaultDockingStrategy.class, new DefaultDockingStrategy());
 
+    // Map(DockingPort -> MaximizedState)
+    private static final Map maximizedStatesByRootPort = new HashMap();
+
     private static Object persistentIdLock = new Object();
 
     private String defaultLayoutManagerClass;
@@ -141,6 +145,52 @@ public class DockingManager implements DockingConstants {
         // call this method to preload any framework resources
         // we might need later
         init();
+    }
+
+    private static class AutoPersist extends Thread {
+        private boolean enabled;
+
+        public void run() {
+            store();
+        }
+
+        private synchronized void store() {
+            try {
+                if (isEnabled())
+                    storeLayoutModel();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (PersistenceException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public synchronized boolean isEnabled() {
+            return enabled;
+        }
+
+        public synchronized void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    private static class MaximizedState {
+        private final Dockable dockable;
+
+        private final DockingPort originalPort;
+
+        public MaximizedState(Dockable dockable, DockingPort originalDockingPort) {
+            this.dockable = dockable;
+            this.originalPort = originalDockingPort;
+        }
+
+        public Dockable getDockable() {
+            return dockable;
+        }
+
+        public DockingPort getOriginalPort() {
+            return originalPort;
+        }
     }
 
     private static void init() {
@@ -326,8 +376,7 @@ public class DockingManager implements DockingConstants {
         }
 
         return false; // TODO think of changing it to runtime exception I
-        // don't see a situation
-        // when there would be no docker.
+        // don't see a situation when there would be no docker.
     }
 
     private static Dockable resolveDockable(Component comp) {
@@ -596,8 +645,9 @@ public class DockingManager implements DockingConstants {
      * Indicates whether tabbed layouts are supported by default for
      * {@code DockingPorts} with a single {@code Dockable} in the CENTER region.
      * This is a global default setting and applies to any <cod>DockingPort}
-     * that does not have a specific contradictory local setting. <p> This
-     * method defers processing to
+     * that does not have a specific contradictory local setting.
+     * <p>
+     * This method defers processing to
      * {@code org.flexdock.docking.props.PropertyManager.getDockingPortRoot()}.
      * As such, there are multiple "scopes" at which this property may be
      * overridden.
@@ -668,11 +718,14 @@ public class DockingManager implements DockingConstants {
      * {@code Dockable} interface, then this method dispatches to
      * {@code registerDockable(Dockable dockable)}. Otherwise, this method
      * dispatches to {@code registerDockable(Component comp, String tabText)}.
-     * <p> This method attempts to resolve an appropriate value for
-     * {@code tabText} by calling {@code getName()} on the specified
-     * {@code Component}. If the resolved value is {@code null} or empty, then
-     * the value {@code "null"} is used. <p> If {@code comp} is {@code null},
-     * no exception is thrown and no action is performed.
+     * <p>
+     * This method attempts to resolve an appropriate value for {@code tabText}
+     * by calling {@code getName()} on the specified {@code Component}. If the
+     * resolved value is {@code null} or empty, then the value {@code "null"} is
+     * used.
+     * <p>
+     * If {@code comp} is {@code null}, no exception is thrown and no action is
+     * performed.
      * 
      * @param comp
      *            the target component for the {@code Dockable}.
@@ -978,7 +1031,8 @@ public class DockingManager implements DockingConstants {
      * the {@code Object} parameter. This method returns {@code null} if the
      * parameter is {@code null}. Otherwise, the method retrieves the
      * {@code Object's} {@code Class} and dispatches to
-     * {@code getDockingStrategy(Class classKey)}. <p>
+     * {@code getDockingStrategy(Class classKey)}.
+     * <p>
      * {@code DockingStrategy} association follows a strict inheritance chain
      * using {@code org.flexdock.util.ClassMapping}. If a mapping for
      * {@code obj.getClass()} is not found, then the superclass is tested, and
@@ -987,7 +1041,8 @@ public class DockingManager implements DockingConstants {
      * {@code Bar}, and class {@code Baz} extends {@code Bar}, then calling
      * this method for an instance of {@code Baz} will return an instance of
      * {@code Foo}. The inheritance chain is <i>strict</i> in the sense that
-     * only superclasses are checked. Implemented interfaces are ignored. <p>
+     * only superclasses are checked. Implemented interfaces are ignored.
+     * <p>
      * If a class association is never found, then an instance of
      * {@code DefaultDockingStrategy} is returned.
      * 
@@ -1008,16 +1063,19 @@ public class DockingManager implements DockingConstants {
     /**
      * Returns the {@code DockingStrategy} associated with specified
      * {@code Class}. This method returns {@code null} if the parameter is
-     * {@code null}. <p> {@code DockingStrategy} association follows a strict
-     * inheritance chain using {@code org.flexdock.util.ClassMapping}. If a
-     * mapping for {@code classKey} is not found, then the superclass is tested,
-     * and so on until {@code java.lang.Object} is reached. Thus, if a
+     * {@code null}.
+     * <p>
+     * {@code DockingStrategy} association follows a strict inheritance chain
+     * using {@code org.flexdock.util.ClassMapping}. If a mapping for
+     * {@code classKey} is not found, then the superclass is tested, and so on
+     * until {@code java.lang.Object} is reached. Thus, if a
      * {@code DockingStrategy} mapping of {@code Foo} exists for class
      * {@code Bar}, and class {@code Baz} extends {@code Bar}, then calling
      * this method for class {@code Baz} will return an instance of {@code Foo}.
      * The inheritance chain is <i>strict</i> in the sense that only
-     * superclasses are checked. Implemented interfaces are ignored. <p> If a
-     * class association is never found, then an instance of
+     * superclasses are checked. Implemented interfaces are ignored.
+     * <p>
+     * If a class association is never found, then an instance of
      * {@code DefaultDockingStrategy} is returned.
      * 
      * @param classKey
@@ -1080,14 +1138,17 @@ public class DockingManager implements DockingConstants {
      * will tend to have a "main" application window, perhaps surrounded with
      * satellite windows or dialogs, the "main" {@code DockingPort} within a
      * given window will be considered by the application developer to contain
-     * the primary docking layout used by the enclosing window. <p> The
-     * {@code Component} parameter may or may not be a root window container. If
-     * not, the ancestor window of {@code comp} is determined and a set of
-     * docking ports encapsulated by a {@code RootDockingPortInfo} instance is
-     * returned by a call to {@code getRootDockingPortInfo(Component comp)}.
-     * The resolved {@code RootDockingPortInfo} instance's main
-     * {@code DockingPort} is returned via its method {@code getMainPort()}.
-     * <p> By default, the "main" {@code DockingPort} assigned to any
+     * the primary docking layout used by the enclosing window.
+     * <p>
+     * The {@code Component} parameter may or may not be a root window
+     * container. If not, the ancestor window of {@code comp} is determined and
+     * a set of docking ports encapsulated by a {@code RootDockingPortInfo}
+     * instance is returned by a call to
+     * {@code getRootDockingPortInfo(Component comp)}. The resolved
+     * {@code RootDockingPortInfo} instance's main {@code DockingPort} is
+     * returned via its method {@code getMainPort()}.
+     * <p>
+     * By default, the "main" {@code DockingPort} assigned to any
      * {@code RootDockingPortInfo} instance associated with a window will happen
      * to be the first root {@code DockingPort} detected for that window. In
      * essence, the default settings make this method identical to
@@ -1096,10 +1157,12 @@ public class DockingManager implements DockingConstants {
      * {@code setMainPort(String portId)} method based upon the needs of the
      * application developer. In contrast,
      * {@code getMainDockingPort(Component comp)} will always return the first
-     * root {@code DockingPort} found within a window. <p> If {@code comp} is
-     * {@code null} or the root window cannot be resolved, then this method
-     * returns a {@code null} reference. A {@code null} reference is also
-     * returned if the root window does not contain any {@code DockingPorts}.
+     * root {@code DockingPort} found within a window.
+     * <p>
+     * If {@code comp} is {@code null} or the root window cannot be resolved,
+     * then this method returns a {@code null} reference. A {@code null}
+     * reference is also returned if the root window does not contain any
+     * {@code DockingPorts}.
      * 
      * @param comp
      *            the {@code Component} whose root window will be checked for a
@@ -1127,16 +1190,18 @@ public class DockingManager implements DockingConstants {
      * {@code comp} is resolved and the first root {@code DockingPort} found
      * within it is returned. This method defers actual processing to
      * {@code org.flexdock.docking.event.hierarchy.DockingPortTracker.findByWindow(Component comp)}.
-     * <p> If {@code comp} is {@code null} or the root window cannot be
-     * resolved, then this method returns a {@code null} reference. A
-     * {@code null} reference is also returned if the root window does not
-     * contain any {@code DockingPorts}. <p> This method differs from
-     * {@code getMainDockingPort(Component comp)} in that the "main"
-     * {@code DockingPort} for a given window is configurable by the application
-     * developer, whereas this method will always return the "first"
-     * {@code DockingPort} found within the window. However, if the "main"
-     * {@code DockingPort} has not been manually configured by the application
-     * developer, then this method and
+     * <p>
+     * If {@code comp} is {@code null} or the root window cannot be resolved,
+     * then this method returns a {@code null} reference. A {@code null}
+     * reference is also returned if the root window does not contain any
+     * {@code DockingPorts}.
+     * <p>
+     * This method differs from {@code getMainDockingPort(Component comp)} in
+     * that the "main" {@code DockingPort} for a given window is configurable by
+     * the application developer, whereas this method will always return the
+     * "first" {@code DockingPort} found within the window. However, if the
+     * "main" {@code DockingPort} has not been manually configured by the
+     * application developer, then this method and
      * {@code getMainDockingPort(Component comp)} will exhibit identical
      * behavior.
      * 
@@ -1163,11 +1228,14 @@ public class DockingManager implements DockingConstants {
      * all of the "root" {@code DockingPorts} embedded within a root window
      * where a "root" {@code DockingPort} is any {@code DockingPort} embedded
      * within the window that does not have any other {@code DockingPort}
-     * ancestors in it's container hierarchy. <p> If {@code comp} is
-     * {@code null} or the root window cannot be resolved, then this method
-     * returns a {@code null} reference. A {@code null} reference is also
-     * returned if the root window does not contain any {@code DockingPorts}.
-     * <p> This method dispatches internally to
+     * ancestors in it's container hierarchy.
+     * <p>
+     * If {@code comp} is {@code null} or the root window cannot be resolved,
+     * then this method returns a {@code null} reference. A {@code null}
+     * reference is also returned if the root window does not contain any
+     * {@code DockingPorts}.
+     * <p>
+     * This method dispatches internally to
      * {@code org.flexdock.docking.event.hierarchy.DockingPortTracker.getRootDockingPortInfo(Component comp)}.
      * 
      * @param comp
@@ -1187,12 +1255,13 @@ public class DockingManager implements DockingConstants {
      * method defers processing to the currently installed
      * {@code org.flexdock.docking.state.LayoutManager} by invoking its
      * {@code store()} method. If there is no {@code LayoutManager} installed,
-     * then this method returns {@code false}. <p> The layout model itself,
-     * along with storage mechanism, is abstract and dependent upon the
-     * particular {@code LayoutManager} implementation. As such, it may be
-     * possible that the {@code LayoutManager} is unable to persist the current
-     * layout state for non-Exceptional reasons. This method returns
-     * {@code true} if the layout model was successfully stored and
+     * then this method returns {@code false}.
+     * <p>
+     * The layout model itself, along with storage mechanism, is abstract and
+     * dependent upon the particular {@code LayoutManager} implementation. As
+     * such, it may be possible that the {@code LayoutManager} is unable to
+     * persist the current layout state for non-Exceptional reasons. This method
+     * returns {@code true} if the layout model was successfully stored and
      * {@code false} if the layout model could not be stored under circumstances
      * that do not generate an {@code Exception} (for instance, if there is no
      * persistence implementation currently installed). If a problem occurs
@@ -1219,16 +1288,17 @@ public class DockingManager implements DockingConstants {
      * {@code false} to indicate that the stored data model should merely be
      * loaded into memory and the {@code LayoutManager} should not attempt to
      * subsequently restore the application view by synchronizing it against the
-     * newly loaded data model. <p> The layout model itself, along with
-     * storage mechanism, is abstract and dependent upon the particular
-     * {@code LayoutManager} implementation. As such, it may be possible that
-     * the {@code LayoutManager} is unable to load the previous layout state for
-     * non-Exceptional reasons. This method returns {@code true} if the layout
-     * model was successfully loaded and {@code false} if the layout model could
-     * not be loaded under circumstances that do not generate an
-     * {@code Exception} (for instance, if there was no previous layout model
-     * found in storage). If a problem occurs during the loading process, an
-     * {@code IOException} is thrown.
+     * newly loaded data model.
+     * <p>
+     * The layout model itself, along with storage mechanism, is abstract and
+     * dependent upon the particular {@code LayoutManager} implementation. As
+     * such, it may be possible that the {@code LayoutManager} is unable to load
+     * the previous layout state for non-Exceptional reasons. This method
+     * returns {@code true} if the layout model was successfully loaded and
+     * {@code false} if the layout model could not be loaded under circumstances
+     * that do not generate an {@code Exception} (for instance, if there was no
+     * previous layout model found in storage). If a problem occurs during the
+     * loading process, an {@code IOException} is thrown.
      * 
      * @return {@code true} if the current layout model was succesfully loaded,
      *         {@code false} otherwise.
@@ -1252,16 +1322,17 @@ public class DockingManager implements DockingConstants {
      * {@code restoreLayout(boolean loadFromStorage)} with an argument of
      * {@code true}. Otherwise, this method defers processing to the currently
      * installed {@code org.flexdock.docking.state.LayoutManager} by invoking
-     * its {@code load()} method. <p> The layout model itself, along with
-     * storage mechanism, is abstract and dependent upon the particular
-     * {@code LayoutManager} implementation. As such, it may be possible that
-     * the {@code LayoutManager} is unable to load the previous layout state for
-     * non-Exceptional reasons. This method returns {@code true} if the layout
-     * model was successfully loaded and {@code false} if the layout model could
-     * not be loaded under circumstances that do not generate an
-     * {@code Exception} (for instance, if there was no previous layout model
-     * found in storage). If a problem occurs during the loading process, an
-     * {@code IOException} is thrown.
+     * its {@code load()} method.
+     * <p>
+     * The layout model itself, along with storage mechanism, is abstract and
+     * dependent upon the particular {@code LayoutManager} implementation. As
+     * such, it may be possible that the {@code LayoutManager} is unable to load
+     * the previous layout state for non-Exceptional reasons. This method
+     * returns {@code true} if the layout model was successfully loaded and
+     * {@code false} if the layout model could not be loaded under circumstances
+     * that do not generate an {@code Exception} (for instance, if there was no
+     * previous layout model found in storage). If a problem occurs during the
+     * loading process, an {@code IOException} is thrown.
      * 
      * @return {@code true} if the current layout model was succesfully loaded,
      *         {@code false} otherwise.
@@ -1291,9 +1362,10 @@ public class DockingManager implements DockingConstants {
      * restoration. This method is useful for developers who choose to construct
      * a layout model programmatically and wish to "commit" it to the
      * application view, restoring their own in-memory layout model rather than
-     * a model persisted in external storage. <p> If there is no
-     * {@code LayoutManager} currently installed, then this method returns
-     * {@code false}.
+     * a model persisted in external storage.
+     * <p>
+     * If there is no {@code LayoutManager} currently installed, then this
+     * method returns {@code false}.
      * 
      * @return {@code true} if the in-memory layout model was properly restored
      *         to the application view, {@code false} otherwise.
@@ -1323,11 +1395,13 @@ public class DockingManager implements DockingConstants {
      * {@code org.flexdock.docking.state.LayoutManager} by invoking its
      * {@code restore(boolean loadFromStorage)} method. If there is no
      * {@code LayoutManager} currently installed, then this method returns
-     * {@code false}. <p> If the {@code loadFromStorage} parameter is
-     * {@code true}, then the {@code LayoutManager} is instructed to load any
-     * persisted layout model from external storage into memory before
-     * synchronizing the application view. If a problem occurs while loading
-     * from exernal storage, this method throws an {@code IOException}.
+     * {@code false}.
+     * <p>
+     * If the {@code loadFromStorage} parameter is {@code true}, then the
+     * {@code LayoutManager} is instructed to load any persisted layout model
+     * from external storage into memory before synchronizing the application
+     * view. If a problem occurs while loading from exernal storage, this method
+     * throws an {@code IOException}.
      * 
      * @param loadFromStorage
      *            instructs whether to load any layout model from external
@@ -1429,11 +1503,12 @@ public class DockingManager implements DockingConstants {
     /**
      * Returns the {@code DockingPort} that contains the specified
      * {@code Component}. If the {@code Component} is {@code null}, then a
-     * {@code null} reference is returned. <p> This method will only return
-     * the immediate parent {@code DockingPort} of the specified
-     * {@code Component} This means that the {@code DockingPort} returned by
-     * this method will not only be an ancestor {@code Container} of the
-     * specified {@code Component}, but invoking its
+     * {@code null} reference is returned.
+     * <p>
+     * This method will only return the immediate parent {@code DockingPort} of
+     * the specified {@code Component} This means that the {@code DockingPort}
+     * returned by this method will not only be an ancestor {@code Container} of
+     * the specified {@code Component}, but invoking its
      * {@code isParentDockingPort(Component comp)} with the specified
      * {@code Component} will also return {@code true}. If both of these
      * conditions cannot be satisfied, then this method returns a {@code null}
@@ -1452,10 +1527,11 @@ public class DockingManager implements DockingConstants {
     /**
      * Returns the {@code DockingPort} that contains the specified
      * {@code Dockable}. If the {@code Dockable} is {@code null}, then a
-     * {@code null} reference is returned. <p> This method will only return
-     * the immediate parent {@code DockingPort} of the specified
-     * {@code Dockable} This means that a check is performed for the
-     * {@code Component} returned by the {@code Dockable's}
+     * {@code null} reference is returned.
+     * <p>
+     * This method will only return the immediate parent {@code DockingPort} of
+     * the specified {@code Dockable} This means that a check is performed for
+     * the {@code Component} returned by the {@code Dockable's}
      * {@code getComponent()} method. The {@code DockingPort} returned by this
      * method will not only be an ancestor {@code Container} of this
      * {@code Component}, but invoking the {@code DockingPort's}
@@ -1479,10 +1555,11 @@ public class DockingManager implements DockingConstants {
      * {@code Component}. The {@code Dockable} returned by this method will
      * return a reference to {@code comp} when its {@code getComponent()} method
      * is called. If {@code comp} is {@code null}, then this method will return
-     * a {@code null} reference. <p> The association between {@code Dockable}
-     * and {@code Component} is established internally during
-     * {@code registerDockable(Dockable dockable)}. Thus,
-     * {@code registerDockable(Dockable dockable)} must have been called
+     * a {@code null} reference.
+     * <p>
+     * The association between {@code Dockable} and {@code Component} is
+     * established internally during {@code registerDockable(Dockable dockable)}.
+     * Thus, {@code registerDockable(Dockable dockable)} must have been called
      * previously for a mapping to be found and a {@code Dockable} to be
      * returned by this method. If no mapping is found for the specified
      * {@code Component}, then this method returns a {@code null} reference.
@@ -1504,9 +1581,10 @@ public class DockingManager implements DockingConstants {
      * {@code Dockable} returned by this method will return a String equal
      * {@code id} when its {@code getPersistentId()} method is called. If
      * {@code id} is {@code null}, then this method will return a {@code null}
-     * reference. <p> The association between {@code Dockable} and {@code id}
-     * is established internally during
-     * {@code registerDockable(Dockable dockable)}. Thus,
+     * reference.
+     * <p>
+     * The association between {@code Dockable} and {@code id} is established
+     * internally during {@code registerDockable(Dockable dockable)}. Thus,
      * {@code registerDockable(Dockable dockable)} must have been called
      * previously for a mapping to be found and a {@code Dockable} to be
      * returned by this method. If no mapping is found for the specified
@@ -1615,11 +1693,13 @@ public class DockingManager implements DockingConstants {
      * position and size relative to other embedded {@code Dockables}. If
      * floating, the {@code LayoutManager} is responsible for supplying a
      * {@code FloatManager} to maintain {@code Dockable} groupings within
-     * dialogs as well as dialog size and positioning. <p> The
-     * {@code LayoutManager} is responsible for providing a persistence
+     * dialogs as well as dialog size and positioning.
+     * <p>
+     * The {@code LayoutManager} is responsible for providing a persistence
      * mechanism to save and restore layout states. Depending on the
      * {@code LayoutManager} implementation, it may or may not support multiple
-     * layout models that may be loaded and switched between at runtime. <p>
+     * layout models that may be loaded and switched between at runtime.
+     * <p>
      * Because the {@code LayoutManager} is a critical piece of the docking
      * infrastructure, it is not possible to install a {@code null}
      * {@code LayoutManager}. Therefore, this method will always return a valid
@@ -1639,21 +1719,25 @@ public class DockingManager implements DockingConstants {
      * {@code MinimizationManager} is responsible for minimizing and
      * unminimizing {@code Dockables}, removing from and restoring to the
      * embedded docking layout through the currently installed
-     * {@code LayoutManager}. <p> The visual representation of a "minimized"
-     * {@code Dockable} is somewhat abstract, although it is commonly expressed
-     * in user interfaces with the disappearance of the {@code Dockable} from
-     * the layout and the addition of a tab or label on one or more edges of the
-     * application window. The {@code MinimizationManager} implementation itself
-     * is responsible for interpreting the visual characteristics and behavior
-     * of a minimized {@code Dockable}, but it must provide a "preview" feature
-     * to allow viewing of minimized {@code Dockables}, on demand without
-     * actually restoring them to the embedded docking layout. {@code Dockables}
-     * may or may not have limited docking functionality while in minimized
-     * and/or preview state, depending upon the {@code MinimizationManager}
-     * implementation. <p> Because the {@code MinimizationManager} is a
-     * critical piece of the docking infrastructure, it cannot be set to
-     * {@code null}. Therefore, this method will always return a valid
-     * {@code MinimizationManager} and never a {@code null} reference.
+     * {@code LayoutManager}.
+     * <p>
+     * The visual representation of a "minimized" {@code Dockable} is somewhat
+     * abstract, although it is commonly expressed in user interfaces with the
+     * disappearance of the {@code Dockable} from the layout and the addition of
+     * a tab or label on one or more edges of the application window. The
+     * {@code MinimizationManager} implementation itself is responsible for
+     * interpreting the visual characteristics and behavior of a minimized
+     * {@code Dockable}, but it must provide a "preview" feature to allow
+     * viewing of minimized {@code Dockables}, on demand without actually
+     * restoring them to the embedded docking layout. {@code Dockables} may or
+     * may not have limited docking functionality while in minimized and/or
+     * preview state, depending upon the {@code MinimizationManager}
+     * implementation.
+     * <p>
+     * Because the {@code MinimizationManager} is a critical piece of the
+     * docking infrastructure, it cannot be set to {@code null}. Therefore,
+     * this method will always return a valid {@code MinimizationManager} and
+     * never a {@code null} reference.
      * 
      * @return the currently installed {@code MinimizationManager}.
      * @see MinimizationManager
@@ -1671,20 +1755,24 @@ public class DockingManager implements DockingConstants {
      * {@code LayoutManager}. As such, this method is merely for convenience.
      * It internally obtains the installed {@code LayoutManager} via
      * {@code getLayoutManager()} and invokes its {@code getFloatManager()}
-     * method. <p> The {@code FloatManager} maintains information relevant to
-     * floating {@code Dockables} including grouping them together within
-     * dialogs and tracking dialog size and position. The {@code FloatManager}
-     * is responsible for generating new dialogs, parenting on the proper
+     * method.
+     * <p>
+     * The {@code FloatManager} maintains information relevant to floating
+     * {@code Dockables} including grouping them together within dialogs and
+     * tracking dialog size and position. The {@code FloatManager} is
+     * responsible for generating new dialogs, parenting on the proper
      * application window(s), and sending {@code Dockables} to the proper
      * dialogs. It may be used by the {@code LayoutManager} to restore hidden
-     * {@code Dockables} to proper floating state as needed. <p> Since the
-     * {@code FloatManager} is provided by the currently installed
+     * {@code Dockables} to proper floating state as needed.
+     * <p>
+     * Since the {@code FloatManager} is provided by the currently installed
      * {@code LayoutManager}, it cannot be set from within the
      * {@code DockingManager}. To change the installed {@code FloatManager},
      * one must work directly with the installed {@code LayoutManager}
-     * implementation per its particular custom API. <p> Since the
-     * {@code FloatManager} is a critical piece of the docking insfrastructure,
-     * this method will never return a {@code null} reference.
+     * implementation per its particular custom API.
+     * <p>
+     * Since the {@code FloatManager} is a critical piece of the docking
+     * insfrastructure, this method will never return a {@code null} reference.
      * 
      * @return the {@code FloatManager} provided by the currently installed
      *         {@code LayoutManager}
@@ -1703,24 +1791,28 @@ public class DockingManager implements DockingConstants {
      * current state in the docking layout. This includes relative size and
      * positioning to other {@code Dockables}, minimization status, floating
      * status, and any other information used to track and potentially restore a
-     * the {@code Dockable} to the layout if it is currently hidden. <p> The
-     * {@code Dockable} whose current {@code DockingState} is resolved will map
-     * to the specified {@code dockableId} via its {@code getPersistentId()}
+     * the {@code Dockable} to the layout if it is currently hidden.
+     * <p>
+     * The {@code Dockable} whose current {@code DockingState} is resolved will
+     * map to the specified {@code dockableId} via its {@code getPersistentId()}
      * method. The semantics of this mapping relationship are the same as
      * {@code DockingManager.getDockable(String id)}. If a valid
      * {@code Dockable} cannot be found for the specified ID, then this method
-     * returns a {@code null} reference. <p> The {@code DockingState} for any
-     * given {@code Dockable} is ultimately managed by the currently installed
-     * {@code LayoutManager}. Therefore, this method resolves the
-     * {@code LayoutManager} via {@code getLayoutManager()} and defers
-     * processing to its {@code getDockingState(String dockableId)} method.
-     * <p> The underlying {@code LayoutManager} does not provide any
-     * guarantees that the same {@code DockingState} reference always will be
-     * returned for a given {@code Dockable}; only that the returned
-     * {@code DockingState} will accurately reflect the current state maintained
-     * by the {@code LayoutManager} for that {@code Dockable}. For instance, if
-     * the {@code LayoutManager} is capable of maintaining multiple layouts for
-     * an application (as Eclipse does between perspectives), then the
+     * returns a {@code null} reference.
+     * <p>
+     * The {@code DockingState} for any given {@code Dockable} is ultimately
+     * managed by the currently installed {@code LayoutManager}. Therefore,
+     * this method resolves the {@code LayoutManager} via
+     * {@code getLayoutManager()} and defers processing to its
+     * {@code getDockingState(String dockableId)} method.
+     * <p>
+     * The underlying {@code LayoutManager} does not provide any guarantees that
+     * the same {@code DockingState} reference always will be returned for a
+     * given {@code Dockable}; only that the returned {@code DockingState} will
+     * accurately reflect the current state maintained by the
+     * {@code LayoutManager} for that {@code Dockable}. For instance, if the
+     * {@code LayoutManager} is capable of maintaining multiple layouts for an
+     * application (as Eclipse does between perspectives), then the
      * {@code LayoutManager} may or may not maintain multiple
      * {@code DockingState} instances for a single {@code Dockable}, one within
      * each layout context. Therefore, it is not a good idea to cache references
@@ -1750,20 +1842,24 @@ public class DockingManager implements DockingConstants {
      * current state in the docking layout. This includes relative size and
      * positioning to other {@code Dockables}, minimization status, floating
      * status, and any other information used to track and potentially restore a
-     * the {@code Dockable} to the layout if it is currently hidden. <p> If
-     * the {@code dockable} parameter is {@code null}, then this method returns
-     * a {@code null} reference. <p> The {@code DockingState} for any given
-     * {@code Dockable} is ultimately managed by the currently installed
-     * {@code LayoutManager}. Therefore, this method resolves the
-     * {@code LayoutManager} via {@code getLayoutManager()} and defers
-     * processing to its {@code getDockingState(String dockableId)} method.
-     * <p> The underlying {@code LayoutManager} does not provide any
-     * guarantees that the same {@code DockingState} reference always will be
-     * returned for a given {@code Dockable}; only that the returned
-     * {@code DockingState} will accurately reflect the current state maintained
-     * by the {@code LayoutManager} for that {@code Dockable}. For instance, if
-     * the {@code LayoutManager} is capable of maintaining multiple layouts for
-     * an application (as Eclipse does between perspectives), then the
+     * the {@code Dockable} to the layout if it is currently hidden.
+     * <p>
+     * If the {@code dockable} parameter is {@code null}, then this method
+     * returns a {@code null} reference.
+     * <p>
+     * The {@code DockingState} for any given {@code Dockable} is ultimately
+     * managed by the currently installed {@code LayoutManager}. Therefore,
+     * this method resolves the {@code LayoutManager} via
+     * {@code getLayoutManager()} and defers processing to its
+     * {@code getDockingState(String dockableId)} method.
+     * <p>
+     * The underlying {@code LayoutManager} does not provide any guarantees that
+     * the same {@code DockingState} reference always will be returned for a
+     * given {@code Dockable}; only that the returned {@code DockingState} will
+     * accurately reflect the current state maintained by the
+     * {@code LayoutManager} for that {@code Dockable}. For instance, if the
+     * {@code LayoutManager} is capable of maintaining multiple layouts for an
+     * application (as Eclipse does between perspectives), then the
      * {@code LayoutManager} may or may not maintain multiple
      * {@code DockingState} instances for a single {@code Dockable}, one within
      * each layout context. Therefore, it is not a good idea to cache references
@@ -1788,7 +1884,8 @@ public class DockingManager implements DockingConstants {
      * {@code DockableFactory} installed by default is {@code null}. Therefore,
      * this method will return a {@code null} reference until the application
      * developer explicitly provides a {@code DockableFactory} implementation
-     * via {@code setDockableFactory(DockableFactory factory)}. <p>
+     * via {@code setDockableFactory(DockableFactory factory)}.
+     * <p>
      * Installing a {@code DockableFactory} allows FlexDock to seamlessly create
      * and register {@code Dockables} within {@code getDockable(String id)}.
      * Generally, {@code getDockable(String id)} will lookup the requested
@@ -1812,8 +1909,9 @@ public class DockingManager implements DockingConstants {
     /**
      * Enables and disables auto-persistence of the current docking layout model
      * when the application exits. Auto-persistence is disabled by default.
-     * <p> The {@code storeLayoutModel()} provides a means of manually sending
-     * the docking layout model to some type of external storage. When the
+     * <p>
+     * The {@code storeLayoutModel()} provides a means of manually sending the
+     * docking layout model to some type of external storage. When the
      * {@code DockingManager} class loads, a shutdown hook is added to the
      * {@code Runtime}. If auto-persist is enabled when the JVM exits, the
      * shutdown hook automatically calls {@code storeLayoutModel()}, catching
@@ -1834,7 +1932,8 @@ public class DockingManager implements DockingConstants {
      * dockable {@code Component}. The {@code Dockable} instance associated
      * with the specified {@code Component} is resolved via
      * {@code getDockable(Component comp)} and processing is dispatched to
-     * {@code setSplitProportion(Dockable dockable, float proportion)}. <p>
+     * {@code setSplitProportion(Dockable dockable, float proportion)}.
+     * <p>
      * The resulting divider location will be a percentage of the split layout
      * size based upon the {@code proportion} parameter. Valid values for
      * {@code proportion} range from {@code 0.0F{@code  to {@code 1.0F}. For
@@ -1843,27 +1942,32 @@ public class DockingManager implements DockingConstants {
      * for vertical split) of the split container that contains the specified
      * {@code Component}. If a {@code proportion} of less than {@code 0.0F} is
      * supplied, the value }0.0F} is used. If a {@code proportion} greater than
-     * {@code 1.0F} is supplied, the value }1.0F} is used. <p> It is important
-     * to note that the split divider location is only a percentage of the
-     * container size from left to right or top to bottom. A {@code proportion}
-     * of {@code 0.3F} does not imply that {@code dockable} itself will be
-     * allotted 30% of the available space. The split divider will be moved to
-     * the 30% position of the split container regardless of the region in which
-     * the specified {@code Component} resides (which may possibly result in
-     * {@code dockable} being allotted 70% of the available space). <p> This
-     * method should be effective regardless of whether the split layout in
+     * {@code 1.0F} is supplied, the value }1.0F} is used.
+     * <p>
+     * It is important to note that the split divider location is only a
+     * percentage of the container size from left to right or top to bottom. A
+     * {@code proportion} of {@code 0.3F} does not imply that {@code dockable}
+     * itself will be allotted 30% of the available space. The split divider
+     * will be moved to the 30% position of the split container regardless of
+     * the region in which the specified {@code Component} resides (which may
+     * possibly result in {@code dockable} being allotted 70% of the available
+     * space).
+     * <p>
+     * This method should be effective regardless of whether the split layout in
      * question has been fully realized and is currently visible on the screen.
      * This should alleviate common problems associated with setting percentages
      * of unrealized {@code Component} dimensions, which are initially
      * {@code 0x0} before the {@code Component} has been rendered to the screen.
-     * <p> If the specified {@code Component} is {@code null}, then no
+     * <p>
+     * If the specified {@code Component} is {@code null}, then no
      * {@code Exception} is thrown and no action is taken. Identical behavior
      * occurs if a valid {@code Dockable} cannot be resolved for the specified
      * {@code Component}, or the {@code Dockable} does not reside within a
-     * split layout. <p> If the {@code Dockable} resides within a tabbed
-     * layout, a check is done to see if the tabbed layout resides within a
-     * parent split layout. If so, the resolved split layout is resized.
-     * Otherwise no action is taken.
+     * split layout.
+     * <p>
+     * If the {@code Dockable} resides within a tabbed layout, a check is done
+     * to see if the tabbed layout resides within a parent split layout. If so,
+     * the resolved split layout is resized. Otherwise no action is taken.
      * 
      * @param dockable
      *            the {@code Component} whose containing split layout is to be
@@ -1880,34 +1984,40 @@ public class DockingManager implements DockingConstants {
 
     /**
      * Sets the divider location of the split layout containing the specified
-     * dockable {@code Component}. <p> The resulting divider location will be
-     * a percentage of the split layout size based upon the {@code proportion}
-     * parameter. Valid values for {@code proportion} range from
-     * {@code 0.0F{@code  to {@code 1.0F}. For example, a {@code proportion} of
-     * {@code 0.3F} will move the divider to 30% of the "size" (<i>width</i>
-     * for horizontal split, <i>height</i> for vertical split) of the split
-     * container that contains the specified {@code Dockable}. If a
-     * {@code proportion} of less than {@code 0.0F} is supplied, the value
-     * }0.0F} is used. If a {@code proportion} greater than {@code 1.0F} is
-     * supplied, the value }1.0F} is used. <p> It is important to note that
-     * the split divider location is only a percentage of the container size
-     * from left to right or top to bottom. A {@code proportion} of {@code 0.3F}
-     * does not imply that {@code dockable} itself will be allotted 30% of the
-     * available space. The split divider will be moved to the 30% position of
-     * the split container regardless of the region in which the specified
-     * {@code Dockable} resides (which may possibly result in {@code dockable}
-     * being allotted 70% of the available space). <p> This method should be
-     * effective regardless of whether the split layout in question has been
-     * fully realized and is currently visible on the screen. This should
-     * alleviate common problems associated with setting percentages of
-     * unrealized {@code Component} dimensions, which are initially {@code 0x0}
-     * before the {@code Component} has been rendered to the screen. <p> If
-     * the specified {@code Dockable} is {@code null}, then no
+     * dockable {@code Component}.
+     * <p>
+     * The resulting divider location will be a percentage of the split layout
+     * size based upon the {@code proportion} parameter. Valid values for
+     * {@code proportion} range from {@code 0.0F{@code  to {@code 1.0F}. For
+     * example, a {@code proportion} of {@code 0.3F} will move the divider to
+     * 30% of the "size" (<i>width</i> for horizontal split, <i>height</i>
+     * for vertical split) of the split container that contains the specified
+     * {@code Dockable}. If a {@code proportion} of less than {@code 0.0F} is
+     * supplied, the value }0.0F} is used. If a {@code proportion} greater than
+     * {@code 1.0F} is supplied, the value }1.0F} is used.
+     * <p>
+     * It is important to note that the split divider location is only a
+     * percentage of the container size from left to right or top to bottom. A
+     * {@code proportion} of {@code 0.3F} does not imply that {@code dockable}
+     * itself will be allotted 30% of the available space. The split divider
+     * will be moved to the 30% position of the split container regardless of
+     * the region in which the specified {@code Dockable} resides (which may
+     * possibly result in {@code dockable} being allotted 70% of the available
+     * space).
+     * <p>
+     * This method should be effective regardless of whether the split layout in
+     * question has been fully realized and is currently visible on the screen.
+     * This should alleviate common problems associated with setting percentages
+     * of unrealized {@code Component} dimensions, which are initially
+     * {@code 0x0} before the {@code Component} has been rendered to the screen.
+     * <p>
+     * If the specified {@code Dockable} is {@code null}, then no
      * {@code Exception} is thrown and no action is taken. Identical behavior
      * occurs if the {@code Dockable} does not reside within a split layout.
-     * <p> If the {@code Dockable} resides within a tabbed layout, a check is
-     * done to see if the tabbed layout resides within a parent split layout. If
-     * so, the resolved split layout is resized. Otherwise no action is taken.
+     * <p>
+     * If the {@code Dockable} resides within a tabbed layout, a check is done
+     * to see if the tabbed layout resides within a parent split layout. If so,
+     * the resolved split layout is resized. Otherwise no action is taken.
      * 
      * @param dockable
      *            the {@code Dockable} whose containing split layout is to be
@@ -1929,24 +2039,27 @@ public class DockingManager implements DockingConstants {
      * this method resolves the split layout embedded <b>within</b> the
      * specified {@code DockingPort}, whereas the other methods modify the
      * split layout <b>containing</b> their respective {@code Dockable}
-     * parameters. <p> The resulting divider location will be a percentage of
-     * the split layout size based upon the {@code proportion} parameter. Valid
-     * values for {@code proportion} range from {@code 0.0F{@code  to
-     * {@code 1.0F}. For example, a {@code proportion} of {@code 0.3F} will
-     * move the divider to 30% of the "size" (<i>width</i> for horizontal
-     * split, <i>height</i> for vertical split) of the split container embedded
-     * within the specified {@code DockingPort}. If a {@code proportion} of
-     * less than {@code 0.0F} is supplied, the value }0.0F} is used. If a
-     * {@code proportion} greater than {@code 1.0F} is supplied, the value
-     * }1.0F} is used. <p> This method should be effective regardless of
-     * whether the split layout in question has been fully realized and is
-     * currently visible on the screen. This should alleviate common problems
-     * associated with setting percentages of unrealized {@code Component}
-     * dimensions, which are initially {@code 0x0} before the {@code Component}
-     * has been rendered to the screen. <p> If the specified
-     * {@code DockingPort} is {@code null}, then no {@code Exception} is thrown
-     * and no action is taken. Identical behavior occurs if the
-     * {@code DockingPort} does not contain split layout.
+     * parameters.
+     * <p>
+     * The resulting divider location will be a percentage of the split layout
+     * size based upon the {@code proportion} parameter. Valid values for
+     * {@code proportion} range from {@code 0.0F{@code  to {@code 1.0F}. For
+     * example, a {@code proportion} of {@code 0.3F} will move the divider to
+     * 30% of the "size" (<i>width</i> for horizontal split, <i>height</i>
+     * for vertical split) of the split container embedded within the specified
+     * {@code DockingPort}. If a {@code proportion} of less than {@code 0.0F}
+     * is supplied, the value }0.0F} is used. If a {@code proportion} greater
+     * than {@code 1.0F} is supplied, the value }1.0F} is used.
+     * <p>
+     * This method should be effective regardless of whether the split layout in
+     * question has been fully realized and is currently visible on the screen.
+     * This should alleviate common problems associated with setting percentages
+     * of unrealized {@code Component} dimensions, which are initially
+     * {@code 0x0} before the {@code Component} has been rendered to the screen.
+     * <p>
+     * If the specified {@code DockingPort} is {@code null}, then no
+     * {@code Exception} is thrown and no action is taken. Identical behavior
+     * occurs if the {@code DockingPort} does not contain split layout.
      * 
      * @param port
      *            the {@code DockingPort} containing the split layout is to be
@@ -1961,9 +2074,10 @@ public class DockingManager implements DockingConstants {
 
     /**
      * Sets the currently installed {@code DockableFactory}. {@code null}
-     * values for the {@code factory} parameter are acceptable. <p> Installing
-     * a {@code DockableFactory} allows FlexDock to seamlessly create and
-     * register {@code Dockables} within {@code getDockable(String id)}.
+     * values for the {@code factory} parameter are acceptable.
+     * <p>
+     * Installing a {@code DockableFactory} allows FlexDock to seamlessly create
+     * and register {@code Dockables} within {@code getDockable(String id)}.
      * Generally, {@code getDockable(String id)} will lookup the requested
      * {@code Dockable} within the internal registry. If not found, and there is
      * no {@code DockableFactory} installed, {@code getDockable(String id)}
@@ -1992,8 +2106,9 @@ public class DockingManager implements DockingConstants {
      * {@code Dockable} as the {@code window} parameter. Minimization
      * processessing is ultimately deferred to the currently installed
      * {@code MinimizationManager} with a constraint of
-     * {@code MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT}. <p> The
-     * current {@code MinimizationManager} is responsible for updating the
+     * {@code MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT}.
+     * <p>
+     * The current {@code MinimizationManager} is responsible for updating the
      * underlying {@code DockingState} model for the specified {@code Dockable}
      * as well as rendering its own interpretation of the corresponding visual
      * state on the screen. If the supplied {@code minimized} parameter matches
@@ -2025,20 +2140,22 @@ public class DockingManager implements DockingConstants {
      * {@code setMinimized(Dockable dockable, boolean minimizing, Component window, int constraint)},
      * passing {@code MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT} for the
      * {@code constraint} parameter. Minimization processessing is ultimately
-     * deferred to the currently installed {@code MinimizationManager}. <p>
+     * deferred to the currently installed {@code MinimizationManager}.
+     * <p>
      * The {@code window} parameter is passed to the {@code MinimizationManager}
      * to indicate that minimization should be handled with respect to the
      * specified root window, or the root window containing the specified
      * {@code Component}. {@code null} values are acceptable for this
-     * parameter. <p> The current {@code MinimizationManager} is responsible
-     * for updating the underlying {@code DockingState} model for the specified
-     * {@code Dockable} as well as rendering its own interpretation of the
-     * corresponding visual state on the screen. If the supplied
-     * {@code minimized} parameter matches the current {@code DockingState},
-     * the {@code MinimizationManager} is responsible for providing the
-     * appropriate visual indications, or lack thereof. If the specified
-     * {@code Dockable} is {@code null}, no {@code Exception} is thrown and no
-     * action is taken.
+     * parameter.
+     * <p>
+     * The current {@code MinimizationManager} is responsible for updating the
+     * underlying {@code DockingState} model for the specified {@code Dockable}
+     * as well as rendering its own interpretation of the corresponding visual
+     * state on the screen. If the supplied {@code minimized} parameter matches
+     * the current {@code DockingState}, the {@code MinimizationManager} is
+     * responsible for providing the appropriate visual indications, or lack
+     * thereof. If the specified {@code Dockable} is {@code null}, no
+     * {@code Exception} is thrown and no action is taken.
      * 
      * @param dockable
      *            the {@code Dockable} whose minimzed state is to be modified
@@ -2066,21 +2183,23 @@ public class DockingManager implements DockingConstants {
      * {@code setMinimized(Dockable dockable, boolean minimizing, Component window, int constraint)},
      * passing {@code null} for the {@code window} parameter. Minimization
      * processessing is ultimately deferred to the currently installed
-     * {@code MinimizationManager}. <p> Valid values for the
-     * {@code constraint} parameter may be found on the
+     * {@code MinimizationManager}.
+     * <p>
+     * Valid values for the {@code constraint} parameter may be found on the
      * {@code MinimizationManager} interface and include
      * UNSPECIFIED_LAYOUT_CONSTRAINT, TOP, LEFT, BOTTOM, RIGHT, and CENTER.
      * However, constraint values must ultimately be interpreted by the current
      * {@code MinimizationManager} implementation and, thus any integer value
-     * may theoretically be valid for {@code constraint}. <p> The current
-     * {@code MinimizationManager} is responsible for updating the underlying
-     * {@code DockingState} model for the specified {@code Dockable} as well as
-     * rendering its own interpretation of the corresponding visual state on the
-     * screen. If the supplied {@code minimized} parameter matches the current
-     * {@code DockingState}, the {@code MinimizationManager} is responsible for
-     * providing the appropriate visual indications, or lack thereof. If the
-     * specified {@code Dockable} is {@code null}, no {@code Exception} is
-     * thrown and no action is taken.
+     * may theoretically be valid for {@code constraint}.
+     * <p>
+     * The current {@code MinimizationManager} is responsible for updating the
+     * underlying {@code DockingState} model for the specified {@code Dockable}
+     * as well as rendering its own interpretation of the corresponding visual
+     * state on the screen. If the supplied {@code minimized} parameter matches
+     * the current {@code DockingState}, the {@code MinimizationManager} is
+     * responsible for providing the appropriate visual indications, or lack
+     * thereof. If the specified {@code Dockable} is {@code null}, no
+     * {@code Exception} is thrown and no action is taken.
      * 
      * @param dockable
      *            the {@code Dockable} whose minimzed state is to be modified
@@ -2103,22 +2222,24 @@ public class DockingManager implements DockingConstants {
     /**
      * Sets the minimized state for the specified {@code Dockable}. This method
      * defers processing to the currently installed {@code MinimizationManager}.
-     * <p> The {@code window} parameter is passed to the
-     * {@code MinimizationManager} to indicate that minimization should be
-     * handled with respect to the specified root window, or the root window
-     * containing the specified {@code Component}. If a {@code null} values is
-     * supplied for this parameter, the currently active window is used. If no
-     * currently active window can be determined, then this method exits with no
-     * action taken. <p> The current {@code MinimizationManager} is
-     * responsible for updating the underlying {@code DockingState} model for
-     * the specified {@code Dockable} as well as rendering its own
-     * interpretation of the corresponding visual state on the screen. If the
-     * supplied {@code minimized} parameter matches the current
-     * {@code DockingState}, the {@code MinimizationManager} is responsible for
-     * providing the appropriate visual indications, or lack thereof. If the
-     * specified {@code Dockable} is {@code null}, no {@code Exception} is
-     * thrown and no action is taken. <p> Valid values for the
-     * {@code constraint} parameter may be found on the
+     * <p>
+     * The {@code window} parameter is passed to the {@code MinimizationManager}
+     * to indicate that minimization should be handled with respect to the
+     * specified root window, or the root window containing the specified
+     * {@code Component}. If a {@code null} values is supplied for this
+     * parameter, the currently active window is used. If no currently active
+     * window can be determined, then this method exits with no action taken.
+     * <p>
+     * The current {@code MinimizationManager} is responsible for updating the
+     * underlying {@code DockingState} model for the specified {@code Dockable}
+     * as well as rendering its own interpretation of the corresponding visual
+     * state on the screen. If the supplied {@code minimized} parameter matches
+     * the current {@code DockingState}, the {@code MinimizationManager} is
+     * responsible for providing the appropriate visual indications, or lack
+     * thereof. If the specified {@code Dockable} is {@code null}, no
+     * {@code Exception} is thrown and no action is taken.
+     * <p>
+     * Valid values for the {@code constraint} parameter may be found on the
      * {@code MinimizationManager} interface and include
      * UNSPECIFIED_LAYOUT_CONSTRAINT, TOP, LEFT, BOTTOM, RIGHT, and CENTER.
      * However, constraint values must ultimately be interpreted by the current
@@ -2161,19 +2282,23 @@ public class DockingManager implements DockingConstants {
      * will tend to have a "main" application window, perhaps surrounded with
      * satellite windows or dialogs, the "main" {@code DockingPort} within a
      * given window will be considered by the application developer to contain
-     * the primary docking layout used by the enclosing window. <p> The
-     * {@code Component} parameter may or may not be a root window container. If
-     * not, the ancestor window of {@code comp} is determined and a set of
-     * docking ports encapsulated by a {@code RootDockingPortInfo} instance is
-     * returned by a call to {@code getRootDockingPortInfo(Component comp)}.
-     * The resolved {@code RootDockingPortInfo} instance's main
-     * {@code DockingPort} is set via its method
-     * {@code setMainPort(String portId)}. <p> By default, the "main"
-     * {@code DockingPort} assigned to any {@code RootDockingPortInfo} instance
-     * associated with a window will happen to be the first root
-     * {@code DockingPort} detected for that window. This method is used to
-     * alter that setting. <p> If {@code comp} is {@code null} or the root
-     * window cannot be resolved, then this method returns with no action taken.
+     * the primary docking layout used by the enclosing window.
+     * <p>
+     * The {@code Component} parameter may or may not be a root window
+     * container. If not, the ancestor window of {@code comp} is determined and
+     * a set of docking ports encapsulated by a {@code RootDockingPortInfo}
+     * instance is returned by a call to
+     * {@code getRootDockingPortInfo(Component comp)}. The resolved
+     * {@code RootDockingPortInfo} instance's main {@code DockingPort} is set
+     * via its method {@code setMainPort(String portId)}.
+     * <p>
+     * By default, the "main" {@code DockingPort} assigned to any
+     * {@code RootDockingPortInfo} instance associated with a window will happen
+     * to be the first root {@code DockingPort} detected for that window. This
+     * method is used to alter that setting.
+     * <p>
+     * If {@code comp} is {@code null} or the root window cannot be resolved,
+     * then this method returns with no action taken.
      * 
      * @param window
      *            the {@code Component} whose root window will be checked for a
@@ -2198,22 +2323,25 @@ public class DockingManager implements DockingConstants {
      * {@code MinimizationManager} is responsible for minimizing and
      * unminimizing {@code Dockables}, removing from and restoring to the
      * embedded docking layout through the currently installed
-     * {@code LayoutManager}. <p> The visual representation of a "minimized"
-     * {@code Dockable} is somewhat abstract, although it is commonly expressed
-     * in user interfaces with the disappearance of the {@code Dockable} from
-     * the layout and the addition of a tab or label on one or more edges of the
-     * application window. The {@code MinimizationManager} implementation itself
-     * is responsible for interpreting the visual characteristics and behavior
-     * of a minimized {@code Dockable}, but it must provide a "preview" feature
-     * to allow viewing of minimized {@code Dockables}, on demand without
-     * actually restoring them to the embedded docking layout. {@code Dockables}
-     * may or may not have limited docking functionality while in minimized
-     * and/or preview state, depending upon the {@code MinimizationManager}
-     * implementation. <p> Because the {@code MinimizationManager} is a
-     * critical piece of the docking infrastructure, it cannot be set to
-     * {@code null}. If a {@code null} value is passed into this method, the
-     * default {@code MinimizationManager} provided by the framework is used
-     * instead.
+     * {@code LayoutManager}.
+     * <p>
+     * The visual representation of a "minimized" {@code Dockable} is somewhat
+     * abstract, although it is commonly expressed in user interfaces with the
+     * disappearance of the {@code Dockable} from the layout and the addition of
+     * a tab or label on one or more edges of the application window. The
+     * {@code MinimizationManager} implementation itself is responsible for
+     * interpreting the visual characteristics and behavior of a minimized
+     * {@code Dockable}, but it must provide a "preview" feature to allow
+     * viewing of minimized {@code Dockables}, on demand without actually
+     * restoring them to the embedded docking layout. {@code Dockables} may or
+     * may not have limited docking functionality while in minimized and/or
+     * preview state, depending upon the {@code MinimizationManager}
+     * implementation.
+     * <p>
+     * Because the {@code MinimizationManager} is a critical piece of the
+     * docking infrastructure, it cannot be set to {@code null}. If a
+     * {@code null} value is passed into this method, the default
+     * {@code MinimizationManager} provided by the framework is used instead.
      * 
      * @param mgr
      *            the {@code MinimizationManager} to be installed
@@ -2240,26 +2368,30 @@ public class DockingManager implements DockingConstants {
      * {@code null}, no error occurs and the default
      * {@code MinimizationManager} is used. If the instantiated class is not a
      * valid instance of {@code MinimizationManager}, then a
-     * {@code ClassCastException} is thrown. <p> The
-     * {@code MinimizationManager} is responsible for minimizing and
+     * {@code ClassCastException} is thrown.
+     * <p>
+     * The {@code MinimizationManager} is responsible for minimizing and
      * unminimizing {@code Dockables}, removing from and restoring to the
      * embedded docking layout through the currently installed
-     * {@code LayoutManager}. <p> The visual representation of a "minimized"
-     * {@code Dockable} is somewhat abstract, although it is commonly expressed
-     * in user interfaces with the disappearance of the {@code Dockable} from
-     * the layout and the addition of a tab or label on one or more edges of the
-     * application window. The {@code MinimizationManager} implementation itself
-     * is responsible for interpreting the visual characteristics and behavior
-     * of a minimized {@code Dockable}, but it must provide a "preview" feature
-     * to allow viewing of minimized {@code Dockables}, on demand without
-     * actually restoring them to the embedded docking layout. {@code Dockables}
-     * may or may not have limited docking functionality while in minimized
-     * and/or preview state, depending upon the {@code MinimizationManager}
-     * implementation. <p> Because the {@code MinimizationManager} is a
-     * critical piece of the docking infrastructure, it cannot be set to
-     * {@code null}. If a {@code null} value is passed into this method, the
-     * default {@code MinimizationManager} provided by the framework is used
-     * instead.
+     * {@code LayoutManager}.
+     * <p>
+     * The visual representation of a "minimized" {@code Dockable} is somewhat
+     * abstract, although it is commonly expressed in user interfaces with the
+     * disappearance of the {@code Dockable} from the layout and the addition of
+     * a tab or label on one or more edges of the application window. The
+     * {@code MinimizationManager} implementation itself is responsible for
+     * interpreting the visual characteristics and behavior of a minimized
+     * {@code Dockable}, but it must provide a "preview" feature to allow
+     * viewing of minimized {@code Dockables}, on demand without actually
+     * restoring them to the embedded docking layout. {@code Dockables} may or
+     * may not have limited docking functionality while in minimized and/or
+     * preview state, depending upon the {@code MinimizationManager}
+     * implementation.
+     * <p>
+     * Because the {@code MinimizationManager} is a critical piece of the
+     * docking infrastructure, it cannot be set to {@code null}. If a
+     * {@code null} value is passed into this method, the default
+     * {@code MinimizationManager} provided by the framework is used instead.
      * 
      * @param mgrClass
      *            the class name of the {@code MinimizationManager} to be
@@ -2300,8 +2432,9 @@ public class DockingManager implements DockingConstants {
      * Sets whether tabbed layouts are supported by default for
      * {@code DockingPorts} with a single {@code Dockable} in the CENTER region.
      * This is a global default setting and applies to any {@code DockingPort}
-     * that does not have a specific contradictory local setting. <p> This
-     * method defers processing to
+     * that does not have a specific contradictory local setting.
+     * <p>
+     * This method defers processing to
      * {@code org.flexdock.docking.props.PropertyManager.getDockingPortRoot()}.
      * As such, there are multiple "scopes" at which this property may be
      * overridden.
@@ -2326,11 +2459,13 @@ public class DockingManager implements DockingConstants {
      * position and size relative to other embedded {@code Dockables}. If
      * floating, the {@code LayoutManager} is responsible for supplying a
      * {@code FloatManager} to maintain {@code Dockable} groupings within
-     * dialogs as well as dialog size and positioning. <p> The
-     * {@code LayoutManager} is responsible for providing a persistence
+     * dialogs as well as dialog size and positioning.
+     * <p>
+     * The {@code LayoutManager} is responsible for providing a persistence
      * mechanism to save and restore layout states. Depending on the
      * {@code LayoutManager} implementation, it may or may not support multiple
-     * layout models that may be loaded and switched between at runtime. <p>
+     * layout models that may be loaded and switched between at runtime.
+     * <p>
      * Because the {@code LayoutManager} is a critical piece of the docking
      * infrastructure, it is not possible to install a {@code null}
      * {@code LayoutManager}. FlexDock provides a default {@code LayoutManager}
@@ -2361,20 +2496,24 @@ public class DockingManager implements DockingConstants {
      * {@code String} parameter is {@code null}, no error occurs and the
      * default {@code LayoutManager} is used. If the instantiated class is not a
      * valid instance of {@code LayoutManager}, then a
-     * {@code ClassCastException} is thrown. <p> The {@code LayoutManager} is
-     * responsible for managing docking layout state. This includes tracking the
-     * state for all {@code Dockables} as they are embedded, minimized, floated,
-     * or hidden. If a {@code Dockable} is embedded, the {@code LayoutManager}
-     * is responsible for tracking its position and size relative to other
-     * embedded {@code Dockables}. If floating, the {@code LayoutManager} is
-     * responsible for supplying a {@code FloatManager} to maintain
-     * {@code Dockable} groupings within dialogs as well as dialog size and
-     * positioning. <p> The {@code LayoutManager} is responsible for providing
-     * a persistence mechanism to save and restore layout states. Depending on
-     * the {@code LayoutManager} implementation, it may or may not support
-     * multiple layout models that may be loaded and switched between at
-     * runtime. <p> Because the {@code LayoutManager} is a critical piece of
-     * the docking infrastructure, it is not possible to install a {@code null}
+     * {@code ClassCastException} is thrown.
+     * <p>
+     * The {@code LayoutManager} is responsible for managing docking layout
+     * state. This includes tracking the state for all {@code Dockables} as they
+     * are embedded, minimized, floated, or hidden. If a {@code Dockable} is
+     * embedded, the {@code LayoutManager} is responsible for tracking its
+     * position and size relative to other embedded {@code Dockables}. If
+     * floating, the {@code LayoutManager} is responsible for supplying a
+     * {@code FloatManager} to maintain {@code Dockable} groupings within
+     * dialogs as well as dialog size and positioning.
+     * <p>
+     * The {@code LayoutManager} is responsible for providing a persistence
+     * mechanism to save and restore layout states. Depending on the
+     * {@code LayoutManager} implementation, it may or may not support multiple
+     * layout models that may be loaded and switched between at runtime.
+     * <p>
+     * Because the {@code LayoutManager} is a critical piece of the docking
+     * infrastructure, it is not possible to install a {@code null}
      * {@code LayoutManager}. FlexDock provides a default {@code LayoutManager}
      * implementation. If this method is passed a {@code null} argument, the
      * default {@code LayoutManager} is used instead.
@@ -2397,12 +2536,15 @@ public class DockingManager implements DockingConstants {
      * {@code null} then any existing {@code DockingStrategy} association with
      * the specified }Class} is removed. Otherwise, a new
      * {@code DockingStrategy} association is added for the specified
-     * {@code Class}. <p> {@code DockingStrategy} association follows a
-     * strict inheritance chain using {@code org.flexdock.util.ClassMapping}.
-     * This means that the association created by this method applies for the
-     * specified {@code Class} and all direct subclasses, but associations for
-     * interfaces are ignored. Associations also do not apply for subclasses
-     * that have their own specific {@code DockingStrategy} mapping. <p>
+     * {@code Class}.
+     * <p>
+     * {@code DockingStrategy} association follows a strict inheritance chain
+     * using {@code org.flexdock.util.ClassMapping}. This means that the
+     * association created by this method applies for the specified
+     * {@code Class} and all direct subclasses, but associations for interfaces
+     * are ignored. Associations also do not apply for subclasses that have
+     * their own specific {@code DockingStrategy} mapping.
+     * <p>
      * 
      * @param classKey
      *            the {@code Class} whose {@code DockingStrategy} association we
@@ -2464,8 +2606,7 @@ public class DockingManager implements DockingConstants {
         }
 
         return false; // TODO think of changing it to runtime exception I
-        // don't see a situation
-        // when there would be no default docker.
+        // don't see a situation when there would be no default docker.
     }
 
     public static boolean undock(final Component dockable) {
@@ -2546,31 +2687,77 @@ public class DockingManager implements DockingConstants {
         EffectsManager.setPreview(dragPreview);
     }
 
-    private static class AutoPersist extends Thread {
-
-        private boolean enabled;
-
-        public void run() {
-            store();
+    /**
+     * Maximizes the {@code Dockable} associated with the specified component or
+     * restores the {@code Dockable} if it is currently maximized. This method
+     * forwards the request to {@link #toggleMaximized(Dockable)} after
+     * obtaining the {@code Dockable} associated to the component via
+     * {@link #getDockable(Component)}.
+     * 
+     * @param comp
+     * @see #toggleMaximized(Dockable)
+     */
+    public static void toggleMaximized(Component comp) {
+        Dockable dockable = getDockable(comp);
+        if (dockable == null) {
+            return;
         }
+        toggleMaximized(dockable);
+    }
 
-        private synchronized void store() {
-            try {
-                if (isEnabled())
-                    storeLayoutModel();
-            } catch (IOException e) {
-                log.warn(e.getMessage(), e);
-            } catch (PersistenceException e) {
-                log.warn(e.getMessage(), e);
+    /**
+     * Maximizes the specified {@code Dockable} or restores the specified
+     * {@code Dockable} if it is already maximized.
+     * <p>
+     * The scope of maximization is the <i>root</i> {@code DockingPort}. The
+     * specified {@code Dockable}'s current {@code DockingPort} is asked to
+     * temporarily lend the {@code Dockable} for maximization and the root
+     * {@code DockingPort} is asked to temorarily host the {@code Dockable} and
+     * display it such that it occupies all (or the majority) of its screen
+     * resources. If the {@code Dockable} is already maximized, the root
+     * {@code DockingPort} is asked to return to its original state and the
+     * {@code Dockable} is returned to its original {@code DockingPort}.
+     * 
+     * @param dockable
+     */
+    public static void toggleMaximized(Dockable dockable) {
+        DockingPort rootPort = getRootDockingPort(dockable.getComponent());
+        MaximizedState state = getMaximizedState(rootPort);
+        if (state != null) {
+            if (state.getDockable() != dockable) {
+                throw new IllegalStateException(
+                        "Can't maximize while different dockable is maximized");
+                // maybe silently switch maximized dockables instead?
             }
+            restoreFromMaximized(dockable, rootPort, state);
+        } else {
+            maximize(dockable, rootPort);
         }
+    }
 
-        public synchronized boolean isEnabled() {
-            return enabled;
-        }
+    private static void maximize(Dockable dockable, DockingPort rootPort) {
+        DockingPort originalPort = dockable.getDockingPort();
+        MaximizedState state = new MaximizedState(dockable, originalPort);
 
-        public synchronized void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
+        originalPort.releaseForMaximization(dockable);
+        rootPort.installMaximizedDockable(dockable);
+
+        maximizedStatesByRootPort.put(rootPort, state);
+    }
+
+    private static void restoreFromMaximized(Dockable dockable,
+            DockingPort rootPort, MaximizedState state) {
+
+        // restore original state in reverse order than maximizing it
+        // (otherwise this will not work if original port and root port are
+        // identical)
+        rootPort.uninstallMaximizedDockable();
+        state.getOriginalPort().returnFromMaximization();
+
+        maximizedStatesByRootPort.remove(rootPort);
+    }
+
+    private static MaximizedState getMaximizedState(DockingPort rootPort) {
+        return (MaximizedState) maximizedStatesByRootPort.get(rootPort);
     }
 }
