@@ -303,14 +303,15 @@ public class PerspectiveManager implements LayoutManager {
         setCurrentPerspectiveName(null);
 
         DockingPort port = DockingManager.getRootDockingPort(w);
-        for (Perspective p : getPerspectives())
+        Perspective[] perspectives = getPerspectives();
+        for (int i = 0; i < perspectives.length; i++)
         {  
-          String id = p.getPersistentId();
+          String id = perspectives[i].getPersistentId();
           if (!id.equals(EMPTY_PERSPECTIVE))
           {  
             //TODO reset layout, maybe there is a better way
             if (reset)
-              p.getLayout().setRestorationLayout(null);
+              perspectives[i].getLayout().setRestorationLayout(null);
             //p.unload();
             //p.reset(port);
           }  

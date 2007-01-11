@@ -39,7 +39,6 @@ public class StatusDockbar extends Dockbar {
         return statusPanel;
     }
 
-    @Override
     public Component add(Component c) {
         return labelPanel.add(c);
     }
