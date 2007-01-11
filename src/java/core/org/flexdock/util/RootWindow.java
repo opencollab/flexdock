@@ -25,10 +25,10 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import javax.swing.JApplet;
 import javax.swing.JComponent;
@@ -53,7 +53,7 @@ public class RootWindow {
     public static final Integer DEFAULT_MAXED_LAYER = new Integer(
             JLayeredPane.PALETTE_LAYER.intValue() - 10);
 
-    private static final HashMap MAP_BY_ROOT_CONTAINER = new HashMap();
+    private static final Map MAP_BY_ROOT_CONTAINER = new WeakHashMap();
 
     private LayoutManager maxedLayout;
 
@@ -94,9 +94,6 @@ public class RootWindow {
         RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
         if (container == null) {
 			container = new RootWindow(root);
-            //zw, add windowlistener to release RootWindow reference (when window is disposed) 
-            WindowListener wl = new WindowListener();
-            ((Window)root).addWindowListener(wl);
             MAP_BY_ROOT_CONTAINER.put(root, container);
 		}
 		
@@ -411,11 +408,4 @@ public class RootWindow {
     public Object getClientProperty(Object key) {
         return key == null ? null : clientProperties.get(key);
     }
-    
-    //zw, Windowlistener to release RootWindow reference (when window is disposed)
-    private static class WindowListener extends WindowAdapter {
-      public void windowClosed(WindowEvent evt) {
-        MAP_BY_ROOT_CONTAINER.remove(evt.getSource());
-      }
-    }     
 }
