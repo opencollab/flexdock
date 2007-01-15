@@ -9,6 +9,7 @@ New Features:
 	- added PerspectiveEvents.  These events now fire during various actions 
 	  with Perspectives.
 	- the ability to resize components by double-clicking on the divider.
+	- the ability to maximize a dockable.
 	
 Deprecated:
 	- the org.flexdock.logging package.  Use the Apache Commons Logging instead.
@@ -23,6 +24,9 @@ Fixed:
 	- a problem with the application shrinking when a L&F was changed.
 	- a problem where flexdock would "freeze" when the last view was closed.
 	- a problem where the docking ratios were not honored.
+	- a possible memory leak when disposing of root windows.
+	- a bug when a UI delegate was a member of the installed L&F and not
+	  registered as an add-on component.
 
 Partially fixed:
 	- JApplet throwing a NullPointerException when floating a dockable.  The 
