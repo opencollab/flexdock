@@ -7,7 +7,6 @@ import javax.swing.Action;
 import javax.swing.ButtonModel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.view.model.ViewButtonModel;
@@ -32,10 +31,6 @@ public class Button extends JToggleButton {
 	}
 	
     public void updateUI() {             
-      //zw, try to get and install UI provided by UIManager uiClassID 
-      if (UIManager.get(uiClassID) != null)
-        setUI(UIManager.getUI(this));
-      else 
         setUI(PlafManager.getUI(this));
     }
 

@@ -23,7 +23,6 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -410,11 +409,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public void updateUI() {
-        // install UI-delegate provided by UIManager if available
-        if (UIManager.get(uiClassID) != null)
-            setUI(UIManager.getUI(this));
-        else
-            setUI(PlafManager.getUI(this));
+        setUI(PlafManager.getUI(this));
     }
 
     public String getUIClassID()
