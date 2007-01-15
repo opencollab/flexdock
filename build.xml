@@ -60,6 +60,7 @@
    <path id="javac.classpath.demo">
       <path refid="javac.classpath" />
       <pathelement location="${lib.dir}/jmf/lib/jmf.jar" />
+      <pathelement location="${lib.dir}/looks-1.3.1.jar" />
    </path>
    <path id="javac.classpath.test">
       <path refid="javac.classpath" />
@@ -333,7 +334,7 @@
               I believe this BUG is the cause: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4490798 -->
          <manifest>
             <!-- matches core jar name -->
-            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar lib/jmf/lib/jmf.jar"/> 
+            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar lib/jmf/lib/jmf.jar lib/looks-1.3.1.jar"/> 
             <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
          </manifest>
       </jar>
