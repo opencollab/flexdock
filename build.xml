@@ -572,5 +572,8 @@ The signing.properties file must specify all of the following properties:
       <mysignjar
           jarname="${build.dir}/lib/commons-logging-1.1.jar"
           sjarname="${bin.dir.webstart}/commons-logging-1.1.jar"/>
+      <mysignjar
+          jarname="${build.dir}/lib/looks-1.3.1.jar"
+          sjarname="${bin.dir.webstart}/looks-1.3.1.jar"/>
    </target>
 </project>
