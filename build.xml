@@ -60,7 +60,7 @@
    <path id="javac.classpath.demo">
       <path refid="javac.classpath" />
       <pathelement location="${lib.dir}/jmf/lib/jmf.jar" />
-      <pathelement location="${lib.dir}/looks-1.3.1.jar" />
+      <pathelement location="${lib.dir}/looks-2.1.1.jar" />
    </path>
    <path id="javac.classpath.test">
       <path refid="javac.classpath" />
@@ -81,7 +81,7 @@
       <pathelement location="${bin.dir}"/>
       <pathelement location="${bin.dir.demo}"/> <!-- needed for a couple of the tests -->
 	  <pathelement location="${lib.dir}/commons-logging-1.1.jar"/>
-	  <pathelement location="${lib.dir}/skinlf-1.2.11.jar"/>
+	  <pathelement location="${lib.dir}/skinlf.jar"/>
    </path>
 
    <!-- build targets -->
@@ -334,7 +334,7 @@
               I believe this BUG is the cause: http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4490798 -->
          <manifest>
             <!-- matches core jar name -->
-            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar lib/jmf/lib/jmf.jar lib/looks-1.3.1.jar"/> 
+            <attribute name="Class-Path" value="${dist.jar.name} lib/commons-logging-1.1.jar lib/jmf/lib/jmf.jar lib/looks-2.1.1.jar"/> 
             <attribute name="Main-Class" value="org.flexdock.demos.AllDemos"/>
          </manifest>
       </jar>
@@ -573,7 +573,7 @@ The signing.properties file must specify all of the following properties:
           jarname="${build.dir}/lib/commons-logging-1.1.jar"
           sjarname="${bin.dir.webstart}/commons-logging-1.1.jar"/>
       <mysignjar
-          jarname="${build.dir}/lib/looks-1.3.1.jar"
-          sjarname="${bin.dir.webstart}/looks-1.3.1.jar"/>
+          jarname="${build.dir}/lib/looks-2.1.1.jar"
+          sjarname="${bin.dir.webstart}/looks-2.1.1.jar"/>
    </target>
 </project>
