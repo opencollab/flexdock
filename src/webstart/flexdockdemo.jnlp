@@ -15,6 +15,9 @@
       <jar href="@DEMO_JAR_NAME@"/>
       <jar href="@FRAMEWORK_JAR_NAME@"/>
       <jar href="@JMF_JAR_NAME@" download="lazy"/>
+      <jar href="@APACHE_LOGGING@" download="lazy"/>
+      <jar href="@LOOKS@" download="lazy"/>
+      <jar href="@SKIN_LF@" download="lazy"/>
    </resources>
    <application-desc main-class="org.flexdock.demos.AllDemos"/>
 </jnlp>

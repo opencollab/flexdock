@@ -558,6 +558,9 @@ The signing.properties file must specify all of the following properties:
             <filter token="DEMO_JAR_NAME" value="${dist.demo.jar.name}"/>
             <filter token="FRAMEWORK_JAR_NAME" value="${dist.jar.name}"/>
             <filter token="JMF_JAR_NAME" value="jmf.jar"/>
+            <filter token="APACHE_LOGGING" value="commons-logging-1.1.jar"/>
+            <filter token="LOOKS" value="looks-2.1.1.jar"/>
+            <filter token="SKIN_LF" value="skinlf.jar"/>
          </filterset>
       </copy>
       <mysignjar
@@ -572,8 +575,11 @@ The signing.properties file must specify all of the following properties:
       <mysignjar
           jarname="${build.dir}/lib/commons-logging-1.1.jar"
           sjarname="${bin.dir.webstart}/commons-logging-1.1.jar"/>
-      <mysignjar
-          jarname="${build.dir}/lib/looks-2.1.1.jar"
-          sjarname="${bin.dir.webstart}/looks-2.1.1.jar"/>
+    <mysignjar
+        jarname="${build.dir}/lib/looks-2.1.1.jar"
+        sjarname="${bin.dir.webstart}/looks-2.1.1.jar"/>
+    <mysignjar
+        jarname="${build.dir}/lib/skinlf.jar"
+        sjarname="${bin.dir.webstart}/skinlf.jar"/>
    </target>
 </project>
