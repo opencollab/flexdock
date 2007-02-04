@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
@@ -20,7 +21,7 @@ import org.flexdock.plaf.common.border.SlideoutBorder;
 public class StatusDockbar extends Dockbar {
     private JPanel labelPanel;
 
-    private JPanel statusPanel;
+    private JComponent statusBarComponent;
 
     public StatusDockbar(DockbarManager manager, int orientation) {
         super(manager, orientation);
@@ -30,13 +31,13 @@ public class StatusDockbar extends Dockbar {
         super.add(labelPanel);
     }
 
-    public void setStatusPane(JPanel p) {
-        statusPanel = p;
-        add(statusPanel, BorderLayout.SOUTH);
+    public void setStatusBarComponent(JComponent c) {
+        statusBarComponent = c;
+        add(statusBarComponent, BorderLayout.SOUTH);
     }
 
-    public JPanel getStatusPane() {
-        return statusPanel;
+    public JComponent getStatusBarComponent() {
+        return statusBarComponent;
     }
 
     public Component add(Component c) {
@@ -67,20 +68,20 @@ public class StatusDockbar extends Dockbar {
     }
 
     public Dimension getPreferredSize() {
-        if (statusPanel == null || statusPanel.getComponentCount() == 0)
+        if (statusBarComponent == null || statusBarComponent.getComponentCount() == 0)
             if (mDocks.size() == 0)
                 return new Dimension(0, 0);
             else
                 return labelPanel.getComponent(0).getPreferredSize();
 
         if (labelPanel.getComponentCount() == 0)
-            return statusPanel.getPreferredSize();
+            return statusBarComponent.getPreferredSize();
 
         DockbarLabel label = (DockbarLabel) labelPanel.getComponent(0);
         return new Dimension(label.getPreferredSize().width
-                + statusPanel.getPreferredSize().width, label
+                + statusBarComponent.getPreferredSize().width, label
                 .getPreferredSize().height
-                + statusPanel.getPreferredSize().height);
+                + statusBarComponent.getPreferredSize().height);
     }
 
 }
