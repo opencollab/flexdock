@@ -162,11 +162,11 @@ public class PlafManager {
      * @see UIManager#getUI
      */
     public static ComponentUI getUI(JComponent target) {
-        ComponentUI ui = UIManager.getUI(target);
+        ComponentUI ui = /*UIManager.getUI(target);
 
         if (ui == null) {
-            ui = (ComponentUI) UI_DEFAULTS.get(target.getClass());
-        }
+            ui = */(ComponentUI) UI_DEFAULTS.get(target.getClass());
+//        }
 
         return ui;
     }
