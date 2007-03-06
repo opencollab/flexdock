@@ -104,6 +104,10 @@ public class DockingPortTracker implements HierarchyListener {
             c = c.getParent();
         }
 
+        if (port == null) {
+            port = findByWindow(RootWindow.getRootContainer(comp));
+        }
+        
         return port;
     }
 	
