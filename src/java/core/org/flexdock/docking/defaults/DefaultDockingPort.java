@@ -47,6 +47,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -313,12 +314,26 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
         // configure layout
         setLayout(createLayout());
+        
+        //configure the default border manager
+        setBorderManager(createBorderManager());
     }
 
     protected LayoutManager createLayout() {
         return new PortLayout();
     }
 
+    /**
+     * Creates a standard border manager for this docking port.
+     * <p>
+     * This method is called from the constructor.
+     * 
+     * @return the border manager for this docking port.
+     */
+    protected BorderManager createBorderManager() {
+        return new StandardBorderManager(new EmptyBorder(0, 0, 0, 0));
+    }
+    
     /**
      * Overridden to set the currently docked component. Should not be called by
      * application code.
