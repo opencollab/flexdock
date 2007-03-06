@@ -21,6 +21,7 @@ import org.flexdock.util.RootWindow;
 
 /**
  * @author Christopher Butler
+ * @author Karl Schaefer
  */
 public class DockingPortTracker implements HierarchyListener {
 	private static final DockingPortTracker SINGLETON = new DockingPortTracker();
@@ -81,11 +82,32 @@ public class DockingPortTracker implements HierarchyListener {
 		return null;
 	}
 	
-	public static DockingPort findByWindow(Component comp) {
-		RootWindow window = RootWindow.getRootContainer(comp);
-		return findByWindow(window);
-	}
+    /**
+     * Returns the {@code DockingPort} for {@code comp}. If {@code comp} is
+     * {@code null}, then this method returns {@code null}.
+     * 
+     * @param comp
+     *            the component for which to find the root docking port.
+     * @return the eldest docking port for {@code comp}, or {@code null} if
+     *         {@code comp} is {@code null} or has no {@code DockingPort}
+     *         ancestor.
+     */
+    public static DockingPort findByWindow(Component comp) {
+        Component c = comp;
+        DockingPort port = null;
+
+        while (c != null) {
+            if (c instanceof DockingPort) {
+                port = (DockingPort) c;
+            }
+
+            c = c.getParent();
+        }
+
+        return port;
+    }
 	
+        
 	public static DockingPort findByWindow(RootWindow window) {
 		RootDockingPortInfo info = getRootDockingPortInfo(window);
 		if(info==null)
