@@ -270,6 +270,10 @@ public class DockingManager implements DockingConstants {
         if (dockable == null)
             return;
 
+        if (isMaximized(dockable)) {
+            toggleMaximized(dockable);
+        }
+        
         if (isDocked(dockable)) {
             undock(dockable);
         } else if (DockingUtility.isMinimized(dockable)) {
@@ -2735,6 +2739,13 @@ public class DockingManager implements DockingConstants {
         }
     }
 
+    public static boolean isMaximized(Dockable dockable) {
+        DockingPort rootPort = getRootDockingPort(dockable.getComponent());
+        MaximizedState state = getMaximizedState(rootPort);
+        
+        return state != null && state.getDockable().equals(dockable);
+    }
+    
     private static void maximize(Dockable dockable, DockingPort rootPort) {
         DockingPort originalPort = dockable.getDockingPort();
         MaximizedState state = new MaximizedState(dockable, originalPort);
