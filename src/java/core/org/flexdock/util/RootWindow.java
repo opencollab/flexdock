@@ -209,6 +209,7 @@ public class RootWindow {
      * Returns the layer associated with {@code Component} maximization.
      * 
      * @return an {@code Integer} indicating the maximization layer property
+     * @deprecated dead code last used in 0.2.0
      */
     public Integer getMaximizationLayer() {
         return maximizationLayer;
@@ -220,6 +221,7 @@ public class RootWindow {
      * 
      * @return a {@code LayoutManager} indicating the maximization layout
      *         property
+     * @deprecated dead code last used in 0.2.0
      */
     public LayoutManager getMaximizedLayout() {
         return maxedLayout;
@@ -319,6 +321,7 @@ public class RootWindow {
      * 
      * @param layer
      *            an {@code Integer} indicating the maximization layer property
+     * @deprecated dead code last used in 0.2.0
      */
     public void setMaximizationLayer(Integer layer) {
         if (layer == null)
@@ -333,6 +336,7 @@ public class RootWindow {
      * @param mgr
      *            the {@code LayoutManager} associated with {@code Component}
      *            maximization within the {@code RootSwingContainer}.
+     * @deprecated dead code last used in 0.2.0
      */
     public void setMaximizedLayout(LayoutManager mgr) {
         maxedLayout = mgr;
