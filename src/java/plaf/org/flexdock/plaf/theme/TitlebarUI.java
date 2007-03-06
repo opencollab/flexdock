@@ -18,6 +18,8 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
+import javax.swing.plaf.FontUIResource;
+import javax.swing.plaf.UIResource;
 
 import org.flexdock.plaf.FlexViewComponentUI;
 import org.flexdock.plaf.icons.IconMap;
@@ -72,8 +74,13 @@ public class TitlebarUI extends FlexViewComponentUI {
 
         reconfigureActions(c);
 
-        if (font != null)
-            c.setFont(font);
+        if (font != null) {
+            Font current = c.getFont();
+
+            if (current == null || current instanceof UIResource) {
+                c.setFont(new FontUIResource(font));
+            }
+        }
     }
 
     public void uninstallUI(JComponent c) {
@@ -113,7 +120,7 @@ public class TitlebarUI extends FlexViewComponentUI {
         Object oldAAValue = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antialiasing);
 
-        g2.setFont( getFont());
+        g2.setFont(titlebar.getFont());
         Rectangle iconRect = getIconRect(titlebar);
         Rectangle paintRect = getPaintRect(titlebar);
 
