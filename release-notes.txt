@@ -6,17 +6,43 @@ Updates:
 	- The JGoodies Looks migrated from 1.3.1 to 2.1.1.
 	
 Known Problems:
-	- The message "UIDefaults.getUI() failed:" with some stack trace is printed
-	  to System.err.  This is not a bug.  This trace is printed from the
-	  underlying Swing L&F management.  The flexdock L&F exensions could
-	  possibly exist for some L&Fs, so it is preferrable to check with the
-	  UIManager before checking with the flexdock extension manager
-	  (PlafManager).  If the requested component is not part of the installed
-	  L&F, then this message is printed.
-	  
+    - FlexDock has some difficulty in supporting third-party L&F
+      implementations.  A 0.5.0 change attempted to resolve this problem, but
+      caused more trouble than it was worth.  That change was reverted, see the
+      Fixed section.
+      
+Deprecated:
+    - org.flexdock.view.actions.ViewAction.EMPTY_ACTION field.  It is unused
+      and there are better ways to signify no-op actions.
+    - org.flexdock.util.RootWindow methods getMaximizationLayer(),
+      setMaximizationLayer(Integer), getMaximizedLayout(),
+      setMaximizedLayout(LayoutManager).  These methods are unused and are
+      remnants of 0.2.0 code.
+      
 Fixed:
 	- Updated the build.xml file to produce 1.4 compatible code.  The Javadoc,
 	  however, is written for 1.5 as it uses the code tag.
+	- Fixed a problem with closing maximized dockables, where the window would
+	  not refresh correctly.
+	- Issue 76.  The Titlebar now correctly displays user-set fonts.
+	- Issue 87.  Maximization now workings with the DefaultDockingPort.  This
+	  was accomplished by creating a createBorderManager method in
+	  DefaultDockingPort that is called during creation.  This method is
+	  designed to be overriden by subclasses.  The DefaultDockingPort creates
+	  an EmptyBorder with 0-sized insets.
+	- Issue 88.  There was a bug in DockingPortTracker.findByWindow(Component)
+	  that caused a symptom where maximized dockables would not appear in the 
+	  correct port.
+	- Issue 90.  The UIManager check required to support third-party L&Fs was
+	  reverted.  In 0.5.0 it gave the message "UIDefaults.getUI() failed:" with
+	  some stack trace is printed to System.err.  This was not a bug.  This
+	  trace is printed from the underlying Swing L&F management.  The flexdock
+	  L&F exensions could possibly exist for some L&Fs, so it was considered
+	  preferrable to check with the UIManager before checking with the flexdock
+	  extension manager (PlafManager).  Given the ugliness of the error
+	  messages, this code change was reverted.
+	- Issue 92.  Users can now use JComponent subclassed status bars with the
+	  DockBar.
 
 CHANGES FROM 0.4:
 New Features:
