@@ -9,6 +9,7 @@ The contents of the binary distributions are:
   README                        this file
   flexdock-<version>.jar        the flexdock framework
   flexdock-demo-<version>.jar   runnable jar containing demo apps
+  release-notes.txt             list of changes, fixes and new features
   docs\*                        user/developer documentation
   docs\apis\...                 javadocs
   jmf\*							Java Media Framework used by the demo
