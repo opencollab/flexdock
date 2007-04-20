@@ -85,7 +85,7 @@ public class DockbarLayout {
 		return (int)(((float)rect.height)*viewSize);
 	}
 	
-	private void layoutViewpane() {
+	protected void layoutViewpane() {
 		ViewPane viewPane = manager.getViewPane();
 		Dockable dockable = manager.getActiveDockable();
 		if(dockable==null) {

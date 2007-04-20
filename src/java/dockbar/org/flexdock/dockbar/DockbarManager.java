@@ -12,6 +12,7 @@ import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.WeakHashMap;
@@ -50,16 +51,18 @@ public class DockbarManager {
 	private static final WeakHashMap MANAGERS_BY_WINDOW = new WeakHashMap();
 	public static final Integer DOCKBAR_LAYER = new Integer(JLayeredPane.PALETTE_LAYER.intValue()-5);
 	public static final int DEFAULT_EDGE = MinimizationManager.LEFT;
+
+    private static String dockbarManagerClassName;        
 	
-	private static DockbarManager currentManager;
+    private static DockbarManager currentManager;
 
-	private WeakReference windowRef;
-	private Dockbar leftBar;
-	private Dockbar rightBar;
-	private Dockbar bottomBar;
-	private ViewPane viewPane;
+    protected WeakReference windowRef;
+    protected Dockbar leftBar;
+    protected Dockbar rightBar;
+    protected Dockbar bottomBar;
+    protected ViewPane viewPane;
 
-	private DockbarLayout dockbarLayout;
+	protected DockbarLayout dockbarLayout;
 	private ActivationListener activationListener;
 	private HashMap dockables;
 
@@ -70,9 +73,9 @@ public class DockbarManager {
 
 
 	static {
-		Class c = DockingManager.class;
+        Class c = DockingManager.class;
 		EventManager.addHandler(new DockbarEventHandler());
-		DockbarTracker.register();
+        DockbarTracker.register();
 		
 		// setup to listen for Dockable property change events
 		PropertyChangeListenerFactory.addFactory(new DockablePropertyChangeHandler.Factory());
@@ -80,7 +83,7 @@ public class DockbarManager {
 		// update behavior of active Dockable changes
 		EventManager.addListener(new ActiveDockableHandler());
 	}
-	
+
 	public static DockbarManager getInstance(Component c) {
 		RootWindow window = RootWindow.getRootContainer(c);
 		return getInstance(window);
@@ -89,7 +92,7 @@ public class DockbarManager {
 	public static DockbarManager getInstance(RootWindow window) {
 		if(window==null)
 			return null;
-		
+
 		// DockingFrames should not be allowed to contain dockbars.
 		// This may change in the future, but for now if our window is a 
 		// DockingFrame, reroute to its owner.
@@ -101,7 +104,7 @@ public class DockbarManager {
 		
 		DockbarManager mgr = (DockbarManager)MANAGERS_BY_WINDOW.get(window);
 		if(mgr==null) { 
-			mgr = new DockbarManager(window);
+			mgr = createDockbarManager(window);
 			synchronized(MANAGERS_BY_WINDOW) {
 				MANAGERS_BY_WINDOW.put(window, mgr);
 			}
@@ -113,7 +116,42 @@ public class DockbarManager {
 		
 		return mgr;		
 	}
-	
+
+    /**
+     * Creates a new DockbarManager instance. In the case that a dockbarManager class name
+     * has been set the class will be instantiated by reflection. If no classname is set a 
+     * org.flexdock.dockbar.DockbarManager will be created.
+     *   
+     * @param window RootWindow for which the DockbarManager will be created 
+     * @return new DockbarManager instance
+     * @see DockbarManager#setDockbarManager(String)
+     */
+    private static DockbarManager createDockbarManager(RootWindow window) {
+        if (dockbarManagerClassName == null)
+            return new DockbarManager(window);            
+
+        DockbarManager mgr = null;
+        try {
+            Class clazz = Class.forName(dockbarManagerClassName);
+            Constructor constructor = clazz.getConstructor(new Class[]{RootWindow.class});
+            mgr = (DockbarManager)constructor.newInstance(new Object[]{window});
+        }
+        catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+        return mgr;            
+    }
+
+    /**
+     * Sets a custom DockbarManager class which will be used to create new DockbarManager 
+     * instances.
+     *   
+     * @param className  Classname of your custom DockbarManager.
+     */
+    public static void setDockbarManager(String className) {
+        dockbarManagerClassName = className; 
+    }
+        
 	public static DockbarManager getCurrent(Dockable dockable) {
 		if(dockable==null)
 			return null;
@@ -176,7 +214,7 @@ public class DockbarManager {
 	
 	
 	
-	private DockbarManager(RootWindow window) {
+        protected DockbarManager(RootWindow window) {
 		dockbarLayout = new DockbarLayout(this);
 		activationListener = new ActivationListener(this);
 		
@@ -194,7 +232,7 @@ public class DockbarManager {
 	}
 
 	
-	private void install() {
+	protected void install() {
 		RootWindow window = getWindow();
 		if(window==null)
 			return;
