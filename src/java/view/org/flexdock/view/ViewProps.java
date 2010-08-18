@@ -53,8 +53,10 @@ public class ViewProps extends ScopedDockablePropertySet {
 	    }
 	    
 		if(!view.isActiveStateLocked() && active!=isActive().booleanValue()) {
-			super.setActive(active);
-			view.repaint();
+		    super.setActive(active);
+		    if (view.getTitlebar() != null) {
+		        view.getTitlebar().repaint();
+		    }
 		}
 	}
 }
