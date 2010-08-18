@@ -25,6 +25,7 @@ import java.awt.LayoutManager;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Window;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -91,10 +92,14 @@ public class RootWindow {
         if (!isValidRootContainer(root))
             return null;
 
-        RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
+        RootWindow container = null;
+        WeakReference containerRef = (WeakReference) MAP_BY_ROOT_CONTAINER.get(root);
+        if (containerRef != null) {
+            container = (RootWindow) containerRef.get();
+        }
         if (container == null) {
 			container = new RootWindow(root);
-            MAP_BY_ROOT_CONTAINER.put(root, container);
+            MAP_BY_ROOT_CONTAINER.put(root, new WeakReference(container));
 		}
 		
         if (container.getRootContainer() != root)
