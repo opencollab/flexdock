@@ -104,7 +104,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
     
     public void setRotation(int rotation) {
     	rotation = getValidRotation(rotation);
-		boolean changed = rotation==mRotation;
+		boolean changed = rotation!=mRotation;
 		mRotation = rotation;
 		
 		if(changed)
