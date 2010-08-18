@@ -1,12 +1,18 @@
 flexdock 0.5.2 RELEASE NOTES:
 
 CHANGES FROM 0.5.1:
+Updates:
+	- Static member org.flexdock.util.Utilities.VERSION added. It contains
+	  the version of flexdock
+
 Fixed:
+	- Issue 78.   Removed deprecated logging classes.
+	- Issue 113.  Changing focus between Views resulted in full repaint.
+	- Issue 115.  Memory leak removed (was caused by incorrect DockbarManager
+	  and RootWindow instances caching).
 	- Issue 117.  TextIcon.setRotation() did not recalculate on change.
 	- Issue 118.  Two threads were trying to control the focus causing some 
 	  wierd behavior. Thanks to Calixte Denizet for the fix.
-	- Static member org.flexdock.util.Utilities.VERSION added. It contains
-	  the version of flexdock
 
 
 CHANGES FROM 0.5:
