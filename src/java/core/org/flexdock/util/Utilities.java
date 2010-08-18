@@ -28,6 +28,11 @@ public class Utilities {
      */
     public static final boolean JAVA_1_5 = isJavaVersion("1.5");
 
+	/**
+     * A String representing the flexdock version. This constant is a string.
+	 */
+	public static final String VERSION = "0.5.2";
+
     private Utilities() {
         // does nothing
     }
