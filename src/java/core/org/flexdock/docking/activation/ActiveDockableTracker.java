@@ -127,7 +127,7 @@ public class ActiveDockableTracker {
 	
 	static void focusDockable(Component child, final Dockable parentDockable, boolean forceChange) {
 		// if the dockable is already active, then leave it alone.
-	    // skip this check if they're trying to force a change
+	        // skip this check if they're trying to force a change
 		if(!forceChange && parentDockable.getDockingProperties().isActive().booleanValue())
 			return;
 
@@ -136,8 +136,25 @@ public class ActiveDockableTracker {
 		Component focuser = focusRoot==null? null: SwingUtility.getNearestFocusableComponent(child, focusRoot);
 		if(focuser==null)
 			focuser = parentComp;
-		focuser.requestFocus();
-		
+
+		/*
+		  requestDockableActivation is called when one clicks in the window (cf ActiveDockableListener.eventDispatched)
+		  and if there is a focusable component where the click occured, it gets the focus with the following
+		  requestFocus() (and it is called in an invokeLater).
+		  If an other Dockable had the focus before, the current Dockable must changed. But this changement is notify by a
+		  PropertyChangeEvent, so requestDockableActivation is called again (cf DockablePropertyChangeHandler.handleActivationChange).
+		  and the Dockable would request the focus !
+		  Conclusion: when the user click in the window, we have two concurrent threads which request focus for two differents
+		  components !
+
+		  Since forceChange is true only if called from the PropertyChangeHandler, the focus will be request only when
+		  forceChange is false, that avoids the two concurrent requestFocus().
+		*/
+
+		if (!forceChange) {
+		    focuser.requestFocus();
+		}
+
 		// if we're in a hidden tab, then bring the tab to the front
 		if(parentComp.getParent() instanceof JTabbedPane) {
 		    JTabbedPane tabPane = (JTabbedPane)parentComp.getParent();
