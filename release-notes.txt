@@ -2,7 +2,7 @@ flexdock 0.5.2 RELEASE NOTES:
 
 CHANGES FROM 0.5.1:
 Fixed:
-	- Issue 117.  TextIcon.setRotation() does not recalculate on change.
+	- Issue 117.  TextIcon.setRotation() did not recalculate on change.
 	- Issue 118.  Two threads were trying to control the focus causing some 
 	  wierd behavior. Thanks to Calixte Denizet for the fix.
 	- Static member org.flexdock.util.Utilities.VERSION added. It contains
