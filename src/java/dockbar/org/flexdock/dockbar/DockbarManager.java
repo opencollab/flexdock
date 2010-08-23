@@ -102,16 +102,11 @@ public class DockbarManager {
 			return getInstance(root);
 		}
 		
-		DockbarManager mgr = null;
-		WeakReference managerRef = (WeakReference) MANAGERS_BY_WINDOW.get(window);
-		if (managerRef != null) {
-		    mgr = (DockbarManager) managerRef.get();
-		}
-		
+		DockbarManager mgr = (DockbarManager)MANAGERS_BY_WINDOW.get(window);
 		if(mgr==null) { 
 			mgr = createDockbarManager(window);
 			synchronized(MANAGERS_BY_WINDOW) {
-				MANAGERS_BY_WINDOW.put(window, new WeakReference(mgr));
+			    MANAGERS_BY_WINDOW.put(window, mgr);
 			}
 			mgr.install();
 		}
@@ -163,12 +158,9 @@ public class DockbarManager {
 		
 		synchronized(MANAGERS_BY_WINDOW) {
 			for(Iterator it=MANAGERS_BY_WINDOW.values().iterator(); it.hasNext();) {
-			        WeakReference managerRef = (WeakReference) it.next();
-			        if (managerRef != null) {
-			            DockbarManager mgr = (DockbarManager) managerRef.get();
-			            if(mgr.isOwner(dockable))
-			                return mgr;
-			        }
+			    DockbarManager mgr = (DockbarManager)it.next();
+				if(mgr.isOwner(dockable))
+					return mgr;
 			}
 		}
 		return null;

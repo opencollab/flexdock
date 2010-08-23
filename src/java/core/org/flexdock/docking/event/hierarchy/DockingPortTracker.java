@@ -178,7 +178,7 @@ public class DockingPortTracker implements HierarchyListener {
 	}
 	
 	public void dockingPortAdded(RootWindow window, DockingPort port) {
-		RootDockingPortInfo info = getRootDockingPortInfo(window);
+	    RootDockingPortInfo info = getRootDockingPortInfo(window);
 		if(info!=null)
 			info.add(port);
 	}

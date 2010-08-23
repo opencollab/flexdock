@@ -60,7 +60,7 @@ public class RootWindow {
 
     private Integer maximizationLayer;
 
-    private Component root;
+    private WeakReference root;
 
     private HashMap clientProperties;
 
@@ -92,15 +92,11 @@ public class RootWindow {
         if (!isValidRootContainer(root))
             return null;
 
-        RootWindow container = null;
-        WeakReference containerRef = (WeakReference) MAP_BY_ROOT_CONTAINER.get(root);
-        if (containerRef != null) {
-            container = (RootWindow) containerRef.get();
-        }
+	RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
         if (container == null) {
-			container = new RootWindow(root);
-            MAP_BY_ROOT_CONTAINER.put(root, new WeakReference(container));
-		}
+	    container = new RootWindow(root);
+	    MAP_BY_ROOT_CONTAINER.put(root, container);
+	}
 		
         if (container.getRootContainer() != root)
             container.setRootContainer(root);
@@ -161,8 +157,8 @@ public class RootWindow {
     public Container getContentPane() {
         Container c = null;
 
-        if (root instanceof RootPaneContainer) {
-            c = ((RootPaneContainer) root).getContentPane();
+        if (getRootContainer() instanceof RootPaneContainer) {
+            c = ((RootPaneContainer) getRootContainer()).getContentPane();
         }
 
         return c;
@@ -176,8 +172,8 @@ public class RootWindow {
     public Component getGlassPane() {
         Component c = null;
 
-        if (root instanceof RootPaneContainer) {
-            c = ((RootPaneContainer) root).getGlassPane();
+        if (getRootContainer() instanceof RootPaneContainer) {
+            c = ((RootPaneContainer) getRootContainer()).getGlassPane();
         }
 
         return c;
@@ -191,8 +187,8 @@ public class RootWindow {
     public JLayeredPane getLayeredPane() {
         JLayeredPane pane = null;
 
-        if (root instanceof RootPaneContainer) {
-            pane = ((RootPaneContainer) root).getLayeredPane();
+        if (getRootContainer() instanceof RootPaneContainer) {
+            pane = ((RootPaneContainer) getRootContainer()).getLayeredPane();
         }
 
         return pane;
@@ -239,7 +235,7 @@ public class RootWindow {
      * @return the wrapped root container
      */
     public Component getRootContainer() {
-        return root;
+        return (Component) root.get();
     }
 
     /**
@@ -250,8 +246,8 @@ public class RootWindow {
     public JRootPane getRootPane() {
         JRootPane pane = null;
 
-        if (root instanceof RootPaneContainer) {
-            pane = ((RootPaneContainer) root).getRootPane();
+        if (getRootContainer() instanceof RootPaneContainer) {
+            pane = ((RootPaneContainer) getRootContainer()).getRootPane();
         }
 
         return pane;
@@ -274,8 +270,8 @@ public class RootWindow {
      *            the {@code contentPane} object for the wrapped component
      */
     public void setContentPane(Container contentPane) {
-        if (root instanceof RootPaneContainer) {
-            ((RootPaneContainer) root).setContentPane(contentPane);
+        if (getRootContainer() instanceof RootPaneContainer) {
+            ((RootPaneContainer) getRootContainer()).setContentPane(contentPane);
         }
     }
 
@@ -286,8 +282,8 @@ public class RootWindow {
      *            the {@code glassPane} object for the wrapped component
      */
     public void setGlassPane(Component glassPane) {
-        if (root instanceof RootPaneContainer) {
-            ((RootPaneContainer) root).setGlassPane(glassPane);
+        if (getRootContainer() instanceof RootPaneContainer) {
+            ((RootPaneContainer) getRootContainer()).setGlassPane(glassPane);
         }
     }
 
@@ -298,8 +294,8 @@ public class RootWindow {
      *            the {@code layeredPane} object for the wrapped component
      */
     public void setLayeredPane(JLayeredPane layeredPane) {
-        if (root instanceof RootPaneContainer) {
-            ((RootPaneContainer) root).setLayeredPane(layeredPane);
+        if (getRootContainer() instanceof RootPaneContainer) {
+            ((RootPaneContainer) getRootContainer()).setLayeredPane(layeredPane);
         }
     }
 
@@ -309,12 +305,12 @@ public class RootWindow {
      * @return all the windows currently owned by this root window.
      */
     public Window[] getOwnedWindows() {
-        if (root instanceof JFrame)
-            return ((JFrame) root).getOwnedWindows();
-        else if (root instanceof JWindow)
-            return ((JWindow) root).getOwnedWindows();
-        else if (root instanceof JDialog)
-            return ((JDialog) root).getOwnedWindows();
+        if (getRootContainer() instanceof JFrame)
+            return ((JFrame) getRootContainer()).getOwnedWindows();
+        else if (getRootContainer() instanceof JWindow)
+            return ((JWindow) getRootContainer()).getOwnedWindows();
+        else if (getRootContainer() instanceof JDialog)
+            return ((JDialog) getRootContainer()).getOwnedWindows();
         else
             return new Window[0];
     }
@@ -354,15 +350,16 @@ public class RootWindow {
      *            the new wrapped root container
      */
     protected void setRootContainer(Component root) {
-        this.root = root;
+        this.root = new WeakReference(root);
     }
 
     public void updateComponentTreeUI() {
-        SwingUtilities.updateComponentTreeUI(root);
+        SwingUtilities.updateComponentTreeUI(getRootContainer());
         pack();
     }
 
     public void pack() {
+	Component root = getRootContainer();
         if (root instanceof JFrame)
             ((JFrame) root).pack();
         else if (root instanceof JWindow)
@@ -372,6 +369,7 @@ public class RootWindow {
     }
 
     public void toFront() {
+	Component root = getRootContainer();
         if (root instanceof JFrame)
             ((JFrame) root).toFront();
         else if (root instanceof JWindow)
@@ -381,6 +379,7 @@ public class RootWindow {
     }
 
     public boolean isActive() {
+	Component root = getRootContainer();
         if (root instanceof JFrame)
             return ((JFrame) root).isActive();
         else if (root instanceof JWindow)
@@ -391,6 +390,7 @@ public class RootWindow {
     }
 
     public Window getOwner() {
+	Component root = getRootContainer();
         if (root instanceof JFrame)
             return ((JFrame) root).getOwner();
         else if (root instanceof JWindow)
