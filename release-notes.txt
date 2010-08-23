@@ -5,6 +5,11 @@ Updates:
 	- Static member org.flexdock.util.Utilities.VERSION added. It contains
 	  the version of flexdock
 
+Security problem:
+    - Replaces the pointless and insecure command "xhost +hostname" with 
+      "xhost". Thanks to Bob Vickers for pointing out this problem and providing
+      a fix.
+
 Fixed:
 	- Issue 78.   Removed deprecated logging classes.
 	- Issue 113.  Changing focus between Views resulted in full repaint.

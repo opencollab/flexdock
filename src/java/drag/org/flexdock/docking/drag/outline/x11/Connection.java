@@ -33,7 +33,7 @@ public class Connection {
 	
 	public Connection() throws IOException {
 		if(!SERVER_AVAILABLE)
-			throw new RuntimeException("X Server is unavailable.  Please check your xhost access control list to ensure localhost may connect.");
+			throw new RuntimeException("X Server is unavailable.");
 			
 		try {
 			socket = new Socket(CONNECTION_INFO.host, 6000 + CONNECTION_INFO.display);
@@ -79,7 +79,7 @@ public class Connection {
 	
 	private static boolean isServerAvailable() {
 		try {
-			Process process = Runtime.getRuntime().exec("xhost +" + CONNECTION_INFO.host);
+			Process process = Runtime.getRuntime().exec("xhost");
 			process.waitFor();
 			DataInputStream in = new DataInputStream(process.getInputStream());
 			in.readFully(new byte[in.available()]);
