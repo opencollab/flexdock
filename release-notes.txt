@@ -1,6 +1,10 @@
 flexdock 0.5.2 RELEASE NOTES:
 
 CHANGES FROM 0.5.1:
+Wed, 25 Aug 2010 11:35:11 +0200
+
+This release has been managed by the Scilab team (http://www.scilab.org/)
+
 Updates:
 	- Static member org.flexdock.util.Utilities.VERSION added. It contains
 	  the version of flexdock
