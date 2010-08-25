@@ -12,8 +12,8 @@
    </security>
    <resources>
       <j2se version="1.4+" initial-heap-size="20m" max-heap-size="384m"/>
-      <jar href="flexdock-demo-0.5.0.jar"/>
-      <jar href="flexdock-0.5.0.jar"/>
+      <jar href="flexdock-demo-0.5.2.jar"/>
+      <jar href="flexdock-0.5.2.jar"/>
       <jar href="jmf.jar" download="lazy"/>
       <jar href="commons-logging-1.1.jar" download="lazy"/>
       <jar href="looks-2.1.1.jar" download="lazy"/>
