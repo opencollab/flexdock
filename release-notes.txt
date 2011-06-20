@@ -1,3 +1,14 @@
+flexdock 0.5.3 RELEASE NOTES:
+
+CHANGES FROM 0.5.2:
+TODO DATE
+
+This release has been managed by the Scilab team (http://www.scilab.org/)
+
+Updates:
+	- Improvement of the View resize management
+
+
 flexdock 0.5.2 RELEASE NOTES:
 
 CHANGES FROM 0.5.1:

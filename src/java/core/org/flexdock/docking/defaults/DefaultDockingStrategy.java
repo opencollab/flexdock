@@ -41,6 +41,8 @@ import org.flexdock.util.SwingUtility;
 public class DefaultDockingStrategy implements DockingStrategy,
         DockingConstants {
     public static final String PREFERRED_PROPORTION = "DefaultDockingStrategy.PREFERRED_PROPORTION";
+
+    private static double defaultResizeWeight = -1;
 	
     /**
      * Returns the specified {@code Dockable's} sibling {@code Dockable} within
@@ -722,13 +724,18 @@ public class DefaultDockingStrategy implements DockingStrategy,
         // mark the creation region on the split pane
         SwingUtility.putClientProperty(split, DockingConstants.REGION, region);
 
-        // the creation region represents the "new" region, not the elder
-        // region.
-        // so if the creation region is NOT in the top left, then the elder
-        // region is.
-        boolean elderInTopLeft = !DockingUtility.isRegionTopLeft(region);
-        int resizeWeight = elderInTopLeft ? 1 : 0;
-        // set the resize weight based on the location of the elder component
+	double resizeWeight;
+	if (defaultResizeWeight == -1) {
+	    // the creation region represents the "new" region, not the elder
+	    // region.
+	    // so if the creation region is NOT in the top left, then the elder
+	    // region is.
+	    boolean elderInTopLeft = !DockingUtility.isRegionTopLeft(region);
+	    resizeWeight = elderInTopLeft ? 1 : 0;
+	} else {
+	    resizeWeight = defaultResizeWeight;
+	}
+
         split.setResizeWeight(resizeWeight);
 
         // determine the orientation
@@ -946,5 +953,9 @@ public class DefaultDockingStrategy implements DockingStrategy,
     protected static Float getPreferredProportion(Component c) {
         return c == null ? null : (Float) SwingUtility.getClientProperty(c,
                 PREFERRED_PROPORTION);
+    }
+
+    public static void setDefaultResizeWeight(double rw) {
+	defaultResizeWeight = rw;
     }
 }

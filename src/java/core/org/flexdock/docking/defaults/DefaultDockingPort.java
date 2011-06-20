@@ -2115,6 +2115,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         if (len == 0)
             return;
 
+	for (int i = 0; i < len; i++) {
+            ((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(false);
+	}
+
         // first, check to see if we're ready for rendering
         SplitNode node = (SplitNode) splitNodes.get(0);
         JSplitPane split = node.getSplitPane();
@@ -2122,14 +2126,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
                 .getWidth()
                 : split.getHeight();
         // if we're not ready to render, then defer processing again until later
-        if (!split.isValid() || !split.isVisible() || size == 0) {
+        if (!split.isValid() || size == 0) {
             // try to validate first
             if (!split.isValid())
                 split.validate();
             // now redispatch
             deferSplitPaneValidation(splitNodes);
             return;
-        }
+	}
 
         // if we're ready to render, then loop through all the splitNodes and
         // set the split dividers to their appropriate locations.
@@ -2154,6 +2158,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
             split.validate();
         }
+
+	for (int i = 0; i < len; i++) {
+            ((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(true);
+	}
     }
 
     // --- maximization
