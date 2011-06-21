@@ -31,7 +31,7 @@ public class Utilities {
 	/**
      * A String representing the flexdock version. This constant is a string.
 	 */
-	public static final String VERSION = "0.5.2";
+	public static final String VERSION = "0.5.3";
 
     private Utilities() {
         // does nothing
