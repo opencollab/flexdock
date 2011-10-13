@@ -66,6 +66,7 @@ public class Titlebar extends JComponent {
      */
     public void setText(String text) {
         titleText = text == null ? "" : text;
+        repaint();
     }
 
     protected void setActions(Action[] actions) {
