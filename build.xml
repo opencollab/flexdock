@@ -37,7 +37,7 @@
    <property name="bin.dir.test" value="${build.dir}/bin-test" />
    <property name="bin.dir.webstart" value="${build.dir}/webstart" />
    <property name="dist.dir" value="${build.dir}/dist" />
-   <property name="version" value="0.5.3" />
+   <property name="version" value="0.5.4" />
    <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
    <property name="dist.demo.jar.basename" value="${ant.project.name}-demo-${version}" />
 
@@ -136,7 +136,7 @@
 
    <target name="compile" depends="init, resources"
            description="Compile java sources for the framework, demos, and tests">
-      <javac classpathref="javac.classpath" destdir="${bin.dir}" debug="true" source="1.4" includeAntRuntime="no">
+      <javac classpathref="javac.classpath" destdir="${bin.dir}" debug="true" source="1.5" target="1.5" includeAntRuntime="no">
          <src path="${java.src.core}" />
          <!-- the next 3 are interdependent -->
          <src path="${java.src.view}"/>
@@ -145,8 +145,8 @@
          <src path="${java.src.drag}"/>
          <src path="${java.src.perspective}"/>
       </javac>
-      <javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" debug="true" source="1.4" includeAntRuntime="no"/>
-      <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" debug="true" source="1.4" includeAntRuntime="no"/>
+      <javac classpathref="javac.classpath.demo" srcdir="${java.src.demo}" destdir="${bin.dir.demo}" debug="true" source="1.5" target="1.5" includeAntRuntime="no"/>
+      <javac classpathref="javac.classpath.test" srcdir="${java.src.test}" destdir="${bin.dir.test}" debug="true" source="1.5" target="1.5"  includeAntRuntime="no"/>
    </target>
 
 
@@ -361,7 +361,7 @@
          <packageset dir="${java.src.drag}" />
          <packageset dir="${java.src.perspective}" />
          <packageset dir="${java.src.view}" />
-         <link href="http://java.sun.com/j2se/1.4.2/docs/api/" />
+         <link href="http://java.sun.com/j2se/1.5.0/docs/api/" />
          <!-- add links to the j2se 1.4 docs -->
       </javadoc>
    </target>
