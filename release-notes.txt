@@ -1,7 +1,18 @@
-flexdock 0.5.3 RELEASE NOTES:
+== flexdock 0.5.4 RELEASE NOTES ==
+
+CHANGES FROM 0.5.3:
+
+
+This release has been managed by the Scilab team (http://www.scilab.org/)
+
+Updates:
+	- Force the repaint when setting the title of a dock
+    - Force the target class to version 1.5 (or 5)
+
+== flexdock 0.5.3 RELEASE NOTES ==
 
 CHANGES FROM 0.5.2:
-TODO DATE
+2011-06-21 11:53:37
 
 This release has been managed by the Scilab team (http://www.scilab.org/)
 
@@ -9,7 +20,7 @@ Updates:
 	- Improvement of the View resize management
 
 
-flexdock 0.5.2 RELEASE NOTES:
+== flexdock 0.5.2 RELEASE NOTES ==
 
 CHANGES FROM 0.5.1:
 Wed, 25 Aug 2010 11:35:11 +0200
