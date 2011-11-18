@@ -17,7 +17,7 @@ import org.flexdock.docking.drag.DragOperation;
  * supplied in the respective method calls. {@code DockingStrategies} are also
  * responsible for creating sub-DockingPorts and split panes for nested
  * {@code DockingPorts}
- * 
+ *
  * Implementations of {@code DockingStrategy} are responsible for managing
  * component relationships between {@code Dockables} and parent containers. This
  * includes making determinations as to whether a particular docking operation
@@ -26,19 +26,19 @@ import org.flexdock.docking.drag.DragOperation;
  * {@code Container} or {@code DockingPort} and added to another.
  * {@code DockingStrategy} may determine whether a call to {@code dock()}
  * implies an attempt to float a {@code Dockable} in a separate window.
- * 
+ *
  * Because of the potentially large scope of responsibilities associated with a
  * {@code DockingStrategy}, implementations may range from being very simple to
  * highly complex. Although custom implementations of {@code DockingStrategy}
  * are not discouraged, the recommeded path is to subclass
  * {@code DefaultDockingStrategy} for consistency of behavior.
- * 
+ *
  * {@code DockingStrategies} are associated with a particular type of
  * {@code Dockable} or {@code DockingPort} by calling
  * {@code DockingManager.setDockingStrategy(Class c, DockingStrategy strategy)}.
  * {@code DefaultDockingStrategy} is the default implementation used for all
  * classes that do not have a custom {@code DockingStrategy} registered.
- * 
+ *
  * @author Christopher Butler
  */
 public interface DockingStrategy {
@@ -50,7 +50,7 @@ public interface DockingStrategy {
      * no action is taken. Since there is no {@code DragOperation} parameter
      * present, this method implies programmatic docking as opposed to docking
      * as a result of drag-events.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} we wish to dock
      * @param dockingPort
@@ -61,7 +61,7 @@ public interface DockingStrategy {
      * @return whether or not the docking operation was successful.
      */
     boolean dock(Dockable dockable, DockingPort dockingPort,
-            String dockingRegion);
+                 String dockingRegion);
 
     /**
      * Attempts to dock the specified {@code Dockable} into the supplied
@@ -69,7 +69,7 @@ public interface DockingStrategy {
      * the specified {@code DragOperation}.   If docking is not possible
      * for the specified parameters, then the method returns {@code false} and
      * no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} we wish to dock
      * @param dockingPort
@@ -84,12 +84,12 @@ public interface DockingStrategy {
      * @return whether or not the docking operation was successful.
      */
     boolean dock(Dockable dockable, DockingPort dockingPort,
-            String dockingRegion, DragOperation operation);
+                 String dockingRegion, DragOperation operation);
 
     /**
      * Undocks the specified {@code Dockable} instance from its containing
      * {@code DockingPort}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} we wish to undock
      * @return {@code true} if the {@code Dockable} was successfully undocked.
@@ -103,7 +103,7 @@ public interface DockingStrategy {
      * {@code DockingPorts}, this method is useful for creating child
      * {@code DockingPorts} suitable for embedding within the base
      * {@code DockingPort}
-     * 
+     *
      * @param base
      *            the {@code DockingPort} off of which the returned instance
      *            will be based.
@@ -117,7 +117,7 @@ public interface DockingStrategy {
      * supplied parameters. The returned {@code JSplitPane} should be suitable
      * for embedding within the base {@code DockingPort} and its orientation
      * should reflect the supplied {@code region} parameter.
-     * 
+     *
      * @param base
      *            the {@code DockingPort} off of which the returned
      *            {@code JSplitPane} will be based.
@@ -134,7 +134,7 @@ public interface DockingStrategy {
      * {@code JSplitPane}. This method assumes that the {@code JSplitPane}
      * parameter is embedded within the specified {@code DockingPort} and that
      * is has been validated and its current dimensions are non-zero.
-     * 
+     *
      * @param dockingPort
      *            the {@code DockingPort} that contains, or will contain the
      *            specified {@code JSplitPane}.
@@ -152,7 +152,7 @@ public interface DockingStrategy {
      * {@code DockingPort}. This method does <b>not</b> assume that the
      * {@code JSplitPane} has been validated and that it's current dimensions
      * are non-zero.
-     * 
+     *
      * @param dockingPort
      *            the {@code DockingPort} that contains, or will contain the
      *            specified {@code JSplitPane}.

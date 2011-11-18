@@ -14,13 +14,13 @@ import java.util.WeakHashMap;
  * be mapped to the classes it is designed to handle. Consider the class
  * hierarchy of {@code Foo}, {@code Bar}, and {@code Baz}, where {@code Bar}
  * extends {@code Foo} and {@code Baz} extends {@code Bar}.
- * 
+ *
  * <pre>
  * Foo.class
  *   |-Bar.class
  *       |-Baz.class
  * </pre>
- * 
+ *
  * Each of these classes is ultimately a type of {@code Foo}. Some operation is
  * performed on instances of {@code Foo} and a set of handler classes are used
  * to handle different types of {@code Foo}. Adding a mapping between
@@ -41,27 +41,27 @@ import java.util.WeakHashMap;
  * {@code Handler1.class} association remains for {@code Foo} and {@code Bar},
  * but no longer for {@code Baz}. Calling {@code getClassMapping(Object obj)}
  * with an instance of {@code Baz} will now return {@code Handler2.class}.
- * 
+ *
  * <pre>
  *  Foo.class ---------------&gt; (maps to Handler1.class)
  *    |-Bar.class -----------&gt; (maps to Handler1.class)
  *        |-Baz.class -------&gt; (maps to Handler2.class)
  * </pre>
- * 
+ *
  * Polymorphic identity within the class association uses <i>strict</i>
  * subclasses. This means that the {@code Handler1.class} mapping for
  * {@code Foo}, {@code Bar}, and all non-specific subclasses will hold true.
  * However, if {@code Foo} happens to implement the interface {@code Qwerty},
  * the class mapping relationship will not hold true for all implementations of
  * {@code Qwerty}. Only subclasses of {@code Foo}.
- * 
+ *
  * <pre>
  *  Foo.class (implements Qwerty) ----------------&gt; (maps to Handler1.class)
  *    |-Bar.class (implements Qwerty) ------------&gt; (maps to Handler1.class)
  *        |-Baz.class (implements Qwerty) --------&gt; (maps to Handler2.class)
  *  Asdf.class (implements Qwerty) ---------------&gt; (maps to nothing)
  * </pre>
- * 
+ *
  * @author Christopher Butler
  */
 public class ClassMapping {
@@ -80,7 +80,7 @@ public class ClassMapping {
      * return the specified {@code defaultClass}. All calls to
      * {@code getClassInstance(Class key)} in which a specific mapping cannot be
      * found will return the specified {@code defaultInstance}.
-     * 
+     *
      * @param defaultClass
      *            the default class used by this {@code ClassMapping}
      * @param defaultInstance
@@ -104,7 +104,7 @@ public class ClassMapping {
      * {@code getClassMapping(Class key)} using the specified {@code key} class ({@code obj.getClass()})
      * or any subclass thereof for which a specific class mapping does not
      * already exist.
-     * 
+     *
      * @param obj
      *            the {@code Object} whose {@code Class} will be mapped to the
      *            specified {@code value}.
@@ -131,7 +131,7 @@ public class ClassMapping {
      * getClassMapping(Class key) using the specified {@code key} class or any
      * subclass thereof for which a specific class mapping does not already
      * exist.
-     * 
+     *
      * @param key
      *            the {@code Class} to be mapped to the specified {@code value}.
      * @param value
@@ -164,7 +164,7 @@ public class ClassMapping {
      * specified {@code key} class or any subclass thereof for which a specific
      * instance mapping does not already exist. If {@code instance} is
      * {@code null}, then no instance mapping is created.
-     * 
+     *
      * @param key
      *            the {@code Class} to be mapped to the specified {@code value}.
      * @param value
@@ -206,7 +206,7 @@ public class ClassMapping {
      * If any instance mappings exist for the specified {@code Class}, they are
      * also removed. This means non-specific subclass instance mappings will
      * also be removed.
-     * 
+     *
      * @param obj
      *            the {@code Object} whose {@code Class} will be removed from
      *            the internal mapping
@@ -237,7 +237,7 @@ public class ClassMapping {
      * If any instance mappings exist for the specified {@code Class}, they are
      * also removed. This means non-specific subclass instance mappings will
      * also be removed.
-     * 
+     *
      * @param key
      *            the {@code Class} whose internal mapping will be removed
      * @return the {@code Class} whose mapping has been removed
@@ -275,7 +275,7 @@ public class ClassMapping {
      * within the superclass hierarchy, then the mapped {@code Class} is
      * returned. Otherwise, the value returned by {@code getDefaultMapping()} is
      * returned.
-     * 
+     *
      * @param obj
      *            the {@code Object} whose {@code Class's} internal mapping will
      *            be returned
@@ -300,7 +300,7 @@ public class ClassMapping {
      * within the superclass hierarchy, then the mapped {@code Class} is
      * returned. Otherwise, the value returned by {@code getDefaultMapping()} is
      * returned.
-     * 
+     *
      * @param key
      *            the {@code Class} whose internal mapping will be returned
      * @return the {@code Class} that is mapped internally to the specified
@@ -335,7 +335,7 @@ public class ClassMapping {
      * anywhere within the superclass hierarchy, then the mapped {@code Object}
      * is returned. Otherwise, the value returned by
      * {@code getDefaultInstance()} is returned.
-     * 
+     *
      * @param key
      *            the {@code Class} whose internal mapping will be returned
      * @return the {@code Object} instance that is mapped internally to the
@@ -364,7 +364,7 @@ public class ClassMapping {
      * Returns the default {@code Class} used for situations in which there is
      * no internal class mapping. This property is read-only and is initialized
      * within the {@code ClassMapping} constructor.
-     * 
+     *
      * @return the default {@code Class} used for situations in which there is
      *         no internal class mapping.
      * @see #ClassMapping(Class, Object)
@@ -377,7 +377,7 @@ public class ClassMapping {
      * Returns the default {@code Object} used for situations in which there is
      * no internal instance mapping. This property is read-only and is
      * initialized within the {@code ClassMapping} constructor.
-     * 
+     *
      * @return the default {@code Object} used for situations in which there is
      *         no internal instance mapping.
      * @see #ClassMapping(Class, Object)

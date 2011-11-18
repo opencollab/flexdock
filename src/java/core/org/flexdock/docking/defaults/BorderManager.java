@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,7 +36,7 @@ import org.flexdock.docking.DockingPort;
  * displeasing to the eye. This class provides a means by which custom border
  * management behavior may be plugged into the {@code DefaultDockingPort} in
  * response to various different layout conditions.
- * 
+ *
  * @author Chris Butler
  */
 public interface BorderManager {
@@ -44,7 +44,7 @@ public interface BorderManager {
      * Callback method allowing for customized behavior when the
      * {@code DefaultDockingPort's} docked component state has changed and there
      * is no longer a component docked within the port.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} whose layout borders are to be managed
      */
@@ -56,7 +56,7 @@ public interface BorderManager {
      * is a single generic component docked within the port. The
      * {@code Component} may be retrieved by calling
      * {@code port.getDockedComponent()}.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} whose layout borders are to be managed
      */
@@ -67,7 +67,7 @@ public interface BorderManager {
      * {@code DefaultDockingPort's} docked component state has changed and the
      * port has been split between two components. The {@code JSPlitPane} may be
      * retrieved by calling {@code port.getDockedComponent()}.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} whose layout borders are to be managed
      */
@@ -79,7 +79,7 @@ public interface BorderManager {
      * docked components within the {@code CENTER} region are layed-out within a
      * {@code JTabbedPane}. The {@code JTabbedPane} may be retrieved by calling
      * {@code port.getDockedComponent()}.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} whose layout borders are to be managed
      */

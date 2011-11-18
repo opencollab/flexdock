@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -138,20 +138,20 @@ import org.flexdock.util.Utilities;
  * component from a {@code DefaultDockingPort} using application code,
  * developers should keep in mind to use {@code undock()} instead of
  * {@code remove()}.
- * 
+ *
  * Border management after docking and undocking operations are accomplished
  * using a {@code BorderManager}. {@code setBorderManager()} may be used to set
  * the border manager instance and customize border management.
- * 
+ *
  * @author Christopher Butler
- * 
+ *
  */
 public class DefaultDockingPort extends JPanel implements DockingPort,
-        DockingConstants {
+    DockingConstants {
     protected class PortLayout implements LayoutManager2, Serializable {
         /**
          * Returns the amount of space the layout would like to have.
-         * 
+         *
          * @param parent
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's preferred size
@@ -167,12 +167,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             }
 
             return new Dimension(dd.width + i.left + i.right, dd.height + i.top
-                    + i.bottom);
+                                 + i.bottom);
         }
 
         /**
          * Returns the minimum amount of space the layout needs.
-         * 
+         *
          * @param parent
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's minimum size
@@ -188,12 +188,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             }
 
             return new Dimension(dd.width + i.left + i.right, dd.height + i.top
-                    + i.bottom);
+                                 + i.bottom);
         }
 
         /**
          * Returns the maximum amount of space the layout can use.
-         * 
+         *
          * @param target
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's maximum size
@@ -207,17 +207,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             } else {
                 // This is silly, but should stop an overflow error
                 dd = new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE - i.top
-                        - i.bottom);
+                                   - i.bottom);
             }
 
             return new Dimension(dd.width + i.left + i.right, dd.height + i.top
-                    + i.bottom);
+                                 + i.bottom);
         }
 
         /**
          * Instructs the layout manager to perform the layout for the specified
          * container.
-         * 
+         *
          * @param parent
          *            the Container for which this layout manager is being used
          */
@@ -274,13 +274,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // DefaultDockingPort-specific
         // events
         PropertyChangeListenerFactory
-                .addFactory(new DockablePropertyChangeHandler.Factory());
+        .addFactory(new DockablePropertyChangeHandler.Factory());
     }
 
     /**
      * Creates a new {@code DefaultDockingPort} with a persistent ID equal to
      * the {@code String} value of this a random UUID.
-     * 
+     *
      * @see org.flexdock.util.UUID
      */
     public DefaultDockingPort() {
@@ -293,7 +293,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code Object's} hash code is used. The persistent ID will be the same
      * value returned by invoking {@code getPersistentId()} for this
      * {@code DefaultDockingPort}.
-     * 
+     *
      * @param id
      *            the persistent ID for the new {@code DefaultDockingPort}
      *            instance.
@@ -314,7 +314,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
         // configure layout
         setLayout(createLayout());
-        
+
         //configure the default border manager
         setBorderManager(createBorderManager());
     }
@@ -327,17 +327,17 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * Creates a standard border manager for this docking port.
      * <p>
      * This method is called from the constructor.
-     * 
+     *
      * @return the border manager for this docking port.
      */
     protected BorderManager createBorderManager() {
         return new StandardBorderManager(new EmptyBorder(0, 0, 0, 0));
     }
-    
+
     /**
      * Overridden to set the currently docked component. Should not be called by
      * application code.
-     * 
+     *
      * @param comp
      *            the component to be added
      */
@@ -348,7 +348,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Overridden to set the currently docked component. Should not be called by
      * application code.
-     * 
+     *
      * @param comp
      *            the component to be added
      * @param index
@@ -362,7 +362,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Overridden to set the currently docked component. Should not be called by
      * application code.
-     * 
+     *
      * @param comp
      *            the component to be added
      * @param constraints
@@ -375,7 +375,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Overridden to set the currently docked component. Should not be called by
      * application code.
-     * 
+     *
      * @param comp
      *            the component to be added
      * @param constraints
@@ -391,7 +391,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Overridden to set the currently docked component. Should not be called by
      * application code.
-     * 
+     *
      * @param name
      *            the name of the {@code Component} to be added.
      * @param comp
@@ -437,7 +437,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code Component} within this {@code DockingPort}, then this method
      * returns {@code false} since the layout cannot be rearranged. Otherwise,
      * this method returns {@code true}.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose docking availability is to be
      *            checked
@@ -538,7 +538,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code DockingPort} and the supplied {@code Point} are passed to
      * {@code getRegion(Component c, Point p)}} for the current
      * {@code RegionChecker}.
-     * 
+     *
      * @param location
      *            the location within this {@code DockingPort} to examine for a
      *            docking region.
@@ -571,7 +571,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code DockingPortPropertySet} instance for this {@code DockingPort} by
      * calling {@code getDockingProperties()}. It then returns by invoking
      * {@code getRegionChecker()} on the resolved {@code DockingPortPropertySet}.
-     * 
+     *
      * @return the {@code RegionChecker} currently used by this
      *         {@code DockingPort}.
      * @see #getDockingProperties()
@@ -595,7 +595,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * If this {@code DockingPort} contains a tabbed layout, then the
      * {@code JTabbedPane} returned by {@code getDockedComponent()} will be
      * checked for a {@code Dockable} at the specified {@code Point}.
-     * 
+     *
      * @param location
      *            the location within the {@code DockingPort} to test for a
      *            {@code Dockable}.
@@ -617,7 +617,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             JTabbedPane tabs = (JTabbedPane) docked;
             Component c = tabs.getComponentAt(location.x, location.y);
             return c instanceof Dockable ? (Dockable) c : DockingManager
-                    .getDockable(c);
+                   .getDockable(c);
         }
 
         return DockingManager.getDockable(docked);
@@ -659,7 +659,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * <p>
      * If this {@code DockingPort} is empty, then this method returns a
      * {@code null} reference.
-     * 
+     *
      * @param region
      *            the region to be checked for a docked {@code Component}
      * @return the {@code Component} docked within the specified region.
@@ -701,9 +701,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             }
 
             boolean left = NORTH_REGION.equals(region)
-                    || WEST_REGION.equals(region);
+                           || WEST_REGION.equals(region);
             Component c = left ? split.getLeftComponent() : split
-                    .getRightComponent();
+                          .getRightComponent();
             // split panes only contain sub-dockingports. if 'c' is not a
             // sub-dockingport,
             // then something is really screwed up.
@@ -734,7 +734,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * the rule set. If {@code region} is invalid according to
      * {@code DockingManager.isValidDockingRegion(String region)}, then this
      * method returns a {@code null} reference.
-     * 
+     *
      * @param region
      *            the region to be checked for a docked {@code Dockable}
      * @return the {@code Dockable} docked within the specified region.
@@ -752,12 +752,12 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * If this method returns {@code null}, implementations may throw
      * NullPointerExceptions. Do not expect NPE checking.
-     * 
+     *
      * @return a valid JTabbedPane.
      */
     protected JTabbedPane createTabbedPane() {
         Insets oldInsets = UIManager
-                .getInsets(LookAndFeelSettings.TAB_PANE_BORDER_INSETS);
+                           .getInsets(LookAndFeelSettings.TAB_PANE_BORDER_INSETS);
         int tabPlacement = getInitTabPlacement();
 
         int edgeInset = LookAndFeelSettings.getTabEdgeInset(tabPlacement);
@@ -796,9 +796,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             int index = tabs.indexOfComponent(dockable.getComponent());
             if (index > -1) {
                 tabs.setIconAt(index, dockable.getDockingProperties()
-                        .getTabIcon());
+                               .getTabIcon());
                 tabs.setTitleAt(index, dockable.getDockingProperties()
-                        .getDockableDesc());
+                                .getDockableDesc());
             }
         }
     }
@@ -810,7 +810,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code DefaultDockingStrategy} is used unless a different
      * {@code DockingStrategy} has been assigned by the end user for
      * {@code DefaultDockingPort}.
-     * 
+     *
      * @return the {@code DockingStrategy} used by this {@code DockingPort}.
      * @see DockingPort#getDockingStrategy()
      * @see DockingManager#getDockingStrategy(Object)
@@ -825,7 +825,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * only docked {@code Components} are removed, that that all wrapper
      * containers such as {@code JTabbedPanes}, {@code JSplitPanes}, and sub-{@code DockingPorts}
      * are removed as well.
-     * 
+     *
      * @see DockingPort#clear()
      * @see #removeAll()
      */
@@ -849,7 +849,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * this method returns {@code false}. Otherwise, this method returns a
      * boolean indicating the success of the docking operation based upon
      * {@code dock(Dockable dockable, String region)}.
-     * 
+     *
      * @param comp
      *            the {@code Component} to be docked within this
      *            {@code DockingPort}
@@ -926,7 +926,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * the {@code DockingStrategy} returned by {@code getDockingStrategy()}.
      * Initial splitpane divider location is also controlled by this
      * {@code DockingStrategy}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked within this
      *            {@code DockingPort}
@@ -974,7 +974,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         }
 
         boolean success = CENTER_REGION.equals(region) ? dockInCenterRegion(comp)
-                : dockInOuterRegion(comp, region);
+                          : dockInOuterRegion(comp, region);
 
         if (success) {
             evaluateDockingBorderStatus();
@@ -1117,7 +1117,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         if (docked instanceof Dockable
                 && newDockedContent instanceof DockingSplitPane) {
             Float siblingRatio = ((Dockable) docked).getDockingProperties()
-                    .getSiblingSize(region);
+                                 .getSiblingSize(region);
             if (siblingRatio != null) {
                 ratio = siblingRatio.doubleValue();
             }
@@ -1136,13 +1136,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // determined until after we're visible. cache the desired size
         // values now for use later during rendering.
         double proportion = strategy.getDividerProportion(this,
-                newDockedContent);
+                            newDockedContent);
         SwingUtility.putClientProperty((Component) oldContent,
-                DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(
-                        proportion));
+                                       DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(
+                                           proportion));
         SwingUtility.putClientProperty((Component) newContent,
-                DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(
-                        1f - proportion));
+                                       DefaultDockingStrategy.PREFERRED_PROPORTION, new Float(
+                                           1f - proportion));
 
         return true;
     }
@@ -1156,7 +1156,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code getComponent()} method. If there is a tabbed layout present, then
      * a {@code JTabbedPane} is returned. If there is a split layout present,
      * then a {@code JSplitPane} is returned.
-     * 
+     *
      * @see DockingPort#getDockedComponent()
      */
     public Component getDockedComponent() {
@@ -1186,7 +1186,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * argument, then the {@code String} verion of this {@code DockingPort's}
      * hash code is used. Therefore, this method will never return a
      * {@code null} reference.
-     * 
+     *
      * @return the persistent ID for this {@code DockingPort}
      * @see DockingPort#getPersistentId()
      * @see #setPersistentId(String)
@@ -1205,7 +1205,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code DockingManager}. Whenever this method is called, the
      * {@code DockingManager's} tracking mechanism is automatically upated for
      * this {@code DockingPort}.
-     * 
+     *
      * @param id
      *            the persistent ID to be used for this {@code DockingPort}
      * @see #getPersistentId()
@@ -1265,7 +1265,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * setting may override the global default setting.
      * {@code org.flexdock.docking.props.PropertyManager} should be referenced
      * for further information on scoped properties.
-     * 
+     *
      * @return {@code true} if single tabs are allowed within this
      *         {@code DockingPort}, {@code false} otherwise.
      * @see #setSingleTabAllowed(boolean)
@@ -1303,7 +1303,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * only to the local scope for this particular {@code DockingPort}.</b>
      * {@code org.flexdock.docking.props.PropertyManager} should be referenced
      * for further information on scoped properties.
-     * 
+     *
      * @param allowed
      *            {@code true} if a single-tabbed layout should be allowed,
      *            {@code false} otherwise
@@ -1326,7 +1326,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * or {@code JSplitPane}that is currently the {@code DefaultDockingPort's}docked
      * component. Otherwise, this method returns {@code false}. If {@code comp}
      * is {@code null}, then then this method return {@code false}
-     * 
+     *
      * @param comp
      *            the Component to be tested.
      * @return a boolean indicating whether or not the specified component is
@@ -1401,7 +1401,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private DockingPort[] putPortsInOrder(DockingPort oldPort,
-            DockingPort newPort, String region) {
+                                          DockingPort newPort, String region) {
         if (NORTH_REGION.equals(region) || WEST_REGION.equals(region))
             return new DockingPort[] { newPort, oldPort };
         return new DockingPort[] { oldPort, newPort };
@@ -1524,7 +1524,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Overridden to decorate superclass method, keeping track of internal
      * docked-component reference.
-     * 
+     *
      * @param index
      *            the index of the component to be removed.
      * @see Container#remove(int)
@@ -1540,7 +1540,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Overridden to decorate superclass method, keeping track of internal
      * docked-component reference.
-     * 
+     *
      * @see Container#removeAll()
      */
     public void removeAll() {
@@ -1555,7 +1555,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code undock(Component comp)}, allowing cleanup of borders for nested
      * {@code Components} within the docking layout. {@code null} values are
      * allowed.
-     * 
+     *
      * @param mgr
      *            the {@code BorderManager} assigned to to manage docked
      *            component borders.
@@ -1574,7 +1574,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * nested {@code Components} within the docking layout. This method will
      * return a {@code null} reference if there is no {@code BorderManager}
      * installed.
-     * 
+     *
      * @return the currently installed {@code BorderManager}.
      * @see #setBorderManager(BorderManager)
      * @see BorderManager
@@ -1620,7 +1620,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * component from a {@code DefaultDockingPort} using application code,
      * developers should keep in mind to use this method instead of
      * {@code remove()}.
-     * 
+     *
      * @param comp
      *            the {@code Component} to be undocked.
      * @return a boolean indicating the success of the operation
@@ -1647,7 +1647,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code Dockable} instances. If there are no {@code Dockables} present, an
      * empty {@code Set} will be returned. This method will never return a
      * {@code null} reference.
-     * 
+     *
      * @return all {@code Dockables} docked within this {@code DockingPort} and
      *         all sub-{@code DockingPorts}.
      * @see DockingPort#getDockables()
@@ -1690,11 +1690,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
             if (sub1 instanceof DefaultDockingPort)
                 set.addAll(((DefaultDockingPort) sub1).getDockableSet(depth,
-                        level + 1, desiredClass));
+                           level + 1, desiredClass));
 
             if (sub2 instanceof DefaultDockingPort)
                 set.addAll(((DefaultDockingPort) sub2).getDockableSet(depth,
-                        level + 1, desiredClass));
+                           level + 1, desiredClass));
         }
 
         if (isValidDockableChild(c, desiredClass)) {
@@ -1708,13 +1708,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
     protected boolean isValidDockableChild(Component c, Class desiredClass) {
         return desiredClass == null ? DockingManager.getDockable(c) != null
-                : desiredClass.isAssignableFrom(c.getClass());
+               : desiredClass.isAssignableFrom(c.getClass());
     }
 
     /**
      * Adds a {@code DockingListener} to observe docking events for this
      * {@code DockingPort}. {@code null} arguments are ignored.
-     * 
+     *
      * @param listener
      *            the {@code DockingListener} to add to this {@code DockingPort}.
      * @see DockingMonitor#addDockingListener(DockingListener)
@@ -1730,7 +1730,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * Returns an array of all {@code DockingListeners} added to this
      * {@code DockingPort}. If there are no listeners present for this
      * {@code DockingPort}, then a zero-length array is returned.
-     * 
+     *
      * @return an array of all {@code DockingListeners} added to this
      *         {@code DockingPort}.
      * @see DockingMonitor#getDockingListeners()
@@ -1739,7 +1739,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      */
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
-                .toArray(new DockingListener[0]);
+               .toArray(new DockingListener[0]);
     }
 
     /**
@@ -1748,7 +1748,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code null}, or the listener has not previously been added to this
      * {@code DockingPort}, then no {@code Exception} is thrown and no action
      * is taken.
-     * 
+     *
      * @param listener
      *            the {@code DockingListener} to remove from this
      *            {@code DockingPort}
@@ -1764,7 +1764,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingCanceled(DockingEvent)
@@ -1774,7 +1774,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
     /**
      * Requests activation for the newly docked Dockable.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingComplete(DockingEvent)
@@ -1785,13 +1785,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             return;
 
         ActiveDockableTracker
-                .requestDockableActivation(dockable.getComponent());
+        .requestDockableActivation(dockable.getComponent());
     }
 
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dragStarted(DockingEvent)
@@ -1802,7 +1802,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dropStarted(DockingEvent)
@@ -1813,7 +1813,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingComplete(DockingEvent)
@@ -1824,7 +1824,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingStarted(DockingEvent)
@@ -1839,7 +1839,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code getDockingPortPropertySet(DockingPort port)} on
      * {@code org.flexdock.docking.props.PropertyManager} and supplying an
      * argument of {@code this}.
-     * 
+     *
      * @return the {@code DockingPortPropertySet} associated with this
      *         {@code DockingPort}. This method will not return a {@code null}
      *         reference.
@@ -1859,7 +1859,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * included within the {@code List} returned by calling
      * {@code getDragSources()} on the {@code Dockable}. This allows dragging a
      * tab to initiate drag-to-dock operations.
-     * 
+     *
      * @param enabled
      *            {@code true} if drag-to-dock support should be enabled for
      *            tabs and their associated {@code Dockables}, {@code false}
@@ -1879,7 +1879,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * events as if the tab were a component included within the {@code List}
      * returned by calling {@code getDragSources()} on the {@code Dockable}.
      * This allows dragging a tab to initiate drag-to-dock operations.
-     * 
+     *
      * @return {@code true} if drag-to-dock support is enabled for tabs and
      *         their associated {@code Dockables}, {@code false} otherwise.
      * @see #setTabsAsDragSource(boolean)
@@ -1901,7 +1901,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * method will return {@code false}. If the this {@code DockingPort} is not
      * validated and/or is not part of a container hierarchy, this method should
      * return {@code true}.
-     * 
+     *
      * @return {@code false} if this {@code DockingPort} is nested within
      *         another {@code DockingPort}, {@code true} otherwise.
      * @see DockingPort#isRoot()
@@ -1918,7 +1918,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * application-level developers.</b> It will most likely be removed in
      * future versions and the logic contained herein will be managed by some
      * type of change listener.
-     * 
+     *
      * @param root
      *            {@code true} if this is a "root" {@code DockingPort},
      *            {@code false} otherwise.
@@ -1935,7 +1935,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * currently in progress and should not be called by application-level
      * developers. It will most likely be removed in future versions and the
      * logic contained herein will be managed by some type of change listener.
-     * 
+     *
      * @param inProgress
      *            {@code true} if a drag operation involving this
      *            {@code DockingPort} is currently in progress, {@code false}
@@ -1966,7 +1966,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * this case, visual feedback for altered subcomponents within this
      * {@code DockingPort} may be blocked in favor of a temporary
      * {@code BufferedImage} for the life of the drag operation.
-     * 
+     *
      * @param g
      *            the {@code Graphics} context in which to paint
      * @see JComponent#paint(java.awt.Graphics)
@@ -1991,7 +1991,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code LayoutNode} itself may be written to external storage and later
      * reloaded into this {@code DockingPort} via
      * {@code importLayout(LayoutNode node)}.
-     * 
+     *
      * @return a {@code LayoutNode} representing the current layout state within
      *         this {@code DockingPort}
      * @see DockingPort#importLayout(LayoutNode)
@@ -2021,7 +2021,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code DockingPort} and all subsequently generated sub-{@code DockingPorts}
      * in a visual configuration mandated by the tree structure modeled by the
      * specified {@code LayoutNode}.
-     * 
+     *
      * @param node
      *            the {@code LayoutNode} whose layout is to be instantiated
      *            within this {@code DockingPort}
@@ -2115,16 +2115,16 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         if (len == 0)
             return;
 
-	for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
             ((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(false);
-	}
+        }
 
         // first, check to see if we're ready for rendering
         SplitNode node = (SplitNode) splitNodes.get(0);
         JSplitPane split = node.getSplitPane();
         int size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split
-                .getWidth()
-                : split.getHeight();
+                   .getWidth()
+                   : split.getHeight();
         // if we're not ready to render, then defer processing again until later
         if (!split.isValid() || size == 0) {
             // try to validate first
@@ -2133,7 +2133,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // now redispatch
             deferSplitPaneValidation(splitNodes);
             return;
-	}
+        }
 
         // if we're ready to render, then loop through all the splitNodes and
         // set the split dividers to their appropriate locations.
@@ -2141,8 +2141,8 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             node = (SplitNode) splitNodes.get(i);
             split = node.getSplitPane();
             size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split
-                    .getWidth()
-                    : split.getHeight();
+                   .getWidth()
+                   : split.getHeight();
             float percent = node.getPercentage();
             int divLoc = (int) ((float) size * percent);
             // System.err.println("percent: " + percent + ", divLoc: " +
@@ -2159,9 +2159,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             split.validate();
         }
 
-	for (int i = 0; i < len; i++) {
+        for (int i = 0; i < len; i++) {
             ((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(true);
-	}
+        }
     }
 
     // --- maximization
@@ -2175,7 +2175,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             throw new IllegalStateException("Already maximized");
         }
         maximizationInstallInfo = new MaximizationInstallInfo(
-                getDockedComponent(), getBorder());
+            getDockedComponent(), getBorder());
 
         Component newComponent = dockable.getComponent();
         setComponent(newComponent);
@@ -2201,7 +2201,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     public void releaseForMaximization(Dockable dockable) {
         if (maximizationReleaseInfo != null) {
             throw new IllegalStateException(
-                    "Already released a Dockable for maximization.");
+                "Already released a Dockable for maximization.");
         }
 
         Component comp = dockable.getComponent();
@@ -2219,7 +2219,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // can't
             // be the direct parent of any dockable requesting maximization
             throw new IllegalStateException(
-                    "DefaultDockingPort does not directly contain a Dockable");
+                "DefaultDockingPort does not directly contain a Dockable");
         } else if (docked instanceof JTabbedPane) {
             // this is the tricky case, we have to store layout of tabbed pane
             // to restore later
@@ -2230,7 +2230,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // check if our component is the one that requested maximization
             if (comp != docked) {
                 throw new IllegalStateException(
-                        "Dockable requesting maximization is not the one docked in this DefaultDockingPort.");
+                    "Dockable requesting maximization is not the one docked in this DefaultDockingPort.");
             }
             remove(comp);
         }
@@ -2291,7 +2291,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private static class MaximizationReleaseInfo extends
-            MaximizationInstallInfo {
+        MaximizationInstallInfo {
         private int tabIndex;
 
         public MaximizationReleaseInfo(Component content, Border border) {

@@ -33,7 +33,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * the {@code DockingPort's} specified {@code region}. Neither {@code port}
      * or {@code region} may be {@code null}. {@code region} must be a valid
      * docking region as defined by {@code isValidDockingRegion(String region)}.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} for which this
      *            {@code DockingSplitPane} is to be created.
@@ -50,7 +50,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             throw new IllegalArgumentException("'port' cannot be null.");
         if (!DockingManager.isValidDockingRegion(region))
             throw new IllegalArgumentException("'" + region
-                    + "' is not a valid region.");
+                                               + "' is not a valid region.");
 
         this.region = region;
         this.dockingPort = port;
@@ -76,7 +76,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             // preferred size
             if (extraSpace >= 0) {
                 setDividerLocation(i.top + topH
-                        + ((int) (extraSpace * getResizeWeight() + .5)));
+                                   + ((int) (extraSpace * getResizeWeight() + .5)));
             }
 
             // TODO implement shrinking excess space to ensure that one has
@@ -91,7 +91,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             // preferred size
             if (extraSpace >= 0) {
                 setDividerLocation(i.left + leftH
-                        + ((int) (extraSpace * getResizeWeight() + .5)));
+                                   + ((int) (extraSpace * getResizeWeight() + .5)));
             }
 
             // TODO implement shrinking excess space to ensure that one has
@@ -125,7 +125,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * value returned from {@code getRegion()}, where {@code getRegion()}
      * indicates the docking region of the 'new' {@code Dockable} for this
      * {@code DockingSplitPane}.
-     * 
+     *
      * @return the 'oldest' {@code Component} to have been added to this
      *         {@code DockingSplitPane} as a result of a docking operation.
      * @see #getRegion()
@@ -133,7 +133,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      */
     public Component getElderComponent() {
         Component c = controllerInTopLeft ? getLeftComponent()
-                : getRightComponent();
+                      : getRightComponent();
         if (c instanceof DockingPort)
             c = ((DockingPort) c).getDockedComponent();
         return c;
@@ -150,7 +150,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * orientation of the split pane. The region returned by this method will be
      * the same passed into the {@code DockingSplitPane} constructor on
      * instantiation.
-     * 
+     *
      * @return the docking region for which this {@code DockingSplitPane} was
      *         created.
      * @see #DockingSplitPane(DockingPort, String)
@@ -176,7 +176,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * value returned from {@code getRegion()}, where {@code getRegion()}
      * indicates the docking region of the 'new' {@code Dockable} for this
      * {@code DockingSplitPane}.
-     * 
+     *
      * @return {@code true} if the 'oldest' {@code Component} to have been added
      *         to this {@code DockingSplitPane} is in the TOP or LEFT side of
      *         the split pane; {@code false} otherwise.
@@ -196,7 +196,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * the split pane has been fully rendered. This method ensures that default
      * {@code JSplitPane} layout behavior is deferred until after the initial
      * dimensions of this split pane have been properly determined.
-     * 
+     *
      * @see java.awt.Container#doLayout()
      * @see JSplitPane#setDividerLocation(double)
      */
@@ -228,7 +228,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     /**
      * Sets the initial divider ration for creating split panes. The default
      * value is {@code 0.5}.
-     * 
+     *
      * @exception IllegalArgumentException
      *                if {@code ratio} is less than 0.0 or greater than 1.0.
      * @param ratio
@@ -238,7 +238,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     public void setInitialDividerRatio(double ratio) {
         if (ratio < 0.0 || ratio > 1.0) {
             throw new IllegalArgumentException("ratio (" + ratio
-                    + ") must be between [0.0,1,0] inclusive");
+                                               + ") must be between [0.0,1,0] inclusive");
         }
         initialDividerRatio = ratio;
     }

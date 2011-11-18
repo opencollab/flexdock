@@ -53,10 +53,10 @@ public class PlafManager {
 
     public static void setPreferredTheme(Properties p) {
         String themeName = p == null ? null : p
-                .getProperty(XMLConstants.NAME_KEY);
+                           .getProperty(XMLConstants.NAME_KEY);
         if (themeName == null)
             throw new IllegalArgumentException(
-                    "Unable to find property 'name' in the supplied data set.");
+                "Unable to find property 'name' in the supplied data set.");
 
         Theme theme = addCustomTheme(themeName, p);
         if (theme != null)
@@ -81,8 +81,8 @@ public class PlafManager {
         // else,
         // vice versa, or a new string value
         boolean themeChanged = oldPref != newPref
-                && (oldPref == null || newPref == null || !oldPref
-                        .equals(newPref));
+                               && (oldPref == null || newPref == null || !oldPref
+                                   .equals(newPref));
         if (reload || themeChanged)
             installPreferredTheme();
     }
@@ -124,7 +124,7 @@ public class PlafManager {
     }
 
     public static Theme loadCustomTheme(String themeName, Properties p,
-            boolean exclusive) {
+                                        boolean exclusive) {
         if (Configurator.isNull(themeName) || p == null)
             return null;
 
@@ -140,7 +140,7 @@ public class PlafManager {
 
     public static Theme removeCustomTheme(String themeName) {
         return Configurator.isNull(themeName) ? null : (Theme) CUSTOM_THEMES
-                .remove(themeName);
+               .remove(themeName);
     }
 
     private static void setProperty(Object key, Object value) {
@@ -153,7 +153,7 @@ public class PlafManager {
      * {@code target}. In case the component is a member of the installed look
      * and feel, this method first queries {@code UIManager.getUI(target)}
      * before attempting to resolve it locally.
-     * 
+     *
      * @param target
      *            the {@code JComponent} to return the {@code ComponentUI} for
      * @return the {@code ComponentUI} object for {@code target}

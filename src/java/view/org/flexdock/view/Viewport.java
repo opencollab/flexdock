@@ -22,79 +22,79 @@ import org.flexdock.docking.defaults.StandardBorderManager;
 public class Viewport extends DefaultDockingPort implements DockingConstants {
 
     protected HashSet blockedRegions;
-	
-	static {
-		DockingManager.setDockingStrategy(Viewport.class, View.VIEW_DOCKING_STRATEGY);
-	}
 
-	public Viewport() {
-	    super();
+    static {
+        DockingManager.setDockingStrategy(Viewport.class, View.VIEW_DOCKING_STRATEGY);
+    }
+
+    public Viewport() {
+        super();
         blockedRegions = new HashSet(5);
         setBorderManager(new StandardBorderManager());
     }
-	
-	public Viewport(String portId) {
-		super(portId);
-		blockedRegions = new HashSet(5);
-		setBorderManager(new StandardBorderManager());
-	}
 
-	public void setRegionBlocked(String region, boolean isBlocked) {
-		if(isValidDockingRegion(region)) {
-			if(isBlocked) {
+    public Viewport(String portId) {
+        super(portId);
+        blockedRegions = new HashSet(5);
+        setBorderManager(new StandardBorderManager());
+    }
+
+    public void setRegionBlocked(String region, boolean isBlocked) {
+        if(isValidDockingRegion(region)) {
+            if(isBlocked) {
                 blockedRegions.add(region);
             } else {
                 blockedRegions.remove(region);
             }
-		}
-	}
-	
-	public boolean isDockingAllowed(Component comp, String region) {
-		// if we're already blocked, then no need to interrogate
-		// the components in this dockingport
-		boolean blocked = !super.isDockingAllowed(comp, region);
-		if(blocked)
-			return false;
-		
-		// check to see if the region itself has been blocked for some reason
-		if(blockedRegions.contains(region))
-			return false;
-		
-		// by default, allow docking in non-CENTER regions
-		if(!CENTER_REGION.equals(region))
-			return true;
-		
-		// allow docking in the CENTER if there's nothing already there,
-		// or if there's no Dockable associated with the component there
-		Dockable dockable = getCenterDockable();
-		if(dockable==null)
-			return true;
-		
-		// otherwise, only allow docking in the CENTER if the dockable
-		// doesn't mind
-		return !dockable.getDockingProperties().isTerritoryBlocked(region).booleanValue();
-	}
-	
-	public boolean dock(Dockable dockable) {
-		return dock(dockable, CENTER_REGION);
-	}
-	
-	protected JTabbedPane createTabbedPane() {
-		JTabbedPane pane = super.createTabbedPane();
-		pane.addChangeListener(ActiveDockableListener.getInstance());
-		return pane;
-	}
-	
+        }
+    }
+
+    public boolean isDockingAllowed(Component comp, String region) {
+        // if we're already blocked, then no need to interrogate
+        // the components in this dockingport
+        boolean blocked = !super.isDockingAllowed(comp, region);
+        if(blocked)
+            return false;
+
+        // check to see if the region itself has been blocked for some reason
+        if(blockedRegions.contains(region))
+            return false;
+
+        // by default, allow docking in non-CENTER regions
+        if(!CENTER_REGION.equals(region))
+            return true;
+
+        // allow docking in the CENTER if there's nothing already there,
+        // or if there's no Dockable associated with the component there
+        Dockable dockable = getCenterDockable();
+        if(dockable==null)
+            return true;
+
+        // otherwise, only allow docking in the CENTER if the dockable
+        // doesn't mind
+        return !dockable.getDockingProperties().isTerritoryBlocked(region).booleanValue();
+    }
+
+    public boolean dock(Dockable dockable) {
+        return dock(dockable, CENTER_REGION);
+    }
+
+    protected JTabbedPane createTabbedPane() {
+        JTabbedPane pane = super.createTabbedPane();
+        pane.addChangeListener(ActiveDockableListener.getInstance());
+        return pane;
+    }
+
     public Set getViewset() {
-    	// return ALL views, recursing to maximum depth
-    	return getDockableSet(-1, 0, View.class);
+        // return ALL views, recursing to maximum depth
+        return getDockableSet(-1, 0, View.class);
     }
-    
+
     public Set getViewset(int depth) {
-    	// return all views, including subviews up to the specified depth
-    	return getDockableSet(depth, 0, View.class);
+        // return all views, including subviews up to the specified depth
+        return getDockableSet(depth, 0, View.class);
     }
-	
+
     protected String paramString() {
         return "id=" + getPersistentId() + "," + super.paramString();
     }

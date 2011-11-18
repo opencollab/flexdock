@@ -45,7 +45,7 @@ public class DockingUtility implements DockingConstants {
      * {@code Component} will also return {@code true}. If both of these
      * conditions cannot be satisfied, then this method returns a {@code null}
      * reference.
-     * 
+     *
      * @param d
      *            the {@code Dockable} whose parent {@code DockingPort} is to be
      *            returned.
@@ -70,7 +70,7 @@ public class DockingUtility implements DockingConstants {
      * {@code Component} will also return {@code true}. If both of these
      * conditions cannot be satisfied, then this method returns a {@code null}
      * reference.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose parent {@code DockingPort} is to
      *            be returned.
@@ -79,7 +79,7 @@ public class DockingUtility implements DockingConstants {
      */
     public static DockingPort getParentDockingPort(Component comp) {
         DockingPort port = comp == null ? null : (DockingPort) SwingUtilities
-                .getAncestorOfClass(DockingPort.class, comp);
+                           .getAncestorOfClass(DockingPort.class, comp);
         if (port == null)
             return null;
 
@@ -91,7 +91,7 @@ public class DockingUtility implements DockingConstants {
      * {@code DockingPort}; {@code false} otherwise. If the specified
      * {@code DockingPort} is {@code null}, then this method returns
      * {@code false}.
-     * 
+     *
      * @param dockingPort
      *            the {@code DockingPort} to check for an ancestor port
      * @return {@code true} if the specified {@code DockingPort} has an ancestor
@@ -101,7 +101,7 @@ public class DockingUtility implements DockingConstants {
      */
     public static boolean isSubport(DockingPort dockingPort) {
         return dockingPort == null ? false : SwingUtilities.getAncestorOfClass(
-                DockingPort.class, (Component) dockingPort) != null;
+                   DockingPort.class, (Component) dockingPort) != null;
     }
 
     /**
@@ -119,7 +119,7 @@ public class DockingUtility implements DockingConstants {
      * {@code DockingPort} ancestor is resovled and returned from
      * {@code SwingUtilities.getAncestorOfClass(Class c, Component comp)},
      * passing {@code DockingPort.class} for the ancestor class parameter.
-     * 
+     *
      * @param container
      *            the {@code Container} within which to find a
      *            {@code DockingPort}.
@@ -138,7 +138,7 @@ public class DockingUtility implements DockingConstants {
             return null;
 
         Component deepestComponent = SwingUtilities.getDeepestComponentAt(
-                container, location.x, location.y);
+                                         container, location.x, location.y);
         if (deepestComponent == null)
             return null;
 
@@ -154,7 +154,7 @@ public class DockingUtility implements DockingConstants {
         // in returning both
         // cases.
         return (DockingPort) SwingUtilities.getAncestorOfClass(
-                DockingPort.class, deepestComponent);
+                   DockingPort.class, deepestComponent);
     }
 
     /**
@@ -164,7 +164,7 @@ public class DockingUtility implements DockingConstants {
      * {@code region} is invalid according to
      * {@code DockingManager.isValidDockingRegion(String region)}, then this
      * method returns {@code null}.
-     * 
+     *
      * {@code NORTH_REGION} and {@code SOUTH_REGION} are considered "vertical"
      * regions, while {@code WEST_REGION} and {@code EAST_REGION} are considered
      * horizontal regions. If the {@code JSplitPane} orientation matches the
@@ -182,7 +182,7 @@ public class DockingUtility implements DockingConstants {
      * {@code EAST_REGION}, {@code WEST_REGION} to {@code NORTH_REGION}, and
      * {@code EAST_REGION} to {@code SOUTH_REGION}. {@code CENTER_REGION} is
      * never altered.
-     * 
+     *
      * @param splitPane
      *            the {@code JSplitPane} whose orientation is to be used as a
      *            target axis
@@ -223,7 +223,7 @@ public class DockingUtility implements DockingConstants {
      * {@code CENTER_REGION} or an invalid region, as specified by
      * {@code DockingManager.isValidDockingRegion(String region)}, this method
      * return {@code CENTER_REGION}.
-     * 
+     *
      * @param region
      *            the region whose opposite is to be returned.
      * @return the opposite docking region of the specified {@code region}.
@@ -271,7 +271,7 @@ public class DockingUtility implements DockingConstants {
      * equivalent. These combination will return {@code true} for this method.
      * All other region combinatinos will cause this method to return
      * {@code false}.
-     * 
+     *
      * @param region
      *            the first region to check for equivalency
      * @param otherRegion
@@ -307,7 +307,7 @@ public class DockingUtility implements DockingConstants {
      * Returns {@code true} if the specified {@code region} is equal to either
      * {@code NORTH_REGION} or {@code WEST_REGION}. Returns {@code false}
      * otherwise.
-     * 
+     *
      * @param region
      *            the {@code region} to check for top or left equivalency
      * @return {@code true} if the specified {@code region} is equal to either
@@ -330,7 +330,7 @@ public class DockingUtility implements DockingConstants {
      * <p>
      * All constants, both integer an {@code String} values, can be found on the
      * {@code DockingConstants} interface.
-     * 
+     *
      * @param regionType
      *            the orientation constant to translate into a docking region
      * @return the {@code String} docking region for the specified orientation
@@ -374,7 +374,7 @@ public class DockingUtility implements DockingConstants {
      * method to return. {@code DockingState} for the specified {@code Dockable}
      * is queried by calling {@code getDockingState(Dockable dockable)} on the
      * {@code DockingManager's} currently installed {@code LayoutManager}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose minimized state is to be returned
      * @return {@code true} if the specified {@code Dockable} is currently
@@ -403,7 +403,7 @@ public class DockingUtility implements DockingConstants {
      * for the specified {@code Dockable} is queried by calling
      * {@code getDockingState(Dockable dockable)} on the
      * {@code DockingManager's} currently installed {@code LayoutManager}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose minimized constraint is to be
      *            returned
@@ -438,7 +438,7 @@ public class DockingUtility implements DockingConstants {
      * {@code null} or if the specified {@code region} is invalid according to
      * {@code DockingManager.isValidDockingRegion(String region)}. If the
      * specified region is other than CENTER, then a split layout should result.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked
      * @param parent
@@ -453,9 +453,9 @@ public class DockingUtility implements DockingConstants {
      * @see DockingManager#dock(Dockable, DockingPort, String)
      */
     public static boolean dockRelative(Dockable dockable, Dockable parent,
-            String relativeRegion) {
+                                       String relativeRegion) {
         return dockRelative(parent, dockable, relativeRegion,
-                UNSPECIFIED_SIBLING_PREF);
+                            UNSPECIFIED_SIBLING_PREF);
     }
 
     /**
@@ -473,7 +473,7 @@ public class DockingUtility implements DockingConstants {
      * This method returns {@code false} if any of the input parameters are
      * {@code null} or if the specified {@code region} is invalid according to
      * {@code DockingManager.isValidDockingRegion(String region)}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked
      * @param parent
@@ -490,7 +490,7 @@ public class DockingUtility implements DockingConstants {
      * @see DockingManager#dock(Dockable, DockingPort, String)
      */
     public static boolean dockRelative(Dockable dockable, Dockable parent,
-            String relativeRegion, float ratio) {
+                                       String relativeRegion, float ratio) {
         if (parent == null || dockable == null
                 || !DockingManager.isValidDockingRegion(relativeRegion))
             return false;
@@ -526,7 +526,7 @@ public class DockingUtility implements DockingConstants {
      * method to return. {@code DockingState} for the specified {@code Dockable}
      * is queried by calling {@code getDockingState(Dockable dockable)} on the
      * {@code DockingManager's} currently installed {@code LayoutManager}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose floating state is to be returned
      * @return {@code true} if the specified {@code Dockable} is currently
@@ -545,7 +545,7 @@ public class DockingUtility implements DockingConstants {
      * docked within a {@code DockingPort}. This method returns {@code false}
      * if the {@code Dockable} is presently floating, minimized, hidden, or if
      * the {@code Dockable} parameter is {@code null}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose embedded state is to be returned
      * @return {@code true} if the specified {@code Dockable} is currently
@@ -555,7 +555,7 @@ public class DockingUtility implements DockingConstants {
      */
     public static boolean isEmbedded(Dockable dockable) {
         return dockable == null ? false : DockingManager.isDocked(dockable)
-                && !isFloating(dockable);
+               && !isFloating(dockable);
     }
 
     /**
@@ -586,7 +586,7 @@ public class DockingUtility implements DockingConstants {
      * If the specified {@code DockingPort} is {@code null}, then no
      * {@code Exception} is thrown and no action is taken. Identical behavior
      * occurs if the {@code DockingPort} does not contain split layout.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} containing the split layout is to be
      *            resized.
@@ -640,7 +640,7 @@ public class DockingUtility implements DockingConstants {
      * If the {@code Dockable} resides within a tabbed layout, a check is done
      * to see if the tabbed layout resides within a parent split layout. If so,
      * the resolved split layout is resized. Otherwise no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose containing split layout is to be
      *            resized.
@@ -674,7 +674,7 @@ public class DockingUtility implements DockingConstants {
      * calling {@code getDockableDesc()} on the {@code DockablePropertySet}
      * instance. If the specified {@code Dockable} is {@code null}, then this
      * method returns {@code null}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose tab-text is to be returned
      * @return the text to be used by a {@code Dockable} as a tab label within a
@@ -684,7 +684,7 @@ public class DockingUtility implements DockingConstants {
      */
     public static String getTabText(Dockable dockable) {
         DockablePropertySet props = dockable == null ? null : dockable
-                .getDockingProperties();
+                                    .getDockingProperties();
         return props == null ? null : props.getDockableDesc();
     }
 
@@ -707,7 +707,7 @@ public class DockingUtility implements DockingConstants {
      * {@code Dockable.DOCKABLE_INDICATOR} is checked for a value of
      * {@code Boolean.TRUE}. If the client property is present, then this
      * method returns {@code true}.
-     * 
+     *
      * @param obj
      *            the {@code Object} to be checked to see if it represents a
      *            valid {@code Dockable}
@@ -731,7 +731,7 @@ public class DockingUtility implements DockingConstants {
         if (obj instanceof JComponent) {
             Component comp = (Component) obj;
             return SwingUtility.getClientProperty(comp,
-                    Dockable.DOCKABLE_INDICATOR) == Boolean.TRUE;
+                                                  Dockable.DOCKABLE_INDICATOR) == Boolean.TRUE;
         }
 
         // they may have a heavyweight Component that does not directly

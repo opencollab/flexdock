@@ -54,7 +54,7 @@ public class MappingReader {
         NodeList nodes = adapterElem.getElementsByTagName(METHOD_KEY);
         String className = adapterElem.getAttribute(CLASS_KEY);
         Properties p = new Properties();
-        
+
         for (int i = 0, len = nodes.getLength(); i < len; i++) {
             Element elem = (Element) nodes.item(i);
             String key = elem.getAttribute(FLEXDOCK_KEY);
@@ -76,7 +76,7 @@ public class MappingReader {
                 continue;
 
             String key = Character.toLowerCase(methodName.charAt(3))
-                    + methodName.substring(4);
+                         + methodName.substring(4);
             String clientMethod = props.getProperty(key);
             if (clientMethod == null)
                 continue;

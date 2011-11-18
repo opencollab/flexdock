@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,13 +35,13 @@ import org.flexdock.docking.props.DockablePropertySet;
  * {@code DockingManager} and {@code DockingPort} for dealing with dockable
  * components in a drag-n-drop fashion. A {@code Dockable} is the child
  * component that is docked into a {@code DockingPort}.
- * 
+ *
  * @author Christopher Butler
  */
 public interface Dockable extends DockingListener, DockingMonitor {
 
     /**
-     * A constant property key to signify that a component is dockable. 
+     * A constant property key to signify that a component is dockable.
      */
     String DOCKABLE_INDICATOR = "Dockable.DOCKABLE_INDICATOR";
 
@@ -49,7 +49,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * Returns the value of the property with the specified key. Only properties
      * added with {@code putClientProperty} will return a non-{@code null}
      * value.
-     * 
+     *
      * @param key
      *            the key that is being queried
      * @return the value of this property or {@code null}
@@ -64,7 +64,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * The framework performs indexing on the underlying {@code Component}.
      * Consequently, this method may <b>not</b> return a {@code null}
      * reference.
-     * 
+     *
      * @return the component wrapped by this dockable.
      */
     Component getComponent();
@@ -72,7 +72,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
     /**
      * Returns the DockingPort within which this Dockable is currently docked.
      * If not currently docked, this method will return null.
-     * 
+     *
      * @return the docking port this dockable resides in, or {@code null} if the
      *         dockable is not currently docked (i.e. in the middle of a drag
      *         operation).
@@ -83,7 +83,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * Returns a {@code List} of the {@code Components} that are event sources
      * for drag operations. The list may or may not include the Component
      * returned by {@code getComponent()}.
-     * 
+     *
      * @return a list containing the components that may be used to drag this
      *         dockable.
      */
@@ -99,7 +99,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * the Set returned by this method and the List returned by
      * {@code getDragSources()}, the "frame reposition" behavior will supercede
      * any "drag-to-dock" behavior while the Dockable is in a floating state.
-     * 
+     *
      * @return a set containing the components that may be used to drag the
      *         frame this dockable resides in, if the dockable is floating.
      */
@@ -118,7 +118,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * <p>
      * The framework performs indexing on the persistent ID. Consequently, this
      * method may <b>not</b> return a {@code null} reference.
-     * 
+     *
      * @return the persistence id for this dockable. This id ensures that only
      *         one copy of a given dockable will exist.
      */
@@ -127,7 +127,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
     /**
      * Adds an arbitrary key/value "client property" to this {@code Dockable}.
      * {@code null} values are allowed.
-     * 
+     *
      * @param key
      *            the new client property key.
      * @param value
@@ -149,7 +149,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * {@code org.flexdock.docking.props.PropertyManager}. Developers are
      * encouraged to take advantage of this by calling
      * {@code PropertyManager.getDockablePropertySet(this)}.
-     * 
+     *
      * @return the {@code DockablePropertySet} associated with this
      *         {@code Dockable} This method may not return a {@code null}
      *         reference.
@@ -167,7 +167,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * users are free to provide their own implementation for this method, the
      * recommended approach is to use the default implementation with the
      * following line: <p> {@code return DockingManager.dock(dockable, this);}
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @return {@code true} if the docking operation was successful;
@@ -191,7 +191,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * the recommended approach is to use the default implementation with the
      * following line: <p>
      * {@code return DockingManager.dock(dockable, this, relativeRegion);}
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @param relativeRegion
@@ -221,7 +221,7 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * following line:
      * <p>
      * {@code return DockingManager.dock(dockable, this, relativeRegion, ratio);}
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @param relativeRegion
@@ -243,10 +243,10 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * response to a change in the inherited property.
      * <p>
      * If listener is null, no exception is thrown and no action is performed.
-     * 
+     *
      * @param listener
      *            the PropertyChangeListener to be added
-     * 
+     *
      * @see #removePropertyChangeListener(PropertyChangeListener)
      */
     void addPropertyChangeListener(PropertyChangeListener listener);
@@ -257,10 +257,10 @@ public interface Dockable extends DockingListener, DockingMonitor {
      * all bound properties of this class.
      * <p>
      * If listener is null, no exception is thrown and no action is performed.
-     * 
+     *
      * @param listener
      *            the PropertyChangeListener to be removed
-     * 
+     *
      * @see #addPropertyChangeListener
      */
     void removePropertyChangeListener(PropertyChangeListener listener);

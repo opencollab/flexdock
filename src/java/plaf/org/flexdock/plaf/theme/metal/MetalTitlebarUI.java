@@ -22,17 +22,17 @@ public class MetalTitlebarUI extends TitlebarUI {
 
     protected void paintBackground(Graphics g, Titlebar titlebar) {
         Rectangle paintArea = getPaintRect( titlebar);
-        g.translate(paintArea.x, paintArea.y);  
+        g.translate(paintArea.x, paintArea.y);
         g.setColor(getBackgroundColor( titlebar.isActive()));
         g.fillRect(0, 0, paintArea.width, paintArea.height);
-        g.translate(-paintArea.x, -paintArea.y);  
-        
+        g.translate(-paintArea.x, -paintArea.y);
+
         Rectangle paintAreaer = getPainterRect( g, titlebar);
-        g.translate(paintAreaer.x, paintAreaer.y);  
+        g.translate(paintAreaer.x, paintAreaer.y);
         painter.paint(g, paintAreaer.width, paintAreaer.height, titlebar.isActive(), titlebar);
         g.translate(-paintAreaer.x, -paintAreaer.y);
     }
-    
+
     protected Color getBackgroundColor(boolean active) {
         return active ? MetalLookAndFeel.getPrimaryControl() : MetalLookAndFeel.getControl();
     }
@@ -43,7 +43,7 @@ public class MetalTitlebarUI extends TitlebarUI {
         paintX += (int)rect.getWidth();
         paintX +=10;
         return paintX;
-    }    
+    }
 
     protected int getPainterWidth(Graphics g, Titlebar titlebar) {
         int buttonWidth = 0;
@@ -56,19 +56,19 @@ public class MetalTitlebarUI extends TitlebarUI {
             buttonWidth = b.getHeight();
             break;
         }
-        
+
         int paintY = (getButtonMargin() + buttonWidth) * 2;
         paintY += 5;
         return paintY;
-    }    
-    
+    }
+
     private Rectangle getPainterRect( Graphics g, Titlebar titlebar) {
         Rectangle painterRectangle = getPaintRect( titlebar);
         painterRectangle.x = getPainterX( g, titlebar);
-        
+
         painterRectangle.width = titlebar.getWidth()-painterRectangle.x;
         painterRectangle.width -= getPainterWidth( g, titlebar);
-        
+
         painterRectangle.y +=3;
         painterRectangle.height -= 6;
         return painterRectangle;

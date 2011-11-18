@@ -1,19 +1,19 @@
-/* 
- * Copyright (c) 2005 FlexDock Development Team. All rights reserved. 
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of 
- * this software and associated documentation files (the "Software"), to deal in the 
+/*
+ * Copyright (c) 2005 FlexDock Development Team. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in the
  * Software without restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
  * to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all 
+ *
+ * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
  */
 package org.flexdock.perspective.persist.xml;
@@ -30,20 +30,20 @@ import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-03
- * 
+ *
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @version $Id: LayoutSerializer.java,v 1.11 2005-07-06 18:10:48 winnetou25 Exp $
  */
 public class LayoutSerializer implements ISerializer {
-    
+
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
     public Element serialize(Document document, Object object) {
         Layout layout = (Layout) object;
-        
+
         Element layoutElement = document.createElement(PersistenceConstants.LAYOUT_ELEMENT_NAME);
-        
+
         Dockable[] dockables = layout.getDockables();
         ISerializer dockingStateSerializer = SerializerRegistry.getSerializer(DockingState.class);
         for (int i = 0; i < dockables.length; i++) {
@@ -52,7 +52,7 @@ public class LayoutSerializer implements ISerializer {
             Element dockingStateElement = dockingStateSerializer.serialize(document, dockingState);
             layoutElement.appendChild(dockingStateElement);
         }
-        
+
         ISerializer floatingGroupSerializer = SerializerRegistry.getSerializer(FloatingGroup.class);
         String[] floatingGroupIds = layout.getFloatingGroupIds();
         for (int i = 0; i < floatingGroupIds.length; i++) {
@@ -69,7 +69,7 @@ public class LayoutSerializer implements ISerializer {
             Element layoutNodeElement = layoutNodeSerializer.serialize(document, layoutNode);
             layoutElement.appendChild(layoutNodeElement);
         }
-        
+
         return layoutElement;
     }
 
@@ -87,7 +87,7 @@ public class LayoutSerializer implements ISerializer {
                 layout.setDockingState(dockableId, dockingState);
             }
         }
-        
+
         ISerializer floatingGroupsSerializer = SerializerRegistry.getSerializer(FloatingGroup.class);
         NodeList floatingGroupsNodeList = element.getElementsByTagName(PersistenceConstants.FLOATING_GROUP_ELEMENT_NAME);
         for (int i=0; i<floatingGroupsNodeList.getLength(); i++) {
@@ -98,7 +98,7 @@ public class LayoutSerializer implements ISerializer {
                 layout.addFloatingGroup(floatingGroup);
             }
         }
-        
+
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
 
         NodeList dockingPortNodeList = element.getElementsByTagName(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME);
@@ -107,8 +107,8 @@ public class LayoutSerializer implements ISerializer {
             LayoutNode restorationLayout = (LayoutNode) layoutNodeSerializer.deserialize(layoutNodeElement);
             layout.setRestorationLayout(restorationLayout);
         }
- 
+
         return layout;
     }
-    
+
 }

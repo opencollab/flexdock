@@ -13,10 +13,10 @@ import org.flexdock.util.Utilities;
  */
 public class ActionResourceHandler extends ResourceHandler {
 
-	public Object getResource(String stringValue) {
-		Object obj = Utilities.createInstance(stringValue);
-		if(!(obj instanceof Action))
-			obj = new DefaultAction();
-		return obj;
-	}
+    public Object getResource(String stringValue) {
+        Object obj = Utilities.createInstance(stringValue);
+        if(!(obj instanceof Action))
+            obj = new DefaultAction();
+        return obj;
+    }
 }

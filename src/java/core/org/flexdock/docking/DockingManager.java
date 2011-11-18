@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -77,9 +77,9 @@ import org.flexdock.util.Utilities;
  * methods are accessed statically from within application code and it generally
  * defers processing to a set of abstract handlers hidden from the application
  * layer.
- * 
+ *
  * Among {@code DockingManager's} responsibilities are as follows:
- * 
+ *
  * <dl>
  * <dt>Maintaining a component repository.</dt>
  * <dd> All {@code Dockables} and {@code DockingPorts} are cached within an and
@@ -97,7 +97,7 @@ import org.flexdock.util.Utilities;
  * <dd> {@code DockingManager} provides public APIs for programmatically dock,
  * undock, minimize, persist, and load {@code Dockables} from storage. </dd>
  * </dl>
- * 
+ *
  * @author Christopher Butler
  */
 public class DockingManager implements DockingConstants {
@@ -118,7 +118,7 @@ public class DockingManager implements DockingConstants {
     private static final WeakHashMap DOCKABLES_BY_COMPONENT = new WeakHashMap();
 
     private static final ClassMapping DOCKING_STRATEGIES = new ClassMapping(
-            DefaultDockingStrategy.class, new DefaultDockingStrategy());
+        DefaultDockingStrategy.class, new DefaultDockingStrategy());
 
     // Map(DockingPort -> MaximizedState)
     private static final Map maximizedStatesByRootPort = new HashMap();
@@ -223,8 +223,8 @@ public class DockingManager implements DockingConstants {
 
         // setup the default sibling size
         float siblingSize = Utilities.getFloat(System
-                .getProperty(RegionChecker.DEFAULT_SIBLING_SIZE_KEY),
-                RegionChecker.DEFAULT_SIBLING_SIZE);
+                                               .getProperty(RegionChecker.DEFAULT_SIBLING_SIZE_KEY),
+                                               RegionChecker.DEFAULT_SIBLING_SIZE);
         setDefaultSiblingSize(siblingSize);
 
         // setup auto-persistence
@@ -262,7 +262,7 @@ public class DockingManager implements DockingConstants {
      * {@code DockingState} information remains consistent so that the
      * {@code Dockable} may later be restored to its original location within
      * the application.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be closed.
      */
@@ -273,7 +273,7 @@ public class DockingManager implements DockingConstants {
         if (isMaximized(dockable)) {
             toggleMaximized(dockable);
         }
-        
+
         if (isDocked(dockable)) {
             undock(dockable);
         } else if (DockingUtility.isMinimized(dockable)) {
@@ -292,7 +292,7 @@ public class DockingManager implements DockingConstants {
      * {@code true} if the docking operation was successful and {@code false} if
      * the docking operation cannot be completed. This method defers processing
      * to {@code dock(Component dockable , DockingPort port, String region)}.
-     * 
+     *
      * @param dockable
      *            the {@code Component} to be docked.
      * @param port
@@ -317,7 +317,7 @@ public class DockingManager implements DockingConstants {
      * {@code true} if the docking operation was successful and {@code false} if
      * the docking operation cannot be completed. This method defers processing
      * to {@code dock(Dockable dockable, DockingPort port, String region)}.
-     * 
+     *
      * @param dockable
      *            the {@code Component} to be docked.
      * @param port
@@ -330,7 +330,7 @@ public class DockingManager implements DockingConstants {
      * @see #dock(Dockable, DockingPort, String)
      */
     public static boolean dock(Component dockable, DockingPort port,
-            String region) {
+                               String region) {
         Dockable d = resolveDockable(dockable);
         return dock(d, port, region);
     }
@@ -342,7 +342,7 @@ public class DockingManager implements DockingConstants {
      * Otherwise, this method returns {@code true} if the docking operation was
      * successful and {@code false} if the docking operation cannot be
      * completed.
-     * 
+     *
      * This method determines the {@code DockingStrategy} to be used for the
      * specified {@code DockingPort} and defers processing to the
      * {@code DockingStrategy}. This method's return value will be based upon
@@ -355,7 +355,7 @@ public class DockingManager implements DockingConstants {
      * {@code setDockingStrategy(Class c, DockingStrategy strategy)}, supplying
      * a {@code DockingPort} implementation class and a customized
      * {@code DockingStrategy}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked.
      * @param port
@@ -370,7 +370,7 @@ public class DockingManager implements DockingConstants {
      * @see #setDockingStrategy(Class, DockingStrategy)
      */
     public static boolean dock(Dockable dockable, DockingPort port,
-            String region) {
+                               String region) {
         if (dockable == null)
             return false;
 
@@ -404,7 +404,7 @@ public class DockingManager implements DockingConstants {
      * Otherwise, its parent {@code DockingPort} will be resolved and the new
      * {@code Dockable} will be docked into the {@code DockingPort} relative to
      * the "parent" {@code Dockable}.
-     * 
+     *
      * @param dockable
      *            the {@code Component} to be docked
      * @param parent
@@ -426,7 +426,7 @@ public class DockingManager implements DockingConstants {
      * the "parent" {@code Dockable}. This method defers processing to
      * {@code dock(Dockable dockable, Dockable parent, String region)} and
      * returns {@code false} if any of the input parameters are {@code null}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked
      * @param parent
@@ -455,7 +455,7 @@ public class DockingManager implements DockingConstants {
      * result. This method supplies a split proportion of 0.5F, resulting in
      * equal distribution of space between the dockable and parent parameters if
      * docking is successful.
-     * 
+     *
      * @param dockable
      *            the {@code Component} to be docked
      * @param parent
@@ -468,7 +468,7 @@ public class DockingManager implements DockingConstants {
      * @see #dock(Component, Component, String, float)
      */
     public static boolean dock(Component dockable, Component parent,
-            String region) {
+                               String region) {
         return dock(dockable, parent, region, 0.5f);
     }
 
@@ -485,7 +485,7 @@ public class DockingManager implements DockingConstants {
      * result. This method supplies a split proportion of 0.5F, resulting in
      * equal distribution of space between the dockable and parent parameters if
      * docking is successful.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked
      * @param parent
@@ -516,7 +516,7 @@ public class DockingManager implements DockingConstants {
      * parameter allotted to the {@code dockable} argument. This method defers
      * processing to
      * {@code dock(Dockable dockable, Dockable parent, String region, float proportion)}.
-     * 
+     *
      * @param dockable
      *            the {@code Component} to be docked
      * @param parent
@@ -531,7 +531,7 @@ public class DockingManager implements DockingConstants {
      *         {@code false} otherwise.
      */
     public static boolean dock(Component dockable, Component parent,
-            String region, float proportion) {
+                               String region, float proportion) {
         Dockable newDockable = resolveDockable(dockable);
         Dockable parentDockable = resolveDockable(parent);
         return dock(newDockable, parentDockable, region, proportion);
@@ -548,7 +548,7 @@ public class DockingManager implements DockingConstants {
      * {@code proportion} parameter is ignored. Otherwise, a split layout should
      * result with the proportional space specified in the {@code proportion}
      * parameter allotted to the {@code dockable} argument.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be docked
      * @param parent
@@ -562,15 +562,15 @@ public class DockingManager implements DockingConstants {
      *         {@code false} otherwise.
      */
     public static boolean dock(Dockable dockable, Dockable parent,
-            String region, float proportion) {
+                               String region, float proportion) {
         return DockingUtility
-                .dockRelative(dockable, parent, region, proportion);
+               .dockRelative(dockable, parent, region, proportion);
     }
 
     private static DockingStrategy findDockingStrategy(Dockable dockable) {
         DockingPort port = dockable.getDockingPort();
         DockingStrategy strategy = port == null ? null : port
-                .getDockingStrategy();
+                                   .getDockingStrategy();
         if (strategy == null) {
             DockingManager mgr = getDockingManager();
             strategy = mgr == null ? null : mgr.defaultDocker;
@@ -586,7 +586,7 @@ public class DockingManager implements DockingConstants {
      * {@code true} if a parent {@code DockingPort} is found and {@code false}
      * if no parent {@code DockingPort} is present. This method returns
      * {@code false} if the {@code Component} parameter is {@code null}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose docking status is to be examined
      * @return {@code true} if the {@code Component} is currently docked;
@@ -604,7 +604,7 @@ public class DockingManager implements DockingConstants {
      * and {@code false} if no parent {@code DockingPort} is present. This
      * method returns {@code false} if the {@code Dockable} parameter is
      * {@code null}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose docking status is to be examined
      * @return {@code true} if the {@code Dockable} is currently docked;
@@ -620,7 +620,7 @@ public class DockingManager implements DockingConstants {
      * {@code DockingPort} contains the specified {@code Dockable};
      * {@code false} otherwise. This method returns {@code false} if either of
      * the input parameters are {@code null}.
-     * 
+     *
      * @param dockingPort
      *            the {@code DockingPort} to be tested
      * @param dockable
@@ -630,13 +630,13 @@ public class DockingManager implements DockingConstants {
      */
     public static boolean isDocked(DockingPort dockingPort, Dockable dockable) {
         return dockingPort == null || dockable == null ? false : dockingPort
-                .isParentDockingPort(dockable.getComponent());
+               .isParentDockingPort(dockable.getComponent());
     }
 
     /**
      * Indicates whether global floating support is currently enabled. Defers
      * processing to {@code FloatPolicyManager.isGlobalFloatingEnabled()}.
-     * 
+     *
      * @return {@code true} if global floating support is enabled, {@code false}
      *         otherwise.
      * @see FloatPolicyManager#isGlobalFloatingEnabled()
@@ -655,7 +655,7 @@ public class DockingManager implements DockingConstants {
      * {@code org.flexdock.docking.props.PropertyManager.getDockingPortRoot()}.
      * As such, there are multiple "scopes" at which this property may be
      * overridden.
-     * 
+     *
      * @return {@code true} if the default setting for {@code DockingPorts}
      *         allows a tabbed layout for a single {@code Dockable} in the
      *         CENTER region; {@code false} otherwise.
@@ -664,7 +664,7 @@ public class DockingManager implements DockingConstants {
      */
     public static boolean isSingleTabsAllowed() {
         return PropertyManager.getDockingPortRoot().isSingleTabsAllowed()
-                .booleanValue();
+               .booleanValue();
     }
 
     /**
@@ -673,7 +673,7 @@ public class DockingManager implements DockingConstants {
      * include {@code NORTH_REGION}, {@code SOUTH_REGION}, {@code EAST_REGION},
      * {@code WEST_REGION}, and {@code CENTER_REGION}. This method returns
      * {@code true} if the supplied parameter is equal to one of these values.
-     * 
+     *
      * @param region
      *            the region value to be tested
      * @return {@code true} if the supplied parameter is a valid docking region;
@@ -681,12 +681,12 @@ public class DockingManager implements DockingConstants {
      */
     public static boolean isValidDockingRegion(String region) {
         return CENTER_REGION.equals(region) || NORTH_REGION.equals(region)
-                || SOUTH_REGION.equals(region) || EAST_REGION.equals(region)
-                || WEST_REGION.equals(region);
+               || SOUTH_REGION.equals(region) || EAST_REGION.equals(region)
+               || WEST_REGION.equals(region);
     }
 
     private static void updateDragListeners(Component dragSrc,
-            DragManager listener) {
+                                            DragManager listener) {
         MouseMotionListener motionListener = null;
         EventListener[] listeners = dragSrc.getMouseMotionListeners();
         for (int i = 0; i < listeners.length; i++) {
@@ -730,7 +730,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * If {@code comp} is {@code null}, no exception is thrown and no action is
      * performed.
-     * 
+     *
      * @param comp
      *            the target component for the {@code Dockable}.
      * @return the {@code Dockable} that has been registered for the supplied
@@ -784,7 +784,7 @@ public class DockingManager implements DockingConstants {
      * Creates a {@code Dockable} for the specified {@code Component} and
      * dispatches to {@code registerDockable(Dockable init)}. If {@code comp}
      * is {@code null}, no exception is thrown and no action is performed.
-     * 
+     *
      * @param comp
      *            the target component for the Dockable, both drag-starter and
      *            docking source
@@ -822,7 +822,7 @@ public class DockingManager implements DockingConstants {
      * has been registered. If the {@code Dockable} is {@code null}, no
      * {@code Exception} is thrown and no action is taken. The {@code Dockable}
      * returned by this method will be the same object passed in as an argument.
-     * 
+     *
      * @param dockable
      *            the Dockable that is being registered.
      * @return the {@code Dockable} that has been registered.
@@ -835,7 +835,7 @@ public class DockingManager implements DockingConstants {
 
         if (dockable.getPersistentId() == null)
             throw new IllegalArgumentException(
-                    "Dockable must have a non-null persistent ID.");
+                "Dockable must have a non-null persistent ID.");
 
         DOCKABLES_BY_COMPONENT.put(dockable.getComponent(), dockable);
 
@@ -843,7 +843,7 @@ public class DockingManager implements DockingConstants {
         // implement the interface directly
         Component c = dockable.getComponent();
         SwingUtility.putClientProperty(c, Dockable.DOCKABLE_INDICATOR,
-                Boolean.TRUE);
+                                       Boolean.TRUE);
 
         // add drag listeners
         updateDragListeners(dockable);
@@ -857,11 +857,11 @@ public class DockingManager implements DockingConstants {
         // make sure we have docking-properties initialized (must come after
         // ID-caching)
         DockablePropertySet props = PropertyManager
-                .getDockablePropertySet(dockable);
+                                    .getDockablePropertySet(dockable);
 
         // dispatch a registration event
         EventManager.dispatch(new RegistrationEvent(dockable,
-                DockingManager.SINGLETON, true));
+                              DockingManager.SINGLETON, true));
 
         // return the dockable
         return dockable;
@@ -906,7 +906,7 @@ public class DockingManager implements DockingConstants {
 
         // dispatch a registration event
         EventManager.dispatch(new RegistrationEvent(dockable,
-                DockingManager.SINGLETON, false));
+                              DockingManager.SINGLETON, false));
     }
 
     /**
@@ -914,7 +914,7 @@ public class DockingManager implements DockingConstants {
      * from the specified {@code Component}. If the specific listeners are not
      * present, then no action is taken. Drag listeners used by the docking
      * system are of type {@code org.flexdock.docking.drag.DragManager}.
-     * 
+     *
      * @param comp
      *            the {@code Component} from which to remove drag listeners.
      * @see DragManager
@@ -963,7 +963,7 @@ public class DockingManager implements DockingConstants {
      * {@code Dockable} to its previous layout state. If the {@code Dockable}
      * parameter is {@code null}, no {@code Exception} is thrown and no action
      * is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be displayed.
      * @return {@code true} if the {@code Dockable} was successfully displayed;
@@ -993,7 +993,7 @@ public class DockingManager implements DockingConstants {
      * {@code Dockable} to its previous layout state. If the {@code Dockable}
      * parameter is {@code null}, no {@code Exception} is thrown and no action
      * is taken.
-     * 
+     *
      * @param dockable
      *            the ID of the {@code Dockable} to be displayed.
      * @return {@code true} if the {@code Dockable} was successfully displayed;
@@ -1016,7 +1016,7 @@ public class DockingManager implements DockingConstants {
 
         synchronized (persistentIdLock) {
             String pId = desiredId == null ? obj.getClass().getName()
-                    : desiredId;
+                         : desiredId;
             StringBuffer baseId = new StringBuffer(pId);
             for (int i = 1; hasRegisteredDockableId(pId); i++) {
                 baseId.append("_").append(i);
@@ -1049,7 +1049,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * If a class association is never found, then an instance of
      * {@code DefaultDockingStrategy} is returned.
-     * 
+     *
      * @param obj
      *            the object whose {@code DockingStrategy} association we wish
      *            to test
@@ -1081,7 +1081,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * If a class association is never found, then an instance of
      * {@code DefaultDockingStrategy} is returned.
-     * 
+     *
      * @param classKey
      *            the {@code Class} whose {@code DockingStrategy} association we
      *            wish to test
@@ -1092,7 +1092,7 @@ public class DockingManager implements DockingConstants {
      */
     public static DockingStrategy getDockingStrategy(Class classKey) {
         DockingStrategy strategy = (DockingStrategy) DOCKING_STRATEGIES
-                .getClassInstance(classKey);
+                                   .getClassInstance(classKey);
         return strategy;
     }
 
@@ -1105,7 +1105,7 @@ public class DockingManager implements DockingConstants {
      * This method will return an array of all known RootWindows that contain
      * {@code DockingPorts}. Ordering of the array may be based off of a
      * {@code java.util.Set} and is <b>not</b> guaranteed.
-     * 
+     *
      * @return an array of all known {@code RootWindows} that contain
      *         {@code DockingPorts}
      * @see RootWindow
@@ -1114,7 +1114,7 @@ public class DockingManager implements DockingConstants {
     public static RootWindow[] getDockingWindows() {
         Set windowSet = DockingPortTracker.getDockingWindows();
         return windowSet == null ? new RootWindow[0] : (RootWindow[]) windowSet
-                .toArray(new RootWindow[0]);
+               .toArray(new RootWindow[0]);
     }
 
     /**
@@ -1125,7 +1125,7 @@ public class DockingManager implements DockingConstants {
      * {@code org.flexdock.docking.event.hierarchy.DockingPortTracker.findById(String portId)}.
      * {@code portId} should match the value returned by a {@code DockingPort's}
      * {@code getPersistentId()} method.
-     * 
+     *
      * @param portId
      *            the ID of the {@code DockingPort} to be looked up
      * @return the {@code DockingPort} with the specified ID
@@ -1167,7 +1167,7 @@ public class DockingManager implements DockingConstants {
      * then this method returns a {@code null} reference. A {@code null}
      * reference is also returned if the root window does not contain any
      * {@code DockingPorts}.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose root window will be checked for a
      *            main {@code DockingPort}
@@ -1208,7 +1208,7 @@ public class DockingManager implements DockingConstants {
      * application developer, then this method and
      * {@code getMainDockingPort(Component comp)} will exhibit identical
      * behavior.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose root window will be checked for a
      *            root {@code DockingPort}
@@ -1241,7 +1241,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * This method dispatches internally to
      * {@code org.flexdock.docking.event.hierarchy.DockingPortTracker.getRootDockingPortInfo(Component comp)}.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose root window will be checked for an
      *            associated {@code RootDockingPortInfo}.
@@ -1270,7 +1270,7 @@ public class DockingManager implements DockingConstants {
      * that do not generate an {@code Exception} (for instance, if there is no
      * persistence implementation currently installed). If a problem occurs
      * during the persistence process, an {@code IOException} is thrown.
-     * 
+     *
      * @return {@code true} if the current layout model was succesfully stored,
      *         {@code false} otherwise.
      * @throws IOException
@@ -1280,7 +1280,7 @@ public class DockingManager implements DockingConstants {
      * @see LayoutManager#store()
      */
     public static boolean storeLayoutModel() throws IOException,
-            PersistenceException {
+        PersistenceException {
         LayoutManager mgr = getLayoutManager();
         return mgr == null ? false : mgr.store();
     }
@@ -1303,7 +1303,7 @@ public class DockingManager implements DockingConstants {
      * that do not generate an {@code Exception} (for instance, if there was no
      * previous layout model found in storage). If a problem occurs during the
      * loading process, an {@code IOException} is thrown.
-     * 
+     *
      * @return {@code true} if the current layout model was succesfully loaded,
      *         {@code false} otherwise.
      * @throws IOException
@@ -1312,7 +1312,7 @@ public class DockingManager implements DockingConstants {
      * @see LayoutManager#load()
      */
     public static boolean loadLayoutModel() throws IOException,
-            PersistenceException {
+        PersistenceException {
         return loadLayoutModel(false);
     }
 
@@ -1337,7 +1337,7 @@ public class DockingManager implements DockingConstants {
      * that do not generate an {@code Exception} (for instance, if there was no
      * previous layout model found in storage). If a problem occurs during the
      * loading process, an {@code IOException} is thrown.
-     * 
+     *
      * @return {@code true} if the current layout model was succesfully loaded,
      *         {@code false} otherwise.
      * @throws IOException
@@ -1348,7 +1348,7 @@ public class DockingManager implements DockingConstants {
      * @see LayoutManager#load()
      */
     public static boolean loadLayoutModel(boolean restore) throws IOException,
-            PersistenceException {
+        PersistenceException {
         LayoutManager mgr = getLayoutManager();
         if (mgr == null)
             return false;
@@ -1370,7 +1370,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * If there is no {@code LayoutManager} currently installed, then this
      * method returns {@code false}.
-     * 
+     *
      * @return {@code true} if the in-memory layout model was properly restored
      *         to the application view, {@code false} otherwise.
      * @throws PersisterException
@@ -1406,7 +1406,7 @@ public class DockingManager implements DockingConstants {
      * from external storage into memory before synchronizing the application
      * view. If a problem occurs while loading from exernal storage, this method
      * throws an {@code IOException}.
-     * 
+     *
      * @param loadFromStorage
      *            instructs whether to load any layout model from external
      *            storage into memory before synchronizing the application view.
@@ -1418,14 +1418,14 @@ public class DockingManager implements DockingConstants {
      * @see LayoutManager#restore(boolean)
      */
     public static boolean restoreLayout(boolean loadFromStorage)
-            throws IOException, PersistenceException {
+    throws IOException, PersistenceException {
         LayoutManager mgr = getLayoutManager();
         return mgr == null ? false : mgr.restore(loadFromStorage);
     }
 
     private static Dockable loadAndRegister(String id) {
         DockableFactory factory = id == null ? null
-                : getDockingManager().dockableFactory;
+                                  : getDockingManager().dockableFactory;
         if (factory == null)
             return null;
 
@@ -1487,9 +1487,9 @@ public class DockingManager implements DockingConstants {
                 dockable = DockableComponentWrapper.create((DockingStub) c);
             } else {
                 String persistentId = dockingId == null ? generatePersistentId(c)
-                        : dockingId;
+                                      : dockingId;
                 dockable = DockableComponentWrapper.create(c, persistentId,
-                        desc);
+                           desc);
             }
         }
 
@@ -1517,7 +1517,7 @@ public class DockingManager implements DockingConstants {
      * {@code Component} will also return {@code true}. If both of these
      * conditions cannot be satisfied, then this method returns a {@code null}
      * reference.
-     * 
+     *
      * @param dockable
      *            the {@code Component} whose parent {@code DockingPort} is to
      *            be returned.
@@ -1543,7 +1543,7 @@ public class DockingManager implements DockingConstants {
      * {@code Component} will also return {@code true}. If both of these
      * conditions cannot be satisfied, then this method returns a {@code null}
      * reference.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose parent {@code DockingPort} is to be
      *            returned.
@@ -1567,7 +1567,7 @@ public class DockingManager implements DockingConstants {
      * previously for a mapping to be found and a {@code Dockable} to be
      * returned by this method. If no mapping is found for the specified
      * {@code Component}, then this method returns a {@code null} reference.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose {@code Dockable} instance is to be
      *            returned.
@@ -1577,7 +1577,7 @@ public class DockingManager implements DockingConstants {
      */
     public static Dockable getDockable(Component comp) {
         return comp == null ? null : (Dockable) DOCKABLES_BY_COMPONENT
-                .get(comp);
+               .get(comp);
     }
 
     /**
@@ -1593,7 +1593,7 @@ public class DockingManager implements DockingConstants {
      * previously for a mapping to be found and a {@code Dockable} to be
      * returned by this method. If no mapping is found for the specified
      * {@code id}, then this method returns a {@code null} reference.
-     * 
+     *
      * @param id
      *            the persistent ID of the {@code Dockable} instance is to be
      *            returned.
@@ -1622,17 +1622,17 @@ public class DockingManager implements DockingConstants {
      * registered with the framework. The IDs returned by this method will
      * correspond to the values returned for the {@code getPersistentId()}
      * method for each {@code Dockable} registered with the framework.
-     * 
+     *
      * {@code Dockable} IDs are cached during
      * {@code registerDockable(Dockable dockable)}. Thus, for an ID to appear
      * within the {@code Set} returned by this method, the corresponding
      * {@code Dockable} must have first been registered via
      * {@code registerDockable(Dockable dockable)}.
-     * 
+     *
      * If no {@code Dockables} have been registered with the framework, then an
      * empty {@code Set} is returned. This method will never return a
      * {@code null} reference.
-     * 
+     *
      * @return a {@code Set} of {@code String} IDs for all {@code Dockables}
      *         registered with the framework.
      * @see #registerDockable(Dockable)
@@ -1655,7 +1655,7 @@ public class DockingManager implements DockingConstants {
      * {@code Dockable} is {@code null} or its {@code getDragSources()} method
      * returns a {@code null}, or if the {@code Dockable} has not previously
      * been registered, this method will return a {@code null} reference.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose drag listener is to be returned.
      * @return the {@code DragManager} responsible for listening to an managing
@@ -1708,7 +1708,7 @@ public class DockingManager implements DockingConstants {
      * infrastructure, it is not possible to install a {@code null}
      * {@code LayoutManager}. Therefore, this method will always return a valid
      * {@code LayoutManager} and never a {@code null} reference.
-     * 
+     *
      * @return the currently installed {@code LayoutManager}
      * @see LayoutManager
      * @see #setLayoutManager(LayoutManager)
@@ -1742,7 +1742,7 @@ public class DockingManager implements DockingConstants {
      * docking infrastructure, it cannot be set to {@code null}. Therefore,
      * this method will always return a valid {@code MinimizationManager} and
      * never a {@code null} reference.
-     * 
+     *
      * @return the currently installed {@code MinimizationManager}.
      * @see MinimizationManager
      * @see #setMinimizeManager(MinimizationManager)
@@ -1777,7 +1777,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * Since the {@code FloatManager} is a critical piece of the docking
      * insfrastructure, this method will never return a {@code null} reference.
-     * 
+     *
      * @return the {@code FloatManager} provided by the currently installed
      *         {@code LayoutManager}
      * @see #getLayoutManager()
@@ -1823,7 +1823,7 @@ public class DockingManager implements DockingConstants {
      * to the {@code DockingState} instance returned by this method for future
      * use as the reference itself may possibly become stale over time depending
      * on the {@code LayoutManager} implementation.
-     * 
+     *
      * @param dockableId
      *            the persistent ID of the {@code Dockable} whose current
      *            {@code DockingState} is to be returned
@@ -1870,7 +1870,7 @@ public class DockingManager implements DockingConstants {
      * to the {@code DockingState} instance returned by this method for future
      * use as the reference itself may possibly become stale over time depending
      * on the {@code LayoutManager} implementation.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose current {@code DockingState} is to
      *            be returned
@@ -1901,7 +1901,7 @@ public class DockingManager implements DockingConstants {
      * {@code DockableFactory's} {@code getDockable(String dockableId)} method,
      * transparently registering and returning the newly created
      * {@code Dockable} from {@code getDockable(String id)}.
-     * 
+     *
      * @return the currently installed {@code DockableFactory}
      * @see #getDockable(String)
      * @see DockableFactory#getDockable(String)
@@ -1920,7 +1920,7 @@ public class DockingManager implements DockingConstants {
      * {@code Runtime}. If auto-persist is enabled when the JVM exits, the
      * shutdown hook automatically calls {@code storeLayoutModel()}, catching
      * and reporting any {@code IOExceptions} that may occur.
-     * 
+     *
      * @param enabled
      *            {@code true} if automatic persistence is desired;
      *            {@code false} otherwise.
@@ -1972,7 +1972,7 @@ public class DockingManager implements DockingConstants {
      * If the {@code Dockable} resides within a tabbed layout, a check is done
      * to see if the tabbed layout resides within a parent split layout. If so,
      * the resolved split layout is resized. Otherwise no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Component} whose containing split layout is to be
      *            resized.
@@ -2022,7 +2022,7 @@ public class DockingManager implements DockingConstants {
      * If the {@code Dockable} resides within a tabbed layout, a check is done
      * to see if the tabbed layout resides within a parent split layout. If so,
      * the resolved split layout is resized. Otherwise no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose containing split layout is to be
      *            resized.
@@ -2064,7 +2064,7 @@ public class DockingManager implements DockingConstants {
      * If the specified {@code DockingPort} is {@code null}, then no
      * {@code Exception} is thrown and no action is taken. Identical behavior
      * occurs if the {@code DockingPort} does not contain split layout.
-     * 
+     *
      * @param port
      *            the {@code DockingPort} containing the split layout is to be
      *            resized.
@@ -2091,7 +2091,7 @@ public class DockingManager implements DockingConstants {
      * {@code DockableFactory's} {@code getDockable(String dockableId)} method,
      * transparently registering and returning the newly created
      * {@code Dockable} from {@code getDockable(String id)}.
-     * 
+     *
      * @param factory
      *            the {@code DockableFactory} to install
      * @see #getDockableFactory()
@@ -2120,7 +2120,7 @@ public class DockingManager implements DockingConstants {
      * responsible for providing the appropriate visual indications, or lack
      * thereof. If the specified {@code Dockable} is {@code null}, no
      * {@code Exception} is thrown and no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose minimzed state is to be modified
      * @param minimized
@@ -2134,7 +2134,7 @@ public class DockingManager implements DockingConstants {
     public static void setMinimized(Dockable dockable, boolean minimized) {
         Component cmp = dockable == null ? null : dockable.getComponent();
         Window window = cmp == null ? null : SwingUtilities
-                .getWindowAncestor(cmp);
+                        .getWindowAncestor(cmp);
         setMinimized(dockable, minimized, window);
     }
 
@@ -2160,7 +2160,7 @@ public class DockingManager implements DockingConstants {
      * responsible for providing the appropriate visual indications, or lack
      * thereof. If the specified {@code Dockable} is {@code null}, no
      * {@code Exception} is thrown and no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose minimzed state is to be modified
      * @param minimized
@@ -2176,9 +2176,9 @@ public class DockingManager implements DockingConstants {
      * @see DockingState#getMinimizedConstraint()
      */
     public static void setMinimized(Dockable dockable, boolean minimized,
-            Component window) {
+                                    Component window) {
         setMinimized(dockable, minimized, window,
-                MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT);
+                     MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT);
     }
 
     /**
@@ -2204,7 +2204,7 @@ public class DockingManager implements DockingConstants {
      * responsible for providing the appropriate visual indications, or lack
      * thereof. If the specified {@code Dockable} is {@code null}, no
      * {@code Exception} is thrown and no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose minimzed state is to be modified
      * @param minimizing
@@ -2219,7 +2219,7 @@ public class DockingManager implements DockingConstants {
      * @see DockingState#getMinimizedConstraint()
      */
     public static void setMinimized(Dockable dockable, boolean minimizing,
-            int constraint) {
+                                    int constraint) {
         setMinimized(dockable, minimizing, null, constraint);
     }
 
@@ -2249,7 +2249,7 @@ public class DockingManager implements DockingConstants {
      * However, constraint values must ultimately be interpreted by the current
      * {@code MinimizationManager} implementation and, thus any integer value
      * may theoretically be valid for {@code constraint}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose minimzed state is to be modified
      * @param minimizing
@@ -2267,7 +2267,7 @@ public class DockingManager implements DockingConstants {
      * @see DockingState#getMinimizedConstraint()
      */
     public static void setMinimized(Dockable dockable, boolean minimizing,
-            Component window, int constraint) {
+                                    Component window, int constraint) {
         if (dockable == null)
             return;
 
@@ -2277,7 +2277,7 @@ public class DockingManager implements DockingConstants {
             return;
 
         getMinimizeManager().setMinimized(dockable, minimizing, window,
-                constraint);
+                                          constraint);
     }
 
     /**
@@ -2303,7 +2303,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * If {@code comp} is {@code null} or the root window cannot be resolved,
      * then this method returns with no action taken.
-     * 
+     *
      * @param window
      *            the {@code Component} whose root window will be checked for a
      *            main {@code DockingPort}
@@ -2346,7 +2346,7 @@ public class DockingManager implements DockingConstants {
      * docking infrastructure, it cannot be set to {@code null}. If a
      * {@code null} value is passed into this method, the default
      * {@code MinimizationManager} provided by the framework is used instead.
-     * 
+     *
      * @param mgr
      *            the {@code MinimizationManager} to be installed
      * @see MinimizationManager
@@ -2396,7 +2396,7 @@ public class DockingManager implements DockingConstants {
      * docking infrastructure, it cannot be set to {@code null}. If a
      * {@code null} value is passed into this method, the default
      * {@code MinimizationManager} provided by the framework is used instead.
-     * 
+     *
      * @param mgrClass
      *            the class name of the {@code MinimizationManager} to be
      *            installed
@@ -2413,7 +2413,7 @@ public class DockingManager implements DockingConstants {
      * Sets whether global floating support should be enabled. Defers processing
      * to
      * {@code FloatPolicyManager.setGlobalFloatingEnabled(boolean globalFloatingEnabled)}.
-     * 
+     *
      * @param enabled
      *            {@code true} if global floating support should be enabled,
      *            {@code false} otherwise.
@@ -2442,7 +2442,7 @@ public class DockingManager implements DockingConstants {
      * {@code org.flexdock.docking.props.PropertyManager.getDockingPortRoot()}.
      * As such, there are multiple "scopes" at which this property may be
      * overridden.
-     * 
+     *
      * @param allowed
      *            {@code true} if the default setting for {@code DockingPorts}
      *            should allow a tabbed layout for a single {@code Dockable} in
@@ -2475,7 +2475,7 @@ public class DockingManager implements DockingConstants {
      * {@code LayoutManager}. FlexDock provides a default {@code LayoutManager}
      * implementation. If this method is passed a {@code null} argument, the
      * default {@code LayoutManager} is used instead.
-     * 
+     *
      * @param mgr
      *            the {@code LayoutManager} to install.
      * @see LayoutManager
@@ -2521,7 +2521,7 @@ public class DockingManager implements DockingConstants {
      * {@code LayoutManager}. FlexDock provides a default {@code LayoutManager}
      * implementation. If this method is passed a {@code null} argument, the
      * default {@code LayoutManager} is used instead.
-     * 
+     *
      * @param mgrClass
      *            the class name of the {@code LayoutManager} to install.
      * @see LayoutManager
@@ -2549,7 +2549,7 @@ public class DockingManager implements DockingConstants {
      * are ignored. Associations also do not apply for subclasses that have
      * their own specific {@code DockingStrategy} mapping.
      * <p>
-     * 
+     *
      * @param classKey
      *            the {@code Class} whose {@code DockingStrategy} association we
      *            wish to set
@@ -2562,7 +2562,7 @@ public class DockingManager implements DockingConstants {
      * @see ClassMapping#removeClassMapping(Class)
      */
     public static void setDockingStrategy(Class classKey,
-            DockingStrategy strategy) {
+                                          DockingStrategy strategy) {
         if (classKey == null)
             return;
 
@@ -2570,7 +2570,7 @@ public class DockingManager implements DockingConstants {
             DOCKING_STRATEGIES.removeClassMapping(classKey);
         else
             DOCKING_STRATEGIES.addClassMapping(classKey, strategy.getClass(),
-                    strategy);
+                                               strategy);
     }
 
     /**
@@ -2580,7 +2580,7 @@ public class DockingManager implements DockingConstants {
      * returns {@code false} with no action taken. Otherwise, this method
      * returns {@code true} if the undocking operation was successful and
      * {@code false} if the undocking operation could not be completed.
-     * 
+     *
      * This method determines the {@code DockingStrategy} to be used for
      * {@code DockingPort} containing the specified {@code Dockable} and defers
      * processing to the {@code undock(Dockable dockable)} method on the
@@ -2591,7 +2591,7 @@ public class DockingManager implements DockingConstants {
      * {@code setDockingStrategy(Class c, DockingStrategy strategy)}, supplying
      * a {@code DockingPort} implementation class and a customized
      * {@code DockingStrategy}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be undocked.
      * @return {@code true} if the undocking operation was successful,
@@ -2636,7 +2636,7 @@ public class DockingManager implements DockingConstants {
      * <p>
      * If the specified {@code Dockable} is {@code null}, then no
      * {@code Exception} is thrown and no action is taken.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose drag sources are to be checked for
      *            {@code DragManagers} and updated accordingly.
@@ -2697,7 +2697,7 @@ public class DockingManager implements DockingConstants {
      * forwards the request to {@link #toggleMaximized(Dockable)} after
      * obtaining the {@code Dockable} associated to the component via
      * {@link #getDockable(Component)}.
-     * 
+     *
      * @param comp
      * @see #toggleMaximized(Dockable)
      */
@@ -2721,7 +2721,7 @@ public class DockingManager implements DockingConstants {
      * resources. If the {@code Dockable} is already maximized, the root
      * {@code DockingPort} is asked to return to its original state and the
      * {@code Dockable} is returned to its original {@code DockingPort}.
-     * 
+     *
      * @param dockable
      */
     public static void toggleMaximized(Dockable dockable) {
@@ -2730,7 +2730,7 @@ public class DockingManager implements DockingConstants {
         if (state != null) {
             if (state.getDockable() != dockable) {
                 throw new IllegalStateException(
-                        "Can't maximize while different dockable is maximized");
+                    "Can't maximize while different dockable is maximized");
                 // maybe silently switch maximized dockables instead?
             }
             restoreFromMaximized(dockable, rootPort, state);
@@ -2742,10 +2742,10 @@ public class DockingManager implements DockingConstants {
     public static boolean isMaximized(Dockable dockable) {
         DockingPort rootPort = getRootDockingPort(dockable.getComponent());
         MaximizedState state = getMaximizedState(rootPort);
-        
+
         return state != null && state.getDockable().equals(dockable);
     }
-    
+
     private static void maximize(Dockable dockable, DockingPort rootPort) {
         DockingPort originalPort = dockable.getDockingPort();
         MaximizedState state = new MaximizedState(dockable, originalPort);

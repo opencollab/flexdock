@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,7 +35,7 @@ import org.flexdock.docking.state.LayoutNode;
  * {@code DockingManager} for placing {@code Dockable} instances within a
  * container. A {@code DockingPort} is the parent container inside of which
  * {@code Dockable} instances may be placed.
- * 
+ *
  * @author Chris Butler
  */
 public interface DockingPort extends DockingListener, DockingMonitor {
@@ -101,7 +101,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
 
     /**
      * Sets the persistent ID String to be returned by {@code getPersistentId()}.
-     * 
+     *
      * @param id
      *            the persistent ID to be applied.
      * @see #getPersistentId()
@@ -127,7 +127,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * including {@code CENTER_REGION}, {@code NORTH_REGION},
      * {@code SOUTH_REGION}, {@code EAST_REGION}, {@code WEST_REGION}, or
      * {@code UNKNOWN_REGION}.
-     * 
+     *
      * @return the region containing the specified {@code Point}.
      */
     String getRegion(Point p);
@@ -136,7 +136,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * Returns the value of the property with the specified key. Only properties
      * added with {@code putClientProperty} will return a non-{@code null}
      * value.
-     * 
+     *
      * @param key
      *            the being queried
      * @return the value of this property or {@code null}
@@ -147,7 +147,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
     /**
      * Adds an arbitrary key/value "client property" to this {@code DockingPort}.
      * {@code null} values are allowed.
-     * 
+     *
      * @see javax.swing.JComponent#putClientProperty(java.lang.Object,
      *      java.lang.Object)
      */
@@ -165,7 +165,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * {@code org.flexdock.docking.props.PropertyManager}. Developers are
      * encouraged to take advantage of this by calling
      * {@code PropertyManager.getDockingPortPropertySet(this)}.
-     * 
+     *
      * @return the {@code DockingPortPropertySet} associated with this
      *         {@code DockingPort} This method may not return a {@code null}
      *         reference.
@@ -177,7 +177,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
     /**
      * Returns the {@code DockingStrategy} instance used by this
      * {@code DockingPort} for docking operations.
-     * 
+     *
      * @see DockingStrategy
      */
     DockingStrategy getDockingStrategy();
@@ -185,7 +185,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
     /**
      * Returns a {@code Set} of all {@code Dockables} presently contained by
      * this {@code DockingPort}.
-     * 
+     *
      * @return a {@code Set} of {@code Dockables} contained by this
      *         {@code DockingPort}. If the {@code DockingPort} contians no
      *         {@code Dockables}, and empty {@code Set} is returned. This
@@ -212,7 +212,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * {@code DockingPort} is reponsible for constructing a valid
      * {@code Dockable} component layout based upon the metadata contained
      * within the supplied {@code LayoutNode}
-     * 
+     *
      * @param node
      *            the {@code LayoutNode} describing the layout to construct
      * @see org.flexdock.docking.state.LayoutNode
@@ -227,7 +227,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * {@code importLayout()} on the same {@code DockingPort} should construct a
      * visual component layout identical to that which currently exists in this
      * {@code DockingPort}
-     * 
+     *
      * @return a {@code LayoutNode} representing the current layout state within
      *         this {@code DockingPort}
      * @see org.flexdock.docking.state.LayoutNode
@@ -249,7 +249,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * {@code DockingPort} is expected to internally store enough information to
      * restore its current state after a subsequent call to
      * {@link #returnFromMaximization()}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} that is requested to be maximized
      * @see DockingManager#toggleMaximized(Component)
@@ -264,7 +264,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * its original state inside this {@code DockingPort}. This method is
      * called by {@code DockingManager} in the course of restoring a maximized
      * {@code Dockable}. Client code should not call this method directly.
-     * 
+     *
      * @see DockingManager#toggleMaximized(Component)
      * @see DockingManager#toggleMaximized(Dockable)
      */
@@ -281,7 +281,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * resources. Also, this {@code DockingPort} is expected to internally store
      * enough information to restore its current state after a subsequent call
      * to {@link #uninstallMaximizedDockable()}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} that is requested to be maximized
      * @see DockingManager#toggleMaximized(Component)
@@ -301,7 +301,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * <p>
      * This {@code DockingPort} is expected to remove the maximized dockable's
      * component from its swing container hierarchy.
-     * 
+     *
      * @see DockingManager#toggleMaximized(Component)
      * @see DockingManager#toggleMaximized(Dockable)
      */

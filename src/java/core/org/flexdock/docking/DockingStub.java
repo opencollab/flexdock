@@ -14,7 +14,7 @@ public interface DockingStub {
      * Returns the {@code Component} that is the event source for drag
      * operations. The component may or may not be the same as the Component
      * returned by {@code getFrameDragSource()}.
-     * 
+     *
      * @see #getFrameDragSource()
      */
     Component getDragSource();
@@ -29,7 +29,7 @@ public interface DockingStub {
      * one returned by {@code getDragSource()} is the same, then then "frame
      * reposition" behavior will supercede any "drag-to-dock" behavior while
      * this stub is in a floating state.
-     * 
+     *
      * @see #getDragSource()
      */
     Component getFrameDragSource();
@@ -52,7 +52,7 @@ public interface DockingStub {
 
     /**
      * Gets the tab text for this class.
-     * 
+     *
      * @return the text placed in a {@code JTabbedPane} tab.
      * @see javax.swing.JTabbedPane
      */

@@ -23,7 +23,7 @@ public class DemoUtility {
 
     /**
      * Opens a JOptionPane with the error message and formatted stack trace of the throwable in a scrollable text area.
-     * 
+     *
      * @param c
      *            optional argument for parent component to open modal error
      *            dialog relative to
@@ -33,7 +33,7 @@ public class DemoUtility {
      *            the throwable that's being reported, must be non-null
      */
     public static void showErrorDialog(Component c, String error_message,
-            Throwable t) {
+                                       Throwable t) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
         pw.println(error_message);
@@ -44,6 +44,6 @@ public class DemoUtility {
         JTextArea ta = new JTextArea(sw.toString(), 15, 60);
         JScrollPane sp = new JScrollPane(ta);
         JOptionPane.showMessageDialog(c, sp, error_message,
-                JOptionPane.ERROR_MESSAGE);
+                                      JOptionPane.ERROR_MESSAGE);
     }
 }

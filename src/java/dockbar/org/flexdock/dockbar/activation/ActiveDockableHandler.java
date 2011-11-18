@@ -20,16 +20,16 @@ import org.flexdock.util.DockingUtility;
  */
 public class ActiveDockableHandler extends DockbarListener.Stub {
 
-	public void dockableLocked(DockbarEvent evt) {
-	    Dockable d = (Dockable)evt.getSource();
-		if(d!=null)
-			ActiveDockableTracker.requestDockableActivation(d.getComponent());
-	}
-	
-	public void minimizeStarted(DockbarEvent evt) {
-	    Dockable d = (Dockable)evt.getSource();
-		// block minimization on floating views
-		if(d!=null && DockingUtility.isFloating(d))
-			evt.consume();
-	}
+    public void dockableLocked(DockbarEvent evt) {
+        Dockable d = (Dockable)evt.getSource();
+        if(d!=null)
+            ActiveDockableTracker.requestDockableActivation(d.getComponent());
+    }
+
+    public void minimizeStarted(DockbarEvent evt) {
+        Dockable d = (Dockable)evt.getSource();
+        // block minimization on floating views
+        if(d!=null && DockingUtility.isFloating(d))
+            evt.consume();
+    }
 }

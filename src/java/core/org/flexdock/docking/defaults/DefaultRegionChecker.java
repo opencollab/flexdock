@@ -50,7 +50,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * distance, then EAST or WEST takes precendence of NORTH or SOUTH. This
      * allows for proper determination between "northeast", "northwest",
      * "southeast", and "southwest" cases.
-     * 
+     *
      * @param comp
      *            the {@code Component} whose region is to be examined.
      * @param point
@@ -154,7 +154,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * passing an argument of {@code DockingConstants.NORTH_REGION} for the
      * region parameter. If the specified {@code Component} is {@code null},
      * then a {@code null} reference is returned.
-     * 
+     *
      * @param c
      *            the {@code Component} whose north region is to be returned.
      * @return the bounds containing the north region of the specified
@@ -173,7 +173,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * passing an argument of {@code DockingConstants.SOUTH_REGION} for the
      * region parameter. If the specified {@code Component} is {@code null},
      * then a {@code null} reference is returned.
-     * 
+     *
      * @param c
      *            the {@code Component} whose south region is to be returned.
      * @return the bounds containing the north region of the specified
@@ -192,7 +192,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * passing an argument of {@code DockingConstants.EAST_REGION} for the
      * region parameter. If the specified {@code Component} is {@code null},
      * then a {@code null} reference is returned.
-     * 
+     *
      * @param c
      *            the {@code Component} whose east region is to be returned.
      * @return the bounds containing the north region of the specified
@@ -211,7 +211,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * passing an argument of {@code DockingConstants.WEST_REGION} for the
      * region parameter. If the specified {@code Component} is {@code null},
      * then a {@code null} reference is returned.
-     * 
+     *
      * @param c
      *            the {@code Component} whose west region is to be returned.
      * @return the bounds containing the north region of the specified
@@ -236,7 +236,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * {@code height} for north/south</i>) and returns a {@code Rectangle} with
      * the resulting dimension, spanning the {@code Component} edge for the
      * specified region.
-     * 
+     *
      * @param c
      *            the {@code Component} whose region bounds are to be returned.
      * @param region
@@ -269,7 +269,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * {@code height} for north/south</i>) and returns a {@code Rectangle} with
      * the resulting dimension, spanning the {@code Component} edge for the
      * specified region.
-     * 
+     *
      * @param c
      *            the {@code Component} whose sibling bounds are to be returned.
      * @param region
@@ -324,7 +324,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * can be resolved, or no value is specified in the {@code Dockable's}
      * associated {@code DockingProps} instance, then the default value of
      * {@code RegionChecker.DEFAULT_REGION_SIZE} is returned.
-     * 
+     *
      * @param c
      *            the {@code Component} whose region is to be examined.
      * @param region
@@ -358,7 +358,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * can be resolved, or no value is specified in the {@code Dockable's}
      * associated {@code DockingProps} instance, then the default value of
      * {@code RegionChecker.DEFAULT_SIBLING_SIZE} is returned.
-     * 
+     *
      * @param c
      *            the {@code Component} whose sibling size is to be examined.
      * @param region
@@ -375,7 +375,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
     }
 
     protected static float getDockingInset(Float value, float defaultVal,
-            float max, float min) {
+                                           float max, float min) {
         float f = value == null ? -1 : value.floatValue();
         if (f == -1)
             f = defaultVal;
@@ -395,7 +395,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * {@code RegionChecker.MIN_REGION_SIZE} is returned. If {@code size} is
      * greater than {@code RegionChecker.MAX_REGION_SIZE}, then
      * {@code RegionChecker.MAX_REGION_SIZE} is returned.
-     * 
+     *
      * @return a valid {@code size} value between
      *         {@code RegionChecker.MIN_REGION_SIZE} and
      *         {@code RegionChecker.MAX_REGION_SIZE}, inclusive.
@@ -412,7 +412,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * {@code RegionChecker.MIN_SIBILNG_SIZE} is returned. If {@code size} is
      * greater than {@code RegionChecker.MAX_SIBILNG_SIZE}, then
      * {@code RegionChecker.MAX_SIBILNG_SIZE} is returned.
-     * 
+     *
      * @return a valid {@code size} value between
      *         {@code RegionChecker.MIN_SIBILNG_SIZE} and
      *         {@code RegionChecker.MAX_SIBILNG_SIZE}, inclusive.
@@ -433,7 +433,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * of {@code RegionChecker.DEFAULT_REGION_SIZE} is returned. Otherwise, the
      * retrieved region preference is passed through
      * {@code validateRegionSize(float size)} and returned.
-     * 
+     *
      * @param d
      *            the {@code Dockable} whose region is to be checked
      * @param region
@@ -447,9 +447,9 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      */
     public static float getRegionPreference(Dockable d, String region) {
         Float inset = d == null ? null : d.getDockingProperties()
-                .getRegionInset(region);
+                      .getRegionInset(region);
         return getDockingInset(inset, DEFAULT_REGION_SIZE, MAX_REGION_SIZE,
-                MIN_REGION_SIZE);
+                               MIN_REGION_SIZE);
     }
 
     /**
@@ -465,7 +465,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * value of {@code RegionChecker.DEFAULT_SIBLING_SIZE} is returned.
      * Otherwise, the retrieved region preference is passed through
      * {@code validateSiblingSize(float size)} and returned.
-     * 
+     *
      * @param d
      *            the {@code Dockable} whose sibling size is to be checked
      * @param region
@@ -479,8 +479,8 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      */
     public static float getSiblingPreference(Dockable d, String region) {
         Float size = d == null ? null : d.getDockingProperties()
-                .getSiblingSize(region);
+                     .getSiblingSize(region);
         return getDockingInset(size, DockingManager.getDefaultSiblingSize(),
-                MAX_SIBILNG_SIZE, MIN_SIBILNG_SIZE);
+                               MAX_SIBILNG_SIZE, MIN_SIBILNG_SIZE);
     }
 }

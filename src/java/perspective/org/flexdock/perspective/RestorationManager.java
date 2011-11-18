@@ -31,66 +31,66 @@ public class RestorationManager {
     private static final RestorationManager SINGLETON = new RestorationManager();
 
     private Vector restorationHandlers = new Vector();
-	
-	static {
-		getInstance().addHandler(new AlreadyRestoredHandler());
-		getInstance().addHandler(new FloatingHandler());
-		getInstance().addHandler(new MinimizedHandler());
-		getInstance().addHandler(new RelativeHandler());
-		getInstance().addHandler(new DockPathHandler());
-		getInstance().addHandler(new PointHandler());
-		getInstance().addHandler(new UnknownStateHandler());
-	}
+
+    static {
+        getInstance().addHandler(new AlreadyRestoredHandler());
+        getInstance().addHandler(new FloatingHandler());
+        getInstance().addHandler(new MinimizedHandler());
+        getInstance().addHandler(new RelativeHandler());
+        getInstance().addHandler(new DockPathHandler());
+        getInstance().addHandler(new PointHandler());
+        getInstance().addHandler(new UnknownStateHandler());
+    }
 
     private RestorationManager() {
         //prevent instant..
     }
 
-	public static RestorationManager getInstance() {
-		return SINGLETON;
-	}
-	
-	public void addHandler(RestorationHandler handler) {
-		if(handler!=null) {
-			restorationHandlers.add(handler);
-			EventManager.dispatch(new RegistrationEvent(handler, this, true));
-		}
-	}
-	
-	public boolean removeHandler(RestorationHandler handler) {
-		boolean ret = false;
-		if(handler!=null) {
-			ret = restorationHandlers.remove(handler);
-			if(ret)
-				EventManager.dispatch(new RegistrationEvent(handler, this, false));
-		}
-		return ret;
-	}
-	
-	
-	public boolean restore(Dockable dockable) {
-		if(dockable != null) {
-    		DockingState info = PerspectiveManager.getInstance().getDockingState(dockable, true);
-    		HashMap context = new HashMap();
-    		for(Iterator it=restorationHandlers.iterator(); it.hasNext();) {
-    			RestorationHandler handler = (RestorationHandler)it.next();
-    			if(handler.restore(dockable, info, context))
-    				return true;
-    		}
-        }
-        
-		return false;
-	}
-	
-	public static RootWindow getRestoreWindow(Dockable dockable) {
-		// TODO: fix this code to keep track of the proper dialog owner
-		RootWindow[] windows = DockingManager.getDockingWindows();
-		return windows.length==0? null: windows[0];
-	}
+    public static RestorationManager getInstance() {
+        return SINGLETON;
+    }
 
-	public static Component getRestoreContainer(Dockable dockable) {
-		RootWindow window = getRestoreWindow(dockable);
-		return window==null? null: window.getRootContainer();
-	}
+    public void addHandler(RestorationHandler handler) {
+        if(handler!=null) {
+            restorationHandlers.add(handler);
+            EventManager.dispatch(new RegistrationEvent(handler, this, true));
+        }
+    }
+
+    public boolean removeHandler(RestorationHandler handler) {
+        boolean ret = false;
+        if(handler!=null) {
+            ret = restorationHandlers.remove(handler);
+            if(ret)
+                EventManager.dispatch(new RegistrationEvent(handler, this, false));
+        }
+        return ret;
+    }
+
+
+    public boolean restore(Dockable dockable) {
+        if(dockable != null) {
+            DockingState info = PerspectiveManager.getInstance().getDockingState(dockable, true);
+            HashMap context = new HashMap();
+            for(Iterator it=restorationHandlers.iterator(); it.hasNext();) {
+                RestorationHandler handler = (RestorationHandler)it.next();
+                if(handler.restore(dockable, info, context))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static RootWindow getRestoreWindow(Dockable dockable) {
+        // TODO: fix this code to keep track of the proper dialog owner
+        RootWindow[] windows = DockingManager.getDockingWindows();
+        return windows.length==0? null: windows[0];
+    }
+
+    public static Component getRestoreContainer(Dockable dockable) {
+        RootWindow window = getRestoreWindow(dockable);
+        return window==null? null: window.getRootContainer();
+    }
 
 }

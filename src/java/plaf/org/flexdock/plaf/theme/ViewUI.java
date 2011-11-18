@@ -13,24 +13,24 @@ import org.flexdock.plaf.FlexViewComponentUI;
  * @author Christopher Butler
  */
 public class ViewUI extends FlexViewComponentUI {
-	
-	public void installUI(JComponent c) {
-		super.installUI(c);
-	}
 
-	public void paint(Graphics g, JComponent c) {
-		super.paint(g, c);
-	}
+    public void installUI(JComponent c) {
+        super.installUI(c);
+    }
 
-	public void uninstallUI(JComponent c) {
-		super.uninstallUI(c);
-	}
+    public void paint(Graphics g, JComponent c) {
+        super.paint(g, c);
+    }
 
-	public void initializeCreationParameters() {
+    public void uninstallUI(JComponent c) {
+        super.uninstallUI(c);
+    }
 
-	}
-	
-	public String getPreferredTitlebarUI() {
-		return creationParameters.getString(UIFactory.TITLEBAR_KEY);
-	}
+    public void initializeCreationParameters() {
+
+    }
+
+    public String getPreferredTitlebarUI() {
+        return creationParameters.getString(UIFactory.TITLEBAR_KEY);
+    }
 }

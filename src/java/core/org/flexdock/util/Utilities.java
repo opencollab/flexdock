@@ -28,10 +28,10 @@ public class Utilities {
      */
     public static final boolean JAVA_1_5 = isJavaVersion("1.5");
 
-	/**
+    /**
      * A String representing the flexdock version. This constant is a string.
-	 */
-	public static final String VERSION = "0.5.4";
+     */
+    public static final String VERSION = "0.5.4";
 
     private Utilities() {
         // does nothing
@@ -42,7 +42,7 @@ public class Utilities {
      * method calls {@code Integer.parseInt(String s)} and returns the resulting
      * {@code int} value. If any {@code Exception} is thrown, this method
      * returns a value of {@code 0}.
-     * 
+     *
      * @param data
      *            a {@code String} containing the {@code int} representation to
      *            be parsed
@@ -59,7 +59,7 @@ public class Utilities {
      * method calls {@code Integer.parseInt(String s)} and returns the resulting
      * {@code int} value. If any {@code Exception} is thrown, this method
      * returns the value supplied by the {@code defaultValue} parameter.
-     * 
+     *
      * @param data
      *            a {@code String} containing the {@code int} representation to
      *            be parsed
@@ -85,7 +85,7 @@ public class Utilities {
      * {@code float} value. If any {@code Exception} is thrown by
      * {@code parseFloat}, this method returns the value supplied by the
      * {@code defaultValue} parameter.
-     * 
+     *
      * @param data
      *            a {@code String} containing the {@code float} representation
      *            to be parsed
@@ -111,7 +111,7 @@ public class Utilities {
      * contains only whitespace. Otherwise, returns {@code false}. The
      * whitespace check is performed by calling {@code trim()} and checking to
      * see if the trimmed string {@code length()} is zero.
-     * 
+     *
      * @param data
      *            the {@code String} to check for non-whitespace content
      * @return {@code true} if the specified {@code String} is {@code null} or
@@ -143,7 +143,7 @@ public class Utilities {
      * the value of {@code false} for {@code failSilent} will cause the stack
      * trace to be printed to the {@code System.err} and a {@code null}
      * reference will be returned.
-     * 
+     *
      * @param className
      *            the fully qualified name of the desired class.
      * @return an instance of the specified class
@@ -180,7 +180,7 @@ public class Utilities {
      * the value of {@code failSilent} is checked to determine whether the stack
      * stack trace should be printed to the {@code System.err}. A {@code null}
      * reference will be returned if any problems are encountered.
-     * 
+     *
      * @param className
      *            the fully qualified name of the desired class.
      * @param failSilent
@@ -226,7 +226,7 @@ public class Utilities {
      * for {@code failSilent} will ensure the stack stack trace is be printed to
      * the {@code System.err}. A {@code null} reference will be returned if any
      * problems are encountered.
-     * 
+     *
      * @param className
      *            the fully qualified name of the desired class.
      * @return an instance of the specified class
@@ -259,7 +259,7 @@ public class Utilities {
      * {@code failSilent} is checked to determine whether the stack stack trace
      * should be printed to the {@code System.err}. A {@code null} reference
      * will be returned if any problems are encountered.
-     * 
+     *
      * @param className
      *            the fully qualified name of the desired class.
      * @param failSilent
@@ -300,7 +300,7 @@ public class Utilities {
      * for {@code failSilent} will ensure the stack stack trace is be printed to
      * the {@code System.err}. A {@code null} reference will be returned if any
      * problems are encountered.
-     * 
+     *
      * @param className
      *            the fully qualified name of the desired class.
      * @param superType
@@ -341,7 +341,7 @@ public class Utilities {
      * {@code failSilent} is checked to determine whether the stack stack trace
      * should be printed to the {@code System.err}. A {@code null} reference
      * will be returned if any problems are encountered.
-     * 
+     *
      * @param className
      *            the fully qualified name of the desired class.
      * @param superType
@@ -357,7 +357,7 @@ public class Utilities {
      * @see Class#newInstance()
      */
     public static Object createInstance(String className, Class superType,
-            boolean failSilent) {
+                                        boolean failSilent) {
         if (className == null)
             return null;
 
@@ -365,7 +365,7 @@ public class Utilities {
             Class c = Class.forName(className);
             if (superType != null && !superType.isAssignableFrom(c))
                 throw new ClassCastException("'" + c.getName()
-                        + "' is not a type of " + superType + ".");
+                                             + "' is not a type of " + superType + ".");
             return c.newInstance();
         } catch (Throwable e) {
             if (!failSilent)
@@ -385,7 +385,7 @@ public class Utilities {
      * <p>
      * This method is the exact opposite of
      * {@code isChanged(Object oldObj, Object newObj)}.
-     * 
+     *
      * @param obj1
      *            the first {@code Object} to be checked for equality
      * @param obj2
@@ -410,7 +410,7 @@ public class Utilities {
      * <p>
      * This method is the exact opposite of
      * {@code isEqual(Object obj1, Object obj2)}.
-     * 
+     *
      * @param oldObj
      *            the first {@code Object} to be checked for inequality
      * @param newObj
@@ -436,7 +436,7 @@ public class Utilities {
      * property does not exist, or the value is inequal to "true", this method
      * returns {@code false}. This method returns {@code false} if the
      * specified {@code key} parameter is {@code null}.
-     * 
+     *
      * @param key
      *            the {@code System} property to test.
      * @return {@code true} if there is currently a {@code System} property with
@@ -461,7 +461,7 @@ public class Utilities {
      * returns with no action taken. If {@code value} is {@code null},
      * then this method calls {@code map.remove(key)}. Otherwise, this method
      * calls {@code map.put(key, value)}.
-     * 
+     *
      * @param map
      *            the {@code Map} whose contents is to be modified
      * @param key
@@ -514,7 +514,7 @@ public class Utilities {
      * operation is deemed relevant. <b>If call stack data is required within
      * the application for any thrown exceptions, then this method should not be
      * used.}
-     * 
+     *
      * @param obj
      *            the object for which the represented field's value is to be
      *            modified
@@ -579,7 +579,7 @@ public class Utilities {
      * {@code IllegalAccessException}. For wrapped {@code Throwables}, the
      * original cause can be accessed via {@code IllegalAccessException's}
      * {@code getCause()} method.
-     * 
+     *
      * @param obj
      *            the object from which the represented field's value is to be
      *            extracted
@@ -596,7 +596,7 @@ public class Utilities {
      * @see IllegalAccessException#getCause()
      */
     public static Object getValue(Object obj, String fieldName)
-            throws IllegalAccessException {
+    throws IllegalAccessException {
         if (obj == null || fieldName == null)
             return null;
 
@@ -627,7 +627,7 @@ public class Utilities {
      * method calls {@code Thread.sleep(long millis)}, catching any thrown
      * {@code InterruptedException} and printing a stack trace to the
      * {@code System.err}.
-     * 
+     *
      * @param millis
      *            the length of time to sleep in milliseconds.
      * @see Thread#sleep(long)

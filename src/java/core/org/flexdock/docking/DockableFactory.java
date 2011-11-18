@@ -11,7 +11,7 @@ import java.awt.Component;
  * has a single method, {@code getDockableComponent(String dockableId)},
  * responsible for returning {@code Component} instances, possibly creating and
  * registering {@code Dockables} in the process.
- * 
+ *
  * Implementations of this interface will be application-specific and may be
  * plugged into the {@code DockingManager} via the call
  * {@code DockingManager.setDockableFactory(myFactory)}. Throughout the
@@ -19,7 +19,7 @@ import java.awt.Component;
  * {@code DockingManager.getDockable(String id)} under the assumption that at
  * some point, the requested {@code Dockable} instance has been registered via
  * {@code DockingManager.registerDockable(Dockable dockable)}.
- * 
+ *
  * In the event that a {@code Dockable} with the specified ID has never been
  * formally registered, the {@code DockingManager} will check for a factory via
  * {@code DockingManager.getDockableFactory()}. If a factory is present, its
@@ -27,12 +27,12 @@ import java.awt.Component;
  * {@code Component} is returned from {@code getDockableComponent()}, the
  * DockingManager will attempt to register it as a {@code Dockable} and return
  * the {@code Dockable}.
- * 
+ *
  * {@code DockableFactory} implementations are especially useful for
  * applications with persisted layouts where the {@code Dockables} required
  * during a layout restoration may be constructed automatically on demand by the
  * framework.
- * 
+ *
  * @author Christopher Butler
  */
 public interface DockableFactory {
@@ -40,7 +40,7 @@ public interface DockableFactory {
     /**
      * Returns a {@code Component} for the specified Dockable ID, possibly
      * creating and registering a {@code Dockable} in the process.
-     * 
+     *
      * @param dockableId
      *            the ID for the requested dockable {@code Component}
      * @return the {@code Component} for the specified ID
@@ -50,7 +50,7 @@ public interface DockableFactory {
     /**
      * Returns a {@code Dockable} for the specified Dockable ID, possibly
      * creating and registering it in the process.
-     * 
+     *
      * @param dockableId
      *            the ID for the requested {@code Dockable}
      * @return the {@code Dockable} for the specified ID
@@ -64,7 +64,7 @@ public interface DockableFactory {
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code null}.
          */
         public Dockable getDockable(String dockableId) {
@@ -73,7 +73,7 @@ public interface DockableFactory {
 
         /**
          * {@inheritDoc}
-         * 
+         *
          * @return {@code null}.
          */
         public Component getDockableComponent(String dockableId) {

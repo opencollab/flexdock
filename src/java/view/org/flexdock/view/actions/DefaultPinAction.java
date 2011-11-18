@@ -19,30 +19,30 @@ import org.flexdock.view.model.ViewButtonModel;
  */
 public class DefaultPinAction extends ViewAction {
 
-	public DefaultPinAction() {
-		
-	}
-	
-	public void actionPerformed(View view, ActionEvent evt) {
-		boolean minimize = view.isMinimized()? false: true;
-		DockingManager.setMinimized(view, minimize);
-	}
+    public DefaultPinAction() {
 
-	public void updateState(View view, DockingState info, Button button) {
-		button.getModel().setSelected(info.isMinimized());
-	}
-	
-	public ButtonModel createButtonModel() {
-		return new PinButtonModel();
-	}
-	
-	private static class PinButtonModel extends ViewButtonModel {
-		public boolean isSelected() {
-			DockingState info = getDockingState();
-			if(info==null)
-				return super.isSelected();
-			return info.isMinimized();
-		}
-	}
-    
+    }
+
+    public void actionPerformed(View view, ActionEvent evt) {
+        boolean minimize = view.isMinimized()? false: true;
+        DockingManager.setMinimized(view, minimize);
+    }
+
+    public void updateState(View view, DockingState info, Button button) {
+        button.getModel().setSelected(info.isMinimized());
+    }
+
+    public ButtonModel createButtonModel() {
+        return new PinButtonModel();
+    }
+
+    private static class PinButtonModel extends ViewButtonModel {
+        public boolean isSelected() {
+            DockingState info = getDockingState();
+            if(info==null)
+                return super.isSelected();
+            return info.isMinimized();
+        }
+    }
+
 }

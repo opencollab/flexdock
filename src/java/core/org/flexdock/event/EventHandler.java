@@ -15,7 +15,7 @@ public abstract class EventHandler {
 
     /**
      * Tests a given event to determine if this handler can handle that event.
-     * 
+     *
      * @param evt
      *            the event to test.
      * @return {@code true} if this handler handles the event, {@code false}
@@ -26,7 +26,7 @@ public abstract class EventHandler {
     public abstract boolean acceptsListener(EventListener listener);
 
     public abstract void handleEvent(Event evt, EventListener listener,
-            int eventType);
+                                     int eventType);
 
     public void addListener(EventListener listener) {
         synchronized (globalListeners) {
@@ -47,7 +47,7 @@ public abstract class EventHandler {
      * {@code handleEvent(Event, EventListener, int)} for every registered
      * listener in the {@link #globalListeners} list. Then, it passes the event
      * to each of the target listeners passed in via {@code targets}.
-     * 
+     *
      * @param evt
      *            the event to process.
      * @param targets
@@ -75,7 +75,7 @@ public abstract class EventHandler {
         for (int i = 0; i < targets.length; i++) {
             // get the local event listeners
             EventListener[] targetListeners = targets[i] == null ? null
-                    : getListeners(targets[i]);
+                                              : getListeners(targets[i]);
             if (targetListeners == null)
                 continue;
 

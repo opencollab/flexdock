@@ -17,9 +17,9 @@ import org.flexdock.util.SwingUtility;
  * @author Claudio Romano
  */
 public class GradientPainter extends DefaultPainter {
-    
+
     public static final String GRAYSCALE = "grayscale";
-    
+
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         int mid = width / 2;
 
@@ -58,8 +58,8 @@ public class GradientPainter extends DefaultPainter {
         g2.setPaint(secondHalf);
         g2.fillRect(mid, 1, width, height - 2);
     }
-    
-    
+
+
     private boolean useGrayScale(JComponent titlebar) {
         return painterResource.getInt( GRAYSCALE) == 1;
     }

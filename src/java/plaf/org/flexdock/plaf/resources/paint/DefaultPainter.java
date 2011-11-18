@@ -15,7 +15,7 @@ import javax.swing.UIManager;
 public class DefaultPainter implements Painter {
     public static final Color DEFAULT_BG_COLOR = UIManager.getColor( "Panel.background");
     public static final Color DEFAULT_BG_COLOR_ACTIVE = UIManager.getColor( "InternalFrame.activeTitleBackground");
-    
+
     protected PainterResource painterResource;
 
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
@@ -29,11 +29,11 @@ public class DefaultPainter implements Painter {
     protected Color getBackgroundColor(boolean active) {
         return active ? getBackgroundColorActive() :  getBackgroundColorInactive();
     }
-    
+
     protected Color getBackgroundColorInactive() {
         return painterResource.getBgColor()==null ? DEFAULT_BG_COLOR : painterResource.getBgColor();
     }
-    
+
     protected Color getBackgroundColorActive( ) {
         return painterResource.getBgColorActive()==null ? DEFAULT_BG_COLOR_ACTIVE : painterResource.getBgColorActive();
     }

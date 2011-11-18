@@ -8,7 +8,7 @@ package org.flexdock.perspective.event;
  */
 public class RegistrationEvent extends org.flexdock.event.RegistrationEvent {
 
-	public RegistrationEvent(Object src, Object owner, boolean registered) {
-		super(src, owner, registered);
-	}
+    public RegistrationEvent(Object src, Object owner, boolean registered) {
+        super(src, owner, registered);
+    }
 }

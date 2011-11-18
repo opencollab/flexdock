@@ -1,19 +1,19 @@
-/* 
- * Copyright (c) 2005 FlexDock Development Team. All rights reserved. 
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of 
- * this software and associated documentation files (the "Software"), to deal in the 
+/*
+ * Copyright (c) 2005 FlexDock Development Team. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in the
  * Software without restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
  * to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all 
+ *
+ * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
  */
 package org.flexdock.perspective.persist.xml;
@@ -26,7 +26,7 @@ import org.w3c.dom.Element;
 
 /**
  * Created on 2005-06-23
- * 
+ *
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @version $Id: SplitNodeSerializer.java,v 1.9 2005-07-06 18:10:48 winnetou25 Exp $
  */
@@ -34,7 +34,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
 
     public Element serialize(Document document, Object object) {
         SplitNode splitNode = (SplitNode) object;
-        
+
         Element splitNodeElement = super.serialize(document, object);
 
         if (splitNode.getSiblingId() != null && !"".equals(splitNode.getSiblingId())) {
@@ -56,22 +56,22 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
     }
 
     public Object deserialize(Element element) {
-        
+
         SplitNode splitNode = (SplitNode) super.deserialize(element);
-        
+
         String siblingId = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_SIBLING_ID);
         String orientationString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_ORIENTATION);
         String regionString = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_REGION);
         String percentage = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_PERCENTAGE);
         String dockingRegion = element.getAttribute(PersistenceConstants.SPLIT_NODE_ATTRIBUTE_DOCKING_REGION);
-        
+
         int orientation = DockingConstants.UNINITIALIZED;
         if (orientationString.equals("vertical")) {
             orientation = DockingConstants.VERTICAL;
         } else if (orientationString.equals("horizontal")) {
             orientation = DockingConstants.HORIZONTAL;
         }
-        
+
         int region = DockingConstants.UNINITIALIZED;
         if (regionString.equals("top")) {
             region = DockingConstants.TOP;

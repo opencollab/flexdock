@@ -36,7 +36,7 @@ import org.flexdock.docking.event.DockingListener;
  * custom behavior to control floating support for individual docking operations
  * on an event-by-event basis. By default, the {@code FloatPolicyManager} has a
  * single {@code FloatPolicy} installed of type {@code DefaultFloatPolicy}.
- * 
+ *
  * @author Christopher Butler
  */
 public class FloatPolicyManager extends DockingListener.Stub {
@@ -45,7 +45,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
     /**
      * Key constant used within the drag context {@code Map} to indicate whether
      * floating is allowed for a given drag operation.
-     * 
+     *
      * @see DragManager#getDragContext(Dockable)
      */
     public static final String FLOATING_ALLOWED = "FloatPolicyManager.FLOATING_ALLOWED";
@@ -62,7 +62,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
 
     /**
      * Returns a singleton instance of the {@code FloatPolicyManager} class.
-     * 
+     *
      * @return a singleton instance of the {@code FloatPolicyManager} class.
      */
     public static FloatPolicyManager getInstance() {
@@ -90,7 +90,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * value for use throughout the drag operation to avoid successive
      * iterations through the entire installed {@code FloatPolicy} collection.
      * The {@code Map}-key used is {@code FLOATING_ALLOWED}.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} whose drag context is to be
      *            initialized for floating support
@@ -103,7 +103,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
         Map context = evt.getDragContext();
         Dockable d = evt.getDockable();
         Boolean allowed = isPolicyFloatingSupported(d) ? Boolean.TRUE
-                : Boolean.FALSE;
+                          : Boolean.FALSE;
         context.put(FLOATING_ALLOWED, allowed);
     }
 
@@ -134,7 +134,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * If this method completes without the {@code DockingEvent} being consumed,
      * then the docking operation will proceed and attempts to float will be
      * allowed.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to be examined for floating support
      * @see DockingEvent#isOverWindow()
@@ -177,7 +177,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * {@code isPolicyFloatingSupported(Dockable dockable)}, which iterates
      * through all installed {@code FloatPolicies} to determine whether floating
      * support is allowed.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose floating support is to be checked
      * @return {@code true} if floating is allowed for the specified
@@ -210,7 +210,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * within the internal collection returns {@code false} from its
      * {@code isFloatingAllowed(Dockable dockable)} method, this method returns
      * {@code false}. Otherwise, this method returns {@code true}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} whose floating support is to be checked
      * @return {@code true} if floating is allowed for the specified
@@ -234,7 +234,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * This {@code FloatPolicy} will now take part in framework determinations
      * as to whether floating should be supported during docking operations. If
      * {@code policy} is {@code null}, no action is taken.
-     * 
+     *
      * @param policy
      *            the {@code FloatPolicy} to add to the system
      * @see #removePolicy(FloatPolicy)
@@ -250,7 +250,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * determinations as to whether floating should be supported during docking
      * operations. If {@code policy} is {@code null} or was not previously
      * installed, no action is taken.
-     * 
+     *
      * @param policy
      *            the {@code FloatPolicy} to remove from the system
      * @see #addPolicy(FloatPolicy)
@@ -266,7 +266,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * the entire framework is turned off. If this method returns {@code true},
      * then floating support for individual docking operations is deferred to
      * the installed {@code FloatPolicies}.
-     * 
+     *
      * @return {@code true} if global floating support is enabled; {@code false}
      *         otherwise.
      * @see #setGlobalFloatingEnabled(boolean)
@@ -282,7 +282,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * {@code globalFloatingEnabled} is {@code true}, then floating support for
      * individual docking operations is deferred to the installed
      * {@code FloatPolicies}.
-     * 
+     *
      * @param globalFloatingEnabled
      *            {@code true} if global floating support is to be enabled;
      *            {@code false} otherwise.

@@ -1,19 +1,19 @@
-/* 
- * Copyright (c) 2005 FlexDock Development Team. All rights reserved. 
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy of 
- * this software and associated documentation files (the "Software"), to deal in the 
+/*
+ * Copyright (c) 2005 FlexDock Development Team. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in the
  * Software without restriction, including without limitation the rights to use,
  * copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
  * to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in all 
+ *
+ * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
  * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE.
  */
 package org.flexdock.perspective.persist.xml;
@@ -28,17 +28,17 @@ import org.w3c.dom.NodeList;
 
 /**
  * Created on 2005-06-27
- * 
+ *
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @version $Id: AbstractLayoutNodeSerializer.java,v 1.7 2005-07-06 18:10:49 winnetou25 Exp $
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
-    
+
     public Element serialize(Document document, Object object) {
         LayoutNode layoutNode = (LayoutNode) object;
-        
+
         Element layoutNodeElement = getElement(document, object);
-        
+
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
         int childCount = layoutNode.getChildCount();
         for (int i=0; i<childCount; i++) {
@@ -46,12 +46,12 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
             Element element = layoutNodeSerializer.serialize(document, childTreeNode);
             layoutNodeElement.appendChild(element);
         }
-        
+
         return layoutNodeElement;
     }
-    
+
     protected abstract Element getElement(Document document, Object o);
-    
+
     public Object deserialize(Element element) {
         LayoutNode layoutNode = createLayoutNode();
 
@@ -61,14 +61,14 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
             Node node = nodeList.item(i);
             if (node instanceof Element) {
                 Element childElement = (Element) node;
-                LayoutNode childLayoutNode = (LayoutNode) layoutNodeSerializer.deserialize(childElement);   
+                LayoutNode childLayoutNode = (LayoutNode) layoutNodeSerializer.deserialize(childElement);
                 layoutNode.add(childLayoutNode);
             }
         }
-        
+
         return layoutNode;
     }
-    
+
     protected abstract LayoutNode createLayoutNode();
-    
+
 }

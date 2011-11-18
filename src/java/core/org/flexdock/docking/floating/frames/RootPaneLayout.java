@@ -34,12 +34,12 @@ import javax.swing.JLayeredPane;
  * @author Christopher Butler
  */
 public class RootPaneLayout implements LayoutManager2, Serializable {
-	private RootPane pane;
+    private RootPane pane;
     // implement
 
-	RootPaneLayout(RootPane pane) {
-		this.pane = pane;
-	}
+    RootPaneLayout(RootPane pane) {
+        this.pane = pane;
+    }
     public Dimension preferredLayoutSize(Container parent) {
         Insets insets = pane.getInsets();
 
@@ -62,7 +62,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
         // done
 
         return new Dimension(preferredWidth + insets.left + insets.right,
-                preferredHeight + insets.top + insets.bottom);
+                             preferredHeight + insets.top + insets.bottom);
     }
 
 
@@ -85,27 +85,26 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
         // done
 
         return new Dimension(minimumWidth + insets.left + insets.right,
-                minimumHeight + insets.top + insets.bottom);
+                             minimumHeight + insets.top + insets.bottom);
     }
 
     public Dimension maximumLayoutSize(Container target) {
         Dimension rd, mbd;
         Insets i = pane.getInsets();
 
-           mbd = new Dimension(0, 0);
+        mbd = new Dimension(0, 0);
 
         Container contentPane = pane.getContentPane();
         if (contentPane != null) {
             rd = contentPane.getMaximumSize();
-        }
-        else {
+        } else {
             // This is silly, but should stop an overflow error
             rd = new Dimension(Integer.MAX_VALUE,
-                    Integer.MAX_VALUE - i.top - i.bottom - mbd.height - 1);
+                               Integer.MAX_VALUE - i.top - i.bottom - mbd.height - 1);
         }
 
         return new Dimension(Math.min(rd.width, mbd.width) + i.left + i.right,
-                rd.height + mbd.height + i.top + i.bottom);
+                             rd.height + mbd.height + i.top + i.bottom);
     }
 
     // layout engine...

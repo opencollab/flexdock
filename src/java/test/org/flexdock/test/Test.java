@@ -7,5 +7,5 @@ package org.flexdock.test;
  * @author Christopher Butler
  */
 public class Test {
-	// placeholder class for CVS
+    // placeholder class for CVS
 }

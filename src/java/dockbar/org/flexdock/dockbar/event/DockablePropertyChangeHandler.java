@@ -26,38 +26,37 @@ import org.flexdock.util.DockingUtility;
  * Window - Preferences - Java - Code Style - Code Templates
  */
 public class DockablePropertyChangeHandler implements PropertyChangeListener {
-    public static final DockablePropertyChangeHandler DEFAULT_INSTANCE = new DockablePropertyChangeHandler(); 
-    
+    public static final DockablePropertyChangeHandler DEFAULT_INSTANCE = new DockablePropertyChangeHandler();
+
     public void propertyChange(PropertyChangeEvent evt) {
         if(!(evt.getSource() instanceof Dockable))
             return;
-        
+
         Dockable dockable = (Dockable) evt.getSource();
         if(!DockingUtility.isMinimized(dockable))
             return;
-        
+
         String pName = evt.getPropertyName();
         DockbarLabel label = getDockbarLabel(dockable);
         if(label==null)
             return;
-        
+
         if (DockablePropertySet.TAB_ICON.equals(pName) || DockablePropertySet.DOCKBAR_ICON.equals(pName)) {
             Icon icon = dockable.getDockingProperties().getDockbarIcon();
             if(icon==null)
                 icon = dockable.getDockingProperties().getTabIcon();
             label.setIcon(icon);
-        }
-        else if(DockablePropertySet.DESCRIPTION.equals(pName)) {
+        } else if(DockablePropertySet.DESCRIPTION.equals(pName)) {
             label.setText(dockable.getDockingProperties().getDockableDesc());
         }
     }
-    
+
     private DockbarLabel getDockbarLabel(Dockable dockable) {
-        DockbarManager mgr = DockbarManager.getCurrent(); 
+        DockbarManager mgr = DockbarManager.getCurrent();
         Dockbar dockbar = mgr==null? null: mgr.getDockbar(dockable);
         return dockbar==null? null: dockbar.getLabel(dockable);
     }
-    
+
     public static class Factory extends PropertyChangeListenerFactory {
         public PropertyChangeListener getListener() {
             return DEFAULT_INSTANCE;

@@ -22,66 +22,66 @@ import org.flexdock.view.View;
  * @author Christopher Butler
  */
 public class ViewFrameTest extends JFrame implements ActionListener, DockingConstants {
-	private DockingFrame dockingFrame;
-	
-	public static void main(String[] args) {
-		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		
-		JFrame f = new ViewFrameTest();
-		f.setBounds(100, 100, 100, 65);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);
-	}
-	
-	public ViewFrameTest() {
-		super("ViewFrame Demo");
+    private DockingFrame dockingFrame;
 
-		Container c = getContentPane();
-		c.setLayout(new FlowLayout());
-		
-		JButton b = new JButton("Float");
-		b.addActionListener(this);
-		c.add(b);
-		
-		dockingFrame = createDockingFrame();
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		if(!dockingFrame.isVisible()) {
-			dockingFrame.setSize(300, 300);
-			SwingUtility.centerOnScreen(dockingFrame);
-			dockingFrame.setVisible(true);
-		}
-	}
-	
-	private DockingFrame createDockingFrame() {
-		DockingFrame frame = new DockingFrame(this, "12345");
-		frame.addDockable(createView("solution.explorer", "Solution Explorer"));
-		frame.addDockable(createView("class.view", "Class View"));
-		return frame;
-	}
-	
-	private View createView(String id, String text) {
-		View view = new View(id, text);
-		view.addAction(createAction(CLOSE_ACTION, "Close"));
-		view.addAction(createAction(PIN_ACTION, "Pin"));
-		
-		JPanel p = new JPanel();
-		p.setBackground(Color.WHITE);
-		p.setBorder(new LineBorder(Color.GRAY, 1));
+    public static void main(String[] args) {
+        SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 
-		view.setContentPane(p);
-		return view;
-	}
-	
-	private Action createAction(String name, String tooltip) {
-		Action a = new AbstractAction() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		};
-		a.putValue(Action.NAME, name);
-		a.putValue(Action.SHORT_DESCRIPTION, tooltip);
-		return a;
-	}
+        JFrame f = new ViewFrameTest();
+        f.setBounds(100, 100, 100, 65);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
+
+    public ViewFrameTest() {
+        super("ViewFrame Demo");
+
+        Container c = getContentPane();
+        c.setLayout(new FlowLayout());
+
+        JButton b = new JButton("Float");
+        b.addActionListener(this);
+        c.add(b);
+
+        dockingFrame = createDockingFrame();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if(!dockingFrame.isVisible()) {
+            dockingFrame.setSize(300, 300);
+            SwingUtility.centerOnScreen(dockingFrame);
+            dockingFrame.setVisible(true);
+        }
+    }
+
+    private DockingFrame createDockingFrame() {
+        DockingFrame frame = new DockingFrame(this, "12345");
+        frame.addDockable(createView("solution.explorer", "Solution Explorer"));
+        frame.addDockable(createView("class.view", "Class View"));
+        return frame;
+    }
+
+    private View createView(String id, String text) {
+        View view = new View(id, text);
+        view.addAction(createAction(CLOSE_ACTION, "Close"));
+        view.addAction(createAction(PIN_ACTION, "Pin"));
+
+        JPanel p = new JPanel();
+        p.setBackground(Color.WHITE);
+        p.setBorder(new LineBorder(Color.GRAY, 1));
+
+        view.setContentPane(p);
+        return view;
+    }
+
+    private Action createAction(String name, String tooltip) {
+        Action a = new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+            }
+        };
+        a.putValue(Action.NAME, name);
+        a.putValue(Action.SHORT_DESCRIPTION, tooltip);
+        return a;
+    }
 
 }

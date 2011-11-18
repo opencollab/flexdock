@@ -10,6 +10,6 @@ import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
 
 public interface DragPreview extends DockingConstants {
-	public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo);
-	public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo);
+    public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo);
+    public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo);
 }

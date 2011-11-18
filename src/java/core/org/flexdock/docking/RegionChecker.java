@@ -12,14 +12,14 @@ import java.awt.Rectangle;
  * for a {@code Dockable} component. Implementing classes are responsible for
  * determining the bounds and proportional sizes for both docking regions and
  * sibling components.
- * 
+ *
  * As a {@code Dockable} is dragged across a {@code DockingPort} containing
  * another embedded {@code Dockable}, a determination must be made as to where
  * the dragged {@code Dockable} will be docked within the target
  * {@code DockingPort} based upon the current mouse position relative to
  * the embedded {@code Dockable} underneath the mouse. Classes that implement
  * this interface are responsible for making such determinations.
- * 
+ *
  * For example, if a {@code Dockable} is dragged over another {@code Dockable}
  * embedded within a {@code DockingPort}, and the current mouse position is
  * near the top edge of the embedded {@code Dockable}, the current
@@ -28,12 +28,12 @@ import java.awt.Rectangle;
  * {@code center} of the embedded {@code Dockable}. The visual
  * {@code DragPreview} displayed to the end user should reflect this
  * determination.
- * 
+ *
  * Once the docking operation is complete and the layout has been split between
  * both {@code Dockables}, the actual percentage of space allotted to the new
  * {@code Dockable} in the layout, referred to as the "sibling", is also
  * determined by the current {@code RegionChecker} implementation.
- * 
+ *
  * @author Christopher Butler
  * @author Mateusz Szczap
  */
@@ -72,7 +72,7 @@ public interface RegionChecker {
     /**
      * A key to find a system property that will override the default sibling
      * size in this interface.
-     * 
+     *
      * @see #DEFAULT_SIBLING_SIZE
      */
     String DEFAULT_SIBLING_SIZE_KEY = "default.sibling.size";
@@ -83,7 +83,7 @@ public interface RegionChecker {
      * values are those regions defined in {@code DockingConstants} and include
      * {@code CENTER_REGION}, {@code NORTH_REGION}, {@code SOUTH_REGION},
      * {@code EAST_REGION}, {@code WEST_REGION}, or {@code UNKNOWN_REGION}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose region is to be examined.
      * @param point
@@ -95,7 +95,7 @@ public interface RegionChecker {
     /**
      * Returns the rectangular bounds within the specified component that
      * represent it's {@code DockingConstants.NORTH_REGION}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose north region is to be returned.
      * @return the bounds containing the north region of the specified
@@ -106,7 +106,7 @@ public interface RegionChecker {
     /**
      * Returns the rectangular bounds within the specified component that
      * represent it's {@code DockingConstants.SOUTH_REGION}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose south region is to be returned.
      * @return the bounds containing the south region of the specified
@@ -117,7 +117,7 @@ public interface RegionChecker {
     /**
      * Returns the rectangular bounds within the specified component that
      * represent it's {@code DockingConstants.EAST_REGION}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose east region is to be returned.
      * @return the bounds containing the east region of the specified
@@ -128,7 +128,7 @@ public interface RegionChecker {
     /**
      * Returns the rectangular bounds within the specified component that
      * represent it's {@code DockingConstants.WEST_REGION}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose west region is to be returned.
      * @return the bounds containing the west region of the specified
@@ -143,7 +143,7 @@ public interface RegionChecker {
      * include {@code NORTH_REGION}, {@code SOUTH_REGION}, {@code EAST_REGION},
      * and {@code WEST_REGION}. All other region values should result in this
      * method returning a {@code null} reference.
-     * 
+     *
      * @param component
      *            the {@code Component} whose region bounds are to be returned.
      * @param region
@@ -163,7 +163,7 @@ public interface RegionChecker {
      * include {@code NORTH_REGION}, {@code SOUTH_REGION}, {@code EAST_REGION},
      * and {@code WEST_REGION}. All other region values should result in this
      * method returning the constant {@code DEFAULT_SIBLING_SIZE}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose region is to be examined.
      * @param region
@@ -187,7 +187,7 @@ public interface RegionChecker {
      * {@code SOUTH_REGION}, {@code EAST_REGION}, and {@code WEST_REGION}.
      * All other region values should result in this method returning the
      * constant {@code DEFAULT_SIBLING_SIZE}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose sibling bounds are to be returned.
      * @param region
@@ -212,7 +212,7 @@ public interface RegionChecker {
      * {@code SOUTH_REGION}, {@code EAST_REGION}, and {@code WEST_REGION}.
      * All other region values should result in this method returning the
      * constant {@code DEFAULT_SIBLING_SIZE}.
-     * 
+     *
      * @param component
      *            the {@code Component} whose sibling proportions are to be
      *            returned.

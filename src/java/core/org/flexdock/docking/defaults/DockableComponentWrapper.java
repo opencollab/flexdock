@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -70,7 +70,7 @@ import org.flexdock.util.Utilities;
  * {@code DockingManager.registerDockable(Component evtSrc, String desc)} will
  * automatically create a {@code DockableComponentWrapper} instance and register
  * the required drag listeners.
- * 
+ *
  * @author Chris Butler
  */
 public class DockableComponentWrapper implements Dockable {
@@ -103,7 +103,7 @@ public class DockableComponentWrapper implements Dockable {
      * {@code desc} may be used by the {@code Dockable} for descriptive purposes
      * (such as tab-text in a tabbed layout). It is not recommended to supply a
      * {@code null} value for {@code desc}, but doing so is not illegal.
-     * 
+     *
      * @param src
      *            the source component
      * @param id
@@ -129,7 +129,7 @@ public class DockableComponentWrapper implements Dockable {
             return null;
 
         return create((Component) stub, stub.getPersistentId(), stub
-                .getTabText());
+                      .getTabText());
     }
 
     public static DockableComponentWrapper create(DockingAdapter adapter) {
@@ -218,7 +218,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * Returns the {@code Component} used to create this
      * {@code DockableComponentWrapper} instance.
-     * 
+     *
      * @return the {@code Component} used to create this
      *         {@code DockableComponentWrapper} instance.
      * @see Dockable#getComponent()
@@ -232,7 +232,7 @@ public class DockableComponentWrapper implements Dockable {
      * Returns a {@code List} of {@code Components} used to initiate
      * drag-to-dock operation. By default, the returned {@code List} contains
      * the {@code Component} returned by {@code getComponent()}.
-     * 
+     *
      * @return a {@code List} of {@code Components} used to initiate
      *         drag-to-dock operation.
      * @see Dockable#getDragSources()
@@ -246,7 +246,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * Returns the persistent ID of this {@code DockableComponentWrapper}
      * instance provided when this object was instantiated.
-     * 
+     *
      * @return the persistent ID of this {@code DockableComponentWrapper}
      * @see Dockable#getPersistentId()
      * @see #create(Component, String, String)
@@ -261,7 +261,7 @@ public class DockableComponentWrapper implements Dockable {
      * external dialog. The {@code HashSet} returned by this method is initially
      * empty. Because it is mutable, however, new {@code Components} may be
      * added to it.
-     * 
+     *
      * @return a {@code HashSet} of {@code Components} used as frame drag
      *         sources when this {@code Dockable} is floating in a non-decorated
      *         external dialog.
@@ -276,7 +276,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * Adds a {@code DockingListener} to observe docking events for this
      * {@code Dockable}. {@code null} arguments are ignored.
-     * 
+     *
      * @param listener
      *            the {@code DockingListener} to add to this {@code Dockable}.
      * @see #getDockingListeners()
@@ -291,7 +291,7 @@ public class DockableComponentWrapper implements Dockable {
      * Returns an array of all {@code DockingListeners} added to this
      * {@code Dockable}. If there are no listeners present for this
      * {@code Dockable}, then a zero-length array is returned.
-     * 
+     *
      * @return an array of all {@code DockingListeners} added to this
      *         {@code Dockable}.
      * @see #addDockingListener(DockingListener)
@@ -299,7 +299,7 @@ public class DockableComponentWrapper implements Dockable {
      */
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
-                .toArray(new DockingListener[0]);
+               .toArray(new DockingListener[0]);
     }
 
     /**
@@ -307,7 +307,7 @@ public class DockableComponentWrapper implements Dockable {
      * If the specified {@code DockingListener} is {@code null}, or the
      * listener has not previously been added to this {@code Dockable}, then no
      * {@code Exception} is thrown and no action is taken.
-     * 
+     *
      * @param listener
      *            the {@code DockingListener} to remove from this
      *            {@code Dockable}
@@ -322,7 +322,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingCanceled(DockingEvent)
@@ -333,7 +333,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingComplete(DockingEvent)
@@ -344,7 +344,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingComplete(DockingEvent)
@@ -355,7 +355,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingStarted(DockingEvent)
@@ -366,7 +366,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dragStarted(DockingEvent)
@@ -377,7 +377,7 @@ public class DockableComponentWrapper implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dropStarted(DockingEvent)
@@ -396,7 +396,7 @@ public class DockableComponentWrapper implements Dockable {
      * {@code JComponent's} {@code getClientProperty(Object, Object)} method.
      * Otherwise, this {@code DockableComponentWrapper} will provide its own
      * internal mapping of client properties.
-     * 
+     *
      * @param key
      *            the key that is being queried
      * @return the value of this property or {@code null}
@@ -424,7 +424,7 @@ public class DockableComponentWrapper implements Dockable {
      * {@code JComponent's} {@code putClientProperty(Object, Object)} method.
      * Otherwise, this {@code DockableComponentWrapper} will provide its own
      * internal mapping of client properties.
-     * 
+     *
      * @param key
      *            the new client property key
      * @param value
@@ -453,7 +453,7 @@ public class DockableComponentWrapper implements Dockable {
      * {@code getDockablePropertySet(Dockable dockable)} on
      * {@code org.flexdock.docking.props.PropertyManager} and supplying an
      * argument of {@code this}.
-     * 
+     *
      * @return the {@code DockablePropertySet} associated with this
      *         {@code Dockable}. This method will not return a {@code null}
      *         reference.
@@ -472,7 +472,7 @@ public class DockableComponentWrapper implements Dockable {
      * This method defers processing to
      * {@code getDockingPort(Dockable dockable)}, passing an argument of
      * {@code this}.
-     * 
+     *
      * @return the {@code DockingPort} within which this {@code Dockable} is
      *         currently docked.
      * @see Dockable#getDockingPort()
@@ -487,7 +487,7 @@ public class DockableComponentWrapper implements Dockable {
      * {@code dock(Dockable dockable)} by calling and returning
      * {@code DockingManager.dock(Dockable dockable, Dockable parent)}.
      * {@code 'this'} is passed as the {@code parent} parameter.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @return {@code true} if the docking operation was successful;
@@ -505,7 +505,7 @@ public class DockableComponentWrapper implements Dockable {
      * returning
      * {@code DockingManager.dock(Dockable dockable, Dockable parent, String region)}.
      * {@code 'this'} is passed as the {@code parent} parameter.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @param relativeRegion
@@ -526,7 +526,7 @@ public class DockableComponentWrapper implements Dockable {
      * calling and returning
      * {@code DockingManager.dock(Dockable dockable, Dockable parent, String region, float proportion)}.
      * {@code 'this'} is passed as the {@code parent} parameter.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @param relativeRegion

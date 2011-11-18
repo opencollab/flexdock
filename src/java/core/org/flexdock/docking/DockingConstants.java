@@ -8,7 +8,7 @@ import javax.swing.SwingConstants;
 
 /**
  * A collection of constants used by flexdock.
- * 
+ *
  * @author Christopher Butler
  */
 public interface DockingConstants {
@@ -37,7 +37,7 @@ public interface DockingConstants {
 
     /**
      * The property name for handling window activation changes.
-     * 
+     *
      * @see java.beans.PropertyChangeListener
      * @see Dockable#addPropertyChangeListener(java.beans.PropertyChangeListener)
      */
@@ -50,7 +50,7 @@ public interface DockingConstants {
      * title bars to enable the pinning/unpinning effect. This is also used as
      * the name for the property when a {@code Dockable} has been
      * pinned/unpinned.
-     * 
+     *
      * @see java.beans.PropertyChangeListener
      * @see Dockable#addPropertyChangeListener(java.beans.PropertyChangeListener)
      * @see org.flexdock.view.Titlebar
@@ -60,35 +60,35 @@ public interface DockingConstants {
     /**
      * A constant representing a "close" action. Such actions are added to title
      * bars to enable the close effect.
-     * 
+     *
      * @see org.flexdock.view.Titlebar
      */
     String CLOSE_ACTION = "close";
 
     /**
      * Box-orientation constant used to specify the top of a box.
-     * 
+     *
      * @see SwingConstants#TOP
      */
     int TOP = SwingConstants.TOP;
 
     /**
      * Box-orientation constant used to specify the left side of a box.
-     * 
+     *
      * @see SwingConstants#LEFT
      */
     int LEFT = SwingConstants.LEFT;
 
     /**
      * Box-orientation constant used to specify the bottom of a box.
-     * 
+     *
      * @see SwingConstants#BOTTOM
      */
     int BOTTOM = SwingConstants.BOTTOM;
 
     /**
      * Box-orientation constant used to specify the right side of a box.
-     * 
+     *
      * @see SwingConstants#RIGHT
      */
     int RIGHT = SwingConstants.RIGHT;
@@ -96,7 +96,7 @@ public interface DockingConstants {
     /**
      * The central position in an area. Used for both compass-direction
      * constants (NORTH, etc.).
-     * 
+     *
      * @see SwingConstants#CENTER
      */
     int CENTER = SwingConstants.CENTER;
@@ -105,7 +105,7 @@ public interface DockingConstants {
      * Horizontal split indicates the {@code Component}s are split along the x
      * axis. For example the two {@code Component}s will be split one to the
      * left of the other.
-     * 
+     *
      * @see JSplitPane#HORIZONTAL_SPLIT
      */
     int HORIZONTAL = JSplitPane.HORIZONTAL_SPLIT;
@@ -114,7 +114,7 @@ public interface DockingConstants {
      * Vertical split indicates the {@code Component}s are split along the y
      * axis. For example the two {@code Component}s will be split one on top of
      * the other.
-     * 
+     *
      * @see JSplitPane#VERTICAL_SPLIT
      */
     int VERTICAL = JSplitPane.VERTICAL_SPLIT;
@@ -122,7 +122,7 @@ public interface DockingConstants {
     /**
      * A constant representing the "region" property used when a
      * {@code Dockable} region has been changed.
-     * 
+     *
      * @see java.beans.PropertyChangeListener
      * @see Dockable#addPropertyChangeListener(java.beans.PropertyChangeListener)
      */
@@ -130,35 +130,35 @@ public interface DockingConstants {
 
     /**
      * The central region. The regional equivalent for {@linkplain #CENTER}.
-     * 
+     *
      * @see #CENTER
      */
     String CENTER_REGION = "CENTER";
 
     /**
      * The east region. The regional equivalent for {@linkplain #RIGHT}.
-     * 
+     *
      * @see #RIGHT
      */
     String EAST_REGION = "EAST";
 
     /**
      * The north region. The regional equivalent for {@linkplain #TOP}.
-     * 
+     *
      * @see #TOP
      */
     String NORTH_REGION = "NORTH";
 
     /**
      * The south region. The regional equivalent for {@linkplain #BOTTOM}.
-     * 
+     *
      * @see #BOTTOM
      */
     String SOUTH_REGION = "SOUTH";
 
     /**
      * The west region. The regional equivalent for {@linkplain #LEFT}.
-     * 
+     *
      * @see #LEFT
      */
     String WEST_REGION = "WEST";

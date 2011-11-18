@@ -62,7 +62,7 @@ public class ViewTest implements DockingConstants {
     private void configureUI() {
         //UIManager.installLookAndFeel( "Skin LookAndFeel", SkinLookAndFeel.class.getName());
         //UIManager.installLookAndFeel( "Plastic XP LookAndFeel", PlasticXPLookAndFeel.class.getName());
-        
+
         SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     }
 
@@ -80,24 +80,24 @@ public class ViewTest implements DockingConstants {
         JPanel content = new JPanel(new BorderLayout());
         content.setBorder(new EmptyBorder(20, 20, 20, 20));
         content.setPreferredSize(new Dimension(800, 600));
-		
-		Viewport viewport = new Viewport();
-		content.add(viewport, BorderLayout.CENTER);
-		
-		View view1 = buildView("themeinfo.view", "Theme Info", buildThemeInfoPane());
-		View view2 = buildView("plafchooser.view", "Plaf Chooser", buidViewContentPane());
 
-		viewport.dock(view2);
-		view2.dock( view1, EAST_REGION, .2f);
-		
+        Viewport viewport = new Viewport();
+        content.add(viewport, BorderLayout.CENTER);
+
+        View view1 = buildView("themeinfo.view", "Theme Info", buildThemeInfoPane());
+        View view2 = buildView("plafchooser.view", "Plaf Chooser", buidViewContentPane());
+
+        viewport.dock(view2);
+        view2.dock( view1, EAST_REGION, .2f);
+
         return content;
     }
 
     private View buildView(String id, String name, JComponent component) {
         View view = new View(id, name);
-		view.setIcon("org/flexdock/demos/view/titlebar/msvs001.png");
-		view.addAction(new EmptyAction(CLOSE_ACTION));
-		view.addAction(new EmptyAction(PIN_ACTION));
+        view.setIcon("org/flexdock/demos/view/titlebar/msvs001.png");
+        view.addAction(new EmptyAction(CLOSE_ACTION));
+        view.addAction(new EmptyAction(PIN_ACTION));
         view.setContentPane(component);
 
         return view;
@@ -108,13 +108,13 @@ public class ViewTest implements DockingConstants {
         JMenu menu;
         JMenuBar menuBar = new JMenuBar();
         menu = new JMenu("Available LookAndFeel's");
-        
+
         LookAndFeelInfo[] lfInfos = UIManager.getInstalledLookAndFeels();
         for (int i = 0; i < lfInfos.length; i++) {
             menu.add(new JMenuItem(new ChangeLookAndFeelAction(lfInfos[i])));
         }
         menuBar.add(menu);
-        
+
         return menuBar;
     }
 
@@ -126,7 +126,7 @@ public class ViewTest implements DockingConstants {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.add(new JButton(new ChangePlafAction()));
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
-        
+
         return contentPane;
     }
 
@@ -153,11 +153,11 @@ public class ViewTest implements DockingConstants {
 
     private JComponent createUIListComp(String name, JList uiList) {
         uiList.setSelectionMode( ListSelectionModel.SINGLE_SELECTION);
-        
+
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 1));
 
-        
+
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(Color.LIGHT_GRAY);
         header.setBorder( BorderFactory.createEmptyBorder(2,2,2,2));

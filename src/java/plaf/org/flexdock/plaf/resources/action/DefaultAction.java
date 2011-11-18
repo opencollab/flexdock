@@ -11,9 +11,9 @@ import javax.swing.AbstractAction;
  * @author Christopher Butler
  */
 public class DefaultAction extends AbstractAction {
-	public static final DefaultAction SINGLETON = new DefaultAction(); 
-	
-	public void actionPerformed(ActionEvent e) {
-		// noop
-	}
+    public static final DefaultAction SINGLETON = new DefaultAction();
+
+    public void actionPerformed(ActionEvent e) {
+        // noop
+    }
 }

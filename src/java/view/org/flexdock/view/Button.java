@@ -16,37 +16,36 @@ import org.flexdock.view.model.ViewButtonModel;
  */
 public class Button extends JToggleButton {
 
-  public static final String uiClassID = "Flexdock.titlebar.button";
-	
-	public Button(Action action) {
-		setAction(action);
-		setModel(new ViewButtonModel());
-	}
-	
-	public void setModel(ButtonModel newModel) {
-		ButtonModel oldModel = getModel();
-		if(newModel!=null && oldModel!=null)
-			newModel.setSelected(oldModel.isSelected());
-		super.setModel(newModel);
-	}
-	
-    public void updateUI() {             
+    public static final String uiClassID = "Flexdock.titlebar.button";
+
+    public Button(Action action) {
+        setAction(action);
+        setModel(new ViewButtonModel());
+    }
+
+    public void setModel(ButtonModel newModel) {
+        ButtonModel oldModel = getModel();
+        if(newModel!=null && oldModel!=null)
+            newModel.setSelected(oldModel.isSelected());
+        super.setModel(newModel);
+    }
+
+    public void updateUI() {
         setUI(PlafManager.getUI(this));
     }
 
-    public String getUIClassID()
-    {
-      return uiClassID;
+    public String getUIClassID() {
+        return uiClassID;
     }
-    
-	public View getView() {
-		return (View)SwingUtilities.getAncestorOfClass(View.class, this);
-	}
-	
-	public String getActionName() {
-		Action action = getAction();
-		if(action==null)
-			return null;
-		return (String)action.getValue(Action.NAME);
-	}
+
+    public View getView() {
+        return (View)SwingUtilities.getAncestorOfClass(View.class, this);
+    }
+
+    public String getActionName() {
+        Action action = getAction();
+        if(action==null)
+            return null;
+        return (String)action.getValue(Action.NAME);
+    }
 }

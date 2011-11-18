@@ -28,15 +28,15 @@ import org.flexdock.plaf.resources.paint.DefaultPainter;
 public class MetalPainter extends DefaultPainter {
 
     MetalBumps activeBumps = new MetalBumps( 0, 0,
-                      MetalLookAndFeel.getPrimaryControlHighlight(),
-                      MetalLookAndFeel.getPrimaryControlDarkShadow(),
-                      MetalLookAndFeel.getPrimaryControl() );
-    
+            MetalLookAndFeel.getPrimaryControlHighlight(),
+            MetalLookAndFeel.getPrimaryControlDarkShadow(),
+            MetalLookAndFeel.getPrimaryControl() );
+
     MetalBumps inactiveBumps = new MetalBumps( 0, 0,
-                      MetalLookAndFeel.getControlHighlight(),
-                      MetalLookAndFeel.getControlDarkShadow(),
-                      MetalLookAndFeel.getControl() );
-    
+            MetalLookAndFeel.getControlHighlight(),
+            MetalLookAndFeel.getControlDarkShadow(),
+            MetalLookAndFeel.getControl() );
+
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         MetalBumps bumbs = active ? activeBumps : inactiveBumps;
         bumbs.setBumpArea( width, height);
@@ -46,7 +46,7 @@ public class MetalPainter extends DefaultPainter {
 
 
 /**
- * 
+ *
  * @see javax.swing.plaf.metal.MetalBumbs
  */
 class MetalBumps implements Icon {
@@ -59,7 +59,7 @@ class MetalBumps implements Icon {
 
     protected static Vector buffers = new Vector();
     protected BumpBuffer buffer;
-    
+
     public MetalBumps( Dimension bumpArea ) {
         this( bumpArea.width, bumpArea.height );
     }
@@ -71,34 +71,34 @@ class MetalBumps implements Icon {
     }
 
     public MetalBumps( int width, int height,
-		       Color newTopColor, Color newShadowColor, Color newBackColor ) {
+                       Color newTopColor, Color newShadowColor, Color newBackColor ) {
         setBumpArea( width, height );
-	setBumpColors( newTopColor, newShadowColor, newBackColor );
+        setBumpColors( newTopColor, newShadowColor, newBackColor );
     }
 
     private BumpBuffer getBuffer(GraphicsConfiguration gc, Color aTopColor,
                                  Color aShadowColor, Color aBackColor) {
         if (buffer != null && buffer.hasSameConfiguration(
-                              gc, aTopColor, aShadowColor, aBackColor)) {
+                    gc, aTopColor, aShadowColor, aBackColor)) {
             return buffer;
         }
         BumpBuffer result = null;
 
         Enumeration elements = buffers.elements();
 
-	while ( elements.hasMoreElements() ) {
-	    BumpBuffer aBuffer = (BumpBuffer)elements.nextElement();
-	    if ( aBuffer.hasSameConfiguration(gc, aTopColor, aShadowColor,
+        while ( elements.hasMoreElements() ) {
+            BumpBuffer aBuffer = (BumpBuffer)elements.nextElement();
+            if ( aBuffer.hasSameConfiguration(gc, aTopColor, aShadowColor,
                                               aBackColor)) {
-	        result = aBuffer;
-		break;
-	    }
-	}
+                result = aBuffer;
+                break;
+            }
+        }
         if (result == null) {
             result = new BumpBuffer(gc, topColor, shadowColor, backColor);
             buffers.addElement(result);
         }
-	return result;
+        return result;
     }
 
     public void setBumpArea( Dimension bumpArea ) {
@@ -107,41 +107,41 @@ class MetalBumps implements Icon {
 
     public void setBumpArea( int width, int height ) {
         xBumps = width / 2;
-	yBumps = height / 2;
+        yBumps = height / 2;
     }
 
     public void setBumpColors( Color newTopColor, Color newShadowColor, Color newBackColor ) {
         topColor = newTopColor;
-	shadowColor = newShadowColor;
-	backColor = newBackColor;
+        shadowColor = newShadowColor;
+        backColor = newBackColor;
     }
 
     public void paintIcon( Component c, Graphics g, int x, int y ) {
         GraphicsConfiguration gc = (g instanceof Graphics2D) ?
-                                     (GraphicsConfiguration)((Graphics2D)g).
-                                     getDeviceConfiguration() : null;
+                                   (GraphicsConfiguration)((Graphics2D)g).
+                                   getDeviceConfiguration() : null;
 
         buffer = getBuffer(gc, topColor, shadowColor, backColor);
 
-	int bufferWidth = buffer.getImageSize().width;
-	int bufferHeight = buffer.getImageSize().height;
-	int iconWidth = getIconWidth();
-	int iconHeight = getIconHeight();
-	int x2 = x + iconWidth;
-	int y2 = y + iconHeight;
-	int savex = x;
+        int bufferWidth = buffer.getImageSize().width;
+        int bufferHeight = buffer.getImageSize().height;
+        int iconWidth = getIconWidth();
+        int iconHeight = getIconHeight();
+        int x2 = x + iconWidth;
+        int y2 = y + iconHeight;
+        int savex = x;
 
-	while (y < y2) {
-	    int h = Math.min(y2 - y, bufferHeight);
-	    for (x = savex; x < x2; x += bufferWidth) {
-		int w = Math.min(x2 - x, bufferWidth);
-		g.drawImage(buffer.getImage(),
-			    x, y, x+w, y+h,
-			    0, 0, w, h,
-			    null);
-	    }
-	    y += bufferHeight;
-	}
+        while (y < y2) {
+            int h = Math.min(y2 - y, bufferHeight);
+            for (x = savex; x < x2; x += bufferWidth) {
+                int w = Math.min(x2 - x, bufferWidth);
+                g.drawImage(buffer.getImage(),
+                            x, y, x+w, y+h,
+                            0, 0, w, h,
+                            null);
+            }
+            y += bufferHeight;
+        }
     }
 
     public int getIconWidth() {
@@ -168,9 +168,9 @@ class BumpBuffer {
     public BumpBuffer(GraphicsConfiguration gc, Color aTopColor,
                       Color aShadowColor, Color aBackColor) {
         this.gc = gc;
-	topColor = aTopColor;
-	shadowColor = aShadowColor;
-	backColor = aBackColor;
+        topColor = aTopColor;
+        shadowColor = aShadowColor;
+        backColor = aBackColor;
         createImage();
         fillBumpBuffer();
     }
@@ -182,13 +182,12 @@ class BumpBuffer {
             if (!this.gc.equals(gc)) {
                 return false;
             }
-        }
-        else if (gc != null) {
+        } else if (gc != null) {
             return false;
         }
-	return topColor.equals( aTopColor )       &&
-	       shadowColor.equals( aShadowColor ) &&
-	       backColor.equals( aBackColor );
+        return topColor.equals( aTopColor )       &&
+               shadowColor.equals( aShadowColor ) &&
+               backColor.equals( aBackColor );
     }
 
     /**
@@ -209,25 +208,25 @@ class BumpBuffer {
     private void fillBumpBuffer() {
         Graphics g = image.getGraphics();
 
-	g.setColor( backColor );
-	g.fillRect( 0, 0, IMAGE_SIZE, IMAGE_SIZE );
+        g.setColor( backColor );
+        g.fillRect( 0, 0, IMAGE_SIZE, IMAGE_SIZE );
 
-	g.setColor(topColor);
-	for (int x = 0; x < IMAGE_SIZE; x+=4) {
-	    for (int y = 0; y < IMAGE_SIZE; y+=4) {
-	        g.drawLine( x, y, x, y );
-		g.drawLine( x+2, y+2, x+2, y+2);
-	    }
-	}
+        g.setColor(topColor);
+        for (int x = 0; x < IMAGE_SIZE; x+=4) {
+            for (int y = 0; y < IMAGE_SIZE; y+=4) {
+                g.drawLine( x, y, x, y );
+                g.drawLine( x+2, y+2, x+2, y+2);
+            }
+        }
 
-	g.setColor(shadowColor);
-	for (int x = 0; x < IMAGE_SIZE; x+=4) {
-	    for (int y = 0; y < IMAGE_SIZE; y+=4) {
-	        g.drawLine( x+1, y+1, x+1, y+1 );
-		g.drawLine( x+3, y+3, x+3, y+3);
-	    }
-	}
-	g.dispose();
+        g.setColor(shadowColor);
+        for (int x = 0; x < IMAGE_SIZE; x+=4) {
+            for (int y = 0; y < IMAGE_SIZE; y+=4) {
+                g.drawLine( x+1, y+1, x+1, y+1 );
+                g.drawLine( x+3, y+3, x+3, y+3);
+            }
+        }
+        g.dispose();
     }
 
     /**
@@ -237,12 +236,12 @@ class BumpBuffer {
     private void createImage() {
         if (gc != null) {
             image = gc.createCompatibleImage(IMAGE_SIZE, IMAGE_SIZE);
-        }
-        else {
+        } else {
             int cmap[] = { backColor.getRGB(), topColor.getRGB(),
-                           shadowColor.getRGB() };
+                           shadowColor.getRGB()
+                         };
             IndexColorModel icm = new IndexColorModel(8, 3, cmap, 0, false, -1,
-                                                      DataBuffer.TYPE_BYTE);
+                    DataBuffer.TYPE_BYTE);
             image = new BufferedImage(IMAGE_SIZE, IMAGE_SIZE,
                                       BufferedImage.TYPE_BYTE_INDEXED, icm);
         }

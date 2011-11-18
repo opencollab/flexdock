@@ -24,79 +24,79 @@ import org.flexdock.view.Viewport;
  * @author Christopher Butler
  */
 public class ComplexDockbarTest extends JFrame implements DockingConstants {
-	public static void main(String[] args) {
-		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		//		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-		//		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				startup();
-			}
-		});
-	}
-	
-	private static void startup() {
-		JFrame f = new ComplexDockbarTest();
-		f.setSize(800, 600);
-		SwingUtility.centerOnScreen(f);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);		
-	}
+    public static void main(String[] args) {
+        SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        //		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        //		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                startup();
+            }
+        });
+    }
 
-	public ComplexDockbarTest() {
-		super("Viewport Demo");
-		setContentPane(createContentPane());
-	}
+    private static void startup() {
+        JFrame f = new ComplexDockbarTest();
+        f.setSize(800, 600);
+        SwingUtility.centerOnScreen(f);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
 
-	private JPanel createContentPane() {
-		JPanel p = new JPanel(new BorderLayout(0, 0));
-		p.setBorder(new EmptyBorder(5, 5, 5, 5));
+    public ComplexDockbarTest() {
+        super("Viewport Demo");
+        setContentPane(createContentPane());
+    }
 
-		Viewport viewport = new Viewport();
-		p.add(viewport, BorderLayout.CENTER);
+    private JPanel createContentPane() {
+        JPanel p = new JPanel(new BorderLayout(0, 0));
+        p.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		View startPage = createStartPage();
-		View view1 = createView("solution.explorer", "Solution Explorer");
-		View view2 = createView("task.list", "Task List");
-		View view3 = createView("class.view", "Class View");
-		View view4 = createView("message.log", "Message Log");
+        Viewport viewport = new Viewport();
+        p.add(viewport, BorderLayout.CENTER);
 
-		viewport.dock(startPage);
-		startPage.dock(view1, WEST_REGION, .3f);
-		startPage.dock(view2, SOUTH_REGION, .3f);
-		startPage.dock(view4, EAST_REGION, .3f);
-		view1.dock(view3, SOUTH_REGION, .3f);
+        View startPage = createStartPage();
+        View view1 = createView("solution.explorer", "Solution Explorer");
+        View view2 = createView("task.list", "Task List");
+        View view3 = createView("class.view", "Class View");
+        View view4 = createView("message.log", "Message Log");
 
-		return p;
-	}
+        viewport.dock(startPage);
+        startPage.dock(view1, WEST_REGION, .3f);
+        startPage.dock(view2, SOUTH_REGION, .3f);
+        startPage.dock(view4, EAST_REGION, .3f);
+        view1.dock(view3, SOUTH_REGION, .3f);
 
-	private View createView(String id, String text) {
-		View view = new View(id, text);
-		view.addAction(CLOSE_ACTION);
-		view.addAction(PIN_ACTION);
+        return p;
+    }
 
-		JPanel p = new JPanel();
-		//		p.setBackground(Color.WHITE);
-		p.setBorder(new LineBorder(Color.GRAY, 1));
+    private View createView(String id, String text) {
+        View view = new View(id, text);
+        view.addAction(CLOSE_ACTION);
+        view.addAction(PIN_ACTION);
 
-		JTextField t = new JTextField(text);
-		t.setPreferredSize(new Dimension(100, 20));
-		p.add(t);
+        JPanel p = new JPanel();
+        //		p.setBackground(Color.WHITE);
+        p.setBorder(new LineBorder(Color.GRAY, 1));
 
-		view.setContentPane(p);
-		return view;
-	}
+        JTextField t = new JTextField(text);
+        t.setPreferredSize(new Dimension(100, 20));
+        p.add(t);
 
-	private View createStartPage() {
-		String id = "startPage";
+        view.setContentPane(p);
+        return view;
+    }
 
-		VSNetStartPage page = new VSNetStartPage();
-		View view = new View(id, null, null);
-		view.setTerritoryBlocked(CENTER_REGION, true);
-		view.setTitlebar(null);
-		view.setContentPane(page);
+    private View createStartPage() {
+        String id = "startPage";
 
-		return view;
-	}
+        VSNetStartPage page = new VSNetStartPage();
+        View view = new View(id, null, null);
+        view.setTerritoryBlocked(CENTER_REGION, true);
+        view.setTitlebar(null);
+        view.setContentPane(page);
+
+        return view;
+    }
 
 }

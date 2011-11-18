@@ -13,9 +13,9 @@ import javax.swing.tree.MutableTreeNode;
 public interface LayoutNode extends MutableTreeNode, Cloneable, Serializable {
 
     Object getUserObject();
-	
+
     Object getDockingObject();
-	
+
     void add(MutableTreeNode child);
 
     Object clone();

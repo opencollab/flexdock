@@ -13,7 +13,7 @@ import org.w3c.dom.Document;
  * A factory for transforming {@code Component}s into a class that contains
  * information about the component that is necessary for treating the component
  * as a {@code Dockable}.
- * 
+ *
  * @author Christopher Butler
  * @author Karl Schaefer
  */
@@ -26,7 +26,7 @@ public class AdapterFactory {
 
     /**
      * A constant representing the relative URI to the default docking adapter.
-     * 
+     *
      * @deprecated Scope is likely to become more restrictive (protected or
      *             private).
      */
@@ -43,7 +43,7 @@ public class AdapterFactory {
 
     /**
      * Creates the {@code DockingAdapter} for the given {@code Component}.
-     * 
+     *
      * @param comp
      *            the component to create an adapter for.
      * @return a docking adapter, or {@code null} if {@code comp} is null.
@@ -78,7 +78,7 @@ public class AdapterFactory {
         if (document == null) {
             document = ResourceManager.getDocument(DEFAULT_ADAPTER_RESOURCE);
         }
-        
+
         if (document == null)
             //TODO this should probably throw a runtime exception
             return;

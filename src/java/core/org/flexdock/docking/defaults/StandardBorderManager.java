@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -39,7 +39,7 @@ import org.flexdock.docking.DockingPort;
  * interface. It is designed to avoid the negative visual effects caused by
  * nesting docked components that have individual borders. It accomplishes this
  * by establishing and maintaining a single border for all docked components
- * 
+ *
  * This class encapsulates a {@code javax.swing.border.Border} instance, or a
  * {@code null} border reference, for application to a
  * {@code DefaultDockingPort} and its child components. If the
@@ -60,7 +60,7 @@ import org.flexdock.docking.DockingPort;
  * This method removes all borders from the {@code DefaultDockingPort} and the
  * split pane divider and applies the encapsulated border to both left and right
  * child components of the {@code JSplitPane}.
- * 
+ *
  * @author Christopher Butler
  */
 public class StandardBorderManager implements BorderManager {
@@ -76,7 +76,7 @@ public class StandardBorderManager implements BorderManager {
     /**
      * Creates a new {@code StandardBorderManager} with the specified assigned
      * border.
-     * 
+     *
      * @param border
      *            the currently assigned border.
      */
@@ -86,7 +86,7 @@ public class StandardBorderManager implements BorderManager {
 
     /**
      * Returns the currently assigned border.
-     * 
+     *
      * @return the currently assigned border.
      */
     public Border getBorder() {
@@ -95,7 +95,7 @@ public class StandardBorderManager implements BorderManager {
 
     /**
      * Sets the assigned border. Null values are acceptable.
-     * 
+     *
      * @param border
      *            the assigned border.
      */
@@ -106,7 +106,7 @@ public class StandardBorderManager implements BorderManager {
     /**
      * Set the border on the supplied {@code DockingPort} to the currently
      * assigned border.
-     * 
+     *
      * @see BorderManager#managePortNullChild(DockingPort)
      */
     public void managePortNullChild(DockingPort port) {
@@ -117,7 +117,7 @@ public class StandardBorderManager implements BorderManager {
      * Removes any border from the {@code DockingPort's} docked component and
      * set the border on the {@code DockingPort} itself to the currently
      * assigned border.
-     * 
+     *
      * @see BorderManager#managePortSimpleChild(DockingPort)
      */
     public void managePortSimpleChild(DockingPort port) {
@@ -131,7 +131,7 @@ public class StandardBorderManager implements BorderManager {
      * Removes any border from the {@code DockingPort} itself and places the
      * currently assigned border on the two child components of the
      * {@code DockingPort's</code JSplitPane} child.
-     * 
+     *
      * @see BorderManager#managePortSplitChild(DockingPort)
      */
     public void managePortSplitChild(DockingPort port) {
@@ -145,7 +145,7 @@ public class StandardBorderManager implements BorderManager {
         if (split.getUI() instanceof BasicSplitPaneUI) {
             // grab the divider from the UI and remove the border from it
             BasicSplitPaneDivider divider = ((BasicSplitPaneUI) split.getUI())
-                    .getDivider();
+                                            .getDivider();
             if (divider != null && divider.getBorder() != null)
                 divider.setBorder(null);
         }
@@ -167,7 +167,7 @@ public class StandardBorderManager implements BorderManager {
      * Removes any border from the {@code DockingPort's} docked
      * {@code JTabbedPane} component and sets the border on the
      * {@code DockingPort} itself to the currently assigned border.
-     * 
+     *
      * @see BorderManager#managePortTabbedChild(DockingPort)
      */
     public void managePortTabbedChild(DockingPort port) {
@@ -209,28 +209,28 @@ public class StandardBorderManager implements BorderManager {
                 int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == BOTTOM)
                 super.paintContentBorderBottomEdge(g, tabPlacement,
-                        selectedIndex, x, y, w, h);
+                                                   selectedIndex, x, y, w, h);
         }
 
         protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
                 int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == LEFT)
                 super.paintContentBorderLeftEdge(g, tabPlacement,
-                        selectedIndex, x, y, w, h);
+                                                 selectedIndex, x, y, w, h);
         }
 
         protected void paintContentBorderRightEdge(Graphics g,
                 int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == RIGHT)
                 super.paintContentBorderRightEdge(g, tabPlacement,
-                        selectedIndex, x, y, w, h);
+                                                  selectedIndex, x, y, w, h);
         }
 
         protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
                 int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == TOP)
                 super.paintContentBorderTopEdge(g, tabPlacement, selectedIndex,
-                        x, y, w, h);
+                                                x, y, w, h);
         }
     }
 }

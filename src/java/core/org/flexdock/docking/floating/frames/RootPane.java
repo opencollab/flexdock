@@ -50,8 +50,8 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     // constructor
 
     RootPane(DockingFrame frame) {
-    	this.frame = frame;
-    	
+        this.frame = frame;
+
         setBorder(new RootPaneBorder());
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -61,40 +61,40 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     // private
 
     void ensureValidScreenBounds(Point attemptedPoint) {
-    	// 'attemptedPoint' is the current "attempted" mousepoint based off of a drag-event.
-    	// here, we check to see if the attempted mousepoint exceeds our valid minimum frame 
-    	// bounds such that 'attemptedPoint' logically expresses a new frame-rect which
-    	// is smaller than the accepted minimum bounds for our frame.  if 'attemptedPoint'
-    	// exceeds any of these bounds, we adjust the values to match the ceiling/floor
-    	// of the acceptable frame-rect appropriately before returning and actually resizing 
-    	// the frame.
-    	
+        // 'attemptedPoint' is the current "attempted" mousepoint based off of a drag-event.
+        // here, we check to see if the attempted mousepoint exceeds our valid minimum frame
+        // bounds such that 'attemptedPoint' logically expresses a new frame-rect which
+        // is smaller than the accepted minimum bounds for our frame.  if 'attemptedPoint'
+        // exceeds any of these bounds, we adjust the values to match the ceiling/floor
+        // of the acceptable frame-rect appropriately before returning and actually resizing
+        // the frame.
+
         // x
         if (attemptedPoint.x < mMouseLimits.x)
-        	attemptedPoint.x = mMouseLimits.x;
+            attemptedPoint.x = mMouseLimits.x;
         else if (attemptedPoint.x > (mMouseLimits.x + mMouseLimits.width))
-        	attemptedPoint.x = mMouseLimits.x + mMouseLimits.width;
-        
+            attemptedPoint.x = mMouseLimits.x + mMouseLimits.width;
+
         // y
         if (attemptedPoint.y < mMouseLimits.y)
-        	attemptedPoint.y = mMouseLimits.y;
+            attemptedPoint.y = mMouseLimits.y;
         else if (attemptedPoint.y > (mMouseLimits.y + mMouseLimits.height))
-        	attemptedPoint.y = mMouseLimits.y + mMouseLimits.height;
+            attemptedPoint.y = mMouseLimits.y + mMouseLimits.height;
     }
 
     void computeMouseLimits(Point p) {
-    	// Called at the very start of a drag operation on the pane edges, not 
-    	// repeatedly during the drag.  This method computes two things:
-    	// 1) The acceptable mouse limits (Rectangle) during the drag.  These have
-    	//    different meanings, depending on which corner or edge is being dragged, 
-    	//    but generally translate into bounds that prevent us from doing things
-    	//    like, for instance, dragging the SOUTH_EAST corner anywhere above the
-    	//    NORTH or left of WEST frame edges (taking min-frame-size into account). 
-    	// 2) The current mouse offset relative to the frame-edge about to be dragged.
-    	//    Subsequent MOUSE_DRAGGED events will report the location of the mouse, 
-    	//    not the actual frame-edge.  We will use this offset to translate from the
-    	//    mouse to the frame-edge.
-    	
+        // Called at the very start of a drag operation on the pane edges, not
+        // repeatedly during the drag.  This method computes two things:
+        // 1) The acceptable mouse limits (Rectangle) during the drag.  These have
+        //    different meanings, depending on which corner or edge is being dragged,
+        //    but generally translate into bounds that prevent us from doing things
+        //    like, for instance, dragging the SOUTH_EAST corner anywhere above the
+        //    NORTH or left of WEST frame edges (taking min-frame-size into account).
+        // 2) The current mouse offset relative to the frame-edge about to be dragged.
+        //    Subsequent MOUSE_DRAGGED events will report the location of the mouse,
+        //    not the actual frame-edge.  We will use this offset to translate from the
+        //    mouse to the frame-edge.
+
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         mMouseLimits = new Rectangle(0, 0, screenSize.width, screenSize.height);
         Rectangle currFrameRect = frame.getBounds(); // in screen-coordinates
@@ -104,50 +104,50 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
         int minHeight = minSize.height;
 
         switch (currentResizeRegion) {
-            case Cursor.NW_RESIZE_CURSOR:
-                mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
-                mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
-                offset.setLocation(-p.x, -p.y);
-                break;
+        case Cursor.NW_RESIZE_CURSOR:
+            mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
+            mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
+            offset.setLocation(-p.x, -p.y);
+            break;
 
-            case Cursor.N_RESIZE_CURSOR:
-                mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
-            	offset.setLocation(0, -p.y);
-                break;
-                
-            case Cursor.NE_RESIZE_CURSOR:
-                mMouseLimits.x = currFrameRect.x + minWidth;
-                mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
-                offset.setLocation(getWidth() - p.x, -p.y);
-                break;
-                
+        case Cursor.N_RESIZE_CURSOR:
+            mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
+            offset.setLocation(0, -p.y);
+            break;
 
-            case Cursor.E_RESIZE_CURSOR:
-                mMouseLimits.x = currFrameRect.x + minWidth;
-            	offset.setLocation(getWidth() - p.x, 0);
-                break;
+        case Cursor.NE_RESIZE_CURSOR:
+            mMouseLimits.x = currFrameRect.x + minWidth;
+            mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
+            offset.setLocation(getWidth() - p.x, -p.y);
+            break;
 
-            case Cursor.SE_RESIZE_CURSOR:
-                mMouseLimits.y = currFrameRect.y + minHeight;
-                mMouseLimits.x = currFrameRect.x + minWidth;
-                offset.setLocation(getWidth() - p.x, getHeight() - p.y);
-                break;
 
-            case Cursor.S_RESIZE_CURSOR:
-                mMouseLimits.y = currFrameRect.y + minHeight;
-            	offset.setLocation(0, getHeight() - p.y);
-                break;
+        case Cursor.E_RESIZE_CURSOR:
+            mMouseLimits.x = currFrameRect.x + minWidth;
+            offset.setLocation(getWidth() - p.x, 0);
+            break;
 
-            case Cursor.SW_RESIZE_CURSOR:
-                mMouseLimits.y = currFrameRect.y + minHeight;
-                mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
-                offset.setLocation(-p.x, getHeight() - p.y);
-                break;
-                
-            case Cursor.W_RESIZE_CURSOR:
-                mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
-            	offset.setLocation(-p.x, 0);
-                break;
+        case Cursor.SE_RESIZE_CURSOR:
+            mMouseLimits.y = currFrameRect.y + minHeight;
+            mMouseLimits.x = currFrameRect.x + minWidth;
+            offset.setLocation(getWidth() - p.x, getHeight() - p.y);
+            break;
+
+        case Cursor.S_RESIZE_CURSOR:
+            mMouseLimits.y = currFrameRect.y + minHeight;
+            offset.setLocation(0, getHeight() - p.y);
+            break;
+
+        case Cursor.SW_RESIZE_CURSOR:
+            mMouseLimits.y = currFrameRect.y + minHeight;
+            mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
+            offset.setLocation(-p.x, getHeight() - p.y);
+            break;
+
+        case Cursor.W_RESIZE_CURSOR:
+            mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
+            offset.setLocation(-p.x, 0);
+            break;
 
         } // switch
     }
@@ -212,13 +212,13 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     // implement MouseListener, MouseMotionListener
 
     public void mousePressed(MouseEvent e) {
-    	currentResizeRegion = getCursor(e.getPoint());
+        currentResizeRegion = getCursor(e.getPoint());
         computeMouseLimits(e.getPoint());
     }
 
     public void mouseDragged(MouseEvent e) {
-    	if(currentResizeRegion==0)
-    		return;
+        if(currentResizeRegion==0)
+            return;
 
         Point p = (Point) e.getPoint().clone();
 
@@ -232,37 +232,37 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
         Rectangle bounds = frame.getBounds();
 
         switch (currentResizeRegion) {
-            case Cursor.NW_RESIZE_CURSOR:
-                frame.setBounds(p.x, p.y, bounds.width + bounds.x - p.x, bounds.height + bounds.y - p.y);
-                break;
+        case Cursor.NW_RESIZE_CURSOR:
+            frame.setBounds(p.x, p.y, bounds.width + bounds.x - p.x, bounds.height + bounds.y - p.y);
+            break;
 
-            case Cursor.N_RESIZE_CURSOR:
-                frame.setBounds(bounds.x, p.y, bounds.width, bounds.height + bounds.y - p.y);
-                break;
+        case Cursor.N_RESIZE_CURSOR:
+            frame.setBounds(bounds.x, p.y, bounds.width, bounds.height + bounds.y - p.y);
+            break;
 
-            case Cursor.NE_RESIZE_CURSOR:
-                frame.setBounds(bounds.x, p.y, p.x - bounds.x, bounds.height + bounds.y - p.y);
-                break;
+        case Cursor.NE_RESIZE_CURSOR:
+            frame.setBounds(bounds.x, p.y, p.x - bounds.x, bounds.height + bounds.y - p.y);
+            break;
 
-            case Cursor.W_RESIZE_CURSOR:
-                frame.setBounds(p.x, bounds.y, bounds.x + bounds.width - p.x, bounds.height);
-                break;
+        case Cursor.W_RESIZE_CURSOR:
+            frame.setBounds(p.x, bounds.y, bounds.x + bounds.width - p.x, bounds.height);
+            break;
 
-            case Cursor.E_RESIZE_CURSOR:
-                frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, bounds.height);
-                break;
+        case Cursor.E_RESIZE_CURSOR:
+            frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, bounds.height);
+            break;
 
-            case Cursor.SW_RESIZE_CURSOR:
-                frame.setBounds(p.x, bounds.y, bounds.width + bounds.x - p.x, p.y - bounds.y);
-                break;
+        case Cursor.SW_RESIZE_CURSOR:
+            frame.setBounds(p.x, bounds.y, bounds.width + bounds.x - p.x, p.y - bounds.y);
+            break;
 
-            case Cursor.S_RESIZE_CURSOR:
-                frame.setBounds(bounds.x, bounds.y, bounds.width, p.y - bounds.y);
-                break;
+        case Cursor.S_RESIZE_CURSOR:
+            frame.setBounds(bounds.x, bounds.y, bounds.width, p.y - bounds.y);
+            break;
 
-            case Cursor.SE_RESIZE_CURSOR:
-                frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, p.y - bounds.y);
-                break;
+        case Cursor.SE_RESIZE_CURSOR:
+            frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, p.y - bounds.y);
+            break;
         } // switch
 
         setCursor(Cursor.getPredefinedCursor(currentResizeRegion));
@@ -272,7 +272,7 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     }
 
     public void mouseReleased(MouseEvent e) {
-    	currentResizeRegion = 0;
+        currentResizeRegion = 0;
     }
 
     public void mouseMoved(MouseEvent e) {

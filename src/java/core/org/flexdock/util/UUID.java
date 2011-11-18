@@ -11,14 +11,14 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 /**
- * 
- * A class that represents an immutable universally unique identifier (UUID). 
+ *
+ * A class that represents an immutable universally unique identifier (UUID).
  * A UUID represents a 128-bit value.
  *
  * <p>There exist different variants of these global identifiers. The methods
  * of this class are for manipulating the Leach-Salz variant, although the
  * constructors allow the creation of any variant of UUID (described below).
- * 
+ *
  * <p>The layout of a variant 2 (Leach-Salz) UUID is as follows:
  *
  * The most significant long consists of the following unsigned fields:
@@ -44,7 +44,7 @@ import java.security.SecureRandom;
  * <tt>UUID</tt>. There are four different basic types of UUIDs: time-based,
  * DCE security, name-based, and randomly generated UUIDs. These types
  * have a version value of 1, 2, 3 and 4, respectively.
- * 
+ *
  * <p>For more information including algorithms used to create <tt>UUID</tt>s,
  * see the Internet-Draft <a href="http://www.ietf.org/internet-drafts/draft-mealling-uuid-urn-03.txt">UUIDs and GUIDs</a>
  * or the standards body definition at
@@ -58,7 +58,7 @@ public final class UUID implements java.io.Serializable, Comparable {
     /**
      * Explicit serialVersionUID for interoperability.
      */
-     private static final long serialVersionUID = -4856846361193249489L;
+    private static final long serialVersionUID = -4856846361193249489L;
 
     /*
      * The most significant 64 bits of this UUID.
@@ -237,7 +237,7 @@ public final class UUID implements java.io.Serializable, Comparable {
     }
 
     /**
-     * The version number associated with this <tt>UUID</tt>. The version 
+     * The version number associated with this <tt>UUID</tt>. The version
      * number describes how this <tt>UUID</tt> was generated.
      *
      * The version number has the following meaning:<p>
@@ -259,7 +259,7 @@ public final class UUID implements java.io.Serializable, Comparable {
     }
 
     /**
-     * The variant number associated with this <tt>UUID</tt>. The variant 
+     * The variant number associated with this <tt>UUID</tt>. The variant
      * number describes the layout of the <tt>UUID</tt>.
      *
      * The variant number has the following meaning:<p>
@@ -290,15 +290,15 @@ public final class UUID implements java.io.Serializable, Comparable {
      * The timestamp value associated with this UUID.
      *
      * <p>The 60 bit timestamp value is constructed from the time_low,
-     * time_mid, and time_hi fields of this <tt>UUID</tt>. The resulting 
-     * timestamp is measured in 100-nanosecond units since midnight, 
+     * time_mid, and time_hi fields of this <tt>UUID</tt>. The resulting
+     * timestamp is measured in 100-nanosecond units since midnight,
      * October 15, 1582 UTC.<p>
      *
      * The timestamp value is only meaningful in a time-based UUID, which
      * has version type 1. If this <tt>UUID</tt> is not a time-based UUID then
      * this method throws UnsupportedOperationException.
-     * 
-     * @throws UnsupportedOperationException if this UUID is not a 
+     *
+     * @throws UnsupportedOperationException if this UUID is not a
      *         version 1 UUID.
      */
     public long timestamp() {
@@ -325,9 +325,9 @@ public final class UUID implements java.io.Serializable, Comparable {
      * The  clockSequence value is only meaningful in a time-based UUID, which
      * has version type 1. If this UUID is not a time-based UUID then
      * this method throws UnsupportedOperationException.
-     * 
+     *
      * @return  the clock sequence of this <tt>UUID</tt>.
-     * @throws UnsupportedOperationException if this UUID is not a 
+     * @throws UnsupportedOperationException if this UUID is not a
      *         version 1 UUID.
      */
     public int clockSequence() {
@@ -344,14 +344,14 @@ public final class UUID implements java.io.Serializable, Comparable {
      * The node value associated with this UUID.
      *
      * <p>The 48 bit node value is constructed from the node field of
-     * this UUID. This field is intended to hold the IEEE 802 address 
+     * this UUID. This field is intended to hold the IEEE 802 address
      * of the machine that generated this UUID to guarantee spatial
      * uniqueness.<p>
      *
      * The node value is only meaningful in a time-based UUID, which
      * has version type 1. If this UUID is not a time-based UUID then
      * this method throws UnsupportedOperationException.
-     * 
+     *
      * @return  the node value of this <tt>UUID</tt>.
      * @throws UnsupportedOperationException if this UUID is not a
      *         version 1 UUID.
@@ -371,8 +371,8 @@ public final class UUID implements java.io.Serializable, Comparable {
     /**
      * Returns a <code>String</code> object representing this
      * <code>UUID</code>.
-     * 
-     * <p>The UUID string representation is as described by this BNF : 
+     *
+     * <p>The UUID string representation is as described by this BNF :
      * <pre>
      *  UUID                   = <time_low> "-" <time_mid> "-"
      *                           <time_high_and_version> "-"
@@ -393,23 +393,23 @@ public final class UUID implements java.io.Serializable, Comparable {
      * @return  a string representation of this <tt>UUID</tt>.
      */
     public String toString() {
-    return (digits(mostSigBits >> 32, 8) + "-" +
-        digits(mostSigBits >> 16, 4) + "-" +
-        digits(mostSigBits, 4) + "-" +
-        digits(leastSigBits >> 48, 4) + "-" +
-        digits(leastSigBits, 12));
+        return (digits(mostSigBits >> 32, 8) + "-" +
+                digits(mostSigBits >> 16, 4) + "-" +
+                digits(mostSigBits, 4) + "-" +
+                digits(leastSigBits >> 48, 4) + "-" +
+                digits(leastSigBits, 12));
     }
 
     /** Returns val represented by the specified number of hex digits. */
     private static String digits(long val, int digits) {
-    long hi = 1L << (digits * 4);
-    return Long.toHexString(hi | (val & (hi - 1))).substring(1);
+        long hi = 1L << (digits * 4);
+        return Long.toHexString(hi | (val & (hi - 1))).substring(1);
     }
 
     /**
      * Returns a hash code for this <code>UUID</code>.
      *
-     * @return  a hash code value for this <tt>UUID</tt>. 
+     * @return  a hash code value for this <tt>UUID</tt>.
      */
     public int hashCode() {
         if (hashCode == -1) {
@@ -432,12 +432,12 @@ public final class UUID implements java.io.Serializable, Comparable {
      *          <code>false</code> otherwise.
      */
     public boolean equals(Object obj) {
-    if (!(obj instanceof UUID))
-        return false;
+        if (!(obj instanceof UUID))
+            return false;
         if (((UUID)obj).variant() != this.variant())
             return false;
         UUID id = (UUID)obj;
-    return (mostSigBits == id.mostSigBits &&
+        return (mostSigBits == id.mostSigBits &&
                 leastSigBits == id.leastSigBits);
     }
 
@@ -445,7 +445,7 @@ public final class UUID implements java.io.Serializable, Comparable {
 
     /**
      * Compares this UUID with the specified UUID.
-     * 
+     *
      * <p>The first of two UUIDs follows the second if the most significant
      * field in which the UUIDs differ is greater for the first UUID.
      *
@@ -457,7 +457,7 @@ public final class UUID implements java.io.Serializable, Comparable {
         UUID uuid = (UUID) val;
         // The ordering is intentionally set up so that the UUIDs
         // can simply be numerically compared as two numbers
-        return (this.mostSigBits < uuid.mostSigBits ? -1 : 
+        return (this.mostSigBits < uuid.mostSigBits ? -1 :
                 (this.mostSigBits > uuid.mostSigBits ? 1 :
                  (this.leastSigBits < uuid.leastSigBits ? -1 :
                   (this.leastSigBits > uuid.leastSigBits ? 1 :
@@ -471,7 +471,7 @@ public final class UUID implements java.io.Serializable, Comparable {
      * on demand.
      */
     private void readObject(java.io.ObjectInputStream in)
-        throws java.io.IOException, ClassNotFoundException {
+    throws java.io.IOException, ClassNotFoundException {
 
         in.defaultReadObject();
 

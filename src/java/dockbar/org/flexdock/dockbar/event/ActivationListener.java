@@ -17,127 +17,126 @@ import org.flexdock.util.Utilities;
  */
 public class ActivationListener {
     private static Log log = LogFactory.getLog(ActivationListener.class);
-    
-	private DockbarManager manager;
-	private Deactivator deactivator;
-	private boolean enabled;
-	private boolean mouseOver;
-	
-	
-	public ActivationListener(DockbarManager mgr) {
-		manager = mgr;
-		setEnabled(true);
-	}
 
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	public boolean isActive() {
-		return manager.isActive() && !manager.isAnimating() && !manager.isDragging();
-	}
-	
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    private DockbarManager manager;
+    private Deactivator deactivator;
+    private boolean enabled;
+    private boolean mouseOver;
 
-	public boolean isAvailable() {
-		return isEnabled() && isActive();
-	}
-	
-	public boolean isViewpaneLocked() {
-		return manager.getViewPane().isLocked();
-	}
-	
-	private boolean isOverDockbars(Point mousePoint) {
-		return manager.getLeftBar().getBounds().contains(mousePoint)
-			|| manager.getRightBar().getBounds().contains(mousePoint)
-			|| manager.getBottomBar().getBounds().contains(mousePoint);
-	}
-	
-	
-	
-	public void mouseEntered(Point mousePoint) {
-		if(mouseOver)
-			return;
 
-		mouseOver = true;
-		if(deactivator!=null)
-			deactivator.setEnabled(false);
-		deactivator = null;
-	}
-	
-	public void mouseExited(Point mousePoint) {
-		if(!mouseOver)
-			return;
-		
-		mouseOver = false;
-		if(!isOverDockbars(mousePoint)) {
-			deactivator = new Deactivator(manager.getActiveDockableId());
-			deactivator.setEnabled(true);
-			deactivator.start();			
-		}
-	}
+    public ActivationListener(DockbarManager mgr) {
+        manager = mgr;
+        setEnabled(true);
+    }
 
-	public void mousePressed(Point mousePoint, boolean mouseOver) {
-		if(mouseOver) {
-			if(!isViewpaneLocked()) {
-				lockViewpane();
-			}
-		}
-		else {
-			if(!isOverDockbars(mousePoint)) {
-				manager.setActiveDockable((String)null);
-			}
-		}
-	}
-	
-	public void lockViewpane() {
-		manager.getViewPane().setLocked(true);
-		dispatchDockbarEvent(DockbarEvent.LOCKED);		
-	}
-	
-	
-	private void dispatchDockbarEvent(int type) {
-		Dockable dockable = manager.getActiveDockable();
-		int edge = manager.getActiveEdge();
-		DockbarEvent evt = new DockbarEvent(dockable, type, edge);
-		EventManager.dispatch(evt);
-	}
-	
-	private class Deactivator extends Thread {
-		private String dockableId;
-		private boolean enabled;
-		
-		private Deactivator(String id) {
-			dockableId = id;
-			enabled = true;
-		}
-		
-		private synchronized void setEnabled(boolean b) {
-			enabled = b;
-		}
-		
-		private synchronized boolean isEnabled() {
-			return enabled;
-		}
-		
-		public void run() {
-			try {
-				Thread.sleep(1000);
-			} catch(InterruptedException e) {
-				log.debug(e.getMessage(), e);
-			}
-			
-			if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&
-					!isViewpaneLocked())
-				manager.setActiveDockable((String)null);
-		}
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	}
+    public boolean isActive() {
+        return manager.isActive() && !manager.isAnimating() && !manager.isDragging();
+    }
 
-	public boolean isMouseOver() {
-		return mouseOver;
-	}
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isAvailable() {
+        return isEnabled() && isActive();
+    }
+
+    public boolean isViewpaneLocked() {
+        return manager.getViewPane().isLocked();
+    }
+
+    private boolean isOverDockbars(Point mousePoint) {
+        return manager.getLeftBar().getBounds().contains(mousePoint)
+               || manager.getRightBar().getBounds().contains(mousePoint)
+               || manager.getBottomBar().getBounds().contains(mousePoint);
+    }
+
+
+
+    public void mouseEntered(Point mousePoint) {
+        if(mouseOver)
+            return;
+
+        mouseOver = true;
+        if(deactivator!=null)
+            deactivator.setEnabled(false);
+        deactivator = null;
+    }
+
+    public void mouseExited(Point mousePoint) {
+        if(!mouseOver)
+            return;
+
+        mouseOver = false;
+        if(!isOverDockbars(mousePoint)) {
+            deactivator = new Deactivator(manager.getActiveDockableId());
+            deactivator.setEnabled(true);
+            deactivator.start();
+        }
+    }
+
+    public void mousePressed(Point mousePoint, boolean mouseOver) {
+        if(mouseOver) {
+            if(!isViewpaneLocked()) {
+                lockViewpane();
+            }
+        } else {
+            if(!isOverDockbars(mousePoint)) {
+                manager.setActiveDockable((String)null);
+            }
+        }
+    }
+
+    public void lockViewpane() {
+        manager.getViewPane().setLocked(true);
+        dispatchDockbarEvent(DockbarEvent.LOCKED);
+    }
+
+
+    private void dispatchDockbarEvent(int type) {
+        Dockable dockable = manager.getActiveDockable();
+        int edge = manager.getActiveEdge();
+        DockbarEvent evt = new DockbarEvent(dockable, type, edge);
+        EventManager.dispatch(evt);
+    }
+
+    private class Deactivator extends Thread {
+        private String dockableId;
+        private boolean enabled;
+
+        private Deactivator(String id) {
+            dockableId = id;
+            enabled = true;
+        }
+
+        private synchronized void setEnabled(boolean b) {
+            enabled = b;
+        }
+
+        private synchronized boolean isEnabled() {
+            return enabled;
+        }
+
+        public void run() {
+            try {
+                Thread.sleep(1000);
+            } catch(InterruptedException e) {
+                log.debug(e.getMessage(), e);
+            }
+
+            if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&
+                    !isViewpaneLocked())
+                manager.setActiveDockable((String)null);
+        }
+
+    }
+
+    public boolean isMouseOver() {
+        return mouseOver;
+    }
 
 }

@@ -1,3 +1,14 @@
+== flexdock 0.5.5 RELEASE NOTES ==
+
+CHANGES FROM 0.5.4:
+
+
+This release has been managed by the Scilab team (http://www.scilab.org/)
+
+Updates:
+	- Consitent indentation of the java source code. 
+	  Done with astyle --style=java
+
 == flexdock 0.5.4 RELEASE NOTES ==
 
 CHANGES FROM 0.5.3:

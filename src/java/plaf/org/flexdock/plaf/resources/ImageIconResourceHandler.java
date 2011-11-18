@@ -12,13 +12,13 @@ import org.flexdock.util.ResourceManager;
  */
 public class ImageIconResourceHandler extends ResourceHandler {
     private static Log log = LogFactory.getLog(ImageIconResourceHandler.class);
-    
-	public Object getResource(String url) {
-		try {
-			return ResourceManager.createIcon(url);
-		} catch(NullPointerException e) {
-			log.debug(e.getMessage(), e);
-			return null;
-		}
-	}
+
+    public Object getResource(String url) {
+        try {
+            return ResourceManager.createIcon(url);
+        } catch(NullPointerException e) {
+            log.debug(e.getMessage(), e);
+            return null;
+        }
+    }
 }

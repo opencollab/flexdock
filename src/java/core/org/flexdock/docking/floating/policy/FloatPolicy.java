@@ -11,7 +11,7 @@ import org.flexdock.docking.event.DockingEvent;
  * events should be handled. Classes implementing this interface should be
  * plugged into to the {@code FloatPolicyManager} to affect floating behavior of
  * the framework at runtime.
- * 
+ *
  * @author Christopher Butler
  */
 public interface FloatPolicy {
@@ -24,7 +24,7 @@ public interface FloatPolicy {
      * {@code Dockable} as a result of the drag. If this method returns
      * {@code false}, floating will not be allowed for the drag operation
      * against the specified {@code Dockable}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be checked for floating support
      * @return {@code true} if floating should be allowed for the specified
@@ -39,7 +39,7 @@ public interface FloatPolicy {
      * {@code Dockable} at the end of a drag operation and invoke this method on
      * all installed {@code FloatPolicies}. If any of them returns
      * {@code false}, the docking operation will be canceled.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to be checked for drop-to-float
      *            support
@@ -50,13 +50,13 @@ public interface FloatPolicy {
 
     /**
      * Provides a default implementation of the FloatPolicy interface.
-     * 
+     *
      * @author Christopher Butler
      */
     class NullFloatPolicy implements FloatPolicy {
         /**
          * Returns {@code true}.
-         * 
+         *
          * @return {@code true}.
          * @see FloatPolicy#isFloatingAllowed(Dockable)
          */
@@ -66,7 +66,7 @@ public interface FloatPolicy {
 
         /**
          * Returns {@code true}.
-         * 
+         *
          * @return {@code true}.
          * @see FloatPolicy#isFloatDropAllowed(DockingEvent)
          */

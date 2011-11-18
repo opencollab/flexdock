@@ -16,18 +16,18 @@ import org.flexdock.view.View;
 public class DefaultDisplayAction extends ViewAction {
 
     public DefaultDisplayAction() {
-		
-	}
-	
-	public DefaultDisplayAction(String viewId) {
-		setViewId(viewId);
-		View view = View.getInstance(viewId);
-		if(view!=null)
-			putValue(Action.NAME, view.getTitle());
-	}
-	
-	public void actionPerformed(View view, ActionEvent evt) {
-		DockingManager.display(view);
-	}
-    
+
+    }
+
+    public DefaultDisplayAction(String viewId) {
+        setViewId(viewId);
+        View view = View.getInstance(viewId);
+        if(view!=null)
+            putValue(Action.NAME, view.getTitle());
+    }
+
+    public void actionPerformed(View view, ActionEvent evt) {
+        DockingManager.display(view);
+    }
+
 }

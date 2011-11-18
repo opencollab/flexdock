@@ -39,192 +39,192 @@ import org.flexdock.view.Viewport;
  * @author Christopher Butler
  */
 public class SiblingTest extends JFrame implements DockingConstants {
-	private JDialog siblingTestDialog;
-	
-	public static void main(String[] args) {
-		SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		//		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-		//		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				startup();
-			}
-		});
-	}
-	
-	private static void startup() {
-		JFrame f = new SiblingTest();
-		f.setSize(800, 600);
-		SwingUtility.centerOnScreen(f);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setVisible(true);		
-	}
+    private JDialog siblingTestDialog;
 
-	public SiblingTest() {
-		super("Viewport Demo");
-		setContentPane(createContentPane());
-	}
+    public static void main(String[] args) {
+        SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        //		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+        //		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+        EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                startup();
+            }
+        });
+    }
 
-	private JPanel createContentPane() {
-		JPanel p = new JPanel(new BorderLayout(0, 0));
-		p.setBorder(new EmptyBorder(5, 5, 5, 5));
+    private static void startup() {
+        JFrame f = new SiblingTest();
+        f.setSize(800, 600);
+        SwingUtility.centerOnScreen(f);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setVisible(true);
+    }
 
-		Viewport viewport = new Viewport();
-		p.add(viewport, BorderLayout.CENTER);
+    public SiblingTest() {
+        super("Viewport Demo");
+        setContentPane(createContentPane());
+    }
 
-		View startPage = createStartPage();
-		View view1 = createView("solution.explorer", "Solution Explorer");
-		View view2 = createView("task.list", "Task List");
-		View view3 = createView("class.view", "Class View");
-		View view4 = createView("message.log", "Message Log");
+    private JPanel createContentPane() {
+        JPanel p = new JPanel(new BorderLayout(0, 0));
+        p.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		viewport.dock(startPage);
-		startPage.dock(view1, WEST_REGION, .3f);
-		startPage.dock(view2, SOUTH_REGION, .3f);
-		startPage.dock(view4, EAST_REGION, .3f);
-		view1.dock(view3, SOUTH_REGION, .3f);
+        Viewport viewport = new Viewport();
+        p.add(viewport, BorderLayout.CENTER);
 
-		return p;
-	}
+        View startPage = createStartPage();
+        View view1 = createView("solution.explorer", "Solution Explorer");
+        View view2 = createView("task.list", "Task List");
+        View view3 = createView("class.view", "Class View");
+        View view4 = createView("message.log", "Message Log");
 
-	private View createView(String id, String text) {
-		View view = new View(id, text);
-		view.addAction(CLOSE_ACTION);
-		view.addAction(PIN_ACTION);
+        viewport.dock(startPage);
+        startPage.dock(view1, WEST_REGION, .3f);
+        startPage.dock(view2, SOUTH_REGION, .3f);
+        startPage.dock(view4, EAST_REGION, .3f);
+        view1.dock(view3, SOUTH_REGION, .3f);
 
-		JPanel p = new JPanel();
-		//		p.setBackground(Color.WHITE);
-		p.setBorder(new LineBorder(Color.GRAY, 1));
+        return p;
+    }
 
-		JTextField t = new JTextField(text);
-		t.setPreferredSize(new Dimension(100, 20));
-		p.add(t);
+    private View createView(String id, String text) {
+        View view = new View(id, text);
+        view.addAction(CLOSE_ACTION);
+        view.addAction(PIN_ACTION);
 
-		view.setContentPane(p);
-		return view;
-	}
+        JPanel p = new JPanel();
+        //		p.setBackground(Color.WHITE);
+        p.setBorder(new LineBorder(Color.GRAY, 1));
 
-	
-	private JDialog getSiblingTestDialog() {
-		if(siblingTestDialog==null) {
-			siblingTestDialog = new JDialog(this, "Sibling Test");
-			siblingTestDialog.setContentPane(new SiblingTestPanel());
-		}
-		return siblingTestDialog;
-	}
+        JTextField t = new JTextField(text);
+        t.setPreferredSize(new Dimension(100, 20));
+        p.add(t);
 
-	private View createStartPage() {
-
-		String id = "startPage";
-
-		VSNetStartPage page = new VSNetStartPage();
-		page.getNewProjButton().addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ae) {
-				
-				JDialog dialog = getSiblingTestDialog();
-				if(dialog.isVisible())
-					return;
-				
-				dialog.setVisible(true);
-				dialog.pack();
-				testSiblings();
-			}
-		});
-
-		View view = new View(id, null, null);
-		view.setTerritoryBlocked(CENTER_REGION, true);
-		view.setTitlebar(null);
-		view.setContentPane(page);
-
-		return view;
-	}
-	
-	private void testSiblings() {
-		SiblingTestPanel panel = (SiblingTestPanel)getSiblingTestDialog().getContentPane();
-		panel.sync();
-	}
-
-	
+        view.setContentPane(p);
+        return view;
+    }
 
 
-	private class SiblingTestPanel extends JPanel {
-		private JComboBox dockableList;
-		private JComboBox regionList;
-		private JLabel siblingLabel;
-		
-		private SiblingTestPanel() {
-			init();
-		}
+    private JDialog getSiblingTestDialog() {
+        if(siblingTestDialog==null) {
+            siblingTestDialog = new JDialog(this, "Sibling Test");
+            siblingTestDialog.setContentPane(new SiblingTestPanel());
+        }
+        return siblingTestDialog;
+    }
 
-		private JComboBox getDockableList() {
-			if (dockableList != null)
-				return dockableList;
+    private View createStartPage() {
 
-			ArrayList list = new ArrayList(DockingManager.getDockableIds());
-			Collections.sort(list);
-			String[] dockableIds = (String[]) list.toArray(new String[0]);
-			dockableList = new JComboBox(dockableIds);
-			return dockableList;
-		}
+        String id = "startPage";
 
-		private JComboBox getRegionList() {
-			if (regionList != null)
-				return regionList;
+        VSNetStartPage page = new VSNetStartPage();
+        page.getNewProjButton().addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
 
-			String[] regions = { NORTH_REGION, SOUTH_REGION, EAST_REGION, WEST_REGION };
-			regionList = new JComboBox(regions);
-			return regionList;
-		}
-		
-		private JLabel getSiblingLabel() {
-			if(siblingLabel==null)
-				siblingLabel = new JLabel();
-			return siblingLabel;
-		}
-		
+                JDialog dialog = getSiblingTestDialog();
+                if(dialog.isVisible())
+                    return;
 
-		private void init() {
-			setLayout(new GridBagLayout());
-			setBorder(new EmptyBorder(5, 5, 5, 10));
-			
-			GridBagConstraints gbc = new GridBagConstraints();
-			gbc.anchor = GridBagConstraints.WEST;
-			gbc.fill = GridBagConstraints.HORIZONTAL;
-			gbc.insets = new Insets(6, 6, 0, 0);
-			gbc.gridx = GridBagConstraints.RELATIVE;
-			gbc.gridy = 0;
+                dialog.setVisible(true);
+                dialog.pack();
+                testSiblings();
+            }
+        });
 
-			add(new JLabel("Dockable:"), gbc);
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			add(getDockableList(), gbc);
+        View view = new View(id, null, null);
+        view.setTerritoryBlocked(CENTER_REGION, true);
+        view.setTitlebar(null);
+        view.setContentPane(page);
 
-			gbc.gridy++;
-			gbc.gridwidth = 1;
-			add(new JLabel("Region:"), gbc);
-			add(getRegionList(), gbc);
+        return view;
+    }
 
-			gbc.gridy++;
-			gbc.gridwidth = 1;
-			add(new JLabel("Sibling:"), gbc);
-			add(getSiblingLabel(), gbc);
-			
-			ItemListener syncher = new ItemListener() {
-				public void itemStateChanged(ItemEvent evt) {
-					sync();
-				}
-			};
-			getDockableList().addItemListener(syncher);
-			getRegionList().addItemListener(syncher);
-		}
-		
-		public void sync() {
-			String viewId = (String)getDockableList().getSelectedItem();
-			String region = (String)getRegionList().getSelectedItem();
-			
-			Dockable dockable = DockingManager.getDockable(viewId);
-			Dockable sibling = DefaultDockingStrategy.getSibling(dockable, region);
-			getSiblingLabel().setText(sibling==null? "null": sibling.toString());
-		}
-	}
+    private void testSiblings() {
+        SiblingTestPanel panel = (SiblingTestPanel)getSiblingTestDialog().getContentPane();
+        panel.sync();
+    }
+
+
+
+
+    private class SiblingTestPanel extends JPanel {
+        private JComboBox dockableList;
+        private JComboBox regionList;
+        private JLabel siblingLabel;
+
+        private SiblingTestPanel() {
+            init();
+        }
+
+        private JComboBox getDockableList() {
+            if (dockableList != null)
+                return dockableList;
+
+            ArrayList list = new ArrayList(DockingManager.getDockableIds());
+            Collections.sort(list);
+            String[] dockableIds = (String[]) list.toArray(new String[0]);
+            dockableList = new JComboBox(dockableIds);
+            return dockableList;
+        }
+
+        private JComboBox getRegionList() {
+            if (regionList != null)
+                return regionList;
+
+            String[] regions = { NORTH_REGION, SOUTH_REGION, EAST_REGION, WEST_REGION };
+            regionList = new JComboBox(regions);
+            return regionList;
+        }
+
+        private JLabel getSiblingLabel() {
+            if(siblingLabel==null)
+                siblingLabel = new JLabel();
+            return siblingLabel;
+        }
+
+
+        private void init() {
+            setLayout(new GridBagLayout());
+            setBorder(new EmptyBorder(5, 5, 5, 10));
+
+            GridBagConstraints gbc = new GridBagConstraints();
+            gbc.anchor = GridBagConstraints.WEST;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            gbc.insets = new Insets(6, 6, 0, 0);
+            gbc.gridx = GridBagConstraints.RELATIVE;
+            gbc.gridy = 0;
+
+            add(new JLabel("Dockable:"), gbc);
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            add(getDockableList(), gbc);
+
+            gbc.gridy++;
+            gbc.gridwidth = 1;
+            add(new JLabel("Region:"), gbc);
+            add(getRegionList(), gbc);
+
+            gbc.gridy++;
+            gbc.gridwidth = 1;
+            add(new JLabel("Sibling:"), gbc);
+            add(getSiblingLabel(), gbc);
+
+            ItemListener syncher = new ItemListener() {
+                public void itemStateChanged(ItemEvent evt) {
+                    sync();
+                }
+            };
+            getDockableList().addItemListener(syncher);
+            getRegionList().addItemListener(syncher);
+        }
+
+        public void sync() {
+            String viewId = (String)getDockableList().getSelectedItem();
+            String region = (String)getRegionList().getSelectedItem();
+
+            Dockable dockable = DockingManager.getDockable(viewId);
+            Dockable sibling = DefaultDockingStrategy.getSibling(dockable, region);
+            getSiblingLabel().setText(sibling==null? "null": sibling.toString());
+        }
+    }
 
 }

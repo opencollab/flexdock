@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2004 Christopher M Butler
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,7 +46,7 @@ import org.flexdock.util.Utilities;
  * class should be extended by any application that wishes to make use of the
  * {@code Dockable} interface without the need for writing out an implementation
  * for every method that isn't explicitly used.
- * 
+ *
  * @author Christopher Butler
  */
 public abstract class AbstractDockable implements Dockable {
@@ -64,7 +64,7 @@ public abstract class AbstractDockable implements Dockable {
      * Creates a new {@code AbstractDockable} instance. This constructor is
      * meant to be invoked by subclasses as it initializes the
      * {@code Dockable's} persistent ID and drag sources.
-     * 
+     *
      * @param id
      *            the persistent ID of the resulting {@code Dockable}
      * @see Dockable#getPersistentId()
@@ -81,7 +81,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * Returns the {@code Component} used to back this {@code Dockable}
      * instance.
-     * 
+     *
      * @return the {@code Component} used to back this {@code Dockable}
      *         instance.
      * @see Dockable#getComponent()
@@ -92,7 +92,7 @@ public abstract class AbstractDockable implements Dockable {
      * Returns a {@code List} of {@code Components} used to initiate
      * drag-to-dock operation. By default, the returned {@code List} contains
      * the {@code Component} returned by {@code getComponent()}.
-     * 
+     *
      * @return a {@code List} of {@code Components} used to initiate
      *         drag-to-dock operation.
      * @see Dockable#getDragSources()
@@ -105,7 +105,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * Returns the persistent ID of this {@code Dockable} instance provided when
      * this object was instantiated.
-     * 
+     *
      * @return the persistent ID of this {@code Dockable}
      * @see Dockable#getPersistentId()
      * @see #AbstractDockable(String)
@@ -120,7 +120,7 @@ public abstract class AbstractDockable implements Dockable {
      * external dialog. The {@code HashSet} returned by this method is initially
      * empty. Because it is mutable, however, new {@code Components} may be
      * added to it.
-     * 
+     *
      * @return a {@code HashSet} of {@code Components} used as frame drag
      *         sources when this {@code Dockable} is floating in a non-decorated
      *         external dialog.
@@ -136,7 +136,7 @@ public abstract class AbstractDockable implements Dockable {
      * Sets the {@code String} to be used for tab labels when this
      * {@code Dockable} is embedded within a tabbed layout. {@code null} values
      * are discouraged, but not illegal.
-     * 
+     *
      * @param tabText
      *            the {@code String} to be used for tab labels when this
      *            {@code Dockable} is embedded within a tabbed layout.
@@ -149,7 +149,7 @@ public abstract class AbstractDockable implements Dockable {
      * Returns the {@code String} used for tab labels when this {@code Dockable}
      * is embedded within a tabbed layout. It is possible for this method to
      * return a {@code null} reference.
-     * 
+     *
      * @return tabText the {@code String} used for tab labels when this
      *         {@code Dockable} is embedded within a tabbed layout.
      */
@@ -160,7 +160,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingCanceled(DockingEvent)
@@ -171,7 +171,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingComplete(DockingEvent)
@@ -182,7 +182,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dragStarted(DockingEvent)
@@ -193,7 +193,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dropStarted(DockingEvent)
@@ -204,7 +204,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingComplete(DockingEvent)
@@ -216,7 +216,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * No operation. Provided as a method stub to fulfull the
      * {@code DockingListener} interface contract.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingStarted(DockingEvent)
@@ -227,7 +227,7 @@ public abstract class AbstractDockable implements Dockable {
     /**
      * Adds a {@code DockingListener} to observe docking events for this
      * {@code Dockable}. {@code null} arguments are ignored.
-     * 
+     *
      * @param listener
      *            the {@code DockingListener} to add to this {@code Dockable}.
      * @see #getDockingListeners()
@@ -242,7 +242,7 @@ public abstract class AbstractDockable implements Dockable {
      * Returns an array of all {@code DockingListeners} added to this
      * {@code Dockable}. If there are no listeners present for this
      * {@code Dockable}, then a zero-length array is returned.
-     * 
+     *
      * @return an array of all {@code DockingListeners} added to this
      *         {@code Dockable}.
      * @see #addDockingListener(DockingListener)
@@ -250,7 +250,7 @@ public abstract class AbstractDockable implements Dockable {
      */
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
-                .toArray(new DockingListener[0]);
+               .toArray(new DockingListener[0]);
     }
 
     /**
@@ -258,7 +258,7 @@ public abstract class AbstractDockable implements Dockable {
      * If the specified {@code DockingListener} is {@code null}, or the
      * listener has not previously been added to this {@code Dockable}, then no
      * {@code Exception} is thrown and no action is taken.
-     * 
+     *
      * @param listener
      *            the {@code DockingListener} to remove from this
      *            {@code Dockable}
@@ -281,7 +281,7 @@ public abstract class AbstractDockable implements Dockable {
      * {@code JComponent's} {@code getClientProperty(Object, Object)} method.
      * Otherwise, this {@code Dockable} will provide its own internal mapping of
      * client properties.
-     * 
+     *
      * @param key
      *            the key that is being queried
      * @return the value of this property or {@code null}
@@ -309,7 +309,7 @@ public abstract class AbstractDockable implements Dockable {
      * {@code JComponent's} {@code putClientProperty(Object, Object)} method.
      * Otherwise, this {@code Dockable} will provide its own internal mapping of
      * client properties.
-     * 
+     *
      * @param key
      *            the new client property key
      * @param value
@@ -338,7 +338,7 @@ public abstract class AbstractDockable implements Dockable {
      * {@code getDockablePropertySet(Dockable dockable)} on
      * {@code org.flexdock.docking.props.PropertyManager} and supplying an
      * argument of {@code this}.
-     * 
+     *
      * @return the {@code DockablePropertySet} associated with this
      *         {@code Dockable}. This method will not return a {@code null}
      *         reference.
@@ -360,7 +360,7 @@ public abstract class AbstractDockable implements Dockable {
      * {@code this}. This {@code DockingPort} returned is based upon the
      * {@code Component} returned by this {@code Dockable's} abstract
      * {@code getComponent()} method.
-     * 
+     *
      * @return the {@code DockingPort} within which this {@code Dockable} is
      *         currently docked.
      * @see Dockable#getDockingPort()
@@ -375,7 +375,7 @@ public abstract class AbstractDockable implements Dockable {
      * {@code dock(Dockable dockable)} by calling and returning
      * {@code DockingManager.dock(Dockable dockable, Dockable parent)}.
      * {@code 'this'} is passed as the {@code parent} parameter.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @return {@code true} if the docking operation was successful;
@@ -393,7 +393,7 @@ public abstract class AbstractDockable implements Dockable {
      * returning
      * {@code DockingManager.dock(Dockable dockable, Dockable parent, String region)}.
      * {@code 'this'} is passed as the {@code parent} parameter.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @param relativeRegion
@@ -414,7 +414,7 @@ public abstract class AbstractDockable implements Dockable {
      * calling and returning
      * {@code DockingManager.dock(Dockable dockable, Dockable parent, String region, float proportion)}.
      * {@code 'this'} is passed as the {@code parent} parameter.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to dock relative to this {@code Dockable}
      * @param relativeRegion

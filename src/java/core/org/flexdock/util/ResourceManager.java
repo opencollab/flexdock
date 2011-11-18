@@ -1,20 +1,20 @@
 /* Copyright (c) 2004 Christopher M Butler
 
- Permission is hereby granted, free of charge, to any person obtaining a copy of 
- this software and associated documentation files (the "Software"), to deal in the 
- Software without restriction, including without limitation the rights to use, 
- copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
- Software, and to permit persons to whom the Software is furnished to do so, subject 
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in the
+ Software without restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+ Software, and to permit persons to whom the Software is furnished to do so, subject
  to the following conditions:
 
- The above copyright notice and this permission notice shall be included in all 
+ The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
- CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.util;
 
@@ -43,7 +43,7 @@ import org.w3c.dom.Document;
 /**
  * This class provides {@code static} convenience methods for resource
  * management, including resource lookups and image, icon, and cursor creation.
- * 
+ *
  * @author Chris Butler
  */
 public class ResourceManager {
@@ -66,7 +66,7 @@ public class ResourceManager {
     /**
      * Returns {@code true} if the JVM is currently running on {@code Windows};
      * {@code false} otherwise.
-     * 
+     *
      * @return {@code true} if the JVM is currently running on {@code Windows};
      *         {@code false} otherwise.
      */
@@ -82,7 +82,7 @@ public class ResourceManager {
      * same from standalone applications to applets to multiple-classloader
      * container-managed applications. Returns {@code null} if specified
      * resource cannot be found.
-     * 
+     *
      * @param uri
      *            the String describing the resource to be looked up
      * @return a {@code URL} representing the resource that has been looked up.
@@ -91,7 +91,7 @@ public class ResourceManager {
         if (uri == null) {
             return null;
         }
-        
+
         URL url = ResourceManager.class.getResource(uri);
         if (url == null)
             url = ClassLoader.getSystemResource(uri);
@@ -119,7 +119,7 @@ public class ResourceManager {
      * Returns an {@code Image} object based on the specified resource URL. Does
      * not perform any caching on the {@code Image} object, so a new object will
      * be created with each call to this method.
-     * 
+     *
      * @param url
      *            the {@code String} describing the resource to be looked up
      * @exception NullPointerException
@@ -139,7 +139,7 @@ public class ResourceManager {
      * Returns an {@code Image} object based on the specified resource URL. Does
      * not perform any caching on the {@code Image} object, so a new object will
      * be created with each call to this method.
-     * 
+     *
      * @param imageLocation
      *            the {@code URL} indicating where the image resource may be
      *            found.
@@ -152,7 +152,7 @@ public class ResourceManager {
             return Toolkit.getDefaultToolkit().createImage(imageLocation);
         } catch (NullPointerException e) {
             throw new NullPointerException("Unable to locate image: "
-                    + imageLocation);
+                                           + imageLocation);
         }
     }
 
@@ -161,7 +161,7 @@ public class ResourceManager {
      * Uses the {@code ImageIcon} constructor internally instead of dispatching
      * to {@code createImage(String url)}, so {@code Image} objects are cached
      * via the {@code MediaTracker}.
-     * 
+     *
      * @param url
      *            the {@code String} describing the resource to be looked up
      * @exception NullPointerException
@@ -182,7 +182,7 @@ public class ResourceManager {
      * Throws a {@code NullPointerException} if specified resource cannot be
      * found. Dispatches to {@code createImage(URL imageLocation)}, so
      * {@code Image} objects are <b>not</b> cached via the{@code MediaTracker}.
-     * 
+     *
      * @param imageURL
      *            the {@code URL} indicating where the image resource may be
      *            found.
@@ -202,7 +202,7 @@ public class ResourceManager {
     public static Cursor createCursor(URL imageURL, Point hotPoint, String name) {
         Image image = createImage(imageURL);
         Cursor c = Toolkit.getDefaultToolkit().createCustomCursor(image,
-                hotPoint, name);
+                   hotPoint, name);
         return c;
     }
 
@@ -211,7 +211,7 @@ public class ResourceManager {
      * Throws a {@code NullPointerException} if specified resource cannot be
      * found. Dispatches to {@code createImage(String url)}, so {@code Image}
      * objects are <b>not</b> cached via the{@code MediaTracker}.
-     * 
+     *
      * @param url
      *            the {@code String} describing the resource to be looked up
      * @param hotPoint
@@ -230,7 +230,7 @@ public class ResourceManager {
     public static Cursor createCursor(String url, Point hotPoint, String name) {
         Image image = createImage(url);
         Cursor c = Toolkit.getDefaultToolkit().createCustomCursor(image,
-                hotPoint, name);
+                   hotPoint, name);
         return c;
     }
 
@@ -289,7 +289,7 @@ public class ResourceManager {
      * and install to the filesystem as a FlexDock Library, subsequent calls to
      * this method across JVM sessions will find the FlexDock Library on the
      * filesystem and bypass the extraction process.
-     * 
+     *
      * @param library
      *            the native library to load
      * @param classpathResource
@@ -316,7 +316,7 @@ public class ResourceManager {
         File file = new File(System.getProperty("user.home") + "/flexdock");
         file.mkdirs();
         file = new File(file.getAbsolutePath() + "/" + library
-                + LIBRARY_EXTENSION);
+                        + LIBRARY_EXTENSION);
 
         // if the file already exists, try to load from it
         if (file.exists()) {
@@ -344,7 +344,7 @@ public class ResourceManager {
         InputStream in = cl.getResourceAsStream(classpathResource);
         if (in == null)
             throw new UnsatisfiedLinkError(
-                    "Unable to locate classpath resource: " + classpathResource);
+                "Unable to locate classpath resource: " + classpathResource);
 
         try {
             // create an outputstream to our destination file
@@ -362,8 +362,8 @@ public class ResourceManager {
         } catch (IOException giveUp) {
             // well, I guess we're screwed, aren't we?
             UnsatisfiedLinkError err = new UnsatisfiedLinkError(
-                    "Unable to extract resource to file: "
-                            + file.getAbsolutePath());
+                "Unable to extract resource to file: "
+                + file.getAbsolutePath());
             err.initCause(giveUp);
             throw err;
         } finally {
@@ -383,7 +383,7 @@ public class ResourceManager {
      * {@code String} via {@code getResource(String uri)} and dispatches to
      * {@code getDocument(URL url)}. If the specified {@code uri} is
      * {@code null}, then this method returns {@code null}.
-     * 
+     *
      * @param uri
      *            the {@code String} describing the resource to be looked up
      * @return a {@code Document} object based on the specified resource
@@ -403,7 +403,7 @@ public class ResourceManager {
      * {@code Exceptions} are encountered in the process, this method returns
      * {@code null}. If the specified {@code URL} is {@code null}, then this
      * method returns {@code null}.
-     * 
+     *
      * @param url
      *            the {@code URL} describing the resource to be looked up
      * @return a {@code Document} object based on the specified resource
@@ -417,7 +417,7 @@ public class ResourceManager {
         try {
             inStream = url.openStream();
             DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
+                                             .newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             return builder.parse(inStream);
         } catch (Exception e) {
@@ -436,7 +436,7 @@ public class ResourceManager {
      * {@code false} for {@code failSilent}. If the specified {@code uri} is
      * {@code null}, then this method will print a stack trace for the ensuing
      * {@code NullPointerException} and return {@code null}.
-     * 
+     *
      * @param uri
      *            the {@code String} describing the resource to be looked up
      * @return a {@code Properties} object based on the specified resource
@@ -458,7 +458,7 @@ public class ResourceManager {
      * {@code failSilent} is {@code false}, then the ensuing
      * {@code NullPointerException's} stacktrace will be printed to the
      * {@code System.err} before returning.
-     * 
+     *
      * @param uri
      *            the {@code String} describing the resource to be looked up
      * @param failSilent
@@ -482,7 +482,7 @@ public class ResourceManager {
      * {@code null}, this method will print the ensuing
      * {@code NullPointerException} stack tracke to the {@code System.err} and
      * return {@code null}.
-     * 
+     *
      * @param url
      *            the {@code URL} describing the resource to be looked up
      * @return a {@code Properties} object based on the specified resource
@@ -500,7 +500,7 @@ public class ResourceManager {
      * properties-load process, this method will return {@code null}. If
      * {@code failSilent} is {@code false}, then the any encoutered error
      * stacktraces will be printed to the {@code System.err} before returning.
-     * 
+     *
      * @param url
      *            the {@code URL} describing the resource to be looked up
      * @param failSilent
@@ -533,7 +533,7 @@ public class ResourceManager {
      * {@code Exceptions} encountered will be printed to the {@code System.err}.
      * If {@code in} is {@code null}, then no {@code Exception} is thrown and
      * no action is taken.
-     * 
+     *
      * @param in
      *            the {@code InputStream} to close
      * @see InputStream#close()
@@ -552,7 +552,7 @@ public class ResourceManager {
      * {@code Exceptions} encountered will be printed to the {@code System.err}.
      * If {@code out} is {@code null}, then no {@code Exception} is thrown and
      * no action is taken.
-     * 
+     *
      * @param out
      *            the {@code OutputStream} to close
      * @see OutputStream#close()
@@ -571,7 +571,7 @@ public class ResourceManager {
      * {@code Exceptions} encountered will be printed to the {@code System.err}.
      * If {@code socket} is {@code null}, then no {@code Exception} is thrown
      * and no action is taken.
-     * 
+     *
      * @param socket
      *            the {@code Socket} to close
      * @see Socket#close()

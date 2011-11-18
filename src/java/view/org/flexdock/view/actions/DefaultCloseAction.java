@@ -13,11 +13,11 @@ import org.flexdock.view.View;
  */
 public class DefaultCloseAction extends ViewAction {
 
-	public DefaultCloseAction() {
-		
-	}
-	
-	public void actionPerformed(View view, ActionEvent evt) {
-		DockingManager.close(view);
-	}
+    public DefaultCloseAction() {
+
+    }
+
+    public void actionPerformed(View view, ActionEvent evt) {
+        DockingManager.close(view);
+    }
 }

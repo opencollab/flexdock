@@ -60,7 +60,7 @@ public class Titlebar extends JComponent {
     /**
      * Sets the text for this titlebar to {@code text} or empty string if text
      * is {@code null}.
-     * 
+     *
      * @param text
      *            the text to set.
      */
@@ -97,7 +97,7 @@ public class Titlebar extends JComponent {
         String key = getKey(action);
         if (key == null) {
             throw new IllegalArgumentException(
-                    "Cannot add an Action that has no Name associated with it.");
+                "Cannot add an Action that has no Name associated with it.");
         }
 
         // don't add the same action more than once
@@ -251,11 +251,11 @@ public class Titlebar extends JComponent {
 
     private void updateButtonModels() {
         String viewId = parentView == null ? null : parentView
-                .getPersistentId();
+                        .getPersistentId();
         Component[] comps = getComponents();
         for (int i = 0; i < comps.length; i++) {
             Button button = comps[i] instanceof Button ? (Button) comps[i]
-                    : null;
+                            : null;
             if (button == null)
                 continue;
 
@@ -275,9 +275,8 @@ public class Titlebar extends JComponent {
         setUI(PlafManager.getUI(this));
     }
 
-    public String getUIClassID() 
-    {
-      return uiClassID;
+    public String getUIClassID() {
+        return uiClassID;
     }
 
     public View getView() {

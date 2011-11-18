@@ -36,17 +36,17 @@ public class RootPaneBorder implements Border {
     public Insets getBorderInsets(Component c) {
         return new Insets(3, 3, 3, 3);
     }
-    
+
     // implement Border
 
     public boolean isBorderOpaque() {
         return false;
     }
-    
+
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-    	
-    	RootPane pane = (RootPane)c;
-    	
+
+        RootPane pane = (RootPane)c;
+
         Color background = pane.getBackground();
         Color darker = pane.getBackground().darker();
         Color evenDarker = darker.darker();

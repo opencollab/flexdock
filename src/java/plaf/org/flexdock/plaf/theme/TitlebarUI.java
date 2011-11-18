@@ -49,7 +49,7 @@ public class TitlebarUI extends FlexViewComponentUI {
     public static final String ICON_INSETS = "icon.insets";
     public static final String ANTIALIASING = "antialiasing";
     public static final int MINIMUM_HEIGHT = 12;
-    
+
     protected Font font;
     protected Color activeFont;
     protected Color inactiveFont;
@@ -64,7 +64,7 @@ public class TitlebarUI extends FlexViewComponentUI {
     protected Insets iconInsets;
     protected Object antialiasing;
     protected int defaultHeight = MINIMUM_HEIGHT;
-    
+
 
     public void installUI(JComponent c) {
         super.installUI(c);
@@ -108,8 +108,8 @@ public class TitlebarUI extends FlexViewComponentUI {
 
         Insets paintInsets = getInsets();
         return new Rectangle(paintInsets.left, paintInsets.top,
-                (titlebar.getWidth() - paintInsets.right - paintInsets.left), (titlebar.getHeight()
-                        - paintInsets.bottom - paintInsets.top));
+                             (titlebar.getWidth() - paintInsets.right - paintInsets.left), (titlebar.getHeight()
+                                     - paintInsets.bottom - paintInsets.top));
     }
 
     protected void paintTitle(Graphics g, Titlebar titlebar) {
@@ -125,18 +125,18 @@ public class TitlebarUI extends FlexViewComponentUI {
         Rectangle paintRect = getPaintRect(titlebar);
 
         int x = getTextLocation(iconRect);
-        
+
         //Center text vertically.
-	    FontMetrics fm = g.getFontMetrics();
+        FontMetrics fm = g.getFontMetrics();
         int y = (paintRect.height + fm.getAscent() - fm.getLeading() -
-                    fm.getDescent()) / 2;
-        
+                 fm.getDescent()) / 2;
+
         Color c = getFontColor(titlebar.isActive());
         g2.setColor(c);
         g.translate(paintRect.x, paintRect.y);
         g2.drawString(titlebar.getText(), x, y);
         g.translate(-paintRect.x, -paintRect.y);
-        
+
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, oldAAValue);
     }
@@ -202,21 +202,21 @@ public class TitlebarUI extends FlexViewComponentUI {
         View view = titlebar.getView();
         Component[] c = titlebar.getComponents();
         for (int i = 0; i < c.length; i++) {
-        	// start out with the preferred width
-        	int width = c[i].getPreferredSize().width;
+            // start out with the preferred width
+            int width = c[i].getPreferredSize().width;
             if (c[i] instanceof Button) {
-            	// org.flexdock.view.Buttons will be rendered as squares
-            	width = h;
-            	// don't show the button if its corresponding action is blocked
+                // org.flexdock.view.Buttons will be rendered as squares
+                width = h;
+                // don't show the button if its corresponding action is blocked
                 if(view!=null && view.isActionBlocked(((Button) c[i]).getActionName())) {
-                	c[i].setBounds(0, 0, 0, 0);
-                	continue;
+                    c[i].setBounds(0, 0, 0, 0);
+                    continue;
                 }
             }
             // layout the component over to the right
             c[i].setBounds(x, margin + rectangle.y, width, h);
             // move x to the left for the next component
-           	x -= width;
+            x -= width;
         }
     }
 
@@ -364,13 +364,13 @@ public class TitlebarUI extends FlexViewComponentUI {
     public IconResource getIcons(String key) {
         return defaultIcons == null ? null : defaultIcons.getIcons(key);
     }
-    
+
     public Action getAction(String actionKey) {
-    	IconResource resource = getIcons(actionKey);
-    	Action action = resource==null? null: resource.getAction();
-    	if(action!=null)
-    		action.putValue(Action.NAME, actionKey);
-    	return action;
+        IconResource resource = getIcons(actionKey);
+        Action action = resource==null? null: resource.getAction();
+        if(action!=null)
+            action.putValue(Action.NAME, actionKey);
+        return action;
     }
 
     /**
@@ -475,8 +475,8 @@ public class TitlebarUI extends FlexViewComponentUI {
      *            The antialias to set.
      */
     public void setAntialiasing(boolean antialias) {
-        antialiasing = antialias ? RenderingHints.VALUE_ANTIALIAS_ON : 
-            						RenderingHints.VALUE_ANTIALIAS_OFF;
+        antialiasing = antialias ? RenderingHints.VALUE_ANTIALIAS_ON :
+                       RenderingHints.VALUE_ANTIALIAS_OFF;
     }
 
     public void initializeCreationParameters() {

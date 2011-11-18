@@ -20,94 +20,93 @@ import org.flexdock.dockbar.ViewPane;
  */
 public class Animation implements Runnable, ActionListener {
     private static Log log = LogFactory.getLog(Animation.class);
-    
-	private static int ANIMATION_INTERVAL = 20;
-	private static int TOTAL_FRAME_COUNT = 5;
-	
-	private DockbarManager dockManager;
-	private Timer timer;
-	private float frameDelta;
-	private int frameCount;
-	private boolean hiding;
-	private Runnable next;
-	private Object lock;
 
-	public Animation(DockbarManager mgr, boolean hide) {
-		dockManager = mgr;
-		timer = new Timer(ANIMATION_INTERVAL, this);
-		frameDelta = (100f/(float)getTotalFrameCount())/100f;
-		hiding = hide;
-		lock = new Object();
-	}
+    private static int ANIMATION_INTERVAL = 20;
+    private static int TOTAL_FRAME_COUNT = 5;
 
-	public void run() {
-		timer.start();
-		sleep();
-	}
+    private DockbarManager dockManager;
+    private Timer timer;
+    private float frameDelta;
+    private int frameCount;
+    private boolean hiding;
+    private Runnable next;
+    private Object lock;
 
-	public void actionPerformed(ActionEvent e) {
-		resetViewpaneSize();
-		dockManager.revalidate();
-		if(frameCount==getTotalFrameCount()-1) {
-			timer.stop();
-			wakeUp();
-		}
-		else
-			frameCount++;
-	}
-	
-	private void resetViewpaneSize() {
-		ViewPane viewPane = dockManager.getViewPane();
-		int prefSize = dockManager.getPreferredViewpaneSize();
+    public Animation(DockbarManager mgr, boolean hide) {
+        dockManager = mgr;
+        timer = new Timer(ANIMATION_INTERVAL, this);
+        frameDelta = (100f/(float)getTotalFrameCount())/100f;
+        hiding = hide;
+        lock = new Object();
+    }
 
-		if(frameCount==0)
-			prefSize = getStartSize(prefSize);
-		else if(frameCount==getTotalFrameCount()-1)
-			prefSize = getEndSize(prefSize);
-		else {
-			int newSize = (int)((float)prefSize * (frameCount*frameDelta));
-			prefSize = hiding? prefSize-newSize: newSize;
-		}
+    public void run() {
+        timer.start();
+        sleep();
+    }
 
-		viewPane.setPrefSize(prefSize);
-	}
-	
-	private int getStartSize(int prefSize) {
-		if(hiding)
-			return prefSize;
-		return 0;
-	}
-	
-	private int getEndSize(int prefSize) {
-		if(hiding)
-			return 0;
-		return prefSize;
-	}
-	
-	private int getTotalFrameCount() {
-		return TOTAL_FRAME_COUNT;
-	}
+    public void actionPerformed(ActionEvent e) {
+        resetViewpaneSize();
+        dockManager.revalidate();
+        if(frameCount==getTotalFrameCount()-1) {
+            timer.stop();
+            wakeUp();
+        } else
+            frameCount++;
+    }
 
-	public Runnable getNext() {
-		return next;
-	}
-	public void setNext(Runnable next) {
-		this.next = next;
-	}
-	
-	private void sleep() {
-		synchronized(lock) {
-			try {
-				lock.wait();
-			} catch(InterruptedException e) {
-				log.debug(e.getMessage(), e);
-			}
-		}
-	}
-	
-	private void wakeUp() {
-		synchronized(lock) {
-			lock.notifyAll();
-		}
-	}
+    private void resetViewpaneSize() {
+        ViewPane viewPane = dockManager.getViewPane();
+        int prefSize = dockManager.getPreferredViewpaneSize();
+
+        if(frameCount==0)
+            prefSize = getStartSize(prefSize);
+        else if(frameCount==getTotalFrameCount()-1)
+            prefSize = getEndSize(prefSize);
+        else {
+            int newSize = (int)((float)prefSize * (frameCount*frameDelta));
+            prefSize = hiding? prefSize-newSize: newSize;
+        }
+
+        viewPane.setPrefSize(prefSize);
+    }
+
+    private int getStartSize(int prefSize) {
+        if(hiding)
+            return prefSize;
+        return 0;
+    }
+
+    private int getEndSize(int prefSize) {
+        if(hiding)
+            return 0;
+        return prefSize;
+    }
+
+    private int getTotalFrameCount() {
+        return TOTAL_FRAME_COUNT;
+    }
+
+    public Runnable getNext() {
+        return next;
+    }
+    public void setNext(Runnable next) {
+        this.next = next;
+    }
+
+    private void sleep() {
+        synchronized(lock) {
+            try {
+                lock.wait();
+            } catch(InterruptedException e) {
+                log.debug(e.getMessage(), e);
+            }
+        }
+    }
+
+    private void wakeUp() {
+        synchronized(lock) {
+            lock.notifyAll();
+        }
+    }
 }

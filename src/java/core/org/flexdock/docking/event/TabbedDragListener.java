@@ -18,26 +18,26 @@ import org.flexdock.docking.drag.DragManager;
  * @author Christopher Butler
  */
 public class TabbedDragListener extends MouseAdapter implements MouseMotionListener {
-    
+
     private DragManager dragListener;
-    
+
     public void mouseDragged(MouseEvent me) {
         if(dragListener!=null)
             dragListener.mouseDragged(me);
     }
-    
+
     public void mouseReleased(MouseEvent me) {
         if(dragListener!=null)
             dragListener.mouseReleased(me);
         dragListener = null;
     }
-    
+
     public void mousePressed(MouseEvent me) {
         if(!(me.getSource() instanceof JTabbedPane)) {
             dragListener = null;
             return;
         }
-        
+
         JTabbedPane pane = (JTabbedPane)me.getSource();
         Point p = me.getPoint();
         int tabIndex = pane.indexAtLocation(p.x, p.y);
@@ -45,24 +45,24 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
             dragListener = null;
             return;
         }
-        
+
         Dockable dockable = DockingManager.getDockable(pane.getComponentAt(tabIndex));
         dragListener = DockingManager.getDragListener(dockable);
         if(dragListener!=null)
             dragListener.mousePressed(me);
     }
-    
+
     public void mouseMoved(MouseEvent me) {
         // does nothing
     }
-    
+
 //  private void redispatchToDockable(MouseEvent me) {
 ////if(!tabsAsDragSource || dockable==null)
 ////return;
-//  
+//
 ////Component dragSrc = dockable.getInitiator();
 ////MouseEvent evt = SwingUtilities.convertMouseEvent((Component)me.getSource(), me, dragSrc);
 ////dragSrc.dispatchEvent(evt);
 //  }
-    
+
 }

@@ -12,7 +12,7 @@ import javax.swing.JComponent;
  */
 public interface Painter {
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar);
-    
+
     public PainterResource getPainterResource();
     public void setPainterResource(PainterResource painterResource);
 }

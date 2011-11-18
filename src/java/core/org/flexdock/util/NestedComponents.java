@@ -43,7 +43,7 @@ import org.flexdock.docking.Dockable;
  * operations. Since its member fields may be modified publicly, instances of
  * this class should not be cached, nor should its member values be indexed as
  * they are subject to arbitrary changes over the long term.
- * 
+ *
  * @author Christopher Butler
  */
 public class NestedComponents {
@@ -70,7 +70,7 @@ public class NestedComponents {
      * {@code searchSrc} field. If an instance of {@code parentClass} is found
      * before {@code childClass}, this the resulting {@code NestedComponents}
      * instance will have a {@code null} {@code child} field.
-     * 
+     *
      * @param searchSrc
      *            the {@code Component} from which to start searching for parent
      *            {@code Containers}.
@@ -82,7 +82,7 @@ public class NestedComponents {
      *         parameters.
      */
     public static NestedComponents find(Component searchSrc, Class childClass,
-            Class parentClass) {
+                                        Class parentClass) {
         if (searchSrc == null || childClass == null || parentClass == null)
             return null;
 
@@ -122,7 +122,7 @@ public class NestedComponents {
     }
 
     private NestedComponents(Component searchSrc, Component child,
-            Component parent) {
+                             Component parent) {
         this.searchSrc = searchSrc;
         this.child = child;
         this.parent = parent;
@@ -131,7 +131,7 @@ public class NestedComponents {
     /**
      * Returns {@code true} if both {@code child} and {@code parent} fields are
      * non-{@code null}; {@code false} otherwise.
-     * 
+     *
      * @return {@code true} if both {@code child} and {@code parent} fields are
      *         non-{@code null}; {@code false} otherwise.
      */
@@ -141,7 +141,7 @@ public class NestedComponents {
 
     /**
      * Overridden to match the {@code equals()} method.
-     * 
+     *
      * @return a hash code value for this object.
      * @see #equals(Object)
      */
@@ -157,7 +157,7 @@ public class NestedComponents {
      * {@code NestedComponents} instance and all shares all of the same field
      * references (==) as this {@code NestedComponents} for field
      * {@code searchSrc}, {@code child}, and {@code parent}.
-     * 
+     *
      * @param obj
      *            the {@code Object} to test for equality
      * @return {@code true} if the specified {@code Object} is "equal" to this
@@ -169,6 +169,6 @@ public class NestedComponents {
 
         NestedComponents other = (NestedComponents) obj;
         return searchSrc == other.searchSrc && child == other.child
-                && parent == other.parent;
+               && parent == other.parent;
     }
 }

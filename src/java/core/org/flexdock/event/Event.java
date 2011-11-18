@@ -15,7 +15,7 @@ public class Event extends EventObject implements DockingConstants {
 
     /**
      * An event object.
-     * 
+     *
      * @param src
      *            the source of the event.
      * @param evtType

@@ -5,7 +5,7 @@ package org.flexdock.docking.adapter;
 
 /**
  * This POJO contains values for an adapted components dockable requirements.
- * 
+ *
  * @author Christopher Butler
  */
 public class AdapterMapping {

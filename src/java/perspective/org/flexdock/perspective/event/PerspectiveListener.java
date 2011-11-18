@@ -13,8 +13,8 @@ import java.util.EventListener;
  */
 public interface PerspectiveListener extends EventListener {
 
-	void perspectiveChanged(PerspectiveEvent evt);
-	
-	void perspectiveReset(PerspectiveEvent evt);
-	
+    void perspectiveChanged(PerspectiveEvent evt);
+
+    void perspectiveReset(PerspectiveEvent evt);
+
 }

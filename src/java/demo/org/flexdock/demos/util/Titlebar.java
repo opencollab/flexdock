@@ -14,43 +14,43 @@ import javax.swing.border.EmptyBorder;
  */
 public class Titlebar extends JLabel {
 
-	public Titlebar() {
-		super();
-		init();
-	}
+    public Titlebar() {
+        super();
+        init();
+    }
 
-	public Titlebar(String text) {
-		super(text);
-		init();
-	}
-	
-	public Titlebar(String text, Color bgColor) {
-		super(text);
-		init();
-		setBackground(bgColor);
-	}
-	
-	private void init() {
-		setOpaque(true);
-		setBorder(new EmptyBorder(2, 4, 2, 2));
-	}
-	
-	protected void paintBorder(Graphics g) {
-		int w = getWidth();
-		int h = getHeight();
+    public Titlebar(String text) {
+        super(text);
+        init();
+    }
 
-		g.setColor(getBackground().brighter());
-		g.drawLine(0, 0, w, 0);
-		g.drawLine(0, 0, 0, h);
-		
-		g.setColor(getBackground().darker());
-		g.drawLine(0, h, w, h);
-	}
-	
-	public void setTitle(String title) {
-		if(title==null)
-			title = "";
-		title = title.trim();
-		setText(title);
-	}
+    public Titlebar(String text, Color bgColor) {
+        super(text);
+        init();
+        setBackground(bgColor);
+    }
+
+    private void init() {
+        setOpaque(true);
+        setBorder(new EmptyBorder(2, 4, 2, 2));
+    }
+
+    protected void paintBorder(Graphics g) {
+        int w = getWidth();
+        int h = getHeight();
+
+        g.setColor(getBackground().brighter());
+        g.drawLine(0, 0, w, 0);
+        g.drawLine(0, 0, 0, h);
+
+        g.setColor(getBackground().darker());
+        g.drawLine(0, h, w, h);
+    }
+
+    public void setTitle(String title) {
+        if(title==null)
+            title = "";
+        title = title.trim();
+        setText(title);
+    }
 }

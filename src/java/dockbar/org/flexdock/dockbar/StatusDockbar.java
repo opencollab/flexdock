@@ -15,7 +15,7 @@ import org.flexdock.plaf.common.border.SlideoutBorder;
 
 /**
  * A special dockbar which can be used to hold a statusbar panel at the bottom.
- * 
+ *
  * @author Wolfgang Zitzelsberger
  */
 public class StatusDockbar extends Dockbar {
@@ -62,8 +62,8 @@ public class StatusDockbar extends Dockbar {
             ((SlideoutBorder) border).setOrientation(orientation);
 
         int boxConstraint = orientation == MinimizationManager.TOP
-                || orientation == MinimizationManager.BOTTOM ? BoxLayout.LINE_AXIS
-                : BoxLayout.PAGE_AXIS;
+                            || orientation == MinimizationManager.BOTTOM ? BoxLayout.LINE_AXIS
+                            : BoxLayout.PAGE_AXIS;
         labelPanel.setLayout(new BoxLayout(labelPanel, boxConstraint));
     }
 
@@ -79,9 +79,9 @@ public class StatusDockbar extends Dockbar {
 
         DockbarLabel label = (DockbarLabel) labelPanel.getComponent(0);
         return new Dimension(label.getPreferredSize().width
-                + statusBarComponent.getPreferredSize().width, label
-                .getPreferredSize().height
-                + statusBarComponent.getPreferredSize().height);
+                             + statusBarComponent.getPreferredSize().width, label
+                             .getPreferredSize().height
+                             + statusBarComponent.getPreferredSize().height);
     }
 
 }

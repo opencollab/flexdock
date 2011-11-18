@@ -1,20 +1,20 @@
 /* Copyright (c) 2004 Christopher M Butler
 
- Permission is hereby granted, free of charge, to any person obtaining a copy of 
- this software and associated documentation files (the "Software"), to deal in the 
- Software without restriction, including without limitation the rights to use, 
- copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the 
- Software, and to permit persons to whom the Software is furnished to do so, subject 
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in the
+ Software without restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the
+ Software, and to permit persons to whom the Software is furnished to do so, subject
  to the following conditions:
 
- The above copyright notice and this permission notice shall be included in all 
+ The above copyright notice and this permission notice shall be included in all
  copies or substantial portions of the Software.
 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT 
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF 
- CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
  OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
 package org.flexdock.util;
 
@@ -47,12 +47,12 @@ import javax.swing.SwingUtilities;
  * {@code JWindow}, and {@code JDialog} without making an outward distinction
  * between the different container types. This is accomplished by wrapping the
  * root component.
- * 
+ *
  * @author Chris Butler
  */
 public class RootWindow {
     public static final Integer DEFAULT_MAXED_LAYER = new Integer(
-            JLayeredPane.PALETTE_LAYER.intValue() - 10);
+        JLayeredPane.PALETTE_LAYER.intValue() - 10);
 
     private static final Map MAP_BY_ROOT_CONTAINER = new WeakHashMap();
 
@@ -82,7 +82,7 @@ public class RootWindow {
      * Traverses the container hierarchy to locate the root container and
      * returns corresponding {@code RootSwingContainer}. If {@code c} is
      * {@code null}, a {@code null} reference is returned.
-     * 
+     *
      * @param c
      *            the container whose root we wish to find
      * @return the enclosing {@code RootSwingcontainer}
@@ -92,12 +92,12 @@ public class RootWindow {
         if (!isValidRootContainer(root))
             return null;
 
-	RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
+        RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
         if (container == null) {
-	    container = new RootWindow(root);
-	    MAP_BY_ROOT_CONTAINER.put(root, container);
-	}
-		
+            container = new RootWindow(root);
+            MAP_BY_ROOT_CONTAINER.put(root, container);
+        }
+
         if (container.getRootContainer() != root)
             container.setRootContainer(root);
 
@@ -107,14 +107,14 @@ public class RootWindow {
     /**
      * Indicates whether the supplied {@code Component} is, in fact, a root
      * Swing container.
-     * 
+     *
      * @param c
      *            the {@code Component} we wish to check
      */
     public static boolean isValidRootContainer(Component c) {
         return c != null
-                && (c instanceof JFrame || c instanceof JApplet
-                        || c instanceof JWindow || c instanceof JDialog);
+               && (c instanceof JFrame || c instanceof JApplet
+                   || c instanceof JWindow || c instanceof JDialog);
     }
 
     public static RootWindow[] getVisibleWindows() {
@@ -126,7 +126,7 @@ public class RootWindow {
     }
 
     private static void populateWindowList(RootWindow win, HashSet winCache,
-            boolean visOnly) {
+                                           boolean visOnly) {
         if (win == null || winCache.contains(win))
             return;
 
@@ -151,7 +151,7 @@ public class RootWindow {
 
     /**
      * Returns the {@code contentPane} object for the wrapped component.
-     * 
+     *
      * @return the {@code contentPane} property
      */
     public Container getContentPane() {
@@ -166,7 +166,7 @@ public class RootWindow {
 
     /**
      * Returns the {@code glassPane} object for the wrapped component.
-     * 
+     *
      * @return the {@code glassPane} property
      */
     public Component getGlassPane() {
@@ -181,7 +181,7 @@ public class RootWindow {
 
     /**
      * Returns the {@code layeredPane} object for the wrapped component.
-     * 
+     *
      * @return the {@code layeredPane} property
      */
     public JLayeredPane getLayeredPane() {
@@ -198,7 +198,7 @@ public class RootWindow {
      * Gets the location of the wrapped component in the form of a point
      * specifying the component's top-left corner in the screen's coordinate
      * space.
-     * 
+     *
      * @return An instance of {@code Point} representing the top-left corner of
      *         the component's bounds in the coordinate space of the screen.
      */
@@ -208,7 +208,7 @@ public class RootWindow {
 
     /**
      * Returns the layer associated with {@code Component} maximization.
-     * 
+     *
      * @return an {@code Integer} indicating the maximization layer property
      * @deprecated dead code last used in 0.2.0
      */
@@ -219,7 +219,7 @@ public class RootWindow {
     /**
      * Returns the {@code LayoutManager} associated with {@code Component}
      * maximization within the {@code RootSwingContainer}.
-     * 
+     *
      * @return a {@code LayoutManager} indicating the maximization layout
      *         property
      * @deprecated dead code last used in 0.2.0
@@ -231,7 +231,7 @@ public class RootWindow {
     /**
      * Returns the the wrapped component. ({@code JFrame}, {@code JApplet},
      * etc...)
-     * 
+     *
      * @return the wrapped root container
      */
     public Component getRootContainer() {
@@ -240,7 +240,7 @@ public class RootWindow {
 
     /**
      * Returns the {@code rootPane} object for the wrapped component.
-     * 
+     *
      * @return the {@code rootPane} property
      */
     public JRootPane getRootPane() {
@@ -265,7 +265,7 @@ public class RootWindow {
 
     /**
      * Sets the {@code contentPane} property for the wrapped component.
-     * 
+     *
      * @param contentPane
      *            the {@code contentPane} object for the wrapped component
      */
@@ -277,7 +277,7 @@ public class RootWindow {
 
     /**
      * Sets the {@code glassPane} property for the wrapped component.
-     * 
+     *
      * @param glassPane
      *            the {@code glassPane} object for the wrapped component
      */
@@ -289,7 +289,7 @@ public class RootWindow {
 
     /**
      * Sets the {@code layeredPane} property for the wrapped component.
-     * 
+     *
      * @param layeredPane
      *            the {@code layeredPane} object for the wrapped component
      */
@@ -301,7 +301,7 @@ public class RootWindow {
 
     /**
      * Return an array containing all the windows this window currently owns.
-     * 
+     *
      * @return all the windows currently owned by this root window.
      */
     public Window[] getOwnedWindows() {
@@ -319,7 +319,7 @@ public class RootWindow {
      * Sets the layer associated with {@code Component} maximization within the
      * {@code RootSwingContainer}. If {@code layer} is {@code null},
      * DEFAULT_MAXED_LAYER is used instead.
-     * 
+     *
      * @param layer
      *            an {@code Integer} indicating the maximization layer property
      * @deprecated dead code last used in 0.2.0
@@ -333,7 +333,7 @@ public class RootWindow {
     /**
      * Sets the {@code LayoutManager} associated with {@code Component}
      * maximization within the {@code RootSwingContainer}.
-     * 
+     *
      * @param mgr
      *            the {@code LayoutManager} associated with {@code Component}
      *            maximization within the {@code RootSwingContainer}.
@@ -345,7 +345,7 @@ public class RootWindow {
 
     /**
      * Sets the wrapped root container.
-     * 
+     *
      * @param root
      *            the new wrapped root container
      */
@@ -359,7 +359,7 @@ public class RootWindow {
     }
 
     public void pack() {
-	Component root = getRootContainer();
+        Component root = getRootContainer();
         if (root instanceof JFrame)
             ((JFrame) root).pack();
         else if (root instanceof JWindow)
@@ -369,7 +369,7 @@ public class RootWindow {
     }
 
     public void toFront() {
-	Component root = getRootContainer();
+        Component root = getRootContainer();
         if (root instanceof JFrame)
             ((JFrame) root).toFront();
         else if (root instanceof JWindow)
@@ -379,7 +379,7 @@ public class RootWindow {
     }
 
     public boolean isActive() {
-	Component root = getRootContainer();
+        Component root = getRootContainer();
         if (root instanceof JFrame)
             return ((JFrame) root).isActive();
         else if (root instanceof JWindow)
@@ -390,7 +390,7 @@ public class RootWindow {
     }
 
     public Window getOwner() {
-	Component root = getRootContainer();
+        Component root = getRootContainer();
         if (root instanceof JFrame)
             return ((JFrame) root).getOwner();
         else if (root instanceof JWindow)

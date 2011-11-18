@@ -20,24 +20,25 @@ import org.flexdock.util.SwingUtility;
 /**
  * Generic launcher for all demos.
  * It allows us to deliver a single entry point demo via a runnable jar or JNLP launched
- * app that runs all of our demonstration apps. 
+ * app that runs all of our demonstration apps.
  */
 public class AllDemos extends JFrame {
     private static Log log = LogFactory.getLog(AllDemos.class);
-    
+
     private static final String[] DEMO_CLASS_NAMES = new String[] {
-            "org.flexdock.demos.maximizing.MaximizationDemo",
-            "org.flexdock.demos.perspective.PerspectivesDemo",
-            "org.flexdock.demos.perspective.XMLPerspectivesDemo",
-            "org.flexdock.demos.raw.adapter.AdapterDemo",
-            "org.flexdock.demos.raw.border.BorderDemo",
-            "org.flexdock.demos.raw.CompoundDemo",
-            "org.flexdock.demos.raw.elegant.ElegantDemo",
-            "org.flexdock.demos.raw.jmf.JMFDemo",
-            "org.flexdock.demos.raw.SimpleDemo",
-            "org.flexdock.demos.raw.SplitPaneDemo",
-            "org.flexdock.demos.raw.TabbedPaneDemo",
-            "org.flexdock.demos.view.ViewDemo", };
+        "org.flexdock.demos.maximizing.MaximizationDemo",
+        "org.flexdock.demos.perspective.PerspectivesDemo",
+        "org.flexdock.demos.perspective.XMLPerspectivesDemo",
+        "org.flexdock.demos.raw.adapter.AdapterDemo",
+        "org.flexdock.demos.raw.border.BorderDemo",
+        "org.flexdock.demos.raw.CompoundDemo",
+        "org.flexdock.demos.raw.elegant.ElegantDemo",
+        "org.flexdock.demos.raw.jmf.JMFDemo",
+        "org.flexdock.demos.raw.SimpleDemo",
+        "org.flexdock.demos.raw.SplitPaneDemo",
+        "org.flexdock.demos.raw.TabbedPaneDemo",
+        "org.flexdock.demos.view.ViewDemo",
+    };
 
     public AllDemos() {
         super("FlexDock Demos");
@@ -46,7 +47,7 @@ public class AllDemos extends JFrame {
         for (int i = 0; i < DEMO_CLASS_NAMES.length; i++) {
             String full_class_name = DEMO_CLASS_NAMES[i];
             String just_class_name = full_class_name.substring(full_class_name
-                    .lastIndexOf('.') + 1);
+                                     .lastIndexOf('.') + 1);
             sorted_class_names.put(just_class_name, full_class_name);
         }
 

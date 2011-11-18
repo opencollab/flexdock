@@ -10,8 +10,8 @@ import java.util.Map;
  * @author Christopher Butler
  */
 public interface ScopedMap {
-	public Map getRoot();
-	public List getDefaults();
-	public List getLocals();
-	public List getGlobals();
+    public Map getRoot();
+    public List getDefaults();
+    public List getLocals();
+    public List getGlobals();
 }

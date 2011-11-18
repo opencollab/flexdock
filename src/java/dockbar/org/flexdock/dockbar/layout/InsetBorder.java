@@ -23,38 +23,38 @@ public class InsetBorder extends CompoundEmptyBorder {
     private boolean leftEdge;
     private boolean rightEdge;
     private boolean bottomEdge;
-    
-	protected InsetBorder(Border outer, Border inner, boolean emptyInner) {
-		super(outer, inner, emptyInner);
-	}
-	
-	public static InsetBorder createBorder(Border border, boolean inner) {
-		return createBorder(border, inner, null);
-	}
-	
-	public static InsetBorder createBorder(Border border, boolean inner, Insets base) {
-		if(base==null)
-			base = new Insets(0, 0, 0, 0);
-		
-		MutableEmptyBorder empty = new MutableEmptyBorder(base.top, base.left, base.bottom, base.right);
-		if(inner)
-			return new InsetBorder(border, empty, inner);
-		return new InsetBorder(empty, border, inner);
-	}
- 
-	public void toggleEdge(int edge, boolean on) {
-	    switch(edge) {
-	    	case MinimizationManager.LEFT:
-	    	    leftEdge = on;
-	    	    break;
-	    	case MinimizationManager.RIGHT:
-	    	    rightEdge = on;
-	    	    break;
-	    	case MinimizationManager.BOTTOM:
-	    	    bottomEdge = on;
-	    	    break;
-	    }
-	}
+
+    protected InsetBorder(Border outer, Border inner, boolean emptyInner) {
+        super(outer, inner, emptyInner);
+    }
+
+    public static InsetBorder createBorder(Border border, boolean inner) {
+        return createBorder(border, inner, null);
+    }
+
+    public static InsetBorder createBorder(Border border, boolean inner, Insets base) {
+        if(base==null)
+            base = new Insets(0, 0, 0, 0);
+
+        MutableEmptyBorder empty = new MutableEmptyBorder(base.top, base.left, base.bottom, base.right);
+        if(inner)
+            return new InsetBorder(border, empty, inner);
+        return new InsetBorder(empty, border, inner);
+    }
+
+    public void toggleEdge(int edge, boolean on) {
+        switch(edge) {
+        case MinimizationManager.LEFT:
+            leftEdge = on;
+            break;
+        case MinimizationManager.RIGHT:
+            rightEdge = on;
+            break;
+        case MinimizationManager.BOTTOM:
+            bottomEdge = on;
+            break;
+        }
+    }
     /**
      * @return Returns the bottomEdge.
      */
@@ -91,17 +91,17 @@ public class InsetBorder extends CompoundEmptyBorder {
     public void setRightEdge(boolean rightEdge) {
         this.rightEdge = rightEdge;
     }
-    
+
     void clearEdges() {
         setLeftEdge(false);
         setRightEdge(false);
         setBottomEdge(false);
     }
-    
-	public boolean setEmptyInsets(int top, int left, int bottom, int right) {
-	    left = isLeftEdge()? left: 0;
-	    right = isRightEdge()? right: 0;
-	    bottom = isBottomEdge()? bottom: 0;
-	    return super.setEmptyInsets(top, left, bottom, right);
-	}
+
+    public boolean setEmptyInsets(int top, int left, int bottom, int right) {
+        left = isLeftEdge()? left: 0;
+        right = isRightEdge()? right: 0;
+        bottom = isBottomEdge()? bottom: 0;
+        return super.setEmptyInsets(top, left, bottom, right);
+    }
 }

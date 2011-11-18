@@ -17,7 +17,7 @@ import org.flexdock.docking.floating.policy.FloatPolicy.NullFloatPolicy;
  * {@code Dockables} without any frame drag sources, for already floating
  * {@code Dockables} that cannot be reparented within a new dialog, or if global
  * floating support has been disabled.
- * 
+ *
  * @author Christopher Butler
  */
 public class DefaultFloatPolicy extends NullFloatPolicy {
@@ -26,7 +26,7 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
 
     /**
      * Returns a singleton instance of {@code DefaultFloatPolicy}.
-     * 
+     *
      * @return a singleton instance of {@code DefaultFloatPolicy}.
      */
     public static DefaultFloatPolicy getInstance() {
@@ -43,7 +43,7 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
      * sense to remove the {@code Dockable} only to float it within another
      * dialog. This situation is caught by this method and the docking operation
      * is blocked.
-     * 
+     *
      * @param evt
      *            the {@code DockingEvent} to be checked for drop-to-float
      *            support
@@ -77,7 +77,7 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
      * returns {@code false}, or if there are no entries within the {@code Set}
      * returned by {@code dockable.getFrameDragSources()}. Otherwise, this
      * method returns {@code true}.
-     * 
+     *
      * @param dockable
      *            the {@code Dockable} to be checked for floating support
      * @return {@code false} if floating is blocked for the specified

@@ -15,30 +15,30 @@ import org.flexdock.docking.state.LayoutNode;
  */
 public abstract class DockingNode extends DefaultMutableTreeNode implements LayoutNode, DockingConstants {
 
-	public Object getUserObject() {
-		Object obj = super.getUserObject();
-		if(obj==null) {
-			obj = getDockingObject();
-			setUserObject(obj);
-		}
-		return obj;
-	}
+    public Object getUserObject() {
+        Object obj = super.getUserObject();
+        if(obj==null) {
+            obj = getDockingObject();
+            setUserObject(obj);
+        }
+        return obj;
+    }
 
-	public abstract Object getDockingObject();
+    public abstract Object getDockingObject();
 
     protected abstract DockingNode shallowClone();
-	
-	public Object clone() {
-		return deepClone();
-	}
-	
-	public DockingNode deepClone() {
-		DockingNode clone = shallowClone();
-		for(Enumeration en=children(); en.hasMoreElements();) {
-			DockingNode child = (DockingNode)en.nextElement();
-			clone.add(child.deepClone());
-		}
-		return clone;		
-	}
-    
+
+    public Object clone() {
+        return deepClone();
+    }
+
+    public DockingNode deepClone() {
+        DockingNode clone = shallowClone();
+        for(Enumeration en=children(); en.hasMoreElements();) {
+            DockingNode child = (DockingNode)en.nextElement();
+            clone.add(child.deepClone());
+        }
+        return clone;
+    }
+
 }

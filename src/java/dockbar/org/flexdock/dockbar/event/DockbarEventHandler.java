@@ -11,15 +11,15 @@ import org.flexdock.event.EventHandler;
 /**
  * An event handler to match {@code DockbarEvent} types to the appropriate
  * {@code DockbarListener} method.
- * 
+ *
  * @author Christopher Butler
  */
 public class DockbarEventHandler extends EventHandler {
 
     /**
      * This class accepts {@code DockbarEvent}s.
-     * 
-     * @param evt 
+     *
+     * @param evt
      */
     public boolean acceptsEvent(Event evt) {
         return evt instanceof DockbarEvent;
