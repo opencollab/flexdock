@@ -76,22 +76,22 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 
         addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
 
-                public void propertyChange(PropertyChangeEvent pce) {
-                    if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
-                        BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
-                        if (dividerHashCode != ui.getDivider().hashCode()) {
-                            dividerHashCode = ui.getDivider().hashCode();
-                            ui.getDivider().addMouseListener(new MouseAdapter() {
+            public void propertyChange(PropertyChangeEvent pce) {
+                if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
+                    BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
+                    if (dividerHashCode != ui.getDivider().hashCode()) {
+                        dividerHashCode = ui.getDivider().hashCode();
+                        ui.getDivider().addMouseListener(new MouseAdapter() {
 
-                                    public void mouseReleased(MouseEvent e) {
-                                        DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
-                                        DockingSplitPane.this.setResizeWeight(percent);
-                                    }
-                                });
-                        }
+                            public void mouseReleased(MouseEvent e) {
+                                DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
+                                DockingSplitPane.this.setResizeWeight(percent);
+                            }
+                        });
                     }
                 }
-            });
+            }
+        });
     }
 
     public void setConstantPercent(boolean cstPercent) {
@@ -184,7 +184,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      */
     public Component getElderComponent() {
         Component c = controllerInTopLeft ? getLeftComponent()
-            : getRightComponent();
+                      : getRightComponent();
         if (c instanceof DockingPort)
             c = ((DockingPort) c).getDockedComponent();
         return c;

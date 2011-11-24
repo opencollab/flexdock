@@ -103,8 +103,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         if(topLeft) {
             region = orientation==JSplitPane.VERTICAL_SPLIT? TOP: LEFT;
             siblingId = getSiblingId(split.getRightComponent());
-        }
-        else {
+        } else {
             region = orientation==JSplitPane.VERTICAL_SPLIT? BOTTOM: RIGHT;
             siblingId = getSiblingId(split.getLeftComponent());
         }
@@ -390,10 +389,10 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         final Component docked = dockable.getComponent();
 
         EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    resizeSplitPane(docked, percent);
-                }
-            });
+            public void run() {
+                resizeSplitPane(docked, percent);
+            }
+        });
         return ret;
     }
 
