@@ -2147,7 +2147,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             int divLoc = (int) ((float) size * percent);
             // System.err.println("percent: " + percent + ", divLoc: " +
             // divLoc);
-            split.setDividerLocation(divLoc);
+            split.setDividerLocation(percent);
 
             // make sure to invoke the installed BorderManager how that we have
             // a hierarchy of DockingPorts. otherwise, we may end up with some

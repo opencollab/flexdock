@@ -341,11 +341,41 @@ public class SwingUtility {
         return new Color(grayTone, grayTone, grayTone);
     }
 
+	public static BufferedImage createImage(Component comp) {
+		if(comp==null)
+			return null;
+		
+		BufferedImage image = (BufferedImage)comp.createImage(comp.getWidth(), comp.getHeight());
+		Graphics g = image.createGraphics();
+		comp.paintAll(g);
+		return image;
+	}
+	
+	public static float getDividerProportion(JSplitPane splitPane) {
+		if(splitPane==null)
+			return 0;
+		
+		int size = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? splitPane.getWidth(): splitPane.getHeight();
+		int divLoc = splitPane.getDividerLocation();
+		return size==0? 0: (float)divLoc/((float)size - splitPane.getDividerSize());
+	}
+	
+	public static Component getOtherComponent(JSplitPane split, Component current) {
+		if(split==null || current==null)
+			return null;
+		
+		Component other = split.getLeftComponent();
+		if(other==current)
+			other = split.getRightComponent();
+		return other;
+	}
+
     public static void putClientProperty(Component c, Object key, Object value) {
         if(c instanceof JComponent) {
             ((JComponent)c).putClientProperty(key, value);
         }
     }
+
 
     public static Object getClientProperty(Component c, Object key) {
         if(c instanceof JComponent) {
@@ -363,35 +393,6 @@ public class SwingUtility {
     public static Window getActiveWindow() {
         KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         return mgr.getActiveWindow();
-    }
-
-    public static BufferedImage createImage(Component comp) {
-        if(comp==null)
-            return null;
-
-        BufferedImage image = (BufferedImage)comp.createImage(comp.getWidth(), comp.getHeight());
-        Graphics g = image.createGraphics();
-        comp.paintAll(g);
-        return image;
-    }
-
-    public static float getDividerProportion(JSplitPane splitPane) {
-        if(splitPane==null)
-            return 0;
-
-        int size = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? splitPane.getWidth(): splitPane.getHeight();
-        int divLoc = splitPane.getDividerLocation();
-        return size==0? 0: (float)divLoc/(float)size;
-    }
-
-    public static Component getOtherComponent(JSplitPane split, Component current) {
-        if(split==null || current==null)
-            return null;
-
-        Component other = split.getLeftComponent();
-        if(other==current)
-            other = split.getRightComponent();
-        return other;
     }
 
     public static int getSplitPaneSize(JSplitPane splitPane) {

@@ -4,13 +4,19 @@ package org.flexdock.docking.defaults;
 
 import java.awt.Component;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JSplitPane;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.util.DockingUtility;
+import org.flexdock.util.SwingUtility;
 
 /**
  * @author Christopher Butler
@@ -25,6 +31,12 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     protected boolean controllerInTopLeft;
 
     protected double initialDividerRatio = .5;
+
+    protected double percent = -1;
+
+    private int dividerHashCode = -1;
+
+    private boolean constantPercent;
 
     /**
      * Creates a new {@code DockingSplitPane} for the specified
@@ -61,6 +73,31 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         // set the proper resize weight
         int weight = controllerInTopLeft ? 1 : 0;
         setResizeWeight(weight);
+
+        addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
+
+                public void propertyChange(PropertyChangeEvent pce) {
+                    if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
+                        BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
+                        if (dividerHashCode != ui.getDivider().hashCode()) {
+                            dividerHashCode = ui.getDivider().hashCode();
+                            ui.getDivider().addMouseListener(new MouseAdapter() {
+
+                                    public void mouseReleased(MouseEvent e) {
+                                        DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
+                                        DockingSplitPane.this.setResizeWeight(percent);
+                                    }
+                                });
+                        }
+                    }
+                }
+            });
+    }
+
+    public void setConstantPercent(boolean cstPercent) {
+        if (cstPercent != constantPercent) {
+            constantPercent = cstPercent;
+        }
     }
 
     public void resetToPreferredSizes() {
@@ -99,6 +136,20 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         }
     }
 
+    public void setDividerLocation(double percent) {
+        this.percent = percent;
+        super.setDividerLocation(percent);
+        setResizeWeight(percent);
+    }
+
+    public double getPercent() {
+        if (constantPercent) {
+            return percent;
+        }
+
+        return -1;
+    }
+
     protected boolean isDividerSizeProperlyDetermined() {
         if (getDividerLocation() != 0)
             return true;
@@ -133,7 +184,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      */
     public Component getElderComponent() {
         Component c = controllerInTopLeft ? getLeftComponent()
-                      : getRightComponent();
+            : getRightComponent();
         if (c instanceof DockingPort)
             c = ((DockingPort) c).getDockedComponent();
         return c;

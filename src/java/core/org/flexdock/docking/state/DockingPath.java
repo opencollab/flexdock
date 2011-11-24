@@ -24,6 +24,7 @@ import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
+import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.SwingUtility;
@@ -102,7 +103,8 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         if(topLeft) {
             region = orientation==JSplitPane.VERTICAL_SPLIT? TOP: LEFT;
             siblingId = getSiblingId(split.getRightComponent());
-        } else {
+        }
+        else {
             region = orientation==JSplitPane.VERTICAL_SPLIT? BOTTOM: RIGHT;
             siblingId = getSiblingId(split.getLeftComponent());
         }
@@ -116,7 +118,13 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         } else {
             testSize += split.getLeftComponent().getWidth() + split.getRightComponent().getWidth() + split.getDividerSize();
         }
-        float percentage = (float)divLoc / (float)size;
+
+        float percentage;
+        if (split instanceof DockingSplitPane && ((DockingSplitPane) split).getPercent() != -1) {
+            percentage = (float) ((DockingSplitPane) split).getPercent();
+        } else {
+            percentage = (float)divLoc / (float)size;
+        }
 
         return new SplitNode(orientation, region, percentage, siblingId);
     }
@@ -382,10 +390,10 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         final Component docked = dockable.getComponent();
 
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                resizeSplitPane(docked, percent);
-            }
-        });
+                public void run() {
+                    resizeSplitPane(docked, percent);
+                }
+            });
         return ret;
     }
 
@@ -396,8 +404,8 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
             return;
 
         JSplitPane split = (JSplitPane)grandParent;
-//		int splitSize = split.getOrientation()==DockingConstants.VERTICAL? split.getHeight(): split.getWidth();
-//		int divLoc = (int)(percentage * (float)splitSize);
+//              int splitSize = split.getOrientation()==DockingConstants.VERTICAL? split.getHeight(): split.getWidth();
+//              int divLoc = (int)(percentage * (float)splitSize);
         split.setDividerLocation(percentage);
     }
 
