@@ -8,6 +8,9 @@ This release has been managed by the Scilab team (http://www.scilab.org/)
 Updates:
 	- Consitent indentation of the java source code. 
 	  Done with astyle --style=java
+    - Add a static method 
+      DefaultDockingStrategy.keepConstantPercentage(boolean) to force the 
+      restored splitpanes to have the saved proportions.
 
 == flexdock 0.5.4 RELEASE NOTES ==
 
@@ -19,9 +22,6 @@ This release has been managed by the Scilab team (http://www.scilab.org/)
 Updates:
     - Force the repaint when setting the title of a dock
     - Force the target class to version 1.5 (or 5)
-    - Add a static method 
-      DefaultDockingStrategy.keepConstantPercentage(boolean) to force the 
-      restored splitpanes to have the saved proportions.
 
 == flexdock 0.5.3 RELEASE NOTES ==
 
