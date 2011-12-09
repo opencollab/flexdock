@@ -1,10 +1,12 @@
-== flexdock 0.5.5 RELEASE NOTES ==
+== flexdock 1.0 RELEASE NOTES ==
 
 CHANGES FROM 0.5.4:
 
 This release has been managed by Scilab enterprises 
 (http://www.scilab-enterprises.com/) in particular Calixte Denizet and
 Sylvestre Ledru.
+This version is tagged 1.0 in order to show that it reached a stable status.
+It has been used by Scilab for years without any big issues.
 
 Updates:
     - Consitent indentation of the java source code. 
