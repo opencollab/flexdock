@@ -2,12 +2,13 @@
 
 CHANGES FROM 0.5.4:
 
-
-This release has been managed by the Scilab team (http://www.scilab.org/)
+This release has been managed by Scilab enterprises 
+(http://www.scilab-enterprises.com/) in particular Calixte Denizet and
+Sylvestre Ledru.
 
 Updates:
-	- Consitent indentation of the java source code. 
-	  Done with astyle --style=java
+    - Consitent indentation of the java source code. 
+      Done with astyle --style=java
     - Add a static method 
       DefaultDockingStrategy.keepConstantPercentage(boolean) to force the 
       restored splitpanes to have the saved proportions.
