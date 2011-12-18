@@ -7,14 +7,13 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 /**
  * @author Christopher Butler
  */
 public class Utilities {
-    private static Log log = LogFactory.getLog(Utilities.class);
 
     /**
      * A constant representing the Java version. This constant is {@code true}
@@ -31,7 +30,7 @@ public class Utilities {
     /**
      * A String representing the flexdock version. This constant is a string.
      */
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.1";
 
     private Utilities() {
         // does nothing
@@ -369,7 +368,7 @@ public class Utilities {
             return c.newInstance();
         } catch (Throwable e) {
             if (!failSilent)
-                log.warn(e.getMessage(), e);
+                System.err.println("Exception: " +e.getMessage());
             return null;
         }
     }
@@ -636,7 +635,8 @@ public class Utilities {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
         }
     }
 

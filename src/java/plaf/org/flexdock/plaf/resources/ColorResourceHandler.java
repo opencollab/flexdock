@@ -5,15 +5,14 @@ package org.flexdock.plaf.resources;
 
 import javax.swing.plaf.ColorUIResource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.plaf.Configurator;
 
 /**
  * @author Christopher Butler
  */
 public class ColorResourceHandler extends ResourceHandler {
-    private static Log log = LogFactory.getLog(ColorResourceHandler.class);
 
     public Object getResource(String stringValue) {
         return parseHexColor(stringValue);
@@ -37,7 +36,7 @@ public class ColorResourceHandler extends ResourceHandler {
             int color = Integer.parseInt(sb.toString(), 16);
             return new ColorUIResource(color);
         } catch(NumberFormatException e) {
-            log.debug(e.getMessage(),e);
+            System.err.println("Exception: " +e.getMessage());
             return null;
         }
     }

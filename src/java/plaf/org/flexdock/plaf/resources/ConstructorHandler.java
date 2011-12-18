@@ -7,14 +7,13 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 /**
  * @author Christopher Butler
  */
 public class ConstructorHandler extends ResourceHandler {
-    private static Log log = LogFactory.getLog(ConstructorHandler.class);
 
     private Constructor constructor;
 
@@ -27,7 +26,7 @@ public class ConstructorHandler extends ResourceHandler {
         try {
             return constructor.newInstance(arguments);
         } catch(Exception e) {
-            log.debug(e.getMessage(),e);
+            System.err.println("Exception: " +e.getMessage());
             return null;
         }
     }

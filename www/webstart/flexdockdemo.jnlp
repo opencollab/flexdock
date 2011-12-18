@@ -15,7 +15,6 @@
       <jar href="flexdock-demo-0.5.2.jar"/>
       <jar href="flexdock-0.5.2.jar"/>
       <jar href="jmf.jar" download="lazy"/>
-      <jar href="commons-logging-1.1.jar" download="lazy"/>
       <jar href="looks-2.1.1.jar" download="lazy"/>
       <jar href="skinlf.jar" download="lazy"/>
    </resources>

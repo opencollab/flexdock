@@ -5,14 +5,13 @@ package org.flexdock.plaf.resources;
 
 import java.awt.Insets;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 
 /**
  * @author Claudio Romano
  */
 public class InsetsResourceHandler extends ResourceHandler {
-    private static Log log = LogFactory.getLog(InsetsResourceHandler.class);
 
     public Object getResource(String data) {
 //      pattern should be "top, left, bottom, right"
@@ -34,7 +33,8 @@ public class InsetsResourceHandler extends ResourceHandler {
         try {
             return Integer.parseInt(data);
         } catch(Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return 0;
         }
     }

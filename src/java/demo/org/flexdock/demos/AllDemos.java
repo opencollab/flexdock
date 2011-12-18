@@ -12,8 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.demos.util.DemoUtility;
 import org.flexdock.util.SwingUtility;
 
@@ -23,7 +23,6 @@ import org.flexdock.util.SwingUtility;
  * app that runs all of our demonstration apps.
  */
 public class AllDemos extends JFrame {
-    private static Log log = LogFactory.getLog(AllDemos.class);
 
     private static final String[] DEMO_CLASS_NAMES = new String[] {
         "org.flexdock.demos.maximizing.MaximizationDemo",
@@ -79,11 +78,9 @@ public class AllDemos extends JFrame {
         try {
             c = Class.forName(full_class_name);
             Method m = c.getMethod("main", new Class[] { String[].class });
-            log.debug("Launching using: " + m);
             m.invoke(null, new Object[] { null });
         } catch (Throwable t) {
             String message = "Error occurred when calling main(String[]) on class " + full_class_name;
-            log.error(message, t);
             DemoUtility.showErrorDialog(this, message, t);
         }
     }

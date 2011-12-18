@@ -38,8 +38,8 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.docking.activation.ActiveDockableListener;
 import org.flexdock.docking.adapter.AdapterFactory;
 import org.flexdock.docking.adapter.DockingAdapter;
@@ -101,7 +101,6 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  */
 public class DockingManager implements DockingConstants {
-    private static Log log = LogFactory.getLog(DockingManager.class);
 
     public static final String MINIMIZE_MANAGER = "minimize.manager";
 
@@ -1384,11 +1383,13 @@ public class DockingManager implements DockingConstants {
             return restoreLayout(false);
         } catch (IOException e) {
             // shouldn't happen since we're not intending to load from storage
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return false;
         } catch (PersistenceException e) {
             // TODO Auto-generated catch block
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return false;
         }
     }

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.XMLConstants;
@@ -20,7 +20,6 @@ import org.w3c.dom.Element;
  * @author Christopher Butler
  */
 public class ResourceHandlerFactory implements XMLConstants {
-    private static Log log = LogFactory.getLog(ResourceHandlerFactory.class);
 
     private static final HashMap RESOURCE_HANDLERS = loadResourceHandlers();
     private static final HashMap PROPERTY_HANDLERS = loadPropertyHandlers();
@@ -62,7 +61,8 @@ public class ResourceHandlerFactory implements XMLConstants {
             Class clazz = Class.forName(className);
             return (ResourceHandler)clazz.newInstance();
         } catch(Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return null;
         }
     }
@@ -119,7 +119,8 @@ public class ResourceHandlerFactory implements XMLConstants {
             return new ConstructorHandler(constructor);
 
         } catch(Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return null;
         }
     }

@@ -5,8 +5,8 @@ package org.flexdock.dockbar.event;
 
 import java.awt.Point;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.dockbar.DockbarManager;
 import org.flexdock.docking.Dockable;
 import org.flexdock.event.EventManager;
@@ -16,7 +16,6 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  */
 public class ActivationListener {
-    private static Log log = LogFactory.getLog(ActivationListener.class);
 
     private DockbarManager manager;
     private Deactivator deactivator;
@@ -125,7 +124,8 @@ public class ActivationListener {
             try {
                 Thread.sleep(1000);
             } catch(InterruptedException e) {
-                log.debug(e.getMessage(), e);
+                System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             }
 
             if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&

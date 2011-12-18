@@ -36,8 +36,8 @@ import javax.swing.ImageIcon;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.w3c.dom.Document;
 
 /**
@@ -47,7 +47,6 @@ import org.w3c.dom.Document;
  * @author Chris Butler
  */
 public class ResourceManager {
-    private static Log log = LogFactory.getLog(ResourceManager.class);
 
     private ResourceManager() {
         // does nothing
@@ -108,7 +107,7 @@ public class ResourceManager {
                 if (file.exists())
                     url = file.toURL();
             } catch (MalformedURLException e) {
-                log.warn(e.getMessage(), e);
+                System.err.println("Exception: " +e.getMessage());
                 url = null;
             }
         }
@@ -421,7 +420,7 @@ public class ResourceManager {
             DocumentBuilder builder = factory.newDocumentBuilder();
             return builder.parse(inStream);
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
         } finally {
             close(inStream);
         }
@@ -521,7 +520,7 @@ public class ResourceManager {
             return p;
         } catch (Exception e) {
             if (!failSilent)
-                log.warn(e.getMessage(), e);
+                System.err.println("Exception: " +e.getMessage());
             return null;
         } finally {
             close(in);
@@ -543,7 +542,7 @@ public class ResourceManager {
             if (in != null)
                 in.close();
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
         }
     }
 
@@ -562,7 +561,7 @@ public class ResourceManager {
             if (out != null)
                 out.close();
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
         }
     }
 
@@ -581,7 +580,7 @@ public class ResourceManager {
             if (socket != null)
                 socket.close();
         } catch (Exception e) {
-            log.warn(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
         }
     }
 }

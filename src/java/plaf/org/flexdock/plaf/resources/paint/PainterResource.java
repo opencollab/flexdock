@@ -5,15 +5,14 @@ package org.flexdock.plaf.resources.paint;
 
 import java.awt.Color;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.plaf.PropertySet;
 
 /**
  * @author Claudio Romano
  */
 public class PainterResource extends PropertySet {
-    private static Log log = LogFactory.getLog(PainterResource.class);
 
 
     public static final String CLASSNAME = "classname";
@@ -68,7 +67,8 @@ public class PainterResource extends PropertySet {
         try {
             return resolveClass(getString( CLASSNAME));
         } catch( Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
         }
 
         return null;

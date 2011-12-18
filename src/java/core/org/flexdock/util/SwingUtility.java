@@ -23,8 +23,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
 
@@ -35,7 +35,6 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
  * @author Christopher Butler
  */
 public class SwingUtility {
-    private static Log log = LogFactory.getLog(SwingUtility.class);
 
     public static Component toComponent(Object obj) {
         return obj instanceof Component? (Component)obj: null;
@@ -169,7 +168,8 @@ public class SwingUtility {
         try {
             UIManager.setLookAndFeel(lookAndFeelClassName);
         } catch(Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
         }
     }
 
@@ -183,7 +183,8 @@ public class SwingUtility {
             UIManager.setLookAndFeel(SkinLookAndFeel.class.getName());
             return true;
         } catch(Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return false;
         }
     }

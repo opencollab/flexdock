@@ -18,8 +18,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingManager;
@@ -33,7 +33,6 @@ import org.flexdock.util.SwingUtility;
  * @author Christopher Butler
  */
 public class DockingPath implements Cloneable, DockingConstants, Serializable {
-    private static Log log = LogFactory.getLog(DockingPath.class);
 
     public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY";
 
@@ -347,7 +346,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         // stacktrace and see who sends in an error report.
         if(docked != null && !(docked instanceof JSplitPane)) {
             Throwable t = new Throwable("Docked: " + docked);
-            log.warn(t.getMessage(), t);
+            System.err.println("Exception: "+t.getMessage());
             return false;
         }
 

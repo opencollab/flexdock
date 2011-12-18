@@ -4,8 +4,8 @@
  */
 package org.flexdock.plaf.resources;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PropertySet;
 import org.flexdock.plaf.resources.paint.Painter;
@@ -16,7 +16,6 @@ import org.flexdock.plaf.resources.paint.PainterResource;
  *
  */
 public class PainterResourceHandler extends ResourceHandler {
-    private static Log log = LogFactory.getLog(PainterResourceHandler.class);
 
     public static final String PAINTER_RESOURCE_KEY = "painter-resource";
 
@@ -37,7 +36,8 @@ public class PainterResourceHandler extends ResourceHandler {
         try {
             return (Painter)clazz.newInstance();
         } catch(Exception e) {
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return null;
         }
     }

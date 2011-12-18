@@ -6,8 +6,8 @@ package org.flexdock.plaf.theme;
 import java.util.HashMap;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.IFlexViewComponentUI;
 import org.flexdock.plaf.PlafManager;
@@ -19,7 +19,6 @@ import org.w3c.dom.Element;
  * @author Christopher Butler
  */
 public class UIFactory implements XMLConstants {
-    private static Log log = LogFactory.getLog(UIFactory.class);
 
     public static final String DEFAULT = "default";
     public static final String THEME_KEY = "theme";
@@ -109,7 +108,8 @@ public class UIFactory implements XMLConstants {
         } catch(Exception e) {
             // we use public, no-argument constructors, so if this happens, we
             // have a configuration error.
-            log.debug(e.getMessage(), e);
+            System.err.println("Exception: " +e.getMessage());
+e.printStackTrace();
             return null;
         }
     }
@@ -122,12 +122,10 @@ public class UIFactory implements XMLConstants {
         try {
             implClass = Class.forName(classname);
             if(!rootClass.isAssignableFrom(implClass)) {
-                log.warn("Invalid UI class " + implClass + ".  Using '" + rootClass + "' instead.");
                 implClass = null;
             }
         } catch(ClassNotFoundException e) {
-            log.debug("Unable to load " + classname + ".  Using '" + rootClass + "' instead.", e);
-            implClass = null;
+            System.err.println("Exception: " + e.getMessage());                             implClass = null;
         }
         return implClass==null? rootClass: implClass;
     }

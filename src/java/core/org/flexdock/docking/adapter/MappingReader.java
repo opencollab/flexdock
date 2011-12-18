@@ -7,8 +7,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -18,7 +18,6 @@ import org.w3c.dom.NodeList;
  * @deprecated This class will become package-private.
  */
 public class MappingReader {
-    private static Log log = LogFactory.getLog(MappingReader.class);
 
     public static final String ADAPTER_KEY = "adapter";
 
@@ -85,7 +84,7 @@ public class MappingReader {
             try {
                 setter.invoke(mapping, new Object[] { clientMethod });
             } catch (Exception e) {
-                log.warn(e.getMessage(), e);
+                System.err.println("Exception: " +e.getMessage());
             }
         }
 
