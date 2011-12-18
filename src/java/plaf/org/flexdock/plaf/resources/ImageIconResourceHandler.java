@@ -17,7 +17,7 @@ public class ImageIconResourceHandler extends ResourceHandler {
             return ResourceManager.createIcon(url);
         } catch(NullPointerException e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

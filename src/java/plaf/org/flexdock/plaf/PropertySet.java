@@ -103,7 +103,7 @@ public class PropertySet {
             return Integer.parseInt(string);
         } catch(NumberFormatException e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return 0;
         }
     }
@@ -129,7 +129,7 @@ e.printStackTrace();
             return Boolean.valueOf( string).booleanValue();
         } catch(NumberFormatException e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }

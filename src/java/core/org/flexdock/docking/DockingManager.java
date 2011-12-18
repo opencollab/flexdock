@@ -1384,12 +1384,12 @@ public class DockingManager implements DockingConstants {
         } catch (IOException e) {
             // shouldn't happen since we're not intending to load from storage
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return false;
         } catch (PersistenceException e) {
             // TODO Auto-generated catch block
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return false;
         }
     }

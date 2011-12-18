@@ -34,7 +34,7 @@ public class InsetsResourceHandler extends ResourceHandler {
             return Integer.parseInt(data);
         } catch(Exception e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return 0;
         }
     }

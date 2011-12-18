@@ -171,7 +171,7 @@ public class PropertyManager {
             return null;
         } catch(Exception e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

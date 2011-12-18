@@ -62,7 +62,7 @@ public class ResourceHandlerFactory implements XMLConstants {
             return (ResourceHandler)clazz.newInstance();
         } catch(Exception e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }
@@ -120,7 +120,7 @@ e.printStackTrace();
 
         } catch(Exception e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

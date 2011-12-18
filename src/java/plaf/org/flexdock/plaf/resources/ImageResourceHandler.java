@@ -17,7 +17,7 @@ public class ImageResourceHandler extends ResourceHandler {
             return ResourceManager.createImage(url);
         } catch(NullPointerException e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

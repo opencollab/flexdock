@@ -37,7 +37,7 @@ public class PainterResourceHandler extends ResourceHandler {
             return (Painter)clazz.newInstance();
         } catch(Exception e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }

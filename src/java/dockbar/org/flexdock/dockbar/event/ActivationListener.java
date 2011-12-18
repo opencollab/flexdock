@@ -125,7 +125,7 @@ public class ActivationListener {
                 Thread.sleep(1000);
             } catch(InterruptedException e) {
                 System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+                e.printStackTrace();
             }
 
             if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&

@@ -68,7 +68,7 @@ public class PainterResource extends PropertySet {
             return resolveClass(getString( CLASSNAME));
         } catch( Exception e) {
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
         }
 
         return null;

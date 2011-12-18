@@ -109,7 +109,7 @@ public class UIFactory implements XMLConstants {
             // we use public, no-argument constructors, so if this happens, we
             // have a configuration error.
             System.err.println("Exception: " +e.getMessage());
-e.printStackTrace();
+            e.printStackTrace();
             return null;
         }
     }
@@ -125,7 +125,8 @@ e.printStackTrace();
                 implClass = null;
             }
         } catch(ClassNotFoundException e) {
-            System.err.println("Exception: " + e.getMessage());                             implClass = null;
+            System.err.println("Exception: " + e.getMessage());
+            implClass = null;
         }
         return implClass==null? rootClass: implClass;
     }
