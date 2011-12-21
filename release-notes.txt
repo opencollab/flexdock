@@ -1,6 +1,6 @@
 == flexdock 1.1 RELEASE NOTES ==
 
-CHANGES FROM 0.5.4:
+CHANGES FROM 1.0:
 
               
 This release has been managed by Scilab enterprises
@@ -11,7 +11,7 @@ Updates:
 * Get ride of the logging capabilities (not very useful for a GUI lib)
 Replace all of them by pritting the exception messages (and stack trace)
 on stderr
-* Remove the rubberband native capabilities
+* Remove the rubberband native capabilities (Fixes bug #123)
 
 == flexdock 1.0 RELEASE NOTES ==
 
