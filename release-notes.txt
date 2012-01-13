@@ -1,3 +1,14 @@
+== flexdock 1.1.1 RELEASE NOTES ==
+
+This release has been managed by Scilab enterprises
+(http://www.scilab-enterprises.com/) in particular Calixte Denizet and
+Sylvestre Ledru.                                               
+
+Updates:
+* Fix a latency when switching for a tab to an other
+* Fix a bug in the refresh of the title bar (two could be activated at the same
+  time)
+
 == flexdock 1.1 RELEASE NOTES ==
 
 CHANGES FROM 1.0:

@@ -7,6 +7,8 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Window;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -115,15 +117,8 @@ public class ActiveDockableTracker {
 
         // make sure the window is currently active
         SwingUtility.activateWindow(c);
-
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                focusDockable(c, dockable, forceChange);
-            }
-        });
+	focusDockable(c, dockable, forceChange);
     }
-
-
 
     static void focusDockable(Component child, final Dockable parentDockable, boolean forceChange) {
         // if the dockable is already active, then leave it alone.
@@ -152,7 +147,16 @@ public class ActiveDockableTracker {
         */
 
         if (!forceChange) {
-            focuser.requestFocus();
+	    final Component c = focuser;
+	    c.addFocusListener(new FocusAdapter() {
+		    public void focusGained(FocusEvent e) {
+			if(!DockingUtility.isActive(parentDockable)) {
+			    parentDockable.getDockingProperties().setActive(true);
+			}
+			c.removeFocusListener(this);
+		    }
+		});                         
+	    c.requestFocusInWindow();
         }
 
         // if we're in a hidden tab, then bring the tab to the front
@@ -161,19 +165,6 @@ public class ActiveDockableTracker {
             int indx = tabPane.indexOfComponent(parentComp);
             if(indx!=tabPane.getSelectedIndex())
                 tabPane.setSelectedIndex(indx);
-        }
-
-        // if the dockable is not currently active, activation may be pending for
-        // the next item in the event queue.  dispatch another item to the event queue
-        // and if the dockable hasn't been activated in the interim, then activate it.
-        if(!DockingUtility.isActive(parentDockable)) {
-            EventQueue.invokeLater(new Runnable() {
-                public void run() {
-                    if(!DockingUtility.isActive(parentDockable)) {
-                        parentDockable.getDockingProperties().setActive(true);
-                    }
-                }
-            });
         }
     }
 

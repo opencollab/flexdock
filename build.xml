@@ -37,7 +37,7 @@
    <property name="bin.dir.test" value="${build.dir}/bin-test" />
    <property name="bin.dir.webstart" value="${build.dir}/webstart" />
    <property name="dist.dir" value="${build.dir}/dist" />
-   <property name="version" value="1.1" />
+   <property name="version" value="1.1.1" />
    <property name="dist.jar.basename" value="${ant.project.name}-${version}" />
    <property name="dist.demo.jar.basename" value="${ant.project.name}-demo-${version}" />
 
