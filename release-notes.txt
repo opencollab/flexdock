@@ -1,3 +1,9 @@
+== flexdock 1.2.0 RELEASE NOTES ==
+
+Updates:
+* Development moved to http://forge.scilab.org/index.php/p/flexdock/
+* TODO
+
 == flexdock 1.1.1 RELEASE NOTES ==
 
 This release has been managed by Scilab enterprises
