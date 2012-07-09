@@ -2,7 +2,13 @@
 
 Updates:
 * Development moved to http://forge.scilab.org/index.php/p/flexdock/
-* TODO
+* Add the possibility to move the focus with keyboard on the different docked 
+  elements
+* Fix bug 125: http://java.net/jira/browse/FLEXDOCK-125
+  Application minimized to tray icon throws uncaught exception on restore of
+  minimized window to its original size.
+
+
 
 == flexdock 1.1.1 RELEASE NOTES ==
 
