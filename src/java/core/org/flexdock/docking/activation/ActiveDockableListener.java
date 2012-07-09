@@ -46,11 +46,11 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
         PROP_EVENTS.add(ACTIVE_WINDOW);
 
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-                focusManager.addPropertyChangeListener(SINGLETON);
-            }
-        });
+                public void run() {
+                    KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+                    focusManager.addPropertyChangeListener(SINGLETON);
+                }
+            });
 
         Toolkit.getDefaultToolkit().addAWTEventListener(SINGLETON, AWTEvent.MOUSE_EVENT_MASK);
     }
@@ -68,19 +68,22 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
             return;
 
         MouseEvent evt = (MouseEvent)event;
-        Component c = (Component)evt.getSource();
 
-        // check to see if the event was targeted at the deepest component at the current
-        // mouse loaction
-        Container  container = c instanceof Container? (Container)c: null;
-        if(container!=null && container.getComponentCount()>1) {
-            // if not, find the deepest component
-            Point p = evt.getPoint();
-            c = SwingUtilities.getDeepestComponentAt(c, p.x, p.y);
+        if (evt.getSource() instanceof Component) {
+            Component c = (Component) evt.getSource();
+
+            // check to see if the event was targeted at the deepest component at the current
+            // mouse loaction
+            Container  container = c instanceof Container? (Container)c: null;
+            if(container!=null && container.getComponentCount()>1) {
+                // if not, find the deepest component
+                Point p = evt.getPoint();
+                c = SwingUtilities.getDeepestComponentAt(c, p.x, p.y);
+            }
+
+            // request activation of the dockable that encloses this component
+            ActiveDockableTracker.requestDockableActivation(c);
         }
-
-        // request activation of the dockable that encloses this component
-        ActiveDockableTracker.requestDockableActivation(c);
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
@@ -155,10 +158,10 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
         // invokeLater because the new tab may not yet be showing, meaning the enumeration of its
         // focus-cycle will return empty.  the parent dockable in the new tab must be showing.
         EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                ActiveDockableTracker.focusDockable(deep, dockable, true);
-            }
-        });
+                public void run() {
+                    ActiveDockableTracker.focusDockable(deep, dockable, true);
+                }
+            });
 
     }
 
