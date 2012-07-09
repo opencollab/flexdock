@@ -10,6 +10,7 @@ import java.awt.Insets;
 import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.HierarchyEvent;
 import java.awt.event.HierarchyListener;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -38,6 +40,7 @@ import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.ResourceManager;
+import org.flexdock.util.SwingUtility;
 
 /**
  * The {@code View} class is slightly incompatible with {@code JComponent}.
@@ -186,6 +189,9 @@ public class View extends JComponent implements Dockable, DockingConstants {
 
     public static final String uiClassID = "Flexdock.view";
 
+    public static final String ACTION_TOGGLE_NEXT = "toggleNextView";
+    public static final String ACTION_TOGGLE_PREVIOUS = "togglePreviousView";
+
     static final DockingStrategy VIEW_DOCKING_STRATEGY = createDockingStrategy();
 
     private String persistentId;
@@ -251,6 +257,17 @@ public class View extends JComponent implements Dockable, DockingConstants {
         updateUI();
 
         DockingManager.registerDockable((Dockable) this);
+
+	getActionMap().put(ACTION_TOGGLE_NEXT, new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+		    SwingUtility.toggleFocus(+1);
+		}
+	    });
+	getActionMap().put(ACTION_TOGGLE_PREVIOUS, new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+		    SwingUtility.toggleFocus(-1);
+		}
+	    });
     }
 
     private static DockingStrategy createDockingStrategy() {

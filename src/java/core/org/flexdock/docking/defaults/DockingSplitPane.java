@@ -4,11 +4,13 @@ package org.flexdock.docking.defaults;
 
 import java.awt.Component;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.AbstractAction;
 import javax.swing.JSplitPane;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
@@ -76,22 +78,28 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 
         addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
 
-            public void propertyChange(PropertyChangeEvent pce) {
-                if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
-                    BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
-                    if (dividerHashCode != ui.getDivider().hashCode()) {
-                        dividerHashCode = ui.getDivider().hashCode();
-                        ui.getDivider().addMouseListener(new MouseAdapter() {
+                public void propertyChange(PropertyChangeEvent pce) {
+                    if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
+                        BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
+                        if (dividerHashCode != ui.getDivider().hashCode()) {
+                            dividerHashCode = ui.getDivider().hashCode();
+                            ui.getDivider().addMouseListener(new MouseAdapter() {
 
-                            public void mouseReleased(MouseEvent e) {
-                                DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
-                                DockingSplitPane.this.setResizeWeight(percent);
-                            }
-                        });
+                                    public void mouseReleased(MouseEvent e) {
+                                        DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
+                                        DockingSplitPane.this.setResizeWeight(percent);
+                                    }
+                                });
+                        }
                     }
                 }
-            }
-        });
+            });
+
+	getActionMap().put("toggleFocus", new AbstractAction() {
+		public void actionPerformed(ActionEvent e) {
+		    SwingUtility.toggleFocus(+1);
+		}
+	    });
     }
 
     public void setConstantPercent(boolean cstPercent) {
@@ -184,7 +192,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      */
     public Component getElderComponent() {
         Component c = controllerInTopLeft ? getLeftComponent()
-                      : getRightComponent();
+            : getRightComponent();
         if (c instanceof DockingPort)
             c = ((DockingPort) c).getDockedComponent();
         return c;

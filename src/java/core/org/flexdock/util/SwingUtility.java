@@ -23,10 +23,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-
-
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
+import org.flexdock.docking.defaults.DockingSplitPane;
 
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
@@ -451,5 +450,76 @@ public class SwingUtility {
     public static boolean isSkinLFInstalled() {
         return LookAndFeelSettings.isSkinLFSupported();
 
+    }
+
+    public static void toggleFocus(int direction) {
+	KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        Component focused = manager.getFocusOwner();
+	Component newFocused = getNext(focused, direction);
+	if (newFocused != null) {
+	    SwingUtility.focus(newFocused);
+	}
+    }
+
+    private static Component getNext(Component comp, int direction) {
+	Component next = null;
+	JTabbedPane tab;
+	if (comp instanceof JTabbedPane) {
+	    tab = (JTabbedPane) comp;
+	} else {
+	    tab = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, comp);
+	}
+
+	if (tab != null) {
+	    int index = tab.getSelectedIndex();
+	    if (direction > 0 && index < tab.getTabCount() - 1) {
+		tab.setSelectedIndex(index + 1);
+		next = tab;
+	    } else if (direction <= 0 && index > 0) {
+		tab.setSelectedIndex(index - 1);
+		next = tab;
+	    } else {
+		DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, tab);
+		next = getNext(port, direction);
+	    }
+	} else {
+	    DockingSplitPane pane = (DockingSplitPane) SwingUtilities.getAncestorOfClass(DockingSplitPane.class, comp);
+	    if (pane == null) {
+		return getFirstComponent(comp, direction);
+	    }
+	    
+	    Component left = pane.getLeftComponent();
+	    Component right = pane.getRightComponent();
+	    
+	    if (SwingUtilities.isDescendingFrom(comp, left)) {
+		if (direction > 0) {
+		    next = getFirstComponent(right, direction);
+		} else {
+		    DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, pane);
+		    next = getNext(port, direction);
+		}
+	    } else {
+		if (direction > 0) {
+		    DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, pane);
+		    next = getNext(port, direction);
+		} else {
+		    next = getFirstComponent(left, direction);
+		}
+	    }
+	}
+
+	return next;
+    }
+
+    private static Component getFirstComponent(Component c, int direction) {
+	while (c instanceof DefaultDockingPort) {
+	    c = ((DefaultDockingPort) c).getDockedComponent();
+	    if (c instanceof DockingSplitPane) {
+		DockingSplitPane pane = (DockingSplitPane) c;
+		c = direction > 0 ? pane.getLeftComponent() : pane.getRightComponent();
+	    }
+	}
+
+	return c;
     }
 }
