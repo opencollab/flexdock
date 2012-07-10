@@ -2,19 +2,20 @@
 
 Updates:
 * Development moved to http://forge.scilab.org/index.php/p/flexdock/
-* Add the possibility to move the focus with keyboard on the different docked 
-  elements
+* Add the possibility to move the focus with keyboard on the different docked
+  elements.
 * Fix bug 125: http://java.net/jira/browse/FLEXDOCK-125
   Application minimized to tray icon throws uncaught exception on restore of
   minimized window to its original size.
-
+* Fix bug 126: http://java.net/jira/browse/FLEXDOCK-125
+  Application consumes some CPU time even if doing nothing.
 
 
 == flexdock 1.1.1 RELEASE NOTES ==
 
 This release has been managed by Scilab enterprises
 (http://www.scilab-enterprises.com/) in particular Calixte Denizet and
-Sylvestre Ledru.                                               
+Sylvestre Ledru.
 
 Updates:
 * Fix a latency when switching for a tab to an other
@@ -25,10 +26,10 @@ Updates:
 
 CHANGES FROM 1.0:
 
-              
+
 This release has been managed by Scilab enterprises
 (http://www.scilab-enterprises.com/) in particular Calixte Denizet and
-Sylvestre Ledru.                                               
+Sylvestre Ledru.
 
 Updates:
 * Get ride of the logging capabilities (not very useful for a GUI lib)
@@ -40,17 +41,17 @@ on stderr
 
 CHANGES FROM 0.5.4:
 
-This release has been managed by Scilab enterprises 
+This release has been managed by Scilab enterprises
 (http://www.scilab-enterprises.com/) in particular Calixte Denizet and
 Sylvestre Ledru.
 This version is tagged 1.0 in order to show that it reached a stable status.
 It has been used by Scilab for years without any big issues.
 
 Updates:
-    - Consitent indentation of the java source code. 
+    - Consitent indentation of the java source code.
       Done with astyle --style=java
-    - Add a static method 
-      DefaultDockingStrategy.keepConstantPercentage(boolean) to force the 
+    - Add a static method
+      DefaultDockingStrategy.keepConstantPercentage(boolean) to force the
       restored splitpanes to have the saved proportions.
 
 == flexdock 0.5.4 RELEASE NOTES ==
