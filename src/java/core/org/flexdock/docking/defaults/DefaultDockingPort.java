@@ -31,6 +31,8 @@ import java.awt.LayoutManager;
 import java.awt.LayoutManager2;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
@@ -268,6 +271,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     private boolean rootPort;
 
     private BufferedImage dragImage;
+
+    private Timer timer;
+    
+    private Object lock = new Object();
 
     static {
         // setup PropertyChangeListenerFactory to respond to
@@ -2094,74 +2101,82 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private void deferSplitPaneValidation(final ArrayList splitNodes) {
-        Thread t = new Thread() {
-            public void run() {
-                // poor man's yield(), intended for finer grained control across
-                // platforms
-                Utilities.sleep(15);
-                Runnable r = new Runnable() {
-                    public void run() {
-                        processImportedSplitPaneValidation(splitNodes);
-                    }
-                };
-                EventQueue.invokeLater(r);
-            }
-        };
-        t.start();
+	if (timer == null) {
+	    timer = new Timer(15, new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+			Runnable r = new Runnable() {
+				public void run() {
+				    synchronized (lock) {
+					if (timer != null) {
+					    processImportedSplitPaneValidation(splitNodes);
+					}
+				    }
+				}
+			    };
+			EventQueue.invokeLater(r);
+		    }
+		});
+	    timer.setRepeats(true);
+	    timer.start();
+	}
     }
 
     private void processImportedSplitPaneValidation(ArrayList splitNodes) {
-        int len = splitNodes.size();
-        if (len == 0)
-            return;
+        synchronized (lock) {
+	    int len = splitNodes.size();
+	    if (len == 0) {
+		timer.stop();
+		timer = null;
+		return;
+	    }
+	    
+	    for (int i = 0; i < len; i++) {
+		((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(false);
+	    }
+	    
+	    // first, check to see if we're ready for rendering
+	    SplitNode node = (SplitNode) splitNodes.get(0);
+	    JSplitPane split = node.getSplitPane();
+	    int size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
+	    // if we're not ready to render, then defer processing again until later
+	    if (!split.isValid() || size == 0) {
+		// try to validate first
+		if (!split.isValid())
+		    split.validate();
+		// now redispatch
+		return;
+	    }
+	    
+	    timer.stop();
+	    timer = null;
+	    
+	    // if we're ready to render, then loop through all the splitNodes and
+	    // set the split dividers to their appropriate locations.
+	    for (int i = 0; i < len; i++) {
+		node = (SplitNode) splitNodes.get(i);
+		split = node.getSplitPane();
+		size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
+		float percent = node.getPercentage();
+		int divLoc = (int) ((float) size * percent);
+		// System.err.println("percent: " + percent + ", divLoc: " +
+		// divLoc);
+		split.setDividerLocation(percent);
+		
+		// make sure to invoke the installed BorderManager how that we have
+		// a hierarchy of DockingPorts. otherwise, we may end up with some
+		// ugly nested borders.
+		DockingPort port = DockingUtility.getParentDockingPort(split);
+		if (port instanceof DefaultDockingPort) {
+		    ((DefaultDockingPort) port).evaluateDockingBorderStatus();
+		}
 
-        for (int i = 0; i < len; i++) {
-            ((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(false);
-        }
-
-        // first, check to see if we're ready for rendering
-        SplitNode node = (SplitNode) splitNodes.get(0);
-        JSplitPane split = node.getSplitPane();
-        int size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split
-                   .getWidth()
-                   : split.getHeight();
-        // if we're not ready to render, then defer processing again until later
-        if (!split.isValid() || size == 0) {
-            // try to validate first
-            if (!split.isValid())
-                split.validate();
-            // now redispatch
-            deferSplitPaneValidation(splitNodes);
-            return;
-        }
-
-        // if we're ready to render, then loop through all the splitNodes and
-        // set the split dividers to their appropriate locations.
-        for (int i = 0; i < len; i++) {
-            node = (SplitNode) splitNodes.get(i);
-            split = node.getSplitPane();
-            size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split
-                   .getWidth()
-                   : split.getHeight();
-            float percent = node.getPercentage();
-            int divLoc = (int) ((float) size * percent);
-            // System.err.println("percent: " + percent + ", divLoc: " +
-            // divLoc);
-            split.setDividerLocation(percent);
-
-            // make sure to invoke the installed BorderManager how that we have
-            // a hierarchy of DockingPorts. otherwise, we may end up with some
-            // ugly nested borders.
-            DockingPort port = DockingUtility.getParentDockingPort(split);
-            if (port instanceof DefaultDockingPort)
-                ((DefaultDockingPort) port).evaluateDockingBorderStatus();
-
-            split.validate();
-        }
-
-        for (int i = 0; i < len; i++) {
-            ((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(true);
-        }
+		split.validate();
+	    }
+	    
+	    for (int i = 0; i < len; i++) {
+		((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(true);
+	    }
+	}
     }
 
     // --- maximization

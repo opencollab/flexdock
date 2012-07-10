@@ -324,6 +324,11 @@ public class View extends JComponent implements Dockable, DockingConstants {
             titlepane.addAction(action);
     }
 
+    public void removeActions() {
+        if (titlepane != null)
+            titlepane.removeAllActions();
+    }
+
     public void setIcon(Icon icon) {
         if (titlepane != null)
             titlepane.setIcon(icon);
