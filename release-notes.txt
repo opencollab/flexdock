@@ -9,7 +9,7 @@ Updates:
   minimized window to its original size.
 * Fix bug 126: http://java.net/jira/browse/FLEXDOCK-126
   Application consumes some CPU time even if doing nothing.
-
+* ant build shows the Java warnings
 
 == flexdock 1.1.1 RELEASE NOTES ==
 
