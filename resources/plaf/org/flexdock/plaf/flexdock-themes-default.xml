@@ -7,7 +7,8 @@
 	<plaf name="com.sun.java.swing.plaf.gtk.GTKLookAndFeel" ref="default" />
 	<plaf name="com.sun.java.swing.plaf.windows.WindowsLookAndFeel" ref="win32" />
 	<plaf name="com.sun.java.swing.plaf.motif.MotifLookAndFeel" ref="default" />
-	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default" 
+	<plaf name="com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel" ref="eclipse2" />
+	<plaf name="com.l2fprod.gui.plaf.skin.SkinLookAndFeel" ref="default"
 				handler="org.flexdock.plaf.mappings.SkinLFResolver" />
 
 	<plaf name="com.jgoodies.plaf.plastic.PlasticLookAndFeel" ref="eclipse2" />
