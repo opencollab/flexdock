@@ -3,10 +3,6 @@
 
    <property name="version" value="1.2.0" />
 
-   <!-- Pull properties that are specific to the working copy environment.
-        For instance if your sdk is in a different location that C:\jdk1.5.0_03,
-        then specify where it is in this properties file.
-   -->
    <property file="workingcopy.properties" />
 
    <!-- build-source properties -->
