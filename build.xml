@@ -7,12 +7,6 @@
    -->
    <property file="workingcopy.properties" />
 
-   <!-- This is the default location of the JDK to compile native DLL/so against.
-        If your JDK is in a different location then create a
-        workingcopy.properties and set sdk.home to your preferred value there -->
-   <property name="sdk.home" value="c:/jdk1.5.0._03"/>
-   <property name="sdk.include" value="${sdk.home}/include"/>
-
    <!-- build-source properties -->
    <property name="java.src" value="${basedir}/src/java" />
    <property name="webstart.src" value="${basedir}/src/webstart" />
