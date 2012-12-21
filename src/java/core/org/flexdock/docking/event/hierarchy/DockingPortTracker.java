@@ -34,6 +34,15 @@ public class DockingPortTracker implements HierarchyListener {
         return SINGLETON;
     }
 
+    public static void remove(Component c) {
+        RootWindow window = RootWindow.getRootContainer(c);
+        if (window != null) {
+            synchronized(TRACKERS_BY_WINDOW) {
+                TRACKERS_BY_WINDOW.remove(window);
+            }
+        }
+    }
+
     public static RootDockingPortInfo getRootDockingPortInfo(Component c) {
         RootWindow window = RootWindow.getRootContainer(c);
         return getRootDockingPortInfo(window);
