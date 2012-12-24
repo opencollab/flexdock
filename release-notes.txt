@@ -1,3 +1,9 @@
+== flexdock 1.2.1 RELEASE NOTES ==
+
+Updates:
+* Add method org.flexdock.docking.event.hierarchy.DockingPortTracker.remove()
+  to remove objects.
+
 == flexdock 1.2.0 RELEASE NOTES ==
 
 Updates:
