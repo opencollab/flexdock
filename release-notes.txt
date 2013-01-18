@@ -1,3 +1,8 @@
+== flexdock 1.2.2 RELEASE NOTES ==
+
+Updates:
+* Avoid to setActive an unregistered dockable.
+
 == flexdock 1.2.1 RELEASE NOTES ==
 
 Updates:
