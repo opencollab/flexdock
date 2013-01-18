@@ -2,6 +2,9 @@
 
 Updates:
 * Avoid to setActive an unregistered dockable.
+* Remove targets build.default & build.with.native which are no longer relevant
+  since we removed the native libraries.
+* Default ant target is now "jar"
 
 == flexdock 1.2.1 RELEASE NOTES ==
 
