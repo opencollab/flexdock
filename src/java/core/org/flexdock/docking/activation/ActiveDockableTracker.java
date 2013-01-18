@@ -173,14 +173,14 @@ public class ActiveDockableTracker {
     }
 
     public void setActive(boolean b) {
-        if(currentDockable==null)
+        if (currentDockable == null || DockingManager.getDockable(currentDockable.getComponent()) == null) {
             return;
-
+	}
         currentDockable.getDockingProperties().setActive(b);
     }
 
     public void setActive(Dockable dockable) {
-        if(dockable!=currentDockable) {
+        if (dockable != currentDockable) {
             Dockable oldValue = currentDockable;
             setActive(false);
             currentDockable = dockable;
