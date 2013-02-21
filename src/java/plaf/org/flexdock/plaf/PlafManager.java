@@ -37,7 +37,7 @@ public class PlafManager {
     }
 
     private static void initialize() {
-        installPreferredTheme();
+        installPreferredTheme(false);
         // install an updater so we can keep up with changes in the installed
         // plaf
         UIManager.addPropertyChangeListener(new UiUpdater());
@@ -52,8 +52,7 @@ public class PlafManager {
     }
 
     public static void setPreferredTheme(Properties p) {
-        String themeName = p == null ? null : p
-                           .getProperty(XMLConstants.NAME_KEY);
+        String themeName = p == null ? null : p.getProperty(XMLConstants.NAME_KEY);
         if (themeName == null)
             throw new IllegalArgumentException(
                 "Unable to find property 'name' in the supplied data set.");
@@ -81,13 +80,12 @@ public class PlafManager {
         // else,
         // vice versa, or a new string value
         boolean themeChanged = oldPref != newPref
-                               && (oldPref == null || newPref == null || !oldPref
-                                   .equals(newPref));
+            && (oldPref == null || newPref == null || !oldPref.equals(newPref));
         if (reload || themeChanged)
             installPreferredTheme();
     }
 
-    public static void installPreferredTheme() {
+    public static void installPreferredTheme(boolean update) {
         Theme theme = getPreferredTheme();
 
         UI_DEFAULTS.clear();
@@ -95,9 +93,15 @@ public class PlafManager {
         setProperty(Titlebar.class, theme.getTitlebarUI());
         setProperty(Button.class, theme.getButtonUI());
 
-        RootWindow[] windows = RootWindow.getVisibleWindows();
-        for (int i = 0; i < windows.length; i++)
-            windows[i].updateComponentTreeUI();
+        if (update) {
+            RootWindow[] windows = RootWindow.getVisibleWindows();
+            for (int i = 0; i < windows.length; i++)
+                windows[i].updateComponentTreeUI();
+        }
+    }
+
+    public static void installPreferredTheme() {
+        installPreferredTheme(true);
     }
 
     private static Theme getPreferredTheme() {
@@ -139,8 +143,7 @@ public class PlafManager {
     }
 
     public static Theme removeCustomTheme(String themeName) {
-        return Configurator.isNull(themeName) ? null : (Theme) CUSTOM_THEMES
-               .remove(themeName);
+        return Configurator.isNull(themeName) ? null : (Theme) CUSTOM_THEMES.remove(themeName);
     }
 
     private static void setProperty(Object key, Object value) {
@@ -164,8 +167,8 @@ public class PlafManager {
     public static ComponentUI getUI(JComponent target) {
         ComponentUI ui = /*UIManager.getUI(target);
 
-        if (ui == null) {
-            ui = */(ComponentUI) UI_DEFAULTS.get(target.getClass());
+if (ui == null) {
+ui = */(ComponentUI) UI_DEFAULTS.get(target.getClass());
 //        }
 
         return ui;
@@ -174,7 +177,7 @@ public class PlafManager {
     private static class UiUpdater implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
             if (UI_CHANGE_EVENT.equals(evt.getPropertyName())
-                    && evt.getOldValue() != evt.getNewValue()) {
+                && evt.getOldValue() != evt.getNewValue()) {
                 installPreferredTheme();
             }
         }
