@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <project name="flexdock" basedir="." default="jar">
 
-   <property name="version" value="1.2.2" />
+   <property name="version" value="1.2.3" />
 
    <property file="workingcopy.properties" />
 

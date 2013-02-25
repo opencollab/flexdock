@@ -1,3 +1,8 @@
+== flexdock 1.2.3 RELEASE NOTES ==
+
+Updates:
+* Avoid useless updateUI at PlafManager initialization
+
 == flexdock 1.2.2 RELEASE NOTES ==
 
 Updates:
