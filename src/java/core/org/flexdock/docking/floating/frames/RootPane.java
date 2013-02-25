@@ -37,6 +37,7 @@ import javax.swing.SwingUtilities;
  * @author Andreas Ernst
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class RootPane extends JRootPane implements MouseListener, MouseMotionListener {
     private static int CORNER_MARGIN = 5;
 

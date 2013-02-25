@@ -10,6 +10,7 @@ import org.flexdock.docking.DockingConstants;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class Event extends EventObject implements DockingConstants {
     private int eventType;
 

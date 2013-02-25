@@ -12,6 +12,7 @@ import org.flexdock.util.TypedHashtable;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class BasicDockingPortPropertySet extends TypedHashtable implements DockingPortPropertySet, DockingConstants {
 
     public static String getRegionInsetKey(String region) {

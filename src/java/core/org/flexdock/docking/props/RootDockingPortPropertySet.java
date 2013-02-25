@@ -13,6 +13,7 @@ import org.flexdock.docking.defaults.DefaultRegionChecker;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class RootDockingPortPropertySet extends BasicDockingPortPropertySet {
     private static final RegionChecker DEFAULT_REGION_CHECKER = new DefaultRegionChecker();
     private static final Integer DEFAULT_TAB_PLACEMENT = new Integer(JTabbedPane.BOTTOM);

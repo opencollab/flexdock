@@ -13,6 +13,7 @@ import org.flexdock.docking.Dockable;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class ScopedDockablePropertySet extends BasicDockablePropertySet implements ScopedMap {
 
     public static final RootDockablePropertySet ROOT_PROPS = new RootDockablePropertySet(null);

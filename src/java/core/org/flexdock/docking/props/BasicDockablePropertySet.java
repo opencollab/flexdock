@@ -17,6 +17,7 @@ import org.flexdock.util.Utilities;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class BasicDockablePropertySet extends TypedHashtable implements DockablePropertySet, DockingConstants {
     private String dockingId;
     private PropertyChangeSupport changeSupport;

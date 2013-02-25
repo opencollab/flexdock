@@ -11,6 +11,7 @@ import org.flexdock.docking.DockingManager;
  *
  * @author Mateusz Szczap
  */
+@SuppressWarnings(value = { "serial" })
 public class DockingState implements Cloneable, Serializable, DockingConstants {
 
     private String m_dockableId;

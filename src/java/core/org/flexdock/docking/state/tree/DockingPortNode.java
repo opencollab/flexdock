@@ -12,6 +12,7 @@ import org.flexdock.docking.DockingStrategy;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class DockingPortNode extends DockingNode {
 
     public Object getDockingObject() {

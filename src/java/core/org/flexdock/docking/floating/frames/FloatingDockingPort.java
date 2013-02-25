@@ -19,6 +19,7 @@ import org.flexdock.docking.event.DockingEvent;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class FloatingDockingPort extends DefaultDockingPort {
     private static final Set EMPTY_SET = new HashSet(0);
     protected DockingFrame frame;

@@ -32,6 +32,7 @@ import org.flexdock.util.SwingUtility;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class DockingPath implements Cloneable, DockingConstants, Serializable {
 
     public static final String RESTORE_PATH_KEY = "DockingPath.RESTORE_PATH_KEY";

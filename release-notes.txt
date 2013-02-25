@@ -2,6 +2,7 @@
 
 Updates:
 * Avoid useless updateUI at PlafManager initialization
+* Remove warning about the serial version uid missing
 
 == flexdock 1.2.2 RELEASE NOTES ==
 

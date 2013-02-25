@@ -23,6 +23,7 @@ import org.flexdock.util.SwingUtility;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class DockingSplitPane extends JSplitPane implements DockingConstants {
     protected DockingPort dockingPort;
 

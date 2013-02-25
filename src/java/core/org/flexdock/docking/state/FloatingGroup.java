@@ -30,6 +30,7 @@ import org.flexdock.util.UUID;
  *
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class FloatingGroup implements Cloneable, Serializable {
 
     private String name;

@@ -33,6 +33,7 @@ import javax.swing.JLayeredPane;
  * @author Andreas Ernst
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class RootPaneLayout implements LayoutManager2, Serializable {
     private RootPane pane;
     // implement

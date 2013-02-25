@@ -16,6 +16,7 @@ import org.flexdock.event.Event;
  * @author Kevin Duffey
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class DockingEvent extends Event {
     public static final int DRAG_STARTED = 0;
     public static final int DROP_STARTED = 1;

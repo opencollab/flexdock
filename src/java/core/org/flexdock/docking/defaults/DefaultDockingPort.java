@@ -149,6 +149,7 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  *
  */
+@SuppressWarnings(value = { "serial" })
 public class DefaultDockingPort extends JPanel implements DockingPort,
     DockingConstants {
     protected class PortLayout implements LayoutManager2, Serializable {

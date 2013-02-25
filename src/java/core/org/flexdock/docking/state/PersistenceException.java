@@ -24,6 +24,7 @@ package org.flexdock.docking.state;
  * @author <a href="mailto:mati@sz.home.pl">Mateusz Szczap</a>
  * @version $Id: PersistenceException.java,v 1.1 2005-07-05 14:53:31 marius Exp $
  */
+@SuppressWarnings(value = { "serial" })
 public class PersistenceException extends Exception {
 
     public PersistenceException(String message, Exception ex) {

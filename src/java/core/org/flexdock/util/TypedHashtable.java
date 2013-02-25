@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class TypedHashtable extends Hashtable {
 
     /**

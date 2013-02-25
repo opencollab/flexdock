@@ -15,6 +15,7 @@ import org.flexdock.docking.state.LayoutNode;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class SplitNode extends DockingNode implements DockingConstants {
 
     private int orientation;

@@ -44,6 +44,7 @@ import org.flexdock.util.RootWindow;
  * @author Andreas Ernst
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class DockingFrame extends JDialog implements DockingConstants {
     private static final BoundsMonitor BOUNDS_MONITOR = new BoundsMonitor();
 

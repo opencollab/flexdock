@@ -21,6 +21,7 @@ import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.util.NestedComponents;
 import org.flexdock.util.RootWindow;
 
+@SuppressWarnings(value = { "serial" })
 public class DragGlasspane extends JComponent implements DockingConstants {
 
     private NestedComponents currentDropTargets;

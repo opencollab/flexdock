@@ -12,6 +12,7 @@ import org.flexdock.docking.RegionChecker;
 /**
  * @author Christopher Butler
  */
+@SuppressWarnings(value = { "serial" })
 public class RootDockablePropertySet extends BasicDockablePropertySet {
     private static final Float DEFAULT_REGION_INSETS = new Float(RegionChecker.DEFAULT_REGION_SIZE);
     private static final Float DEFAULT_SIBLING_INSETS = new Float(DockingManager.getDefaultSiblingSize());
