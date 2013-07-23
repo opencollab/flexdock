@@ -130,6 +130,25 @@ public interface DockingStrategy {
     JSplitPane createSplitPane(DockingPort base, String region);
 
     /**
+     * Creates and returns a new {@code JSplitPane} instance based upon the
+     * supplied parameters. The returned {@code JSplitPane} should be suitable
+     * for embedding within the base {@code DockingPort} and its orientation
+     * should reflect the supplied {@code region} parameter.
+     *
+     * @param base
+     *            the {@code DockingPort} off of which the returned
+     *            {@code JSplitPane} will be based.
+     * @param region
+     *            the region within the base {@code DockingPort} used to
+     *            determine the orientation of the returned {@code JSplitPane}.
+     * @param percent
+     *            the percentage used in the split.
+     * @return a new {@code JSplitPane} suitable for embedding within the base
+     *         {@code DockingPort} parameter.
+     */
+    JSplitPane createSplitPane(DockingPort base, String region, float percent);
+
+    /**
      * Returns the initial divider location to be used by the specified
      * {@code JSplitPane}. This method assumes that the {@code JSplitPane}
      * parameter is embedded within the specified {@code DockingPort} and that

@@ -681,6 +681,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
         return new DefaultDockingPort();
     }
 
+
     /**
      * Returns a new {@code DockingSplitPane} based on the specified
      * {@code DockingPort}. and region. Creation of the
@@ -723,8 +724,9 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see #createSplitPaneImpl(DockingPort, String)
      * @see JSplitPane#setResizeWeight(double)
      */
-    public JSplitPane createSplitPane(DockingPort base, String region) {
+    public JSplitPane createSplitPane(DockingPort base, String region, float percent) {
         JSplitPane split = createSplitPaneImpl(base, region);
+	split.setVisible(false);
         // mark the creation region on the split pane
         SwingUtility.putClientProperty(split, DockingConstants.REGION, region);
 
@@ -781,7 +783,59 @@ public class DefaultDockingStrategy implements DockingStrategy,
             });
         }
 
+	if (percent != -1) {
+	    split.setDividerLocation(percent);
+	}
+	
+	split.setVisible(true);
+
         return split;
+    }
+
+    /**
+     * Returns a new {@code DockingSplitPane} based on the specified
+     * {@code DockingPort}. and region. Creation of the
+     * {@code DockingSplitPane} is deferred to an internal protected method to
+     * allow for overriding by subclasses. A client property is set on the
+     * returned split pane with the key DockingConstants.REGION to indicate the
+     * creation region of the split pane for non-{@code DockingSplitPanes}
+     * returned by overriding subclasses.
+     * <p>
+     * This method determines the "elder" component of the split pane by
+     * checking whether the new creation region is in the TOP or LEFT
+     * (NORTH_REGION or WEST_REGION). If the creation region, representing where
+     * the new {@code Dockable} will be docked, is <b>not</b> in the top or
+     * left, then the elder {@code Component} in the split pane must be. This
+     * information is used to initialize the resize weight of the split pane,
+     * setting resize weight to {@code 1} if the elder is in the top or left of
+     * the split pane and {@code 0} if not. This gives the elder
+     * {@code Component} in the resulting split pane priority in the layout with
+     * resizing the split pane.
+     * <p>
+     * If the creation region is {@code NORTH_REGION} or {@code SOUTH_REGION},
+     * the returned split pane is initialized with a {@code VERTICAL_SPLIT}
+     * orientation; otherwise a {@code HORIZONTAL_SPLIT} orientation is used.
+     * <p>
+     * Before returning, the border is removed from the split pane, its divider
+     * size is set to 3, and if possible the border is removed from the split
+     * pane divider. This is to avoid an excessive compound border effect for
+     * embedded {@code Components} within the split pane that may have their own
+     * borders.
+     *
+     * @param base
+     *            the {@code DockingPort} off of which the returned
+     *            {@code JSplitPane} will be based.
+     * @param region
+     *            the region within the base {@code DockingPort} used to
+     *            determine the orientation of the returned {@code JSplitPane}.
+     * @return a new {@code DockingSplitPane} based on the specified
+     *         {@code DockingPort}. and region.
+     * @see DockingSplitPane#DockingSplitPane(DockingPort, String)
+     * @see #createSplitPaneImpl(DockingPort, String)
+     * @see JSplitPane#setResizeWeight(double)
+     */
+    public JSplitPane createSplitPane(DockingPort base, String region) {
+	return createSplitPane(base, region, -1f);
     }
 
     protected JSplitPane createSplitPaneImpl(DockingPort base, String region) {

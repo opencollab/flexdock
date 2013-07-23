@@ -114,7 +114,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
 
         DockingPort superPort = (DockingPort)userObj;
         DockingStrategy strategy = superPort.getDockingStrategy();
-        return strategy.createSplitPane(superPort, dockingRegion);
+        return strategy.createSplitPane(superPort, dockingRegion, percentage);
     }
 
     public JSplitPane getSplitPane() {

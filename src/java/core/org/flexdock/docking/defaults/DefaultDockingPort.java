@@ -149,7 +149,6 @@ import org.flexdock.util.Utilities;
  * @author Christopher Butler
  *
  */
-@SuppressWarnings(value = { "serial" })
 public class DefaultDockingPort extends JPanel implements DockingPort,
     DockingConstants {
     protected class PortLayout implements LayoutManager2, Serializable {
@@ -2102,7 +2101,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private void deferSplitPaneValidation(final ArrayList splitNodes) {
-	if (timer == null) {
+	// TODO: I (calixte) deactivated the timer since the border has already been fixed in reconstuct() and
+	//       the divider location has been set in SplitNode. That avoids to have a resize of the splits when
+	//       splits are visible.
+	//       So this method is probably useless... wait for a user feedback.
+	if (false && timer == null) {
 	    timer = new Timer(15, new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 			Runnable r = new Runnable() {
@@ -2131,10 +2134,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 		return;
 	    }
 	    
-	    for (int i = 0; i < len; i++) {
-		((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(false);
-	    }
-	    
 	    // first, check to see if we're ready for rendering
 	    SplitNode node = (SplitNode) splitNodes.get(0);
 	    JSplitPane split = node.getSplitPane();
@@ -2158,9 +2157,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 		split = node.getSplitPane();
 		size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
 		float percent = node.getPercentage();
-		int divLoc = (int) ((float) size * percent);
-		// System.err.println("percent: " + percent + ", divLoc: " +
-		// divLoc);
 		split.setDividerLocation(percent);
 		
 		// make sure to invoke the installed BorderManager how that we have
@@ -2172,10 +2168,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 		}
 
 		split.validate();
-	    }
-	    
-	    for (int i = 0; i < len; i++) {
-		((SplitNode) splitNodes.get(i)).getSplitPane().setVisible(true);
 	    }
 	}
     }

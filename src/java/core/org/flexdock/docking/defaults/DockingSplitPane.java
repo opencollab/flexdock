@@ -96,11 +96,20 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
                 }
             });
 
-	getActionMap().put("toggleFocus", new AbstractAction() {
-		public void actionPerformed(ActionEvent e) {
-		    SwingUtility.toggleFocus(+1);
-		}
-	    });
+        getActionMap().put("toggleFocus", new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtility.toggleFocus(+1);
+                }
+            });
+    }
+
+    @Override
+    public void setBounds(int x, int y, int w, int h) {
+        super.setBounds(x, y, w, h);
+        if (constantPercent) {
+            setResizeWeight(percent);
+            super.setDividerLocation((int) (percent * getSplitSize()));
+        }
     }
 
     public void setConstantPercent(boolean cstPercent) {
@@ -143,6 +152,10 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             // TODO implement shrinking excess space to ensure that one has
             // preferred and nothing more
         }
+    }
+
+    private int getSplitSize() {
+        return getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? getWidth() : getHeight();
     }
 
     public void setDividerLocation(double percent) {
