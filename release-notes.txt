@@ -1,3 +1,8 @@
+== flexdock 1.2.4 RELEASE NOTES ==
+
+Updates:
+* Remove deferred splitpane validation
+
 == flexdock 1.2.3 RELEASE NOTES ==
 
 Updates:
