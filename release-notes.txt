@@ -2,6 +2,7 @@
 
 Updates:
 * Remove deferred splitpane validation
+* Development moved to https://github.com/opencollab/flexdock
 
 == flexdock 1.2.3 RELEASE NOTES ==
 
