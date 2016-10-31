@@ -1,3 +1,8 @@
+== flexdock 1.3 RELEASE NOTES ==
+
+Updates:
+* migrated to Apache Maven
+
 == flexdock 1.2.4 RELEASE NOTES ==
 
 Updates:
