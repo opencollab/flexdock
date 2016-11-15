@@ -80,8 +80,9 @@ public class DockingUtility implements DockingConstants {
     public static DockingPort getParentDockingPort(Component comp) {
         DockingPort port = comp == null ? null : (DockingPort) SwingUtilities
                            .getAncestorOfClass(DockingPort.class, comp);
-        if (port == null)
+        if (port == null) {
             return null;
+        }
 
         return port.isParentDockingPort(comp) ? port : null;
     }
@@ -134,19 +135,22 @@ public class DockingUtility implements DockingConstants {
      */
     public static DockingPort findDockingPort(Container container,
             Point location) {
-        if (container == null || location == null)
+        if (container == null || location == null) {
             return null;
+        }
 
         Component deepestComponent = SwingUtilities.getDeepestComponentAt(
                                          container, location.x, location.y);
-        if (deepestComponent == null)
+        if (deepestComponent == null) {
             return null;
+        }
 
         // we're assured here that the deepest component is both a Component and
         // DockingPort in
         // this case, so we're okay to return here.
-        if (deepestComponent instanceof DockingPort)
+        if (deepestComponent instanceof DockingPort) {
             return (DockingPort) deepestComponent;
+        }
 
         // getAncestorOfClass() will either return a null or a Container that is
         // also an instance of
@@ -196,20 +200,23 @@ public class DockingUtility implements DockingConstants {
      * @see #isAxisEquivalent(String, String)
      */
     public static String translateRegionAxis(JSplitPane splitPane, String region) {
-        if (splitPane == null || !DockingManager.isValidDockingRegion(region))
+        if (splitPane == null || !DockingManager.isValidDockingRegion(region)) {
             return null;
+        }
 
         boolean horizontal = splitPane.getOrientation() == JSplitPane.HORIZONTAL_SPLIT;
         if (horizontal) {
-            if (NORTH_REGION.equals(region))
+            if (NORTH_REGION.equals(region)) {
                 region = WEST_REGION;
-            else if (SOUTH_REGION.equals(region))
+            } else if (SOUTH_REGION.equals(region)) {
                 region = EAST_REGION;
+            }
         } else {
-            if (WEST_REGION.equals(region))
+            if (WEST_REGION.equals(region)) {
                 region = NORTH_REGION;
-            else if (EAST_REGION.equals(region))
+            } else if (EAST_REGION.equals(region)) {
                 region = SOUTH_REGION;
+            }
         }
         return region;
     }
@@ -231,17 +238,21 @@ public class DockingUtility implements DockingConstants {
      */
     public static String flipRegion(String region) {
         if (!DockingManager.isValidDockingRegion(region)
-                || CENTER_REGION.equals(region))
+                || CENTER_REGION.equals(region)) {
             return CENTER_REGION;
+        }
 
-        if (NORTH_REGION.equals(region))
+        if (NORTH_REGION.equals(region)) {
             return SOUTH_REGION;
+        }
 
-        if (SOUTH_REGION.equals(region))
+        if (SOUTH_REGION.equals(region)) {
             return NORTH_REGION;
+        }
 
-        if (EAST_REGION.equals(region))
+        if (EAST_REGION.equals(region)) {
             return WEST_REGION;
+        }
 
         return EAST_REGION;
     }
@@ -282,23 +293,30 @@ public class DockingUtility implements DockingConstants {
      */
     public static boolean isAxisEquivalent(String region, String otherRegion) {
         if (!DockingManager.isValidDockingRegion(region)
-                || !DockingManager.isValidDockingRegion(otherRegion))
+                || !DockingManager.isValidDockingRegion(otherRegion)) {
             return false;
+        }
 
-        if (region.equals(otherRegion))
+        if (region.equals(otherRegion)) {
             return true;
+        }
 
-        if (CENTER_REGION.equals(region))
+        if (CENTER_REGION.equals(region)) {
             return false;
+        }
 
-        if (NORTH_REGION.equals(region))
+        if (NORTH_REGION.equals(region)) {
             return WEST_REGION.equals(otherRegion);
-        if (SOUTH_REGION.equals(region))
+        }
+        if (SOUTH_REGION.equals(region)) {
             return EAST_REGION.equals(otherRegion);
-        if (EAST_REGION.equals(region))
+        }
+        if (EAST_REGION.equals(region)) {
             return SOUTH_REGION.equals(otherRegion);
-        if (WEST_REGION.equals(region))
+        }
+        if (WEST_REGION.equals(region)) {
             return NORTH_REGION.equals(otherRegion);
+        }
 
         return false;
     }
@@ -384,8 +402,9 @@ public class DockingUtility implements DockingConstants {
      * @see org.flexdock.docking.state.LayoutManager#getDockingState(Dockable)
      */
     public static boolean isMinimized(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
 
         DockingState info = getDockingState(dockable);
         return info == null ? false : info.isMinimized();
@@ -492,15 +511,17 @@ public class DockingUtility implements DockingConstants {
     public static boolean dockRelative(Dockable dockable, Dockable parent,
                                        String relativeRegion, float ratio) {
         if (parent == null || dockable == null
-                || !DockingManager.isValidDockingRegion(relativeRegion))
+                || !DockingManager.isValidDockingRegion(relativeRegion)) {
             return false;
+        }
 
         // set the sibling preference
         setSiblingPreference(parent, relativeRegion, ratio);
 
         DockingPort port = parent.getDockingPort();
-        if (port != null)
+        if (port != null) {
             return DockingManager.dock(dockable, port, relativeRegion);
+        }
 
         return false;
     }
@@ -508,8 +529,9 @@ public class DockingUtility implements DockingConstants {
     private static void setSiblingPreference(Dockable src, String region,
             float size) {
         if (size == UNSPECIFIED_SIBLING_PREF || CENTER_REGION.equals(region)
-                || !DockingManager.isValidDockingRegion(region))
+                || !DockingManager.isValidDockingRegion(region)) {
             return;
+        }
 
         size = DefaultRegionChecker.validateSiblingSize(size);
         src.getDockingProperties().setSiblingSize(region, size);
@@ -596,12 +618,14 @@ public class DockingUtility implements DockingConstants {
      * @see SwingUtility#setSplitDivider(JSplitPane, float)
      */
     public static void setSplitProportion(DockingPort port, float proportion) {
-        if (port == null)
+        if (port == null) {
             return;
+        }
 
         Component comp = port.getDockedComponent();
-        if (comp instanceof JSplitPane)
+        if (comp instanceof JSplitPane) {
             SwingUtility.setSplitDivider((JSplitPane) comp, proportion);
+        }
     }
 
     /**
@@ -650,20 +674,23 @@ public class DockingUtility implements DockingConstants {
      * @see SwingUtility#setSplitDivider(JSplitPane, float)
      */
     public static void setSplitProportion(Dockable dockable, float proportion) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
         Component comp = dockable.getComponent();
         Container parent = comp.getParent();
         if (parent instanceof JTabbedPane) {
             parent = parent.getParent();
         }
-        if (!(parent instanceof DockingPort))
+        if (!(parent instanceof DockingPort)) {
             return;
+        }
 
         Container grandParent = parent.getParent();
-        if (grandParent instanceof JSplitPane)
+        if (grandParent instanceof JSplitPane) {
             SwingUtility.setSplitDivider((JSplitPane) grandParent, proportion);
+        }
     }
 
     /**
@@ -717,13 +744,15 @@ public class DockingUtility implements DockingConstants {
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */
     public static boolean isDockable(Object obj) {
-        if (obj == null)
+        if (obj == null) {
             return false;
+        }
 
         // if the object directly implements Dockable, then we can return from
         // here.
-        if (obj instanceof Dockable)
+        if (obj instanceof Dockable) {
             return true;
+        }
 
         // if the object is a JComponent, but not a Dockable implementation,
         // then check its
@@ -748,24 +777,28 @@ public class DockingUtility implements DockingConstants {
     }
 
     public static Dockable getAncestorDockable(Component comp) {
-        if (comp == null)
+        if (comp == null) {
             return null;
+        }
 
-        if (isDockable(comp))
+        if (isDockable(comp)) {
             return DockingManager.getDockable(comp);
+        }
 
         Container parent = comp.getParent();
         while (parent != null && !(parent instanceof JRootPane)) {
-            if (isDockable(parent))
+            if (isDockable(parent)) {
                 return DockingManager.getDockable(parent);
+            }
             parent = parent.getParent();
         }
         return null;
     }
 
     public static boolean isActive(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
         return dockable.getDockingProperties().isActive().booleanValue();
     }
 }

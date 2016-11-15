@@ -103,8 +103,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     protected Rectangle getPaintRect(Titlebar titlebar) {
-        if (getInsets() == null)
+        if (getInsets() == null) {
             return new Rectangle(0, 0, titlebar.getWidth(), titlebar.getHeight());
+        }
 
         Insets paintInsets = getInsets();
         return new Rectangle(paintInsets.left, paintInsets.top,
@@ -113,8 +114,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     protected void paintTitle(Graphics g, Titlebar titlebar) {
-        if (titlebar.getText() == null)
+        if (titlebar.getText() == null) {
             return;
+        }
 
         Graphics2D g2 = (Graphics2D) g;
         Object oldAAValue = g2.getRenderingHint(RenderingHints.KEY_ANTIALIASING);
@@ -142,14 +144,16 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     protected int getTextLocation(Rectangle iconRect) {
-        if (iconRect.width > 0)
+        if (iconRect.width > 0) {
             return iconRect.x + iconRect.width + getRightIconMargin();
+        }
         return 5;
     }
 
     protected void paintIcon(Graphics g, Titlebar titlebar) {
-        if (titlebar.getIcon() == null)
+        if (titlebar.getIcon() == null) {
             return;
+        }
 
         Icon icon = titlebar.getIcon();
         Rectangle r = getIconRect(titlebar);
@@ -163,8 +167,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     protected Rectangle getIconRect(Titlebar titlebar) {
         Icon icon = titlebar.getIcon();
         Rectangle r = new Rectangle(0, 0, 0, 0);
-        if (icon == null)
+        if (icon == null) {
             return r;
+        }
 
         Rectangle paintRect = getPaintRect(titlebar);
 
@@ -221,8 +226,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     }
 
     public void configureAction(Action action) {
-        if (action == null)
+        if (action == null) {
             return;
+        }
 
         IconResource icons = getIcons(action);
         if (icons != null) {
@@ -233,8 +239,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     private void reconfigureActions(JComponent c) {
         Component[] c1 = c.getComponents();
         for (int i = 0; i < c1.length; i++) {
-            if (!(c1[i] instanceof Button))
+            if (!(c1[i] instanceof Button)) {
                 continue;
+            }
             Button b = (Button) c1[i];
             configureAction(b.getAction());
         }
@@ -368,8 +375,9 @@ public class TitlebarUI extends FlexViewComponentUI {
     public Action getAction(String actionKey) {
         IconResource resource = getIcons(actionKey);
         Action action = resource==null? null: resource.getAction();
-        if(action!=null)
+        if(action!=null) {
             action.putValue(Action.NAME, actionKey);
+        }
         return action;
     }
 

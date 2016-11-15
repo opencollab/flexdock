@@ -409,8 +409,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private void addCmp(DockingPort port, Component c) {
-        if (port instanceof Container)
+        if (port instanceof Container) {
             ((Container) port).add(c);
+        }
     }
 
     private void dockCmp(DockingPort port, Component c) {
@@ -459,28 +460,32 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #isParentDockingPort(Component)
      */
     public boolean isDockingAllowed(Component comp, String region) {
-        if (comp == null || !isValidDockingRegion(region))
+        if (comp == null || !isValidDockingRegion(region)) {
             return false;
+        }
 
         // allow any valid region if we're not already the parent
         // of the component we're checking
-        if (!isParentDockingPort(comp))
+        if (!isParentDockingPort(comp)) {
             return true;
+        }
 
         // we already contain 'comp', so we're either a tabbed-layout, or
         // we contain 'comp' directly. If we contain 'comp' directly, then we
         // cannot logically move 'comp' to some other region within us, as it
         // already fills up our entire space.
         Component docked = getDockedComponent();
-        if (!(docked instanceof JTabbedPane))
+        if (!(docked instanceof JTabbedPane)) {
             // not a tabbed-layout, so we contain 'c' directly
             return false;
+        }
 
         JTabbedPane tabs = (JTabbedPane) docked;
         // if there is only 1 tab, then we already fill up the entire
         // dockingport space and cannot be moved elsewhere
-        if (tabs.getTabCount() < 2)
+        if (tabs.getTabCount() < 2) {
             return false;
+        }
 
         // there is more than 1 tab present, so re-ordering is possible,
         // as well as changing regions
@@ -500,23 +505,25 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * {@code managePortTabbedChild(DockingPort port)}
      */
     final void evaluateDockingBorderStatus() {
-        if (borderManager == null)
+        if (borderManager == null) {
             return;
+        }
 
         Component docked = getDockedComponent();
         // check for the null-case
-        if (docked == null)
+        if (docked == null) {
             borderManager.managePortNullChild(this);
-        // check for a split layout
-        else if (docked instanceof JSplitPane)
+            // check for a split layout
+        } else if (docked instanceof JSplitPane) {
             borderManager.managePortSplitChild(this);
-        // check for a tabbed layout
-        else if (docked instanceof JTabbedPane)
+            // check for a tabbed layout
+        } else if (docked instanceof JTabbedPane) {
             borderManager.managePortTabbedChild(this);
-        // otherwise, we have a simple case of a regular component docked within
-        // us
-        else
+            // otherwise, we have a simple case of a regular component docked within
+            // us
+        } else {
             borderManager.managePortSimpleChild(this);
+        }
     }
 
     /**
@@ -557,8 +564,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see RegionChecker#getRegion(Component, Point)
      */
     public String getRegion(Point location) {
-        if (location == null)
+        if (location == null) {
             return UNKNOWN_REGION;
+        }
 
         RegionChecker regionChecker = getRegionChecker();
         Dockable d = getDockableAt(location);
@@ -613,12 +621,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see JTabbedPane#getComponentAt(int x, int y)
      */
     public Dockable getDockableAt(Point location) {
-        if (location == null)
+        if (location == null) {
             return null;
+        }
 
         Component docked = getDockedComponent();
-        if (docked == null || docked instanceof JSplitPane)
+        if (docked == null || docked instanceof JSplitPane) {
             return null;
+        }
 
         if (docked instanceof JTabbedPane) {
             JTabbedPane tabs = (JTabbedPane) docked;
@@ -675,14 +685,16 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      */
     public Component getComponent(String region) {
         Component docked = getDockedComponent();
-        if (docked == null)
+        if (docked == null) {
             return null;
+        }
 
         if (docked instanceof JTabbedPane) {
             // they can only get tabbed dockables if they were checking the
             // CENTER region.
-            if (!CENTER_REGION.equals(region))
+            if (!CENTER_REGION.equals(region)) {
                 return null;
+            }
 
             JTabbedPane tabs = (JTabbedPane) docked;
             return tabs.getSelectedComponent();
@@ -691,8 +703,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         if (docked instanceof JSplitPane) {
             // they can only get split dockables if they were checking an outer
             // region.
-            if (CENTER_REGION.equals(region))
+            if (CENTER_REGION.equals(region)) {
                 return null;
+            }
 
             JSplitPane split = (JSplitPane) docked;
 
@@ -700,11 +713,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // splitpane orientation
             boolean horizontal = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT;
             if (horizontal) {
-                if (NORTH_REGION.equals(region) || SOUTH_REGION.equals(region))
+                if (NORTH_REGION.equals(region) || SOUTH_REGION.equals(region)) {
                     return null;
+                }
             } else {
-                if (EAST_REGION.equals(region) || WEST_REGION.equals(region))
+                if (EAST_REGION.equals(region) || WEST_REGION.equals(region)) {
                     return null;
+                }
             }
 
             boolean left = NORTH_REGION.equals(region)
@@ -714,8 +729,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // split panes only contain sub-dockingports. if 'c' is not a
             // sub-dockingport,
             // then something is really screwed up.
-            if (!(c instanceof DockingPort))
+            if (!(c instanceof DockingPort)) {
                 return null;
+            }
 
             // get the dockable contained in the sub-dockingport
             return ((DockingPort) c).getDockedComponent();
@@ -871,12 +887,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingManager#registerDockable(Component)
      */
     public boolean dock(Component comp, String region) {
-        if (comp == null || region == null)
+        if (comp == null || region == null) {
             return false;
+        }
 
         Dockable dockable = DockingManager.getDockable(comp);
-        if (dockable == null)
+        if (dockable == null) {
             dockable = DockingManager.registerDockable(comp);
+        }
 
         return dock(dockable, region);
     }
@@ -952,24 +970,28 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingStrategy#getDividerProportion(DockingPort, JSplitPane)
      */
     public boolean dock(Dockable dockable, String region) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
 
         Component comp = dockable.getComponent();
-        if (comp == null || !isDockingAllowed(comp, region))
+        if (comp == null || !isDockingAllowed(comp, region)) {
             return false;
+        }
 
         // can't dock the same component twice. This will also keep them from
         // moving CENTER to NORTH and that sort of thing, which would just be a
         // headache to manage anyway.
         Component docked = getDockedComponent();
-        if (comp == docked)
+        if (comp == docked) {
             return false;
+        }
 
         // if there is nothing currently in the docking port, then we can only
         // dock into the CENTER region.
-        if (docked == null)
+        if (docked == null) {
             region = CENTER_REGION;
+        }
 
         String tabTitle = DockingUtility.getTabText(dockable);
         COMPONENT_TITLES.put(comp, tabTitle);
@@ -990,16 +1012,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // evaluateDockingBorderStatus(), so we'll know any border
             // modification that took place has already happened, and we can be
             // relatively safe about assumptions regarding our current insets.
-            if (!CENTER_REGION.equals(region))
+            if (!CENTER_REGION.equals(region)) {
                 resetSplitDividerLocation();
+            }
         }
         return success;
     }
 
     private void resetSplitDividerLocation() {
         Component c = getDockedComponent();
-        if (c instanceof JSplitPane)
+        if (c instanceof JSplitPane) {
             deferSplitDividerReset((JSplitPane) c);
+        }
     }
 
     private void deferSplitDividerReset(final JSplitPane splitPane) {
@@ -1052,8 +1076,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // to check for a possible null case here. Though why anyone would
         // return a null, I don't know. Maybe we should throw a
         // NullPointerException instead.
-        if (tabs == null)
+        if (tabs == null) {
             return false;
+        }
 
         // remove the currently docked component and add it to the tabbed pane
         if (docked != null) {
@@ -1074,8 +1099,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         String tabText = getValidTabTitle(tabs, comp);
         tabs.add(comp, tabText);
         Dockable d = DockingManager.getDockable(comp);
-        if (d == null)
+        if (d == null) {
             return;
+        }
 
         Icon icon = d.getDockingProperties().getTabIcon();
         int indx = tabs.getTabCount() - 1;
@@ -1107,16 +1133,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         DockingPort[] ports = putPortsInOrder(oldContent, newContent, region);
 
         if (ports[0] instanceof JComponent) {
-            ((JComponent) ports[0]).setMinimumSize(new Dimension(0, 0));
+            ((Component) ports[0]).setMinimumSize(new Dimension(0, 0));
         }
         if (ports[1] instanceof JComponent) {
-            ((JComponent) ports[1]).setMinimumSize(new Dimension(0, 0));
+            ((Component) ports[1]).setMinimumSize(new Dimension(0, 0));
         }
 
-        if (ports[0] instanceof Component)
+        if (ports[0] instanceof Component) {
             newDockedContent.setLeftComponent((Component) ports[0]);
-        if (ports[1] instanceof Component)
+        }
+        if (ports[1] instanceof Component) {
             newDockedContent.setRightComponent((Component) ports[1]);
+        }
 
         // set the split in the middle
         double ratio = .5;
@@ -1136,8 +1164,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // now set the wrapper panel as the currently docked component
         setComponent(newDockedContent);
         // if we're currently showing, then we can exit now
-        if (isShowing())
+        if (isShowing()) {
             return true;
+        }
 
         // otherwise, we have unrealized components whose sizes cannot be
         // determined until after we're visible. cache the desired size
@@ -1229,8 +1258,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
     private String getValidTabTitle(JTabbedPane tabs, Component comp) {
         String title = (String) COMPONENT_TITLES.get(comp);
-        if (title == null || title.trim().length() == 0)
+        if (title == null || title.trim().length() == 0) {
             title = "null";
+        }
 
         int tc = tabs.getTabCount();
         int occurrances = 0;
@@ -1239,12 +1269,14 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         for (int i = 0; i < tc; i++) {
             tmp = tabs.getTitleAt(i).toLowerCase();
             titles.add(tmp);
-            if (tmp.startsWith(title.toLowerCase()))
+            if (tmp.startsWith(title.toLowerCase())) {
                 occurrances++;
+            }
         }
 
-        if (titles.contains(title) && occurrances > 0)
+        if (titles.contains(title) && occurrances > 0) {
             title += occurrances;
+        }
 
         COMPONENT_TITLES.put(comp, title);
         return title;
@@ -1343,18 +1375,21 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #getDockedComponent()
      */
     public boolean isParentDockingPort(Component comp) {
-        if (comp == null)
+        if (comp == null) {
             return false;
+        }
 
         Container parent = comp.getParent();
         // if the component has no parent, then it can't be docked within us
-        if (parent == null)
+        if (parent == null) {
             return false;
+        }
 
         // if we're the direct parent of this component, then we're the parent
         // docking port
-        if (parent == this)
+        if (parent == this) {
             return true;
+        }
 
         // if the component is directly inside our docked component, then we're
         // also considered its parent dockingPort
@@ -1368,16 +1403,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     private boolean isSingleComponentDocked() {
         Component c = getDockedComponent();
         // we have no docked component
-        if (c == null)
+        if (c == null) {
             return false;
+        }
 
         // we do have a docked component. It'll be a splitpane, a tabbedpane,
         // or something else.
 
         // if it's a splitpane, then we definitely have more than one component
         // docked
-        if (c instanceof JSplitPane)
+        if (c instanceof JSplitPane) {
             return false;
+        }
 
         // if it's a tabbed pane, then check the number of tabs on the pane
         if (c instanceof JTabbedPane) {
@@ -1392,8 +1429,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
     protected Dockable getCenterDockable() {
         // can't have a CENTER dockable if there's nothing in the center
-        if (!isSingleComponentDocked())
+        if (!isSingleComponentDocked()) {
             return null;
+        }
 
         // get the component in the CENTER
         Component c = getDockedComponent();
@@ -1401,7 +1439,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // if in a tabbed pane, get the first component in there.
             // (there will only be 1, since we've already passed the
             // isSingleComponentDocked() test)
-            c = ((JTabbedPane) c).getComponent(0);
+            c = ((Container) c).getComponent(0);
         }
         // return the Dockable instance associated with this component
         return DockingManager.getDockable(c);
@@ -1409,8 +1447,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
     private DockingPort[] putPortsInOrder(DockingPort oldPort,
                                           DockingPort newPort, String region) {
-        if (NORTH_REGION.equals(region) || WEST_REGION.equals(region))
+        if (NORTH_REGION.equals(region) || WEST_REGION.equals(region)) {
             return new DockingPort[] { newPort, oldPort };
+        }
         return new DockingPort[] { oldPort, newPort };
     }
 
@@ -1460,8 +1499,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             // first, check to make sure we do in fact have 2 components. if so,
             // then we don't have
             // to go any further.
-            if (left != null && right != null)
+            if (left != null && right != null) {
                 return;
+            }
 
             // check to see if we have zero components. if so, remove everything
             // and return.
@@ -1484,18 +1524,21 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             }
             super.remove(wrapper);
 
-            if (comp instanceof DefaultDockingPort)
-                comp = ((DefaultDockingPort) comp).getDockedComponent();
+            if (comp instanceof DefaultDockingPort) {
+                comp = ((DockingPort) comp).getDockedComponent();
+            }
 
-            if (comp != null)
+            if (comp != null) {
                 setComponent(comp);
+            }
         }
     }
 
     private void reevaluateTabbedPane() {
         Component docked = getDockedComponent();
-        if (!(docked instanceof JTabbedPane))
+        if (!(docked instanceof JTabbedPane)) {
             return;
+        }
 
         JTabbedPane tabs = (JTabbedPane) docked;
         int tabCount = tabs.getTabCount();
@@ -1511,8 +1554,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // JTabbedPane).
         Component comp = tabCount == 1 ? tabs.getComponentAt(0) : null;
         removeAll();
-        if (comp != null)
+        if (comp != null) {
             setComponent(comp);
+        }
 
         Container parent = getParent();
         Container grandParent = parent == null ? null : parent.getParent();
@@ -1540,8 +1584,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         Component docked = getDockedComponent();
         Component comp = getComponent(index);
         super.remove(index);
-        if (docked == comp)
+        if (docked == comp) {
             dockedComponent = null;
+        }
     }
 
     /**
@@ -1591,8 +1636,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private Component setComponent(Component c) {
-        if (getDockedComponent() != null)
+        if (getDockedComponent() != null) {
             removeAll();
+        }
 
         dockedComponent = c;
         Component ret = super.add(dockedComponent);
@@ -1636,8 +1682,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      */
     public boolean undock(Component comp) {
         // can't undock a component that isn't already docked within us
-        if (!isParentDockingPort(comp))
+        if (!isParentDockingPort(comp)) {
             return false;
+        }
 
         // remove the component
         comp.getParent().remove(comp);
@@ -1674,10 +1721,11 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             for (int i = 0; i < len; i++) {
                 c = tabs.getComponentAt(i);
                 if (isValidDockableChild(c, desiredClass)) {
-                    if (c instanceof Dockable)
+                    if (c instanceof Dockable) {
                         set.add(c);
-                    else
+                    } else {
                         set.add(DockingManager.getDockable(c));
+                    }
                 }
             }
             return set;
@@ -1695,20 +1743,23 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             Component sub1 = pane.getLeftComponent();
             Component sub2 = pane.getRightComponent();
 
-            if (sub1 instanceof DefaultDockingPort)
+            if (sub1 instanceof DefaultDockingPort) {
                 set.addAll(((DefaultDockingPort) sub1).getDockableSet(depth,
-                           level + 1, desiredClass));
+                        level + 1, desiredClass));
+            }
 
-            if (sub2 instanceof DefaultDockingPort)
+            if (sub2 instanceof DefaultDockingPort) {
                 set.addAll(((DefaultDockingPort) sub2).getDockableSet(depth,
-                           level + 1, desiredClass));
+                        level + 1, desiredClass));
+            }
         }
 
         if (isValidDockableChild(c, desiredClass)) {
-            if (c instanceof Dockable)
+            if (c instanceof Dockable) {
                 set.add(c);
-            else
+            } else {
                 set.add(DockingManager.getDockable(c));
+            }
         }
         return set;
     }
@@ -1729,8 +1780,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #removeDockingListener(DockingListener)
      */
     public void addDockingListener(DockingListener listener) {
-        if (listener != null)
+        if (listener != null) {
             dockingListeners.add(listener);
+        }
     }
 
     /**
@@ -1764,8 +1816,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #getDockingListeners()
      */
     public void removeDockingListener(DockingListener listener) {
-        if (listener != null)
+        if (listener != null) {
             dockingListeners.remove(listener);
+        }
     }
 
     /**
@@ -1788,8 +1841,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      */
     public void dockingComplete(DockingEvent evt) {
         Dockable dockable = evt.getDockable();
-        if (dockable == null || !isShowing() || evt.getNewDockingPort() != this)
+        if (dockable == null || !isShowing() || evt.getNewDockingPort() != this) {
             return;
+        }
 
         ActiveDockableTracker
         .requestDockableActivation(dockable.getComponent());
@@ -1949,11 +2003,13 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            otherwise.
      */
     public void setDragInProgress(boolean inProgress) {
-        if (inProgress && dragImage != null)
+        if (inProgress && dragImage != null) {
             return;
+        }
 
-        if (!inProgress && dragImage == null)
+        if (!inProgress && dragImage == null) {
             return;
+        }
 
         if (inProgress) {
             dragImage = SwingUtility.createImage(this);
@@ -2041,8 +2097,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockableNode
      */
     public void importLayout(LayoutNode node) {
-        if (!(node instanceof DockingPortNode))
+        if (!(node instanceof DockingPortNode)) {
             return;
+        }
 
         node.setUserObject(this);
         ArrayList splitPaneResizeList = new ArrayList();
@@ -2057,18 +2114,20 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // userObject at runtime. we just want to make sure the userObject has
         // been loaded before we proceed.
         Object obj = node.getUserObject();
-        if (node instanceof SplitNode)
+        if (node instanceof SplitNode) {
             splitPaneResizeList.add(node);
+        }
 
         for (Enumeration en = node.children(); en.hasMoreElements();) {
             LayoutNode child = (LayoutNode) en.nextElement();
             constructLayout(child, splitPaneResizeList);
         }
 
-        if (node instanceof SplitNode)
+        if (node instanceof SplitNode) {
             reconstruct((SplitNode) node);
-        else if (node instanceof DockingPortNode)
+        } else if (node instanceof DockingPortNode) {
             reconstruct((DockingPortNode) node);
+        }
     }
 
     private void reconstruct(DockingPortNode node) {
@@ -2141,8 +2200,9 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 	    // if we're not ready to render, then defer processing again until later
 	    if (!split.isValid() || size == 0) {
 		// try to validate first
-		if (!split.isValid())
-		    split.validate();
+		if (!split.isValid()) {
+                    split.validate();
+                }
 		// now redispatch
 		return;
 	    }

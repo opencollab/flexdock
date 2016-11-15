@@ -43,10 +43,12 @@ public class Titlepane extends JPanel {
     }
 
     public void setContentPane(JComponent comp) {
-        if(contentPane!=null)
+        if(contentPane!=null) {
             remove(contentPane);
-        if(comp!=null)
+        }
+        if(comp!=null) {
             add(comp, BorderLayout.CENTER);
+        }
         contentPane = comp;
     }
 

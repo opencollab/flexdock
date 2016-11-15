@@ -56,8 +56,9 @@ public class PointHandler implements RestorationHandler, DockingConstants {
         Container contentPane = window.getContentPane();
 
         Point dropPoint = getDropPoint(dockable, contentPane, dockingState);
-        if(dropPoint==null)
+        if(dropPoint==null) {
             return false;
+        }
 
         Component deep = SwingUtilities.getDeepestComponentAt(contentPane, dropPoint.x, dropPoint.y);
         NestedComponents dropTargets = NestedComponents.find(deep, Dockable.class, DockingPort.class);
@@ -70,8 +71,9 @@ public class PointHandler implements RestorationHandler, DockingConstants {
     }
 
     private Point getDropPoint(Dockable dockable, Container contentPane, DockingState dockingState) {
-        if(!dockingState.hasCenterPoint())
+        if(!dockingState.hasCenterPoint()) {
             return null;
+        }
 
         float percentX = (float)dockingState.getCenterX()/100f;
         float percentY = (float)dockingState.getCenterY()/100f;

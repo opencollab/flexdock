@@ -61,11 +61,13 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * @see DockingManager#isValidDockingRegion(String)
      */
     public DockingSplitPane(DockingPort port, String region) {
-        if (port == null)
+        if (port == null) {
             throw new IllegalArgumentException("'port' cannot be null.");
-        if (!DockingManager.isValidDockingRegion(region))
+        }
+        if (!DockingManager.isValidDockingRegion(region)) {
             throw new IllegalArgumentException("'" + region
-                                               + "' is not a valid region.");
+                    + "' is not a valid region.");
+        }
 
         this.region = region;
         this.dockingPort = port;
@@ -173,8 +175,9 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     }
 
     protected boolean isDividerSizeProperlyDetermined() {
-        if (getDividerLocation() != 0)
+        if (getDividerLocation() != 0) {
             return true;
+        }
         return dividerLocDetermined;
     }
 
@@ -207,8 +210,9 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     public Component getElderComponent() {
         Component c = controllerInTopLeft ? getLeftComponent()
             : getRightComponent();
-        if (c instanceof DockingPort)
+        if (c instanceof DockingPort) {
             c = ((DockingPort) c).getDockedComponent();
+        }
         return c;
     }
 

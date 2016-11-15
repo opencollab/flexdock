@@ -101,16 +101,19 @@ public class SplitNode extends DockingNode implements DockingConstants {
     }
 
     public Object getDockingObject() {
-        if(dockingRegion==null)
+        if(dockingRegion==null) {
             return null;
+        }
 
-        if(!(getParent() instanceof DockingPortNode))
+        if(!(getParent() instanceof DockingPortNode)) {
             return null;
+        }
 
         DockingPortNode superNode = (DockingPortNode)getParent();
         Object userObj = superNode.getUserObject();
-        if(!(userObj instanceof DockingPort))
+        if(!(userObj instanceof DockingPort)) {
             return null;
+        }
 
         DockingPort superPort = (DockingPort)userObj;
         DockingStrategy strategy = superPort.getDockingStrategy();
@@ -135,8 +138,9 @@ public class SplitNode extends DockingNode implements DockingConstants {
     }
 
     private LayoutNode getChild(int indx) {
-        if(indx >= getChildCount())
+        if(indx >= getChildCount()) {
             return null;
+        }
         return (LayoutNode)getChildAt(indx);
     }
 

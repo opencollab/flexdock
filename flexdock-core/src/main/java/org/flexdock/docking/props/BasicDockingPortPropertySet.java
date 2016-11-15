@@ -16,14 +16,18 @@ import org.flexdock.util.TypedHashtable;
 public class BasicDockingPortPropertySet extends TypedHashtable implements DockingPortPropertySet, DockingConstants {
 
     public static String getRegionInsetKey(String region) {
-        if(NORTH_REGION.equals(region))
+        if(NORTH_REGION.equals(region)) {
             return REGION_SIZE_NORTH;
-        if(SOUTH_REGION.equals(region))
+        }
+        if(SOUTH_REGION.equals(region)) {
             return REGION_SIZE_SOUTH;
-        if(EAST_REGION.equals(region))
+        }
+        if(EAST_REGION.equals(region)) {
             return REGION_SIZE_EAST;
-        if(WEST_REGION.equals(region))
+        }
+        if(WEST_REGION.equals(region)) {
             return REGION_SIZE_WEST;
+        }
         return null;
     }
 

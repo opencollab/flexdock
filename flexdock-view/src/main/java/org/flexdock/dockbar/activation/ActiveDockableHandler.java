@@ -22,14 +22,16 @@ public class ActiveDockableHandler extends DockbarListener.Stub {
 
     public void dockableLocked(DockbarEvent evt) {
         Dockable d = (Dockable)evt.getSource();
-        if(d!=null)
+        if(d!=null) {
             ActiveDockableTracker.requestDockableActivation(d.getComponent());
+        }
     }
 
     public void minimizeStarted(DockbarEvent evt) {
         Dockable d = (Dockable)evt.getSource();
         // block minimization on floating views
-        if(d!=null && DockingUtility.isFloating(d))
+        if(d!=null && DockingUtility.isFloating(d)) {
             evt.consume();
+        }
     }
 }

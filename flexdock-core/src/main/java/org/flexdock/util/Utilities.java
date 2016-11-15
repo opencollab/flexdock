@@ -68,8 +68,9 @@ public class Utilities {
      * @see Integer#parseInt(java.lang.String)
      */
     public static int getInt(String data, int defaultValue) {
-        if (data == null)
+        if (data == null) {
             return defaultValue;
+        }
 
         try {
             return Integer.parseInt(data);
@@ -95,8 +96,9 @@ public class Utilities {
      * @see Float#parseFloat(java.lang.String)
      */
     public static float getFloat(String data, float defaultValue) {
-        if (data == null)
+        if (data == null) {
             return defaultValue;
+        }
 
         try {
             return Float.parseFloat(data);
@@ -194,8 +196,9 @@ public class Utilities {
      * @see Class#newInstance()
      */
     public static Object getInstance(String className, boolean failSilent) {
-        if (className == null)
+        if (className == null) {
             return null;
+        }
 
         try {
             Class c = Class.forName(className);
@@ -357,18 +360,21 @@ public class Utilities {
      */
     public static Object createInstance(String className, Class superType,
                                         boolean failSilent) {
-        if (className == null)
+        if (className == null) {
             return null;
+        }
 
         try {
             Class c = Class.forName(className);
-            if (superType != null && !superType.isAssignableFrom(c))
+            if (superType != null && !superType.isAssignableFrom(c)) {
                 throw new ClassCastException("'" + c.getName()
-                                             + "' is not a type of " + superType + ".");
+                        + "' is not a type of " + superType + ".");
+            }
             return c.newInstance();
         } catch (Throwable e) {
-            if (!failSilent)
+            if (!failSilent) {
                 System.err.println("Exception: " +e.getMessage());
+            }
             return null;
         }
     }
@@ -420,11 +426,13 @@ public class Utilities {
      * @see Object#equals(java.lang.Object)
      */
     public static boolean isChanged(Object oldObj, Object newObj) {
-        if (oldObj == newObj)
+        if (oldObj == newObj) {
             return false;
+        }
 
-        if (oldObj == null || newObj == null)
+        if (oldObj == null || newObj == null) {
             return true;
+        }
 
         return !oldObj.equals(newObj);
     }
@@ -471,13 +479,15 @@ public class Utilities {
      * @see Map#remove(java.lang.Object)
      */
     public static void put(Map map, Object key, Object value) {
-        if (map == null || key == null)
+        if (map == null || key == null) {
             return;
+        }
 
-        if (value == null)
+        if (value == null) {
             map.remove(key);
-        else
+        } else {
             map.put(key, value);
+        }
     }
 
     /**
@@ -528,8 +538,9 @@ public class Utilities {
      * @see Field#set(Object, Object)
      */
     public static boolean setValue(Object obj, String fieldName, Object value) {
-        if (obj == null || fieldName == null)
+        if (obj == null || fieldName == null) {
             return false;
+        }
 
         try {
             Class c = obj.getClass();
@@ -596,8 +607,9 @@ public class Utilities {
      */
     public static Object getValue(Object obj, String fieldName)
     throws IllegalAccessException {
-        if (obj == null || fieldName == null)
+        if (obj == null || fieldName == null) {
             return null;
+        }
 
         try {
             Class c = obj.getClass();
@@ -611,8 +623,9 @@ public class Utilities {
             field.setAccessible(false);
             return ret;
         } catch (Throwable t) {
-            if (t instanceof IllegalAccessException)
+            if (t instanceof IllegalAccessException) {
                 throw (IllegalAccessException) t;
+            }
 
             IllegalAccessException e = new IllegalAccessException(t
                     .getMessage());
@@ -641,8 +654,9 @@ public class Utilities {
     }
 
     private static boolean isJavaVersion(String version) {
-        if (version == null)
+        if (version == null) {
             return false;
+        }
         return System.getProperty("java.version").startsWith(version);
     }
 }

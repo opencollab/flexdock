@@ -52,8 +52,9 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
     public FilePersistenceHandler(File defaultFile, Persister persister) {
         defaultPerspectiveFile = defaultFile;
-        if(persister==null)
+        if(persister==null) {
             persister = createDefaultPersister();
+        }
         m_persister = persister;
     }
 
@@ -84,8 +85,9 @@ public class FilePersistenceHandler implements PersistenceHandler {
      */
     public PerspectiveModel load(String persistenceKey) throws IOException, PersistenceException {
         File file = getPerspectiveFile(persistenceKey);
-        if(file==null || !file.exists())
+        if(file==null || !file.exists()) {
             return null;
+        }
 
         FileInputStream fis = new FileInputStream(file);
 
@@ -103,21 +105,25 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
     protected void validatePerspectiveFile(File file) throws IOException {
         File dir = file.getParentFile();
-        if(!dir.exists())
+        if(!dir.exists()) {
             dir.mkdirs();
+        }
 
-        if(!file.exists())
+        if(!file.exists()) {
             file.createNewFile();
+        }
     }
 
 
     public File getPerspectiveFile(String persistenceKey) {
-        if(persistenceKey==null)
+        if(persistenceKey==null) {
             return defaultPerspectiveFile;
+        }
 
         String filePath = persistenceKey;
-        if(filePath.indexOf('/')==-1 && filePath.indexOf('\\')==-1)
+        if(filePath.indexOf('/')==-1 && filePath.indexOf('\\')==-1) {
             filePath = DEFAULT_PERSPECTIVE_DIR.getAbsolutePath() + "/" + filePath;
+        }
         return new File(filePath);
 
     }

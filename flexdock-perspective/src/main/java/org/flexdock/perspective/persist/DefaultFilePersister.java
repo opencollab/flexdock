@@ -17,8 +17,9 @@ import org.flexdock.docking.state.PersistenceException;
 public class DefaultFilePersister implements Persister {
 
     public PerspectiveModel load(InputStream in) throws IOException, PersistenceException {
-        if(in==null)
+        if(in==null) {
             return null;
+        }
 
         ObjectInputStream ois = null;
         try {
@@ -35,8 +36,9 @@ public class DefaultFilePersister implements Persister {
     }
 
     public boolean store(OutputStream out, PerspectiveModel info) throws IOException {
-        if(info==null || out==null)
+        if(info==null || out==null) {
             return false;
+        }
 
         ObjectOutputStream oos = null;
         try {

@@ -3,6 +3,7 @@
  */
 package org.flexdock.docking.state.tree;
 
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import org.flexdock.docking.DockingPort;
@@ -17,14 +18,16 @@ public class DockingPortNode extends DockingNode {
 
     public Object getDockingObject() {
         TreeNode parent = getParent();
-        if(!(parent instanceof SplitNode))
+        if(!(parent instanceof SplitNode)) {
             return null;
+        }
 
         TreeNode grandParent = parent.getParent();
-        if(!(grandParent instanceof DockingPortNode))
+        if(!(grandParent instanceof DockingPortNode)) {
             return null;
+        }
 
-        DockingPort superPort = (DockingPort)((DockingPortNode)grandParent).getUserObject();
+        DockingPort superPort = (DockingPort)((DefaultMutableTreeNode)grandParent).getUserObject();
         DockingStrategy strategy = superPort.getDockingStrategy();
         return strategy.createDockingPort(superPort);
     }
@@ -35,8 +38,9 @@ public class DockingPortNode extends DockingNode {
 
     public boolean isSplit() {
         int cnt = getChildCount();
-        if(cnt!=1)
+        if(cnt!=1) {
             return false;
+        }
 
         return getChildAt(0) instanceof SplitNode;
     }

@@ -21,12 +21,14 @@ public class CompoundEmptyBorder extends CompoundBorder {
     }
 
     public static CompoundEmptyBorder create(Border border, boolean inner, Insets base) {
-        if(base==null)
+        if(base==null) {
             base = new Insets(0, 0, 0, 0);
+        }
 
         MutableEmptyBorder empty = new MutableEmptyBorder(base.top, base.left, base.bottom, base.right);
-        if(inner)
+        if(inner) {
             return new CompoundEmptyBorder(border, empty, inner);
+        }
         return new CompoundEmptyBorder(empty, border, inner);
     }
 
@@ -36,8 +38,9 @@ public class CompoundEmptyBorder extends CompoundBorder {
     }
 
     public boolean setEmptyInsets(Insets insets) {
-        if(insets==null)
+        if(insets==null) {
             insets = EMPTY_INSETS;
+        }
         return setEmptyInsets(insets.top, insets.left, insets.bottom, insets.right);
     }
 

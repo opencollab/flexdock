@@ -27,8 +27,9 @@ public class RubberBand {
     }
 
     public void paint(Graphics g, Rectangle r) {
-        if(g==null || r==null || true)
+        if(g==null || r==null || true) {
             return;
+        }
 
         g.setXORMode(Color.BLACK);
         g.drawRect(r.x, r.y, r.width, r.height);

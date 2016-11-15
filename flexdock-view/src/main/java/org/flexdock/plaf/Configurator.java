@@ -32,8 +32,9 @@ public final class Configurator implements XMLConstants {
     }
 
     public static HashMap getNamedElementsByTagName(String tagName) {
-        if(isNull(tagName))
+        if(isNull(tagName)) {
             return null;
+        }
 
         HashMap cache = new HashMap(256);
         // load defaults
@@ -47,8 +48,9 @@ public final class Configurator implements XMLConstants {
     }
 
     private static void loadNamedElementsByTagName(Document document, String tagName, HashMap cache) {
-        if(document==null)
+        if(document==null) {
             return;
+        }
 
         NodeList elements = document.getElementsByTagName(tagName);
 
@@ -72,8 +74,9 @@ public final class Configurator implements XMLConstants {
 
     public static PropertySet[] getProperties(String tagName) {
         HashMap map = getNamedElementsByTagName(tagName);
-        if(map==null)
+        if(map==null) {
             return new PropertySet[0];
+        }
 
         String[] names = (String[])map.keySet().toArray(new String[0]);
         return getProperties(names, map);
@@ -81,15 +84,17 @@ public final class Configurator implements XMLConstants {
 
     public static PropertySet getProperties(String name, String tagName) {
         HashMap map = getNamedElementsByTagName(tagName);
-        if(map==null)
+        if(map==null) {
             return null;
+        }
         return getProperties(name, map);
     }
 
     public static PropertySet[] getProperties(String[] names, String tagName) {
         HashMap map = names==null? null: getNamedElementsByTagName(tagName);
-        if(map==null)
+        if(map==null) {
             return new PropertySet[0];
+        }
         return getProperties(names, map);
     }
 
@@ -103,8 +108,9 @@ public final class Configurator implements XMLConstants {
 
     private static PropertySet getProperties(String elemName, HashMap cache) {
         Element elem = isNull(elemName)? null: (Element)cache.get(elemName);
-        if(elem==null)
+        if(elem==null) {
             return null;
+        }
 
         PropertySet set = new PropertySet();
         set.setName(elemName);
@@ -112,14 +118,16 @@ public final class Configurator implements XMLConstants {
         // load all the parent properties first, so we can add/overwrite our own later
         String parentName = elem.getAttribute(EXTENDS_KEY);
         PropertySet parent = isNull(parentName)? null: getProperties(parentName, cache);
-        if(parent!=null)
+        if(parent!=null) {
             set.setAll(parent);
+        }
 
         // check to see if we're supposed to inherit from an overridden element
         if("true".equalsIgnoreCase(elem.getAttribute(INHERITS_KEY))) {
             PropertySet overridden = getProperties(OVERRIDDEN_KEY + elemName, cache);
-            if(overridden!=null)
+            if(overridden!=null) {
                 set.setAll(overridden);
+            }
         }
 
         // get the default handler name
@@ -144,15 +152,17 @@ public final class Configurator implements XMLConstants {
 
     private static String getPropertyHandlerName(Element elem) {
         String handlerName = elem.getAttribute(PROP_HANDLER_KEY);
-        if(isNull(handlerName))
+        if(isNull(handlerName)) {
             handlerName = ResourceHandlerFactory.getPropertyHandler(elem.getTagName());
+        }
         return isNull(handlerName)? null: handlerName;
     }
 
     public static Object getResource(String stringValue, String currentHandlerName, String defaultHandlerName) {
         String handlerName = isNull(currentHandlerName)? defaultHandlerName: currentHandlerName;
-        if(isNull(handlerName))
+        if(isNull(handlerName)) {
             return nullify(stringValue);
+        }
 
         ResourceHandler handler = ResourceHandlerFactory.getResourceHandler(handlerName);
         return handler==null? nullify(stringValue): handler.getResource(stringValue);

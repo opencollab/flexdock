@@ -22,8 +22,9 @@ public class DefaultDisplayAction extends ViewAction {
     public DefaultDisplayAction(String viewId) {
         setViewId(viewId);
         View view = View.getInstance(viewId);
-        if(view!=null)
+        if(view!=null) {
             putValue(Action.NAME, view.getTitle());
+        }
     }
 
     public void actionPerformed(View view, ActionEvent evt) {

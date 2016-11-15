@@ -15,11 +15,13 @@ public class ResourceHandler {
     }
 
     protected String[] getArgs(String data) {
-        if(data==null)
+        if(data==null) {
             return new String[0];
+        }
 
-        if(!data.endsWith(","))
+        if(!data.endsWith(",")) {
             data += ",";
+        }
 
         ArrayList args = new ArrayList(3);
         for(StringTokenizer st = new StringTokenizer(data, ","); st.hasMoreTokens();) {

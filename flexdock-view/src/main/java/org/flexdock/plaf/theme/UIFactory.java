@@ -57,8 +57,9 @@ public class UIFactory implements XMLConstants {
 
 
     public static Theme getTheme(String name) {
-        if(Configurator.isNull(name))
+        if(Configurator.isNull(name)) {
             return null;
+        }
 
         Theme theme = (Theme)THEME_UI_CACHE.get(name);
         if(theme==null) {
@@ -73,16 +74,18 @@ public class UIFactory implements XMLConstants {
     }
 
     private static IFlexViewComponentUI getUI(Properties p, HashMap cache, String tagName, Class rootClass) {
-        if(p==null || !p.containsKey(tagName))
+        if(p==null || !p.containsKey(tagName)) {
             return null;
+        }
 
         String name = p.getProperty(tagName);
         return getUI(name, cache, tagName, rootClass);
     }
 
     private static IFlexViewComponentUI getUI(String name, HashMap cache, String tagName, Class rootClass) {
-        if(Configurator.isNull(name))
+        if(Configurator.isNull(name)) {
             return null;
+        }
 
         IFlexViewComponentUI ui = (IFlexViewComponentUI)cache.get(name);
         if(ui==null) {
@@ -115,8 +118,9 @@ public class UIFactory implements XMLConstants {
     }
 
     private static Class loadUIClass(String classname, Class rootClass) {
-        if(Configurator.isNull(classname))
+        if(Configurator.isNull(classname)) {
             return rootClass;
+        }
 
         Class implClass = null;
         try {
@@ -133,27 +137,31 @@ public class UIFactory implements XMLConstants {
 
     private static Theme loadTheme(String themeName) {
         HashMap map = Configurator.getNamedElementsByTagName(THEME_KEY);
-        if(map==null)
+        if(map==null) {
             return null;
+        }
         return loadTheme(themeName, map);
     }
 
     private static Theme loadTheme(String themeName, HashMap cache) {
         Element themeElem = (Element)cache.get(themeName);
-        if(themeElem==null)
+        if(themeElem==null) {
             return null;
+        }
 
         // if we're an indirect reference to a different theme, then return that theme
         String redirect = themeElem.getAttribute(REFERENCE_KEY);
-        if(!Configurator.isNull(redirect))
+        if(!Configurator.isNull(redirect)) {
             return loadTheme(redirect, cache);
+        }
 
         // if we're a child of another theme, then load the parent and
         // add our properties afterward
         String parentName = themeElem.getAttribute(EXTENDS_KEY);
         Theme theme = Configurator.isNull(parentName)? new Theme(): loadTheme(parentName, cache);
-        if(theme==null)
+        if(theme==null) {
             theme = new Theme();
+        }
 
         String name = themeElem.getAttribute(NAME_KEY);
         String desc = themeElem.getAttribute(DESC_KEY);
@@ -174,32 +182,41 @@ public class UIFactory implements XMLConstants {
     }
 
     public static Theme createTheme(Properties p) {
-        if(p==null)
+        if(p==null) {
             return null;
+        }
 
         Theme base = getTheme(PlafManager.getSystemThemeName());
 
         ViewUI view = getViewUI(p);
-        if(view==null)
+        if(view==null) {
             view = base.getViewUI();
-        if(view==null)
+        }
+        if(view==null) {
             view = getViewUI(DEFAULT);
+        }
 
         TitlebarUI titlebar = getTitlebarUI(p);
-        if(titlebar==null)
+        if(titlebar==null) {
             titlebar = getTitlebarUI(view.getPreferredTitlebarUI());
-        if(titlebar==null)
+        }
+        if(titlebar==null) {
             titlebar = base.getTitlebarUI();
-        if(titlebar==null)
+        }
+        if(titlebar==null) {
             titlebar = getTitlebarUI(DEFAULT);
+        }
 
         ButtonUI button = getButtonUI(p);
-        if(button==null)
+        if(button==null) {
             button = getButtonUI(titlebar.getPreferredButtonUI());
-        if(button==null)
+        }
+        if(button==null) {
             button = base.getButtonUI();
-        if(button==null)
+        }
+        if(button==null) {
             button = getButtonUI(DEFAULT);
+        }
 
         Theme theme = new Theme();
         theme.setName(p.getProperty(NAME_KEY, "custom"));

@@ -43,8 +43,9 @@ public class ResourceHandlerFactory implements XMLConstants {
             String name = elem.getAttribute(NAME_KEY);
             String className = elem.getAttribute(VALUE_KEY);
             ResourceHandler handler = createResourceHandler(className);
-            if(handler!=null)
+            if(handler!=null) {
                 handlers.put(name, handler);
+            }
         }
         // add constructor handlers to the set
         HashMap constructors = loadConstructors();
@@ -54,8 +55,9 @@ public class ResourceHandlerFactory implements XMLConstants {
     }
 
     private static ResourceHandler createResourceHandler(String className) {
-        if(Configurator.isNull(className))
+        if(Configurator.isNull(className)) {
             return null;
+        }
 
         try {
             Class clazz = Class.forName(className);
@@ -77,8 +79,9 @@ public class ResourceHandlerFactory implements XMLConstants {
 
             String tagName = elem.getAttribute(NAME_KEY);
             String handlerName = elem.getAttribute(VALUE_KEY);
-            if(!Configurator.isNull(tagName) && !Configurator.isNull(handlerName))
+            if(!Configurator.isNull(tagName) && !Configurator.isNull(handlerName)) {
                 propHandlers.put(tagName, handlerName);
+            }
         }
         return propHandlers;
     }
@@ -98,8 +101,9 @@ public class ResourceHandlerFactory implements XMLConstants {
 
     private static ConstructorHandler createConstructorHandler(PropertySet props) {
         String className = props.getString(CLASSNAME_KEY);
-        if(Configurator.isNull(className))
+        if(Configurator.isNull(className)) {
             return null;
+        }
 
         try {
             List argKeys = props.getNumericKeys(true);
@@ -107,8 +111,9 @@ public class ResourceHandlerFactory implements XMLConstants {
             for(Iterator it=argKeys.iterator(); it.hasNext();) {
                 String key = (String)it.next();
                 Class paramType = props.toClass(key);
-                if(!paramType.isPrimitive() && paramType!=String.class)
+                if(!paramType.isPrimitive() && paramType!=String.class) {
                     throw new IllegalArgumentException("ConstructorHandler can only parse primitive and String arguments: " + paramType);
+                }
                 params.add(paramType);
             }
 

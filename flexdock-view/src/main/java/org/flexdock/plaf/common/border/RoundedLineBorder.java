@@ -56,11 +56,13 @@ public class RoundedLineBorder extends LineBorder {
         Color color = graphics2d.getColor();
         graphics2d.setColor(lineColor);
 
-        if ( mFilled)
+        if ( mFilled) {
             graphics2d.fillRoundRect(i, j, k - 1, l - 1, mArcWidthHeight, mArcWidthHeight);
-        else
-            for (int i1 = 0; i1 < thickness; i1++)
+        } else {
+            for (int i1 = 0; i1 < thickness; i1++) {
                 graphics2d.drawRoundRect(i + i1, j + i1, k - i1 - i1 - 1, l - i1 - i1 - 1, mArcWidthHeight, mArcWidthHeight);
+            }
+        }
 
         graphics2d.setColor(color);
         graphics2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, obj);

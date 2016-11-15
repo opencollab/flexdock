@@ -25,11 +25,13 @@ public abstract class DefaultPreview implements DragPreview {
     public static final int DEFAULT_TAB_HEIGHT = 20;
 
     public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo) {
-        if(dockable==null || port==null || targetRegion==null || paintingTarget==null)
+        if(dockable==null || port==null || targetRegion==null || paintingTarget==null) {
             return null;
+        }
 
-        if(UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(dockable, targetRegion))
+        if(UNKNOWN_REGION.equals(targetRegion) || !port.isDockingAllowed(dockable, targetRegion)) {
             return null;
+        }
 
         // if we're not hovering over another Dockable then the DockingPort we're over is empty.
         // return its bounds.
@@ -40,9 +42,9 @@ public abstract class DefaultPreview implements DragPreview {
 
         Polygon p = null;
         Component srcAxes = hover.getComponent();
-        if(isOuterRegion(targetRegion))
+        if(isOuterRegion(targetRegion)) {
             p = createPolyRect(port, srcAxes, targetRegion);
-        else {
+        } else {
             p = createPolyTab(port, srcAxes);
             srcAxes = (Component)port;
         }
@@ -53,16 +55,18 @@ public abstract class DefaultPreview implements DragPreview {
 
     protected Polygon createPolyRect(DockingPort port, Component dockable, String region) {
         RegionChecker regionChecker = port.getDockingProperties().getRegionChecker();
-        if(regionChecker==null)
+        if(regionChecker==null) {
             regionChecker = new DefaultRegionChecker();
+        }
 
         Rectangle r = regionChecker.getSiblingBounds(dockable, region);
         return createPolyRect(r);
     }
 
     protected Polygon createPolyRect(Rectangle r) {
-        if(r==null)
+        if(r==null) {
             return null;
+        }
 
         int x2 = r.x+r.width;
         int y2 = r.y+r.height;
@@ -97,20 +101,23 @@ public abstract class DefaultPreview implements DragPreview {
             tabRect.y = tabsOnTop? 0: tabPaneRect.height - DEFAULT_TAB_HEIGHT;
             // if there is already a component in the docking port, then our new
             // component will be dropped into the second tab, not the first
-            if(c!=null)
+            if(c!=null) {
                 tabRect.x += DEFAULT_TAB_WIDTH;
+            }
         }
 
         // subtract tab height from the pane-rect height, and shift its location
         // down if the tab sits on top
         tabPaneRect.height -= tabRect.height;
-        if(tabsOnTop)
+        if(tabsOnTop) {
             tabPaneRect.y += tabRect.height;
+        }
 
-        if(tabsOnTop)
+        if(tabsOnTop) {
             return createPolyTabOnTop(tabPaneRect, tabRect);
-        else
+        } else {
             return createPolyTabOnBottom(tabPaneRect, tabRect);
+        }
     }
 
     protected Rectangle createTabbedPaneRect(DockingPort port, Component hover) {

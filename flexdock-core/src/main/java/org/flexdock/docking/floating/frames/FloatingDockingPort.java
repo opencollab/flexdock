@@ -40,8 +40,9 @@ public class FloatingDockingPort extends DefaultDockingPort {
 
     public boolean isDockingAllowed(String region, Component comp) {
         // only allow docking in CENTER
-        if(!CENTER_REGION.equals(region))
+        if(!CENTER_REGION.equals(region)) {
             return false;
+        }
         return super.isDockingAllowed(comp, region);
     }
 
@@ -55,8 +56,9 @@ public class FloatingDockingPort extends DefaultDockingPort {
 
     public boolean undock(Component comp) {
         boolean ret = super.undock(comp);
-        if(ret)
+        if(ret) {
             toggleListeners(comp, false);
+        }
         return ret;
     }
 
@@ -83,10 +85,11 @@ public class FloatingDockingPort extends DefaultDockingPort {
 
     protected void toggleListeners(Component comp, boolean add) {
         Dockable dockable = DockingManager.getDockable(comp);
-        if(add)
+        if(add) {
             installListeners(dockable);
-        else
+        } else {
             uninstallListeners(dockable);
+        }
     }
 
     protected void installListeners(Dockable dockable) {
@@ -112,8 +115,9 @@ public class FloatingDockingPort extends DefaultDockingPort {
 
     public int getDockableCount() {
         Component comp = getDockedComponent();
-        if(!(comp instanceof JTabbedPane))
+        if(!(comp instanceof JTabbedPane)) {
             return 0;
+        }
         return ((JTabbedPane)comp).getTabCount();
     }
 

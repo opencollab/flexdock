@@ -26,6 +26,7 @@ import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
+import java.awt.Window;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
@@ -56,17 +57,20 @@ public class DockingFrame extends JDialog implements DockingConstants {
         RootWindow rootWin = RootWindow.getRootContainer(c);
         Component window = rootWin.getRootContainer();
         if (window instanceof DockingFrame) {
-            window = ((DockingFrame) window).getOwner();
+            window = ((Window) window).getOwner();
         }
 
         //Applets are actually contained in a frame
-        if (window instanceof Applet)
+        if (window instanceof Applet) {
             window = SwingUtilities.windowForComponent(window);
+        }
 
-        if (window instanceof Frame)
+        if (window instanceof Frame) {
             return new DockingFrame((Frame) window, groupName);
-        if (window instanceof Dialog)
+        }
+        if (window instanceof Dialog) {
             return new DockingFrame((Dialog) window, groupName);
+        }
 
         return null;
     }
@@ -107,8 +111,9 @@ public class DockingFrame extends JDialog implements DockingConstants {
     }
 
     public void addDockable(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
         dockingPort.dock(dockable, CENTER_REGION);
     }
@@ -117,8 +122,9 @@ public class DockingFrame extends JDialog implements DockingConstants {
         setVisible(false);
         dockingPort = null;
         FloatingGroup group = getGroup();
-        if (group != null)
+        if (group != null) {
             group.setFrame(null);
+        }
         dispose();
     }
 
@@ -149,14 +155,16 @@ public class DockingFrame extends JDialog implements DockingConstants {
         }
 
         private void updateBounds(ComponentEvent evt) {
-            Component c = (Component) evt.getComponent();
-            if (!(c instanceof DockingFrame))
+            Component c = evt.getComponent();
+            if (!(c instanceof DockingFrame)) {
                 return;
+            }
 
             DockingFrame frame = (DockingFrame) c;
             FloatingGroup group = frame.getGroup();
-            if (group != null)
+            if (group != null) {
                 group.setBounds(frame.getBounds());
+            }
         }
     }
 }

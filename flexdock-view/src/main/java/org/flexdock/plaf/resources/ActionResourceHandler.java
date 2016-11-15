@@ -15,8 +15,9 @@ public class ActionResourceHandler extends ResourceHandler {
 
     public Object getResource(String stringValue) {
         Object obj = Utilities.createInstance(stringValue);
-        if(!(obj instanceof Action))
+        if(!(obj instanceof Action)) {
             obj = new DefaultAction();
+        }
         return obj;
     }
 }

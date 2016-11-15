@@ -135,8 +135,9 @@ public class StandardBorderManager implements BorderManager {
      * @see BorderManager#managePortSplitChild(DockingPort)
      */
     public void managePortSplitChild(DockingPort port) {
-        if (port == null || !(port.getDockedComponent() instanceof JSplitPane))
+        if (port == null || !(port.getDockedComponent() instanceof JSplitPane)) {
             return;
+        }
 
         setBorder(port, null);
 
@@ -146,8 +147,9 @@ public class StandardBorderManager implements BorderManager {
             // grab the divider from the UI and remove the border from it
             BasicSplitPaneDivider divider = ((BasicSplitPaneUI) split.getUI())
                                             .getDivider();
-            if (divider != null && divider.getBorder() != null)
+            if (divider != null && divider.getBorder() != null) {
                 divider.setBorder(null);
+            }
         }
         setBorder(split, null);
 
@@ -157,10 +159,11 @@ public class StandardBorderManager implements BorderManager {
     }
 
     private void setSubComponentBorder(Component comp, Border border) {
-        if (comp instanceof DefaultDockingPort)
+        if (comp instanceof DefaultDockingPort) {
             ((DefaultDockingPort) comp).evaluateDockingBorderStatus();
-        else
+        } else {
             setBorder(comp, border);
+        }
     }
 
     /**
@@ -172,8 +175,9 @@ public class StandardBorderManager implements BorderManager {
      */
     public void managePortTabbedChild(DockingPort port) {
         managePortSimpleChild(port);
-        if (port == null || !(port.getDockedComponent() instanceof JTabbedPane))
+        if (port == null || !(port.getDockedComponent() instanceof JTabbedPane)) {
             return;
+        }
 
         // we need to use a special UI to remove the outline around a
         // JTabbedPane.
@@ -189,48 +193,55 @@ public class StandardBorderManager implements BorderManager {
         Component cmp = null;
         for (int i = 0; i < tc; i++) {
             cmp = tabs.getComponentAt(i);
-            if (cmp instanceof JComponent)
+            if (cmp instanceof JComponent) {
                 ((JComponent) cmp).setBorder(null);
+            }
         }
     }
 
     private void setBorder(Component cmp, Border border) {
-        if (cmp instanceof JComponent)
+        if (cmp instanceof JComponent) {
             ((JComponent) cmp).setBorder(border);
+        }
     }
 
     private void setBorder(DockingPort port, Border border) {
-        if (port instanceof JComponent)
+        if (port instanceof JComponent) {
             ((JComponent) port).setBorder(border);
+        }
     }
 
     private static class SimpleTabbedPaneUI extends BasicTabbedPaneUI {
         protected void paintContentBorderBottomEdge(Graphics g,
                 int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
-            if (tabPlacement == BOTTOM)
+            if (tabPlacement == BOTTOM) {
                 super.paintContentBorderBottomEdge(g, tabPlacement,
-                                                   selectedIndex, x, y, w, h);
+                        selectedIndex, x, y, w, h);
+            }
         }
 
         protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
                 int selectedIndex, int x, int y, int w, int h) {
-            if (tabPlacement == LEFT)
+            if (tabPlacement == LEFT) {
                 super.paintContentBorderLeftEdge(g, tabPlacement,
-                                                 selectedIndex, x, y, w, h);
+                        selectedIndex, x, y, w, h);
+            }
         }
 
         protected void paintContentBorderRightEdge(Graphics g,
                 int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
-            if (tabPlacement == RIGHT)
+            if (tabPlacement == RIGHT) {
                 super.paintContentBorderRightEdge(g, tabPlacement,
-                                                  selectedIndex, x, y, w, h);
+                        selectedIndex, x, y, w, h);
+            }
         }
 
         protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
                 int selectedIndex, int x, int y, int w, int h) {
-            if (tabPlacement == TOP)
+            if (tabPlacement == TOP) {
                 super.paintContentBorderTopEdge(g, tabPlacement, selectedIndex,
-                                                x, y, w, h);
+                        x, y, w, h);
+            }
         }
     }
 }

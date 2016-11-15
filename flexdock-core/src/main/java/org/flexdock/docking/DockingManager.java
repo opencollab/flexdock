@@ -155,8 +155,9 @@ public class DockingManager implements DockingConstants {
 
         private synchronized void store() {
             try {
-                if (isEnabled())
+                if (isEnabled()) {
                     storeLayoutModel();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (PersistenceException e) {
@@ -195,8 +196,9 @@ public class DockingManager implements DockingConstants {
     private static void init() {
         // load the dev system properties
         Properties p = ResourceManager.getProperties(DEV_PROPS, true);
-        if (p != null)
+        if (p != null) {
             System.getProperties().putAll(p);
+        }
 
         // prime the drag manager for use
         DragManager.prime();
@@ -241,8 +243,9 @@ public class DockingManager implements DockingConstants {
 
     public static void addDragSource(Dockable dockable, Component dragSrc) {
         List sources = dockable == null ? null : dockable.getDragSources();
-        if (sources == null || dragSrc == null)
+        if (sources == null || dragSrc == null) {
             return;
+        }
 
         if (!sources.contains(dragSrc)) {
             updateDragListeners(dockable);
@@ -266,8 +269,9 @@ public class DockingManager implements DockingConstants {
      *            the {@code Dockable} to be closed.
      */
     public static void close(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
         if (isMaximized(dockable)) {
             toggleMaximized(dockable);
@@ -370,8 +374,9 @@ public class DockingManager implements DockingConstants {
      */
     public static boolean dock(Dockable dockable, DockingPort port,
                                String region) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
 
         DockingStrategy strategy = getDockingStrategy(port);
         if (strategy != null) {
@@ -383,12 +388,14 @@ public class DockingManager implements DockingConstants {
     }
 
     private static Dockable resolveDockable(Component comp) {
-        if (comp == null)
+        if (comp == null) {
             return null;
+        }
 
         Dockable d = getDockable(comp);
-        if (d == null)
+        if (d == null) {
             d = registerDockable(comp);
+        }
         return d;
     }
 
@@ -695,8 +702,9 @@ public class DockingManager implements DockingConstants {
             }
         }
         if (motionListener != listener) {
-            if (motionListener != null)
+            if (motionListener != null) {
                 dragSrc.removeMouseMotionListener(motionListener);
+            }
             dragSrc.addMouseMotionListener(listener);
         }
 
@@ -709,8 +717,9 @@ public class DockingManager implements DockingConstants {
             }
         }
         if (mouseListener != listener) {
-            if (mouseListener != null)
+            if (mouseListener != null) {
                 dragSrc.removeMouseListener(mouseListener);
+            }
             dragSrc.addMouseListener(listener);
         }
     }
@@ -738,11 +747,13 @@ public class DockingManager implements DockingConstants {
      * @see #registerDockable(Component, String)
      */
     public static Dockable registerDockable(Component comp) {
-        if (comp == null)
+        if (comp == null) {
             return null;
+        }
 
-        if (comp instanceof Dockable)
+        if (comp instanceof Dockable) {
             return registerDockable((Dockable) comp);
+        }
 
         return registerDockable(comp, null, null);
     }
@@ -757,24 +768,28 @@ public class DockingManager implements DockingConstants {
             // if we can find an adapter mapping, then try to pull
             // the tab text from there
             DockingAdapter adapter = AdapterFactory.getAdapter(comp);
-            if (adapter != null)
+            if (adapter != null) {
                 tabText = adapter.getTabText();
+            }
         }
 
         // if 'comp' wasn't a DockingStub, or the stub returned a null tabText,
         // then try the component name
-        if (tabText == null)
+        if (tabText == null) {
             tabText = comp.getName();
+        }
 
         // if tabText is still null, then use the persistentId
-        if (tabText == null)
+        if (tabText == null) {
             tabText = persistId;
+        }
 
         // get rid of null and empty cases. use the string "null" if nothing
         // else can be found
         tabText = tabText == null ? "null" : tabText.trim();
-        if (tabText.length() == 0)
+        if (tabText.length() == 0) {
             tabText = "null";
+        }
 
         return tabText;
     }
@@ -800,11 +815,13 @@ public class DockingManager implements DockingConstants {
 
     private static Dockable registerDockable(Component comp, String tabText,
             String dockingId) {
-        if (comp == null)
+        if (comp == null) {
             return null;
+        }
 
-        if (tabText == null)
+        if (tabText == null) {
             tabText = determineTabText(comp, dockingId);
+        }
 
         Dockable dockable = getDockableForComponent(comp, tabText, dockingId);
         return registerDockable(dockable);
@@ -829,12 +846,14 @@ public class DockingManager implements DockingConstants {
      */
     public static Dockable registerDockable(Dockable dockable) {
         if (dockable == null || dockable.getComponent() == null
-                || dockable.getDragSources() == null)
+                || dockable.getDragSources() == null) {
             return null;
+        }
 
-        if (dockable.getPersistentId() == null)
+        if (dockable.getPersistentId() == null) {
             throw new IllegalArgumentException(
-                "Dockable must have a non-null persistent ID.");
+                    "Dockable must have a non-null persistent ID.");
+        }
 
         DOCKABLES_BY_COMPONENT.put(dockable.getComponent(), dockable);
 
@@ -877,8 +896,9 @@ public class DockingManager implements DockingConstants {
     }
 
     public static void unregisterDockable(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
         synchronized (DOCKABLES_BY_COMPONENT) {
             DOCKABLES_BY_COMPONENT.remove(dockable.getComponent());
@@ -919,8 +939,9 @@ public class DockingManager implements DockingConstants {
      * @see DragManager
      */
     public static void removeDragListeners(Component comp) {
-        if (comp == null)
+        if (comp == null) {
             return;
+        }
 
         MouseMotionListener motionListener = null;
         EventListener[] listeners = comp.getMouseMotionListeners();
@@ -1010,8 +1031,9 @@ public class DockingManager implements DockingConstants {
     }
 
     private static String generatePersistentId(Object obj, String desiredId) {
-        if (obj == null)
+        if (obj == null) {
             return null;
+        }
 
         synchronized (persistentIdLock) {
             String pId = desiredId == null ? obj.getClass().getName()
@@ -1349,8 +1371,9 @@ public class DockingManager implements DockingConstants {
     public static boolean loadLayoutModel(boolean restore) throws IOException,
         PersistenceException {
         LayoutManager mgr = getLayoutManager();
-        if (mgr == null)
+        if (mgr == null) {
             return false;
+        }
 
         return restore ? restoreLayout(true) : mgr.load();
     }
@@ -1427,8 +1450,9 @@ public class DockingManager implements DockingConstants {
     private static Dockable loadAndRegister(String id) {
         DockableFactory factory = id == null ? null
                                   : getDockingManager().dockableFactory;
-        if (factory == null)
+        if (factory == null) {
             return null;
+        }
 
         // the getDockableComponent() implementation may or may not
         // automatically register a dockable before returning.
@@ -1438,8 +1462,9 @@ public class DockingManager implements DockingConstants {
         if (dockable != null) {
             // check to see if the dockable is already registered.
             Dockable tmp = getDockableImpl(dockable.getPersistentId());
-            if (tmp == null)
+            if (tmp == null) {
                 registerDockable(dockable);
+            }
         }
         // if we couldn't find a dockable from the factory, then try getting
         // a component.
@@ -1447,8 +1472,9 @@ public class DockingManager implements DockingConstants {
             Component comp = factory.getDockableComponent(id);
             // we already weren't able to get a Dockable from the factory. If
             // we couldn't get a Component either, then give up.
-            if (comp == null)
+            if (comp == null) {
                 return null;
+            }
 
             // if the newly created dockable has not yet been registered,
             // then register it.
@@ -1467,13 +1493,15 @@ public class DockingManager implements DockingConstants {
 
     private static Dockable getDockableForComponent(Component c, String desc,
             String dockingId) {
-        if (c == null)
+        if (c == null) {
             return null;
+        }
 
         // return the dockable if it has already been registered
         Dockable dockable = getDockable(c);
-        if (dockable != null)
+        if (dockable != null) {
             return dockable;
+        }
 
         // if we need to create a dockable, first try to do it with an adapter
         DockingAdapter adapter = AdapterFactory.getAdapter(c);
@@ -1495,8 +1523,9 @@ public class DockingManager implements DockingConstants {
         }
 
         // make sure the specified description is applied
-        if (desc != null)
+        if (desc != null) {
             dockable.getDockingProperties().setDockableDesc(desc);
+        }
 
         // cache the dockable for future use
         DOCKABLES_BY_COMPONENT.put(c, dockable);
@@ -1603,12 +1632,14 @@ public class DockingManager implements DockingConstants {
      * @see Dockable#getPersistentId()
      */
     public static Dockable getDockable(String id) {
-        if (id == null)
+        if (id == null) {
             return null;
+        }
 
         Dockable dockable = getDockableImpl(id);
-        if (dockable == null)
+        if (dockable == null) {
             dockable = loadAndRegister(id);
+        }
         return dockable;
     }
 
@@ -1666,15 +1697,17 @@ public class DockingManager implements DockingConstants {
      * @see #registerDockable(Dockable)
      */
     public static DragManager getDragListener(Dockable dockable) {
-        if (dockable == null || dockable.getDragSources() == null)
+        if (dockable == null || dockable.getDragSources() == null) {
             return null;
+        }
 
         for (Iterator it = dockable.getDragSources().iterator(); it.hasNext();) {
             Object obj = it.next();
             if (obj instanceof Component) {
                 DragManager listener = getDragListener((Component) obj);
-                if (listener != null)
+                if (listener != null) {
                     return listener;
+                }
             }
         }
         return null;
@@ -1683,8 +1716,9 @@ public class DockingManager implements DockingConstants {
     private static DragManager getDragListener(Component c) {
         EventListener[] listeners = c.getMouseMotionListeners();
         for (int i = 0; i < listeners.length; i++) {
-            if (listeners[i] instanceof DragManager)
+            if (listeners[i] instanceof DragManager) {
                 return (DragManager) listeners[i];
+            }
         }
         return null;
     }
@@ -2269,13 +2303,16 @@ public class DockingManager implements DockingConstants {
      */
     public static void setMinimized(Dockable dockable, boolean minimizing,
                                     Component window, int constraint) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
-        if (window == null)
+        if (window == null) {
             window = SwingUtility.getActiveWindow();
-        if (window == null)
+        }
+        if (window == null) {
             return;
+        }
 
         getMinimizeManager().setMinimized(dockable, minimizing, window,
                                           constraint);
@@ -2319,8 +2356,9 @@ public class DockingManager implements DockingConstants {
      */
     public static void setMainDockingPort(Component window, String portId) {
         RootDockingPortInfo info = getRootDockingPortInfo(window);
-        if (info != null)
+        if (info != null) {
             info.setMainPort(portId);
+        }
     }
 
     /**
@@ -2356,11 +2394,12 @@ public class DockingManager implements DockingConstants {
      */
     public static void setMinimizeManager(MinimizationManager mgr) {
         DockingManager dockingManager = getDockingManager();
-        if (mgr == null)
+        if (mgr == null) {
             // do not allow null minimization managers
             setMinimizeManager(dockingManager.defaultMinimizeManagerClass);
-        else
+        } else {
             dockingManager.minimizeManager = mgr;
+        }
     }
 
     /**
@@ -2485,11 +2524,12 @@ public class DockingManager implements DockingConstants {
      */
     public static void setLayoutManager(LayoutManager mgr) {
         DockingManager dockingManager = getDockingManager();
-        if (mgr == null)
+        if (mgr == null) {
             // do not allow a null layout manager.
             setLayoutManager(dockingManager.defaultLayoutManagerClass);
-        else
+        } else {
             getDockingManager().layoutManager = mgr;
+        }
     }
 
     /**
@@ -2564,14 +2604,16 @@ public class DockingManager implements DockingConstants {
      */
     public static void setDockingStrategy(Class classKey,
                                           DockingStrategy strategy) {
-        if (classKey == null)
+        if (classKey == null) {
             return;
+        }
 
-        if (strategy == null)
+        if (strategy == null) {
             DOCKING_STRATEGIES.removeClassMapping(classKey);
-        else
+        } else {
             DOCKING_STRATEGIES.addClassMapping(classKey, strategy.getClass(),
-                                               strategy);
+                    strategy);
+        }
     }
 
     /**
@@ -2602,8 +2644,9 @@ public class DockingManager implements DockingConstants {
      * @see #setDockingStrategy(Class, DockingStrategy)
      */
     public static boolean undock(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
 
         DockingStrategy strategy = findDockingStrategy(dockable);
         if (strategy != null) {
@@ -2646,8 +2689,9 @@ public class DockingManager implements DockingConstants {
      * @see DragManager
      */
     public static void updateDragListeners(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
         DragManager dragListener = getDragListener(dockable);
         if (dragListener == null) {
@@ -2663,8 +2707,9 @@ public class DockingManager implements DockingConstants {
     }
 
     private static void removeDragListeners(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return;
+        }
 
         for (Iterator it = dockable.getDragSources().iterator(); it.hasNext();) {
             Object obj = it.next();

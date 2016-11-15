@@ -84,22 +84,25 @@ public class TextIcon implements Icon, PropertyChangeListener {
     }
 
     public void setText(String text) {
-        if(text==null)
+        if(text==null) {
             text = "";
+        }
 
         boolean changed = isChanged(mText, text);
         mText = text;
 
-        if(changed)
+        if(changed) {
             recalcDimensions();
+        }
     }
 
     public void setIcon(Icon icon) {
         boolean changed = isChanged(mIcon, icon);
         mIcon = icon;
 
-        if(changed)
+        if(changed) {
             recalcDimensions();
+        }
     }
 
     public void setRotation(int rotation) {
@@ -107,8 +110,9 @@ public class TextIcon implements Icon, PropertyChangeListener {
         boolean changed = rotation!=mRotation;
         mRotation = rotation;
 
-        if(changed)
+        if(changed) {
             recalcDimensions();
+        }
     }
 
     public static int getValidRotation(int rotation) {
@@ -123,11 +127,13 @@ public class TextIcon implements Icon, PropertyChangeListener {
     }
 
     private boolean isChanged(Object oldValue, Object newValue) {
-        if(oldValue==newValue)
+        if(oldValue==newValue) {
             return false;
+        }
 
-        if(oldValue==null || newValue==null)
+        if(oldValue==null || newValue==null) {
             return true;
+        }
 
         return !oldValue.equals(newValue);
     }
@@ -136,8 +142,9 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent e) {
         String prop = e.getPropertyName();
-        if (prop.equals("font"))
+        if (prop.equals("font")) {
             recalcDimensions();
+        }
     }
 
     // private
@@ -148,8 +155,9 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
         calcDimensions();
 
-        if (w != getIconWidth() || h != getIconHeight())
+        if (w != getIconWidth() || h != getIconHeight()) {
             mComponent.invalidate();
+        }
     }
 
     private void calcDimensions() {

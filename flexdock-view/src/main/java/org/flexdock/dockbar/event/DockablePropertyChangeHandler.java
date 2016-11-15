@@ -29,22 +29,26 @@ public class DockablePropertyChangeHandler implements PropertyChangeListener {
     public static final DockablePropertyChangeHandler DEFAULT_INSTANCE = new DockablePropertyChangeHandler();
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if(!(evt.getSource() instanceof Dockable))
+        if(!(evt.getSource() instanceof Dockable)) {
             return;
+        }
 
         Dockable dockable = (Dockable) evt.getSource();
-        if(!DockingUtility.isMinimized(dockable))
+        if(!DockingUtility.isMinimized(dockable)) {
             return;
+        }
 
         String pName = evt.getPropertyName();
         DockbarLabel label = getDockbarLabel(dockable);
-        if(label==null)
+        if(label==null) {
             return;
+        }
 
         if (DockablePropertySet.TAB_ICON.equals(pName) || DockablePropertySet.DOCKBAR_ICON.equals(pName)) {
             Icon icon = dockable.getDockingProperties().getDockbarIcon();
-            if(icon==null)
+            if(icon==null) {
                 icon = dockable.getDockingProperties().getTabIcon();
+            }
             label.setIcon(icon);
         } else if(DockablePropertySet.DESCRIPTION.equals(pName)) {
             label.setText(dockable.getDockingProperties().getDockableDesc());

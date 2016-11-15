@@ -58,8 +58,9 @@ public class StatusDockbar extends Dockbar {
         this.orientation = orientation;
 
         Border border = labelPanel.getBorder();
-        if (border instanceof SlideoutBorder)
+        if (border instanceof SlideoutBorder) {
             ((SlideoutBorder) border).setOrientation(orientation);
+        }
 
         int boxConstraint = orientation == MinimizationManager.TOP
                             || orientation == MinimizationManager.BOTTOM ? BoxLayout.LINE_AXIS
@@ -68,14 +69,17 @@ public class StatusDockbar extends Dockbar {
     }
 
     public Dimension getPreferredSize() {
-        if (statusBarComponent == null || statusBarComponent.getComponentCount() == 0)
-            if (mDocks.size() == 0)
+        if (statusBarComponent == null || statusBarComponent.getComponentCount() == 0) {
+            if (mDocks.size() == 0) {
                 return new Dimension(0, 0);
-            else
+            } else {
                 return labelPanel.getComponent(0).getPreferredSize();
+            }
+        }
 
-        if (labelPanel.getComponentCount() == 0)
+        if (labelPanel.getComponentCount() == 0) {
             return statusBarComponent.getPreferredSize();
+        }
 
         DockbarLabel label = (DockbarLabel) labelPanel.getComponent(0);
         return new Dimension(label.getPreferredSize().width

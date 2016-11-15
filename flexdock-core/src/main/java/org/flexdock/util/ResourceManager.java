@@ -92,20 +92,23 @@ public class ResourceManager {
         }
 
         URL url = ResourceManager.class.getResource(uri);
-        if (url == null)
+        if (url == null) {
             url = ClassLoader.getSystemResource(uri);
+        }
 
         // if we still couldn't find the resource, then slash it and try again
-        if (url == null && !uri.startsWith("/"))
+        if (url == null && !uri.startsWith("/")) {
             url = getResource("/" + uri);
+        }
 
         // if resource is still null, then check to see if it's a filesystem
         // path
         if (url == null) {
             try {
                 File file = new File(uri);
-                if (file.exists())
+                if (file.exists()) {
                     url = file.toURL();
+                }
             } catch (MalformedURLException e) {
                 System.err.println("Exception: " +e.getMessage());
                 url = null;
@@ -299,8 +302,9 @@ public class ResourceManager {
      *                if the library cannot be loaded
      */
     public static void loadLibrary(String library, String classpathResource) {
-        if (library == null)
+        if (library == null) {
             return;
+        }
 
         UnsatisfiedLinkError linkageError = null;
         try {
@@ -330,8 +334,9 @@ public class ResourceManager {
 
         // if we can't load from the classpath, then we're stuck.
         // throw the last UnsatisfiedLinkError we encountered.
-        if (classpathResource == null && linkageError != null)
+        if (classpathResource == null && linkageError != null) {
             throw linkageError;
+        }
 
         // if the file didn't exist, or we couldn't load from it,
         // we'll have to pull from the classpath resource and write it
@@ -341,9 +346,10 @@ public class ResourceManager {
         // get a handle to our resource in the classpath
         ClassLoader cl = ResourceManager.class.getClassLoader();
         InputStream in = cl.getResourceAsStream(classpathResource);
-        if (in == null)
+        if (in == null) {
             throw new UnsatisfiedLinkError(
-                "Unable to locate classpath resource: " + classpathResource);
+                    "Unable to locate classpath resource: " + classpathResource);
+        }
 
         try {
             // create an outputstream to our destination file
@@ -409,8 +415,9 @@ public class ResourceManager {
      *         {@code URL}
      */
     public static Document getDocument(URL url) {
-        if (url == null)
+        if (url == null) {
             return null;
+        }
 
         InputStream inStream = null;
         try {
@@ -509,8 +516,9 @@ public class ResourceManager {
      *         {@code url}.
      */
     public static Properties getProperties(URL url, boolean failSilent) {
-        if (failSilent && url == null)
+        if (failSilent && url == null) {
             return null;
+        }
 
         InputStream in = null;
         try {
@@ -519,8 +527,9 @@ public class ResourceManager {
             p.load(in);
             return p;
         } catch (Exception e) {
-            if (!failSilent)
+            if (!failSilent) {
                 System.err.println("Exception: " +e.getMessage());
+            }
             return null;
         } finally {
             close(in);
@@ -539,8 +548,9 @@ public class ResourceManager {
      */
     public static void close(InputStream in) {
         try {
-            if (in != null)
+            if (in != null) {
                 in.close();
+            }
         } catch (Exception e) {
             System.err.println("Exception: " +e.getMessage());
         }
@@ -558,8 +568,9 @@ public class ResourceManager {
      */
     public static void close(OutputStream out) {
         try {
-            if (out != null)
+            if (out != null) {
                 out.close();
+            }
         } catch (Exception e) {
             System.err.println("Exception: " +e.getMessage());
         }
@@ -577,8 +588,9 @@ public class ResourceManager {
      */
     public static void close(Socket socket) {
         try {
-            if (socket != null)
+            if (socket != null) {
                 socket.close();
+            }
         } catch (Exception e) {
             System.err.println("Exception: " +e.getMessage());
         }

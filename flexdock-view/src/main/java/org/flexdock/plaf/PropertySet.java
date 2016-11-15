@@ -37,8 +37,9 @@ public class PropertySet {
     }
 
     public void setAll(PropertySet set) {
-        if(set!=null)
+        if(set!=null) {
             properties.putAll(set.properties);
+        }
     }
 
     public void setProperty(String key, Object value) {
@@ -85,19 +86,22 @@ public class PropertySet {
     }
 
     public String[] getStrings(String[] keys) {
-        if(keys==null)
+        if(keys==null) {
             return null;
+        }
 
         String[] values = new String[keys.length];
-        for(int i=0; i<values.length; i++)
+        for(int i=0; i<values.length; i++) {
             values[i] = getString(keys[i]);
+        }
         return values;
     }
 
     public int getInt(String key) {
         String string = getString(key);
-        if(string==null)
+        if(string==null) {
             return 0;
+        }
 
         try {
             return Integer.parseInt(string);
@@ -110,8 +114,9 @@ public class PropertySet {
 
     public Integer getInteger(String key) {
         String string = getString(key);
-        if(string==null)
+        if(string==null) {
             return null;
+        }
 
         try {
             return new Integer(string);
@@ -122,8 +127,9 @@ public class PropertySet {
 
     public boolean getBoolean( String key) {
         String string = getString(key);
-        if(string==null)
+        if(string==null) {
             return false;
+        }
 
         try {
             return Boolean.valueOf( string).booleanValue();
@@ -189,23 +195,31 @@ public class PropertySet {
     }
 
     protected Class resolveClass(String className) throws ClassNotFoundException {
-        if(className==null)
+        if(className==null) {
             return null;
+        }
 
-        if("int".equals(className))
+        if("int".equals(className)) {
             return int.class;
-        if("long".equals(className))
+        }
+        if("long".equals(className)) {
             return long.class;
-        if("boolean".equals(className))
+        }
+        if("boolean".equals(className)) {
             return boolean.class;
-        if("float".equals(className))
+        }
+        if("float".equals(className)) {
             return float.class;
-        if("double".equals(className))
+        }
+        if("double".equals(className)) {
             return double.class;
-        if("byte".equals(className))
+        }
+        if("byte".equals(className)) {
             return byte.class;
-        if("short".equals(className))
+        }
+        if("short".equals(className)) {
             return short.class;
+        }
 
         return Class.forName(className);
     }

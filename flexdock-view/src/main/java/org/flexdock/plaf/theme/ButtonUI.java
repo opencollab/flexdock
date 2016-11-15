@@ -61,32 +61,37 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 
     protected void paintBorder(Graphics g, AbstractButton b) {
         Border border = getBorder(b);
-        if(border!=null)
+        if(border!=null) {
             border.paintBorder(b, g, 0, 0, b.getWidth(), b.getHeight());
+        }
     }
 
     protected Border getBorder(AbstractButton button) {
-        if(isPressed(button))
+        if(isPressed(button)) {
             return getPressedBorder(button);
+        }
 
         boolean active = isParentActive(button);
-        if(button.getModel().isRollover())
+        if(button.getModel().isRollover()) {
             return getHoverBorder(button, active);
+        }
 
         return getDefaultBorder(button, active);
     }
 
     protected Border getPressedBorder(AbstractButton button) {
         Border border = borderPressed;
-        if(border==null)
+        if(border==null) {
             border = getHoverBorder(button, true);
+        }
         return border;
     }
 
     protected Border getHoverBorder(AbstractButton button, boolean active) {
         Border border = active? borderActiveHover: borderDefaultHover;
-        if(border==null)
+        if(border==null) {
             border = getDefaultBorder(button, active);
+        }
         return border;
     }
 
@@ -99,8 +104,9 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 
     protected void paintIcon(Graphics g, AbstractButton b) {
         Icon icon = getIcon(b);
-        if(icon==null)
+        if(icon==null) {
             return;
+        }
 
         int h = icon.getIconHeight();
         int w = icon.getIconWidth();
@@ -113,57 +119,68 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
     protected Icon getIcon(AbstractButton button) {
         boolean active = isParentActive(button);
 
-        if(!button.isEnabled() || !button.getModel().isEnabled())
+        if(!button.isEnabled() || !button.getModel().isEnabled()) {
             return getDisabledIcon(button, active);
+        }
 
-        if(isPressed(button))
+        if(isPressed(button)) {
             return getPressedIcon(button);
+        }
 
-        if(button.getModel().isRollover())
+        if(button.getModel().isRollover()) {
             return getHoverIcon(button, active);
+        }
 
         return getDefaultIcon(button, active);
     }
 
     protected Icon getDisabledIcon(AbstractButton button, boolean active) {
         Icon icon = button.getDisabledIcon();
-        if(icon==null)
+        if(icon==null) {
             icon = getActionIcon(button, false, active, false);
-        if(icon==null)
+        }
+        if(icon==null) {
             icon = getDefaultIcon(button, active);
+        }
         return icon;
     }
 
     protected Icon getPressedIcon(AbstractButton button) {
         Icon icon = button.getPressedIcon();
-        if(icon==null)
+        if(icon==null) {
             icon = getActionIcon(button, true, true, true);
-        if(icon==null)
+        }
+        if(icon==null) {
             icon = getHoverIcon(button, true);
+        }
         return icon;
     }
 
     protected Icon getHoverIcon(AbstractButton button, boolean active) {
         Icon icon = button.getRolloverIcon();
-        if(icon==null)
+        if(icon==null) {
             icon = getActionIcon(button, false, active, true);
-        if(icon==null)
+        }
+        if(icon==null) {
             icon = getDefaultIcon(button, active);
+        }
         return icon;
     }
 
     protected Icon getDefaultIcon(AbstractButton button, boolean active) {
         Icon icon = button.getIcon();
-        if(icon==null)
+        if(icon==null) {
             icon = getActionIcon(button, false, active, false);
+        }
         return icon;
     }
 
     protected Icon getActionIcon(AbstractButton button, boolean pressed, boolean active, boolean hover) {
         Action action = button.getAction();
         IconResource resource = action==null? null: (IconResource)action.getValue(ICON_RESOURCE);
-        if(resource==null)
+        if(resource==null) {
             return null;
+        }
 
         boolean disabled = !button.isEnabled() || !button.getModel().isEnabled();
         boolean selected = button.isSelected();
@@ -171,49 +188,56 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 
         if(pressed && !disabled) {
             Icon icon = selected? resource.getIconSelectedPressed(): null;
-            if(icon==null)
+            if(icon==null) {
                 icon = resource.getIconPressed();
+            }
             return icon;
         }
 
         if(active) {
             if(disabled) {
                 Icon icon = selected? resource.getIconSelectedActiveDisabled(): null;
-                if(icon==null)
+                if(icon==null) {
                     icon = resource.getIconActiveDisabled();
+                }
                 return icon==null? resource.getIconActive(): icon;
             }
 
             if(hover) {
                 Icon icon = selected? resource.getIconSelectedActiveHover(): null;
-                if(icon==null)
+                if(icon==null) {
                     icon = resource.getIconActiveHover();
+                }
                 return icon;
             }
 
             Icon icon = selected? resource.getIconSelectedActive(): null;
-            if(icon==null)
+            if(icon==null) {
                 icon = resource.getIconActive();
+            }
             return icon;
         }
 
         if(disabled) {
             Icon icon = selected? resource.getIconSelectedDisabled(): null;
-            if(icon==null)
+            if(icon==null) {
                 icon = resource.getIconDisabled();
+            }
             return icon==null? resource.getIcon(): icon;
         }
 
         if(hover) {
             Icon icon = selected? resource.getIconSelectedHover(): null;
-            if(icon==null)
+            if(icon==null) {
                 icon = resource.getIconHover();
+            }
             return icon;
         }
 
         Icon icon = selected? resource.getIconSelected(): null;
-        if(icon==null)
+        if(icon==null) {
             icon = resource.getIcon();
+        }
         return icon;
     }
 
@@ -302,8 +326,9 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 
     private class ToggleListener implements ItemListener {
         public void itemStateChanged(ItemEvent e) {
-            if(e.getStateChange()!=ItemEvent.SELECTED && e.getStateChange()!=ItemEvent.DESELECTED)
+            if(e.getStateChange()!=ItemEvent.SELECTED && e.getStateChange()!=ItemEvent.DESELECTED) {
                 return;
+            }
 
             Button button = (Button)e.getSource();
             updateTooltip(button);
@@ -312,22 +337,27 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
 
     private void updateTooltip(AbstractButton button) {
         Action action = button.getAction();
-        if(action==null)
+        if(action==null) {
             return;
+        }
 
         String toolTip = (String)action.getValue(Action.SHORT_DESCRIPTION);
-        if(toolTip!=null)
+        if(toolTip!=null) {
             return;
+        }
 
         IconResource resource = action==null? null: (IconResource)action.getValue(ICON_RESOURCE);
-        if(resource==null)
+        if(resource==null) {
             return;
+        }
 
         toolTip = button.isSelected()? resource.getTooltipSelected(): resource.getTooltip();
-        if(toolTip==null)
+        if(toolTip==null) {
             toolTip = resource.getTooltip();
+        }
 
-        if(toolTip!=null)
+        if(toolTip!=null) {
             button.setToolTipText(toolTip);
+        }
     }
 }

@@ -30,8 +30,9 @@ public class PainterResourceHandler extends ResourceHandler {
 
     private static Painter createPainter(Class clazz) {
 
-        if(clazz ==null)
+        if(clazz ==null) {
             return null;
+        }
 
         try {
             return (Painter)clazz.newInstance();

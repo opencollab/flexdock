@@ -57,18 +57,21 @@ public class ActivationListener {
 
 
     public void mouseEntered(Point mousePoint) {
-        if(mouseOver)
+        if(mouseOver) {
             return;
+        }
 
         mouseOver = true;
-        if(deactivator!=null)
+        if(deactivator!=null) {
             deactivator.setEnabled(false);
+        }
         deactivator = null;
     }
 
     public void mouseExited(Point mousePoint) {
-        if(!mouseOver)
+        if(!mouseOver) {
             return;
+        }
 
         mouseOver = false;
         if(!isOverDockbars(mousePoint)) {
@@ -129,8 +132,9 @@ public class ActivationListener {
             }
 
             if(isEnabled() && !Utilities.isChanged(dockableId, manager.getActiveDockableId()) &&
-                    !isViewpaneLocked())
+                    !isViewpaneLocked()) {
                 manager.setActiveDockable((String)null);
+            }
         }
 
     }

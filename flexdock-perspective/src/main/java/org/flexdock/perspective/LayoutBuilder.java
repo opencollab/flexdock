@@ -34,8 +34,9 @@ public class LayoutBuilder {
     }
 
     public LayoutNode createLayout(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return null;
+        }
         return createLayoutImpl(port);
     }
 
@@ -69,8 +70,9 @@ public class LayoutBuilder {
     }
 
     private LayoutNode createLayout(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         DockableNode node = new DockableNode();
         node.setDockableId(dockable.getPersistentId());
@@ -97,8 +99,9 @@ public class LayoutBuilder {
             link(node, childNode);
         } else if (child instanceof JTabbedPane) {
             LayoutNode[] children = createLayout((JTabbedPane)child);
-            for(int i=0; i<children.length; i++)
+            for(int i=0; i<children.length; i++) {
                 link(node, children[i]);
+            }
         } else {
             Dockable dockable = DockingManager.getDockable(child);
             LayoutNode childNode = createLayout(dockable);
@@ -107,7 +110,8 @@ public class LayoutBuilder {
     }
 
     private void link(LayoutNode parent, LayoutNode child) {
-        if(child!=null)
+        if(child!=null) {
             parent.add(child);
+        }
     }
 }

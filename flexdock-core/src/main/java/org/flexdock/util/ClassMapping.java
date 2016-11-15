@@ -176,8 +176,9 @@ public class ClassMapping {
      * @see #removeClassMapping(Class)
      */
     public void addClassMapping(Class key, Class value, Object instance) {
-        if (key == null || value == null)
+        if (key == null || value == null) {
             return;
+        }
 
         synchronized (classes) {
             classes.put(key, value);
@@ -247,8 +248,9 @@ public class ClassMapping {
      * @see #getClassInstance(Class)
      */
     public Class removeClassMapping(Class key) {
-        if (key == null)
+        if (key == null) {
             return null;
+        }
 
         Class c = null;
         synchronized (classes) {
@@ -310,8 +312,9 @@ public class ClassMapping {
      * @see #removeClassMapping(Class)
      */
     public Class getClassMapping(Class key) {
-        if (key == null)
+        if (key == null) {
             return defaultClass;
+        }
 
         Class value = null;
 
@@ -345,8 +348,9 @@ public class ClassMapping {
      * @see #removeClassMapping(Class)
      */
     public Object getClassInstance(Class key) {
-        if (key == null)
+        if (key == null) {
             return defaultInstance;
+        }
 
         Object value = null;
 

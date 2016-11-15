@@ -25,8 +25,9 @@ public class Button extends JToggleButton {
 
     public void setModel(ButtonModel newModel) {
         ButtonModel oldModel = getModel();
-        if(newModel!=null && oldModel!=null)
+        if(newModel!=null && oldModel!=null) {
             newModel.setSelected(oldModel.isSelected());
+        }
         super.setModel(newModel);
     }
 
@@ -44,8 +45,9 @@ public class Button extends JToggleButton {
 
     public String getActionName() {
         Action action = getAction();
-        if(action==null)
+        if(action==null) {
             return null;
+        }
         return (String)action.getValue(Action.NAME);
     }
 }

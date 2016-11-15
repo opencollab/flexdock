@@ -97,19 +97,22 @@ public class DragGlasspane extends JComponent implements DockingConstants {
     }
 
     private String findRegion(DockingPort hoverPort, Dockable hoverDockable, Point mousePoint) {
-        if(hoverPort==null)
+        if(hoverPort==null) {
             return UNKNOWN_REGION;
+        }
 
-        if(hoverDockable!=null)
+        if(hoverDockable!=null) {
             return hoverPort.getRegion(mousePoint);
+        }
 
         // apparently, we're not hovered over a valid dockable.  either the dockingport
         // is empty, or it already contains a non-dockable component.  if it's empty, then
         // we can dock into it.  otherwise, we need to short-circuit the docking operation.
         Component docked = hoverPort.getDockedComponent();
         // if 'docked' is null, then the port is empty and we can dock
-        if(docked==null)
+        if(docked==null) {
             return hoverPort.getRegion(mousePoint);
+        }
 
         // the port contains a non-dockable component.  we can't dock
         return UNKNOWN_REGION;
@@ -117,16 +120,17 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 
     private Dockable getHoverDockable(NestedComponents nest) {
         Component c = nest==null? null: nest.child;
-        if(c instanceof Dockable)
+        if(c instanceof Dockable) {
             return (Dockable)c;
+        }
         return DockingManager.getDockable(c);
     }
 
     protected void createPreviewPolygon(DragOperation token, DockingPort port, Dockable hover, String region) {
         DragPreview preview = getPreviewDelegate(token.getDockable(), port);
-        if(preview==null)
+        if(preview==null) {
             previewPoly = null;
-        else {
+        } else {
             Map dragContext = getDragContext(token);
             previewPoly = preview.createPreviewPolygon(token.getDockable(), port, hover, region, this, dragContext);
         }
@@ -145,8 +149,9 @@ public class DragGlasspane extends JComponent implements DockingConstants {
     }
 
     protected void postPaint(Graphics g) {
-        if(postPainter!=null)
+        if(postPainter!=null) {
             postPainter.run();
+        }
         postPainter = null;
     }
 
@@ -188,8 +193,9 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 //	}
 
     private Map getDragContext(DragOperation token) {
-        if(token==null)
+        if(token==null) {
             return null;
+        }
 
         Dockable dockable = token.getDockableReference();
         return DragManager.getDragContext(dockable);

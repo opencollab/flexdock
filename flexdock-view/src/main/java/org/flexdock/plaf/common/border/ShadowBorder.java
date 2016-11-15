@@ -28,8 +28,9 @@ public class ShadowBorder implements Border {
                             int y, int w, int h) {
         // choose which colors we want to use
         Color bg = c.getBackground();
-        if(c.getParent()!=null)
+        if(c.getParent()!=null) {
             bg = c.getParent().getBackground();
+        }
         Color mid = bg.darker();
         Color rect = mid.darker();
         Color edge = average(mid, bg);

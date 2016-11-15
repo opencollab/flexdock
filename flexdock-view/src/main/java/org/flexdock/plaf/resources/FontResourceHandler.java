@@ -16,15 +16,17 @@ public class FontResourceHandler extends ResourceHandler {
     public static final String BASE_FONT_KEY = "Panel.font";
 
     public Object getResource(String fontData) {
-        if(fontData==null)
+        if(fontData==null) {
             return null;
+        }
 
         String name = null;
         int style = -1;
         int size = -1;
 
-        if(!fontData.endsWith(","))
+        if(!fontData.endsWith(",")) {
             fontData += ",";
+        }
 
         StringTokenizer st = new StringTokenizer(fontData, ",");
         for(int i=0; st.hasMoreTokens(); i++) {
@@ -42,12 +44,15 @@ public class FontResourceHandler extends ResourceHandler {
         }
 
         FontUIResource defaultFont = (FontUIResource)UIManager.getDefaults().getFont(BASE_FONT_KEY);
-        if(name==null)
+        if(name==null) {
             name = defaultFont.getName();
-        if(style==-1)
+        }
+        if(style==-1) {
             style = defaultFont.getStyle();
-        if(size==-1)
+        }
+        if(size==-1) {
             size = defaultFont.getSize();
+        }
 
         return new FontUIResource(name, style, size);
 

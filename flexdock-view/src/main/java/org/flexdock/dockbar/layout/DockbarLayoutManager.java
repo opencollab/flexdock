@@ -39,8 +39,9 @@ public class DockbarLayoutManager {
     }
 
     public Rectangle getViewArea(DockbarManager mgr, Dockable dockable) {
-        if(mgr==null)
+        if(mgr==null) {
             return new Rectangle(0, 0, 0, 0);
+        }
 
         Rectangle leftBar = mgr.getLeftBar().getBounds();
         Rectangle bottomBar = mgr.getBottomBar().getBounds();
@@ -51,8 +52,9 @@ public class DockbarLayoutManager {
     public Rectangle getLayoutArea(DockbarManager mgr) {
         Rectangle rect = new Rectangle();
         RootWindow window = mgr==null? null: mgr.getWindow();
-        if(window==null)
+        if(window==null) {
             return rect;
+        }
 
         JLayeredPane layeredPane = window.getLayeredPane();
 

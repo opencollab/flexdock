@@ -40,18 +40,21 @@ public class PropertyManager {
     }
 
     public static void setDockablePropertyType(Class dockable, Class propType) {
-        if(dockable==null || propType==null)
+        if(dockable==null || propType==null) {
             return;
+        }
 
-        if(!Dockable.class.isAssignableFrom(dockable) || !DockablePropertySet.class.isAssignableFrom(propType))
+        if(!Dockable.class.isAssignableFrom(dockable) || !DockablePropertySet.class.isAssignableFrom(propType)) {
             return;
+        }
 
         DOCKABLE_PROPS_MAPPING.addClassMapping(dockable, propType);
     }
 
     public static DockablePropertySet getDockablePropertySet(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         Object obj = dockable.getClientProperty(DOCKABLE_PROPERTIES_KEY);
         if(!(obj instanceof DockablePropertySet)) {
@@ -80,8 +83,9 @@ public class PropertyManager {
     }
 
     public static DockingPortPropertySet getDockingPortPropertySet(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return null;
+        }
 
         Object obj = port.getClientProperty(DOCKINGPORT_PROPERTIES_KEY);
         if(!(obj instanceof DockingPortPropertySet)) {
@@ -92,26 +96,31 @@ public class PropertyManager {
     }
 
     public static Object getProperty(Object key, ScopedMap map) {
-        if(key==null || map==null)
+        if(key==null || map==null) {
             return null;
+        }
 
         // first, check the global property list
         Object value = getProperty(key, map.getGlobals());
         // if not in the global list, check the locals
-        if(value==null)
+        if(value==null) {
             value = getProperty(key, map.getLocals());
+        }
         // if not in the local list, check the defaults
-        if(value==null)
+        if(value==null) {
             value = getProperty(key, map.getDefaults());
+        }
         // if not in the default list, check the root
-        if(value==null)
+        if(value==null) {
             value = getProperty(key, map.getRoot());
+        }
         return value;
     }
 
     public static Object getClientProperty(Dockable dockable, Object key) {
-        if(dockable==null || key==null)
+        if(dockable==null || key==null) {
             return null;
+        }
 
         Component comp = dockable.getComponent();
         if(comp instanceof JComponent) {
@@ -121,8 +130,9 @@ public class PropertyManager {
     }
 
     public static void putClientProperty(Dockable dockable, Object key, Object value) {
-        if(dockable==null || key==null)
+        if(dockable==null || key==null) {
             return;
+        }
 
         Component comp = dockable.getComponent();
         if(comp instanceof JComponent) {
@@ -159,8 +169,9 @@ public class PropertyManager {
             Constructor[] constructors = c.getConstructors();
             for(int i=0; i<constructors.length; i++) {
                 Class[] paramTypes = constructors[i].getParameterTypes();
-                if(paramTypes.length!=1)
+                if(paramTypes.length!=1) {
                     continue;
+                }
 
                 Class param = paramTypes[0];
                 if(Dockable.class.isAssignableFrom(param)) {
@@ -184,14 +195,16 @@ public class PropertyManager {
     }
 
     private static Object getProperty(Object key, List maps) {
-        if(maps==null)
+        if(maps==null) {
             return null;
+        }
 
         for(Iterator it=maps.iterator(); it.hasNext();) {
             Object map = it.next();
             Object value = getProperty(key, map);
-            if(value!=null)
+            if(value!=null) {
                 return value;
+            }
         }
         return null;
     }

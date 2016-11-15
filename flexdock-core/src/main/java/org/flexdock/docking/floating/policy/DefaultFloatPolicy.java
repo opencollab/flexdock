@@ -86,12 +86,14 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
      * @see FloatPolicyManager#isGlobalFloatingEnabled()
      */
     public boolean isFloatingAllowed(Dockable dockable) {
-        if (dockable == null || !FloatPolicyManager.isGlobalFloatingEnabled())
+        if (dockable == null || !FloatPolicyManager.isGlobalFloatingEnabled()) {
             return false;
+        }
 
         Set frameDragSources = dockable.getFrameDragSources();
-        if (frameDragSources == null || frameDragSources.size() == 0)
+        if (frameDragSources == null || frameDragSources.size() == 0) {
             return false;
+        }
 
         return super.isFloatingAllowed(dockable);
     }

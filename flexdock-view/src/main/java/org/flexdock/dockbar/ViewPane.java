@@ -58,22 +58,25 @@ public class ViewPane extends JPanel {
         // remove the currently docked component
         Component[] children = getComponents();
         for(int i=0; i<children.length; i++) {
-            if(children[i]!=dragEdge)
+            if(children[i]!=dragEdge) {
                 remove(children[i]);
+            }
         }
 
         // add the new component
         Dockable d = manager.getActiveDockable();
         Component c = d==null? null: d.getComponent();
-        if(c!=null)
+        if(c!=null) {
             add(c, BorderLayout.CENTER);
+        }
     }
 
 
     public void updateOrientation() {
         Border border = getBorder();
-        if(border instanceof SlideoutBorder)
+        if(border instanceof SlideoutBorder) {
             ((SlideoutBorder)border).setOrientation(manager.getActiveEdge());
+        }
 
         // update the drag edge
         remove(dragEdge);

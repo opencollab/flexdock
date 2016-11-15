@@ -47,28 +47,32 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
     }
 
     public void mousePressed(MouseEvent e) {
-        if(dockable==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE)
+        if(dockable==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE) {
             enabled = false;
-        else {
+        } else {
             toggleDragContext(true);
             enabled = !isDragCanceled(dockable, e);
         }
     }
 
     public void mouseDragged(MouseEvent evt) {
-        if(!enabled)
+        if(!enabled) {
             return;
+        }
 
-        if(dragOrigin==null)
+        if(dragOrigin==null) {
             dragOrigin = evt.getPoint();
+        }
 
         if(pipeline==null || !pipeline.isOpen()) {
-            if(passedDragThreshold(evt))
+            if(passedDragThreshold(evt)) {
                 openPipeline(evt);
-            else
+            } else {
                 evt.consume();
-        } else
+            }
+        } else {
             pipeline.processDragEvent(evt);
+        }
     }
 
     private boolean passedDragThreshold(MouseEvent evt) {
@@ -93,12 +97,14 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
     }
 
     public void mouseReleased(MouseEvent e) {
-        if(pipeline==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE)
+        if(pipeline==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE) {
             return;
+        }
 
         finishDrag(dockable, pipeline.getDragToken(), e);
-        if(pipeline!=null)
+        if(pipeline!=null) {
             pipeline.close();
+        }
         toggleDragContext(false);
         dragOrigin = null;
         pipeline = null;
@@ -123,8 +129,9 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
 
 
         // attempt to complete the docking operation
-        if(!evt.isConsumed())
+        if(!evt.isConsumed()) {
             docker.dock(dockable, targetPort, region, token);
+        }
     }
 
 
@@ -163,8 +170,9 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
             dragSrc.removeMouseMotionListener((MouseMotionListener) cachedListeners[i]);
         }
         // then, re-add the DragManager
-        if(dragListener!=null)
+        if(dragListener!=null) {
             dragSrc.addMouseMotionListener(dragListener);
+        }
     }
 
     private static void restoreCachedListeners(DragOperation token) {
@@ -173,12 +181,14 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
         DragManager dragListener = token.getDragListener();
 
         // remove the pipeline listener
-        if(dragListener!=null)
+        if(dragListener!=null) {
             dragSrc.removeMouseMotionListener(dragListener);
+        }
 
         // now, re-add all of the original MouseMotionListeners
-        for (int i = 0; i < cachedListeners.length; i++)
+        for (int i = 0; i < cachedListeners.length; i++) {
             dragSrc.addMouseMotionListener((MouseMotionListener) cachedListeners[i]);
+        }
     }
 
     private static boolean isDragCanceled(Dockable dockable, MouseEvent trigger) {

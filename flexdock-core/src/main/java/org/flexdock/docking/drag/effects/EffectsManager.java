@@ -57,8 +57,9 @@ public class EffectsManager {
 
     public static RubberBand setRubberBand(String implClass) {
         RubberBand rb = createRubberBand(implClass);
-        if(implClass!=null && rb==null)
+        if(implClass!=null && rb==null) {
             return null;
+        }
 
         setRubberBand(rb);
         return rb;
@@ -72,8 +73,9 @@ public class EffectsManager {
 
     public DragPreview setPreview(String implClass) {
         DragPreview preview = createPreview(implClass);
-        if(implClass!=null && preview==null)
+        if(implClass!=null && preview==null) {
             return null;
+        }
 
         setPreview(preview);
         return preview;
@@ -129,14 +131,16 @@ public class EffectsManager {
         for(Iterator it=osList.iterator(); it.hasNext();) {
             String osName = (String)it.next();
             List classes = (List)info.get(osName);
-            if(classes==null)
+            if(classes==null) {
                 continue;
+            }
 
             for(Iterator it2=classes.iterator(); it2.hasNext();) {
                 String implClass = (String)it2.next();
                 RubberBand rb = createRubberBand(implClass);
-                if(rb!=null)
+                if(rb!=null) {
                     return rb;
+                }
             }
         }
 
@@ -149,8 +153,9 @@ public class EffectsManager {
         Element root = (Element)config.getElementsByTagName("drag-previews").item(0);
         String previewClass = root.getAttribute("default");
         DragPreview preview = createPreview(previewClass);
-        if(preview!=null)
+        if(preview!=null) {
             return preview;
+        }
         // unable to load the preview class.  return a no-op preview delegate instead.
         return new DefaultPreview() {
             public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {

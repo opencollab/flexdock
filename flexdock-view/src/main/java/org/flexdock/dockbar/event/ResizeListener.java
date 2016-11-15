@@ -66,8 +66,9 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
     }
 
     public void mouseDragged(MouseEvent e) {
-        if(dockable!=null)
+        if(dockable!=null) {
             handleResizeEvent(e);
+        }
     }
 
     private void handleResizeEvent(MouseEvent me) {
@@ -84,8 +85,9 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
         int loc = orientation==MinimizationManager.LEFT || orientation==MinimizationManager.RIGHT? p.x: p.y;
         int dim = orientation==MinimizationManager.LEFT || orientation==MinimizationManager.RIGHT? viewArea.width: viewArea.height;
 
-        if(orientation==MinimizationManager.RIGHT || orientation==MinimizationManager.BOTTOM)
+        if(orientation==MinimizationManager.RIGHT || orientation==MinimizationManager.BOTTOM) {
             loc = dim - loc;
+        }
 
         float percent = (float)loc/(float)dim;
         float minPercent = (float)DockbarLayout.MINIMUM_VIEW_SIZE/(float)dim;

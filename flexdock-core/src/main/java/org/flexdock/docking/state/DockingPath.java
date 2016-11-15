@@ -53,8 +53,9 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     }
 
     public static DockingPath create(Dockable dockable) {
-        if(dockable==null || !isDocked(dockable))
+        if(dockable==null || !isDocked(dockable)) {
             return null;
+        }
 
         DockingPath path = new DockingPath(dockable);
         Component comp = dockable.getComponent();
@@ -67,29 +68,33 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
             }
             parent = parent.getParent();
         }
-        if(isDockingRoot(parent))
+        if(isDockingRoot(parent)) {
             path.setRootPortId(((DockingPort)parent).getPersistentId());
+        }
 
         path.initialize();
         return path;
     }
 
     public static SplitNode createNode(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         Container parent = dockable.getComponent().getParent();
         return parent instanceof DockingPort? createNode((DockingPort)parent): null;
     }
 
     public static SplitNode createNode(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return null;
+        }
 
         Component c = ((Component)port).getParent();
         JSplitPane split = c instanceof JSplitPane? (JSplitPane)c: null;
-        if(split==null)
+        if(split==null) {
             return null;
+        }
 
         return createNode(port, split);
     }
@@ -122,15 +127,16 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         if (split instanceof DockingSplitPane && ((DockingSplitPane) split).getPercent() != -1) {
             percentage = (float) ((DockingSplitPane) split).getPercent();
         } else {
-            percentage = (float)divLoc / (float)size;
+            percentage = divLoc / (float)size;
         }
 
         return new SplitNode(orientation, region, percentage, siblingId);
     }
 
     private static String getSiblingId(Component c) {
-        if(c instanceof DockingPort)
+        if(c instanceof DockingPort) {
             c = ((DockingPort)c).getDockedComponent();
+        }
 
         Dockable dockable = findDockable(c);
         return dockable==null? null: dockable.getPersistentId();
@@ -148,8 +154,9 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     }
 
     public static DockingPath updateRestorePath_(Dockable dockable, DockingPath restorePath) {
-        if(dockable==null || restorePath==null)
+        if(dockable==null || restorePath==null) {
             return null;
+        }
         dockable.putClientProperty(RESTORE_PATH_KEY, restorePath);
         return restorePath;
     }
@@ -209,12 +216,14 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     private String findSiblingId(Dockable dockable) {
         Component comp = dockable.getComponent();
         JSplitPane split = comp.getParent() instanceof JSplitPane? (JSplitPane)comp.getParent(): null;
-        if(split==null)
+        if(split==null) {
             return null;
+        }
 
         Component sibling = split.getLeftComponent();
-        if(comp==sibling)
+        if(comp==sibling) {
             sibling = split.getRightComponent();
+        }
 
         Dockable d = findDockable(sibling);
         return d==null? null: d.getPersistentId();
@@ -239,16 +248,18 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 
     private DockingPort getRootDockingPort() {
         DockingPort port = DockingManager.getDockingPort(rootPortId);
-        if(port!=null)
+        if(port!=null) {
             return port;
+        }
 
         Window activeWindow = SwingUtility.getActiveWindow();
         return DockingManager.getRootDockingPort(activeWindow);
     }
 
     public boolean restore(Dockable dockable) {
-        if(dockable==null || isDocked(dockable))
+        if(dockable==null || isDocked(dockable)) {
             return false;
+        }
 
         DockingPort rootPort = getRootDockingPort();
         String region = CENTER_REGION;
@@ -326,8 +337,9 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
                 return dock(dockable, port, CENTER_REGION, null);
             }
             DockingPort superPort = (DockingPort)SwingUtilities.getAncestorOfClass(DockingPort.class, (Component)port);
-            if(superPort!=null)
+            if(superPort!=null) {
                 port = superPort;
+            }
             return dock(dockable, port, region, getLastNode());
         }
 
@@ -371,8 +383,9 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     }
 
     private String getRegion(SplitNode node, Component dockedComponent) {
-        if(dockedComponent==null)
+        if(dockedComponent==null) {
             return CENTER_REGION;
+        }
         return DockingUtility.getRegion(node.getRegion());
     }
 
@@ -382,8 +395,9 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 
     private boolean dock(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
         boolean ret = DockingManager.dock(dockable, port, region);
-        if(tabbed || ctrlNode==null)
+        if(tabbed || ctrlNode==null) {
             return ret;
+        }
 
         final float percent = ctrlNode.getPercentage();
         final Component docked = dockable.getComponent();
@@ -399,8 +413,9 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     private void resizeSplitPane(Component comp, float percentage) {
         Container parent = comp.getParent();
         Container grandParent = parent==null? null: parent.getParent();
-        if(!(grandParent instanceof JSplitPane))
+        if(!(grandParent instanceof JSplitPane)) {
             return;
+        }
 
         JSplitPane split = (JSplitPane)grandParent;
 //              int splitSize = split.getOrientation()==DockingConstants.VERTICAL? split.getHeight(): split.getWidth();

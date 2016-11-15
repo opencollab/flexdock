@@ -28,11 +28,13 @@ public class ActivationQueue extends Thread {
 
     public void run() {
         manager.setAnimating(true);
-        if(deactivation!=null)
+        if(deactivation!=null) {
             deactivation.run();
+        }
         postDeactivate.run();
-        if(activation!=null)
+        if(activation!=null) {
             activation.run();
+        }
         postActivate.run();
         manager.setAnimating(false);
     }

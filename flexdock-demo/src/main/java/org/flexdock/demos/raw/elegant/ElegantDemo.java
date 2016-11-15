@@ -67,9 +67,10 @@ public class ElegantDemo extends JFrame implements DockingConstants {
         DockingManager.setDefaultPersistenceKey("ElegantDemo.xml");
 
         try {
-            if(!DockingManager.restoreLayout(true))
-//			if(true)
+            if(!DockingManager.restoreLayout(true)) {
+                //			if(true)
                 setupDefaultLayout();
+            }
         } catch(Exception e) {
             e.printStackTrace();
             setupDefaultLayout();

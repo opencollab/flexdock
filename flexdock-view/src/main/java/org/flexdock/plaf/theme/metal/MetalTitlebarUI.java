@@ -49,8 +49,9 @@ public class MetalTitlebarUI extends TitlebarUI {
         int buttonWidth = 0;
         Component[] c = titlebar.getComponents();
         for (int i = 0; i < c.length; i++) {
-            if (!(c[i] instanceof Button))
+            if (!(c[i] instanceof Button)) {
                 continue;
+            }
 
             Button b = (Button) c[i];
             buttonWidth = b.getHeight();

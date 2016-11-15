@@ -46,8 +46,9 @@ public class IconResourceFactory implements XMLConstants {
     private static final HashSet BAD_RESOURCE_NAMES = new HashSet();
 
     public static IconMap getIconMap(String name) {
-        if(Configurator.isNull(name) || BAD_RESOURCE_NAMES.contains(name))
+        if(Configurator.isNull(name) || BAD_RESOURCE_NAMES.contains(name)) {
             return null;
+        }
 
         IconMap map = (IconMap)RESOURCE_MAP_CACHE.get(name);
         if(map==null) {
@@ -66,8 +67,9 @@ public class IconResourceFactory implements XMLConstants {
     }
 
     public static IconResource getResource(String name) {
-        if(Configurator.isNull(name))
+        if(Configurator.isNull(name)) {
             return null;
+        }
 
         IconResource icons = getCachedResource(name);
         if(icons==null) {
@@ -149,8 +151,9 @@ public class IconResourceFactory implements XMLConstants {
             }
         }
         // if all our resources were already cached, then we can return immediately
-        if(notCached.size()==0)
+        if(notCached.size()==0) {
             return iconMap;
+        }
 
         // otherwise, we need to load resources and put them in the cache.
         String[] fakeNames = (String[])notCached.toArray(new String[0]);

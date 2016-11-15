@@ -191,12 +191,15 @@ public class ViewTest implements DockingConstants {
 
         public void actionPerformed(ActionEvent arg0) {
             Properties p = new Properties();
-            if( viewUIList.getSelectedValue() != null)
+            if( viewUIList.getSelectedValue() != null) {
                 p.setProperty(UIFactory.VIEW_KEY, viewUIList.getSelectedValue().toString());
-            if( titlebarUIList.getSelectedValue() != null)
+            }
+            if( titlebarUIList.getSelectedValue() != null) {
                 p.setProperty(UIFactory.TITLEBAR_KEY, titlebarUIList.getSelectedValue().toString());
-            if( buttonUIList.getSelectedValue() != null)
+            }
+            if( buttonUIList.getSelectedValue() != null) {
                 p.setProperty(UIFactory.BUTTON_KEY, buttonUIList.getSelectedValue().toString());
+            }
 
             Theme theme = PlafManager.setCustomTheme("custom.theme", p);
             PlafManager.setPreferredTheme("custom.theme", true);

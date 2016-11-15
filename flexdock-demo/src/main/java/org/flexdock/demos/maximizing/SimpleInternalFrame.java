@@ -346,10 +346,12 @@ public class SimpleInternalFrame extends JPanel {
      */
     protected Color getHeaderBackground() {
         Color c = UIManager.getColor("SimpleInternalFrame.activeTitleBackground");
-        if (c != null)
+        if (c != null) {
             return c;
-        if (LookUtils.IS_LAF_WINDOWS_XP_ENABLED)
+        }
+        if (LookUtils.IS_LAF_WINDOWS_XP_ENABLED) {
             c = UIManager.getColor("InternalFrame.activeTitleGradient");
+        }
         return c != null ? c : UIManager.getColor("InternalFrame.activeTitleBackground");
     }
 

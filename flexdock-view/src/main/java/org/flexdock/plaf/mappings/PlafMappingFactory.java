@@ -31,20 +31,23 @@ public class PlafMappingFactory implements XMLConstants {
 
     public static String getInstalledPlafReference() {
         LookAndFeel currentPlaf = UIManager.getLookAndFeel();
-        if(currentPlaf==null)
+        if(currentPlaf==null) {
             return null;
+        }
 
         String key = currentPlaf.getClass().getName();
         return getPlafReference(key);
     }
 
     public static String getPlafReference(String key) {
-        if(key==null)
+        if(key==null) {
             return null;
+        }
 
         Object value = PLAF_MAPPINGS.get(key);
-        if(value instanceof String)
+        if(value instanceof String) {
             return (String)value;
+        }
 
         // if not a String, then we must have a RefResolver
         if(value instanceof RefResolver) {
@@ -73,8 +76,9 @@ public class PlafMappingFactory implements XMLConstants {
 
 
     private static Object createPlafMapping(String refName, String resolverName) {
-        if(Configurator.isNull(resolverName))
+        if(Configurator.isNull(resolverName)) {
             return refName;
+        }
 
         RefResolver resolver = null;
         try {

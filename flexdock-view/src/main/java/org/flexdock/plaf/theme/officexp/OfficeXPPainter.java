@@ -28,10 +28,11 @@ public class OfficeXPPainter extends DefaultPainter {
         Color gradColor = getGradientColor(active);
 
         GradientPaint gradientPaint;
-        if( active)
+        if( active) {
             gradientPaint = new GradientPaint(0, 0, gradColor, 0, center, backgroundColor);
-        else
+        } else {
             gradientPaint = new GradientPaint(0, 0, backgroundColor, 0, center, gradColor);
+        }
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setPaint(gradientPaint);

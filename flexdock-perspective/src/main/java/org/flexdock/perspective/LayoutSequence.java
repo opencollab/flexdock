@@ -60,11 +60,13 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
     }
 
     public void add(String dockableId, String relativeParentId, String region, float ratio) {
-        if(dockableId==null)
+        if(dockableId==null) {
             return;
+        }
 
-        if(relativeParentId==null && sequence.size() > 0)
+        if(relativeParentId==null && sequence.size() > 0) {
             throw new IllegalStateException("All calls to add() after the first dockable has been added MUST specify a relative dockable parent.");
+        }
 
         DockingState info = new DockingState(dockableId);
         info.setRelativeParentId(relativeParentId);
@@ -82,8 +84,9 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
     }
 
     public void apply(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return;
+        }
 
         boolean listen = PerspectiveManager.isDockingStateListening();
         PerspectiveManager.setDockingStateListening(false);

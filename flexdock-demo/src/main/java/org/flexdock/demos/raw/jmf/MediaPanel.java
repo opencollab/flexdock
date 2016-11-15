@@ -58,8 +58,9 @@ public class MediaPanel extends Panel implements DockingStub {
                 ta.setEditable(false);
                 add(ta, BorderLayout.CENTER);
             }
-            if (controls != null)
+            if (controls != null) {
                 add(controls, BorderLayout.SOUTH);
+            }
         } else {
             TextArea ta = new TextArea("No JMF decoder support for '" + mediaFileName + "'");
             ta.setEditable(false);
@@ -104,14 +105,16 @@ public class MediaPanel extends Panel implements DockingStub {
      * @throws IOException
      */
     private static URL replaceJarUrlWithFileUrl(URL url, String mediaUri) throws IOException {
-        if(!url.getProtocol().equals("jar"))
+        if(!url.getProtocol().equals("jar")) {
             return url;
+        }
 
         File f;
         synchronized(jarUrlToTempFileCache) {
             f = (File)jarUrlToTempFileCache.get(url);
-            if(f != null && f.exists() && f.isFile() && f.canRead())
+            if(f != null && f.exists() && f.isFile() && f.canRead()) {
                 return f.toURL();
+            }
 
             f = File.createTempFile("flexdock-", mediaUri);
             f.deleteOnExit();
@@ -123,8 +126,9 @@ public class MediaPanel extends Panel implements DockingStub {
             URLConnection conn = url.openConnection();
             InputStream is = conn.getInputStream();
             int read;
-            while((read=is.read(b, 0, b.length)) != -1)
+            while((read=is.read(b, 0, b.length)) != -1) {
                 bos.write(b, 0, read);
+            }
 
             bos.close();
 

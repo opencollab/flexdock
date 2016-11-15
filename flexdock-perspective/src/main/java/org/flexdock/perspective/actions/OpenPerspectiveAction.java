@@ -18,12 +18,15 @@ public class OpenPerspectiveAction extends AbstractAction {
     private String m_perspective;
 
     public OpenPerspectiveAction(String perspectiveId) {
-        if (perspectiveId == null) throw new IllegalArgumentException("perspectiveId cannot be null");
+        if (perspectiveId == null) {
+            throw new IllegalArgumentException("perspectiveId cannot be null");
+        }
         m_perspective = perspectiveId;
 
         Perspective perspective = getPerspective();
-        if(perspective!=null)
+        if(perspective!=null) {
             putValue(Action.NAME, perspective.getName());
+        }
     }
 
     public Perspective getPerspective() {
