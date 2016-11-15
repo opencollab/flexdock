@@ -89,7 +89,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         if (siblingId != null && !"".equals(siblingId)) {
             splitNode.setSiblingId(siblingId);
         }
-        if (dockingRegion != null && !dockingRegion.equals("")) {
+        if (dockingRegion != null && dockingRegion.length() != 0) {
             splitNode.setDockingRegion(dockingRegion.toUpperCase());
         }
 

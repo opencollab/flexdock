@@ -48,7 +48,7 @@ public class DockingStateSerializer implements ISerializer {
 
         Element dockingStateElement = document.createElement(PersistenceConstants.DOCKING_STATE_ELEMENT_NAME);
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID, dockingState.getDockableId());
-        if (dockingState.getRelativeParentId() != null && !dockingState.getRelativeParentId().equals("")) {
+        if (dockingState.getRelativeParentId() != null && dockingState.getRelativeParentId().length() != 0) {
             dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID, dockingState.getRelativeParentId());
         }
         dockingStateElement.setAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION, dockingState.getRegion().toLowerCase());
@@ -135,14 +135,14 @@ public class DockingStateSerializer implements ISerializer {
         String region = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_REGION);
 
         DockingState dockingState = new DockingState(dockableId);
-        if (relativeParentId != null && !relativeParentId.equals("")) {
+        if (relativeParentId != null && relativeParentId.length() != 0) {
             dockingState.setRelativeParentId(relativeParentId);
         }
 
         dockingState.setRegion(region.toUpperCase());
 
         String splitRatioString = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_SPLIT_RATIO);
-        if (splitRatioString != null && !splitRatioString.equals("")) {
+        if (splitRatioString != null && splitRatioString.length() != 0) {
             float splitRatio = Float.parseFloat(splitRatioString);
             dockingState.setSplitRatio(splitRatio);
         }
@@ -150,7 +150,7 @@ public class DockingStateSerializer implements ISerializer {
         String dockingStateState = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_STATE);
         if (dockingStateState.equals(FLOATING_STATE)) {
             String floatingGroupName = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_FLOATING_GROUP_NAME);
-            if (floatingGroupName != null && !floatingGroupName.equals("")) {
+            if (floatingGroupName != null && floatingGroupName.length() != 0) {
                 dockingState.setFloatingGroup(floatingGroupName);
             }
         } else if (dockingStateState.equals(MINIMIZED_STATE)) {

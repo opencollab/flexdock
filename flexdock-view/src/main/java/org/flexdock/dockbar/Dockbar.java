@@ -115,7 +115,7 @@ public class Dockbar extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        if(mDocks.size()==0) {
+        if(mDocks.isEmpty()) {
             return new Dimension(0,0);
         }
 

@@ -82,7 +82,7 @@ public class PlafManager {
         // this will handle the case where we switch from null to something
         // else,
         // vice versa, or a new string value
-        boolean themeChanged = oldPref != newPref
+        boolean themeChanged = (oldPref == null ? newPref != null : !oldPref.equals(newPref))
             && (oldPref == null || newPref == null || !oldPref.equals(newPref));
         if (reload || themeChanged) {
             installPreferredTheme();

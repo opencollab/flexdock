@@ -235,7 +235,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     private void restoreDeferredMinimizedDockables(final ArrayList deferred) {
-        if(deferred==null || deferred.size()==0) {
+        if(deferred==null || deferred.isEmpty()) {
             return;
         }
 
