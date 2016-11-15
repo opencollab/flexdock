@@ -36,7 +36,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
     public static final File DEFAULT_PERSPECTIVE_DIR = new File(System.getProperty("user.home") + "/flexdock/perspectives");
 
     protected File defaultPerspectiveFile;
-    protected Persister m_persister = null;
+    protected Persister persister = null;
 
     public FilePersistenceHandler(String absolutePath) {
         this(new File(absolutePath), null);
@@ -55,7 +55,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
         if(persister==null) {
             persister = createDefaultPersister();
         }
-        m_persister = persister;
+        this.persister = persister;
     }
 
     public static FilePersistenceHandler createDefault(String fileName) {
@@ -74,7 +74,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
         FileOutputStream fos = new FileOutputStream(file);
         try {
-            return m_persister.store(fos, perspectiveModel);
+            return this.persister.store(fos, perspectiveModel);
         } finally {
             fos.close();
         }
@@ -92,7 +92,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
         FileInputStream fis = new FileInputStream(file);
 
         try {
-            PerspectiveModel perspectiveModel = m_persister.load(fis);
+            PerspectiveModel perspectiveModel = this.persister.load(fis);
 
 //            LayoutNode node = perspectiveModel.getPerspectives()[1].getLayout().getRestorationLayout();
 //            XMLDebugger.println(node);
@@ -137,7 +137,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
     }
 
     public Persister createDefaultPersister() {
-//		return new DefaultFilePersister();
+//                return new DefaultFilePersister();
         return XMLPersister.newDefaultInstance();
     }
 

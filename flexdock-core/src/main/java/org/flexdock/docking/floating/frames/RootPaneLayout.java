@@ -52,8 +52,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
         if (contentPane != null) {
             preferredWidth = contentPane.getPreferredSize().width;
             preferredHeight = contentPane.getPreferredSize().height;
-        } // if
-        else {
+        } else {
             preferredWidth = parent.getSize().width;
             preferredHeight = parent.getSize().height;
         } // else
@@ -78,8 +77,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
         if (contentPane != null) {
             minimumWidth = contentPane.getMinimumSize().width;
             minimumHeight = contentPane.getMinimumSize().height;
-        } // if
-        else {
+        } else {
             minimumWidth = parent.getSize().width;
             minimumHeight = parent.getSize().height;
         } // else

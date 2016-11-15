@@ -1,5 +1,21 @@
 /*
- * Created on Apr 18, 2005
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.dockbar;
 
@@ -52,8 +68,6 @@ public class ViewPane extends JPanel {
         addMouseMotionListener(EMPTY_MOUSE_LISTENER);
     }
 
-
-
     public void updateContents() {
         // remove the currently docked component
         Component[] children = getComponents();
@@ -70,7 +84,6 @@ public class ViewPane extends JPanel {
             add(c, BorderLayout.CENTER);
         }
     }
-
 
     public void updateOrientation() {
         Border border = getBorder();
@@ -90,14 +103,14 @@ public class ViewPane extends JPanel {
     private String getEdgeRegion() {
         int orientation = manager.getActiveEdge();
         switch(orientation) {
-        case MinimizationManager.TOP:
-            return BorderLayout.SOUTH;
-        case MinimizationManager.BOTTOM:
-            return BorderLayout.NORTH;
-        case MinimizationManager.RIGHT:
-            return BorderLayout.WEST;
-        default:
-            return BorderLayout.EAST;
+            case MinimizationManager.TOP:
+                return BorderLayout.SOUTH;
+            case MinimizationManager.BOTTOM:
+                return BorderLayout.NORTH;
+            case MinimizationManager.RIGHT:
+                return BorderLayout.WEST;
+            default:
+                return BorderLayout.EAST;
         }
     }
 
@@ -112,12 +125,15 @@ public class ViewPane extends JPanel {
     public int getPrefSize() {
         return prefSize;
     }
+
     public void setPrefSize(int prefSize) {
         this.prefSize = prefSize;
     }
+
     public boolean isLocked() {
         return locked;
     }
+
     public void setLocked(boolean locked) {
         this.locked = locked;
     }

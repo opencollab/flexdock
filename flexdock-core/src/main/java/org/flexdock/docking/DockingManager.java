@@ -38,8 +38,6 @@ import java.util.WeakHashMap;
 
 import javax.swing.SwingUtilities;
 
-
-
 import org.flexdock.docking.activation.ActiveDockableListener;
 import org.flexdock.docking.adapter.AdapterFactory;
 import org.flexdock.docking.adapter.DockingAdapter;
@@ -120,7 +118,7 @@ public class DockingManager implements DockingConstants {
         DefaultDockingStrategy.class, new DefaultDockingStrategy());
 
     // Map(DockingPort -> MaximizedState)
-    private static final Map maximizedStatesByRootPort = new HashMap();
+    private static final Map MAXIMIZED_STATES_BY_ROOT_PORT = new HashMap();
 
     private static Object persistentIdLock = new Object();
 
@@ -1465,10 +1463,9 @@ public class DockingManager implements DockingConstants {
             if (tmp == null) {
                 registerDockable(dockable);
             }
-        }
-        // if we couldn't find a dockable from the factory, then try getting
-        // a component.
-        else {
+        } else {
+            // if we couldn't find a dockable from the factory, then try getting
+            // a component.
             Component comp = factory.getDockableComponent(id);
             // we already weren't able to get a Dockable from the factory. If
             // we couldn't get a Component either, then give up.
@@ -2799,7 +2796,7 @@ public class DockingManager implements DockingConstants {
         originalPort.releaseForMaximization(dockable);
         rootPort.installMaximizedDockable(dockable);
 
-        maximizedStatesByRootPort.put(rootPort, state);
+        MAXIMIZED_STATES_BY_ROOT_PORT.put(rootPort, state);
     }
 
     private static void restoreFromMaximized(Dockable dockable,
@@ -2811,10 +2808,10 @@ public class DockingManager implements DockingConstants {
         rootPort.uninstallMaximizedDockable();
         state.getOriginalPort().returnFromMaximization();
 
-        maximizedStatesByRootPort.remove(rootPort);
+        MAXIMIZED_STATES_BY_ROOT_PORT.remove(rootPort);
     }
 
     private static MaximizedState getMaximizedState(DockingPort rootPort) {
-        return (MaximizedState) maximizedStatesByRootPort.get(rootPort);
+        return (MaximizedState) MAXIMIZED_STATES_BY_ROOT_PORT.get(rootPort);
     }
 }

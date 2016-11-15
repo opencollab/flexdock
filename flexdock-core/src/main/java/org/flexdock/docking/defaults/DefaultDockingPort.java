@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import java.util.WeakHashMap;
 
 import javax.swing.Icon;
@@ -61,7 +62,6 @@ import org.flexdock.docking.RegionChecker;
 import org.flexdock.docking.activation.ActiveDockableTracker;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
-import org.flexdock.docking.event.DockingMonitor;
 import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.props.DockingPortPropertySet;
@@ -74,8 +74,6 @@ import org.flexdock.docking.state.tree.SplitNode;
 import org.flexdock.util.DockingUtility;
 import org.flexdock.util.LookAndFeelSettings;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.util.UUID;
-import org.flexdock.util.Utilities;
 
 /**
  * This is a {@code Container} that implements the {@code DockingPort}
@@ -273,7 +271,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     private BufferedImage dragImage;
 
     private Timer timer;
-    
+
     private Object lock = new Object();
 
     static {
@@ -787,18 +785,18 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
 
         Insets newInsets = new Insets(0, 0, 0, 0);
         switch (tabPlacement) {
-        case JTabbedPane.TOP:
-            newInsets.top = edgeInset >= 0 ? edgeInset : oldInsets.top;
-            break;
-        case JTabbedPane.LEFT:
-            newInsets.left = edgeInset >= 0 ? edgeInset : oldInsets.left;
-            break;
-        case JTabbedPane.BOTTOM:
-            newInsets.bottom = edgeInset >= 0 ? edgeInset : oldInsets.bottom;
-            break;
-        case JTabbedPane.RIGHT:
-            newInsets.right = edgeInset >= 0 ? edgeInset : oldInsets.right;
-            break;
+            case JTabbedPane.TOP:
+                newInsets.top = edgeInset >= 0 ? edgeInset : oldInsets.top;
+                break;
+            case JTabbedPane.LEFT:
+                newInsets.left = edgeInset >= 0 ? edgeInset : oldInsets.left;
+                break;
+            case JTabbedPane.BOTTOM:
+                newInsets.bottom = edgeInset >= 0 ? edgeInset : oldInsets.bottom;
+                break;
+            case JTabbedPane.RIGHT:
+                newInsets.right = edgeInset >= 0 ? edgeInset : oldInsets.right;
+                break;
         }
 
         UIManager.put(LookAndFeelSettings.TAB_PANE_BORDER_INSETS, newInsets);
@@ -2160,76 +2158,76 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     }
 
     private void deferSplitPaneValidation(final ArrayList splitNodes) {
-	// TODO: I (calixte) deactivated the timer since the border has already been fixed in reconstuct() and
-	//       the divider location has been set in SplitNode. That avoids to have a resize of the splits when
-	//       splits are visible.
-	//       So this method is probably useless... wait for a user feedback.
-	if (false && timer == null) {
-	    timer = new Timer(15, new ActionListener() {
-		    public void actionPerformed(ActionEvent e) {
-			Runnable r = new Runnable() {
-				public void run() {
-				    synchronized (lock) {
-					if (timer != null) {
-					    processImportedSplitPaneValidation(splitNodes);
-					}
-				    }
-				}
-			    };
-			EventQueue.invokeLater(r);
-		    }
-		});
-	    timer.setRepeats(true);
-	    timer.start();
-	}
+        // TODO: I (calixte) deactivated the timer since the border has already been fixed in reconstuct() and
+        //       the divider location has been set in SplitNode. That avoids to have a resize of the splits when
+        //       splits are visible.
+        //       So this method is probably useless... wait for a user feedback.
+        if (false && timer == null) {
+            timer = new Timer(15, new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    Runnable r = new Runnable() {
+                            public void run() {
+                                synchronized (lock) {
+                                    if (timer != null) {
+                                        processImportedSplitPaneValidation(splitNodes);
+                                    }
+                                }
+                            }
+                        };
+                    EventQueue.invokeLater(r);
+                }
+            });
+            timer.setRepeats(true);
+            timer.start();
+        }
     }
 
     private void processImportedSplitPaneValidation(ArrayList splitNodes) {
         synchronized (lock) {
-	    int len = splitNodes.size();
-	    if (len == 0) {
-		timer.stop();
-		timer = null;
-		return;
-	    }
-	    
-	    // first, check to see if we're ready for rendering
-	    SplitNode node = (SplitNode) splitNodes.get(0);
-	    JSplitPane split = node.getSplitPane();
-	    int size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
-	    // if we're not ready to render, then defer processing again until later
-	    if (!split.isValid() || size == 0) {
-		// try to validate first
-		if (!split.isValid()) {
+            int len = splitNodes.size();
+            if (len == 0) {
+                timer.stop();
+                timer = null;
+                return;
+            }
+
+            // first, check to see if we're ready for rendering
+            SplitNode node = (SplitNode) splitNodes.get(0);
+            JSplitPane split = node.getSplitPane();
+            int size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
+            // if we're not ready to render, then defer processing again until later
+            if (!split.isValid() || size == 0) {
+                // try to validate first
+                if (!split.isValid()) {
                     split.validate();
                 }
-		// now redispatch
-		return;
-	    }
-	    
-	    timer.stop();
-	    timer = null;
-	    
-	    // if we're ready to render, then loop through all the splitNodes and
-	    // set the split dividers to their appropriate locations.
-	    for (int i = 0; i < len; i++) {
-		node = (SplitNode) splitNodes.get(i);
-		split = node.getSplitPane();
-		size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
-		float percent = node.getPercentage();
-		split.setDividerLocation(percent);
-		
-		// make sure to invoke the installed BorderManager how that we have
-		// a hierarchy of DockingPorts. otherwise, we may end up with some
-		// ugly nested borders.
-		DockingPort port = DockingUtility.getParentDockingPort(split);
-		if (port instanceof DefaultDockingPort) {
-		    ((DefaultDockingPort) port).evaluateDockingBorderStatus();
-		}
+                // now redispatch
+                return;
+            }
 
-		split.validate();
-	    }
-	}
+            timer.stop();
+            timer = null;
+
+            // if we're ready to render, then loop through all the splitNodes and
+            // set the split dividers to their appropriate locations.
+            for (int i = 0; i < len; i++) {
+                node = (SplitNode) splitNodes.get(i);
+                split = node.getSplitPane();
+                size = split.getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? split.getWidth() : split.getHeight();
+                float percent = node.getPercentage();
+                split.setDividerLocation(percent);
+
+                // make sure to invoke the installed BorderManager how that we have
+                // a hierarchy of DockingPorts. otherwise, we may end up with some
+                // ugly nested borders.
+                DockingPort port = DockingUtility.getParentDockingPort(split);
+                if (port instanceof DefaultDockingPort) {
+                    ((DefaultDockingPort) port).evaluateDockingBorderStatus();
+                }
+
+                split.validate();
+            }
+        }
     }
 
     // --- maximization

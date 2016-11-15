@@ -52,7 +52,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
     private String dockingId;
 
     private boolean mSelected = false;
-//	private boolean mDragging = false;
+//        private boolean mDragging = false;
     private RoundedLineBorder mBorder;
     private boolean mInPaint = false;
     private boolean mActive = false;
@@ -119,7 +119,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
     public void paint(Graphics g) {
         mInPaint = true;
 
-//		updateView();
+//                updateView();
 
         super.paint(g); // will call paintComponent, paintBorder
 

@@ -1,3 +1,22 @@
+/*
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.flexdock.demos;
 
 import java.awt.GridLayout;
@@ -42,30 +61,30 @@ public class AllDemos extends JFrame {
     public AllDemos() {
         super("FlexDock Demos");
 
-        TreeMap sorted_class_names = new TreeMap();
+        TreeMap sortedClassNames = new TreeMap();
         for (int i = 0; i < DEMO_CLASS_NAMES.length; i++) {
-            String full_class_name = DEMO_CLASS_NAMES[i];
-            String just_class_name = full_class_name.substring(full_class_name
+            String fullClassName = DEMO_CLASS_NAMES[i];
+            String justClassName = fullClassName.substring(fullClassName
                                      .lastIndexOf('.') + 1);
-            sorted_class_names.put(just_class_name, full_class_name);
+            sortedClassNames.put(justClassName, fullClassName);
         }
 
         getContentPane().setLayout(new GridLayout(0, 1, 3, 3));
-        for (Iterator iter = sorted_class_names.entrySet().iterator(); iter
+        for (Iterator iter = sortedClassNames.entrySet().iterator(); iter
                 .hasNext();) {
             Map.Entry entry = (Map.Entry) iter.next();
 
-            final String full_class_name = (String) entry.getValue();
-            final String just_class_name = (String) entry.getKey();
+            final String fullClassName = (String) entry.getValue();
+            final String justClassName = (String) entry.getKey();
 
-            JButton button = new JButton(just_class_name);
-            button.setToolTipText("Runs " + full_class_name);
+            JButton button = new JButton(justClassName);
+            button.setToolTipText("Runs " + fullClassName);
 
             getContentPane().add(button);
 
             button.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent event) {
-                    launchClass(full_class_name);
+                    launchClass(fullClassName);
                 }
             });
         }
@@ -73,14 +92,14 @@ public class AllDemos extends JFrame {
         pack();
     }
 
-    private void launchClass(String full_class_name) {
+    private void launchClass(String fullClassName) {
         Class c;
         try {
-            c = Class.forName(full_class_name);
+            c = Class.forName(fullClassName);
             Method m = c.getMethod("main", new Class[] { String[].class });
             m.invoke(null, new Object[] { null });
         } catch (Throwable t) {
-            String message = "Error occurred when calling main(String[]) on class " + full_class_name;
+            String message = "Error occurred when calling main(String[]) on class " + fullClassName;
             DemoUtility.showErrorDialog(this, message, t);
         }
     }
@@ -94,10 +113,10 @@ public class AllDemos extends JFrame {
             a.setVisible(true);
 
             for (int i = 0; i < args.length; i++) {
-                final String full_class_name = args[i];
+                final String fullClassName = args[i];
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
-                        a.launchClass(full_class_name);
+                        a.launchClass(fullClassName);
                     }
                 });
             }
