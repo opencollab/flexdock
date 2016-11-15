@@ -23,6 +23,7 @@ package org.flexdock.plaf.resources;
  * @author Christopher Butler
  */
 public class StringResourceHandler extends ResourceHandler {
+    @Override
     public Object getResource(String value) {
         return value;
     }

@@ -157,6 +157,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's preferred size
          */
+        @Override
         public Dimension preferredLayoutSize(Container parent) {
             Dimension dd;
             Insets i = getInsets();
@@ -178,6 +179,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's minimum size
          */
+        @Override
         public Dimension minimumLayoutSize(Container parent) {
             Dimension dd;
             Insets i = getInsets();
@@ -199,6 +201,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's maximum size
          */
+        @Override
         public Dimension maximumLayoutSize(Container target) {
             Dimension dd;
             Insets i = getInsets();
@@ -222,6 +225,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
          * @param parent
          *            the Container for which this layout manager is being used
          */
+        @Override
         public void layoutContainer(Container parent) {
             Rectangle b = getBounds();
             Insets i = getInsets();
@@ -233,23 +237,29 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             }
         }
 
+        @Override
         public void addLayoutComponent(String name, Component comp) {
         }
 
+        @Override
         public void removeLayoutComponent(Component comp) {
         }
 
+        @Override
         public void addLayoutComponent(Component comp, Object constraints) {
         }
 
+        @Override
         public float getLayoutAlignmentX(Container target) {
             return 0.0f;
         }
 
+        @Override
         public float getLayoutAlignmentY(Container target) {
             return 0.0f;
         }
 
+        @Override
         public void invalidateLayout(Container target) {
         }
     }
@@ -346,6 +356,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @param comp
      *            the component to be added
      */
+    @Override
     public Component add(Component comp) {
         return setComponent(comp);
     }
@@ -360,6 +371,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the position at which to insert the component, or {@code -1}
      *            to append the component to the end
      */
+    @Override
     public Component add(Component comp, int index) {
         return setComponent(comp);
     }
@@ -373,6 +385,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @param constraints
      *            an object expressing layout contraints for this component
      */
+    @Override
     public void add(Component comp, Object constraints) {
         setComponent(comp);
     }
@@ -389,6 +402,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the position in the container's list at which to insert the
      *            component; {@code -1} means insert at the end
      */
+    @Override
     public void add(Component comp, Object constraints, int index) {
         setComponent(comp);
     }
@@ -402,6 +416,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @param comp
      *            the {@code Component} to add.
      */
+    @Override
     public Component add(String name, Component comp) {
         return setComponent(comp);
     }
@@ -457,6 +472,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingManager#isValidDockingRegion(String)
      * @see #isParentDockingPort(Component)
      */
+    @Override
     public boolean isDockingAllowed(Component comp, String region) {
         if (comp == null || !isValidDockingRegion(region)) {
             return false;
@@ -561,6 +577,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see Dockable#getComponent()
      * @see RegionChecker#getRegion(Component, Point)
      */
+    @Override
     public String getRegion(Point location) {
         if (location == null) {
             return UNKNOWN_REGION;
@@ -681,6 +698,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingPort#getComponent(String)
      * @see #getDockedComponent()
      */
+    @Override
     public Component getComponent(String region) {
         Component docked = getDockedComponent();
         if (docked == null) {
@@ -765,6 +783,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingManager#getDockable(Component)
      * @see DockingManager#isValidDockingRegion(String)
      */
+    @Override
     public Dockable getDockable(String region) {
         Component c = getComponent(region);
         return DockingManager.getDockable(c);
@@ -836,6 +855,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingPort#getDockingStrategy()
      * @see DockingManager#getDockingStrategy(Object)
      */
+    @Override
     public DockingStrategy getDockingStrategy() {
         return DockingManager.getDockingStrategy(this);
     }
@@ -850,6 +870,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingPort#clear()
      * @see #removeAll()
      */
+    @Override
     public void clear() {
         removeAll();
     }
@@ -884,6 +905,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingManager#getDockable(Component)
      * @see DockingManager#registerDockable(Component)
      */
+    @Override
     public boolean dock(Component comp, String region) {
         if (comp == null || region == null) {
             return false;
@@ -967,6 +989,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingStrategy#getInitialDividerLocation(DockingPort, JSplitPane)
      * @see DockingStrategy#getDividerProportion(DockingPort, JSplitPane)
      */
+    @Override
     public boolean dock(Dockable dockable, String region) {
         if (dockable == null) {
             return false;
@@ -1045,6 +1068,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         // otherwise, defer applying the divider location reset until
         // the split pane is rendered.
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 deferSplitDividerReset(splitPane);
             }
@@ -1193,6 +1217,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *
      * @see DockingPort#getDockedComponent()
      */
+    @Override
     public Component getDockedComponent() {
         return dockedComponent;
     }
@@ -1226,6 +1251,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #setPersistentId(String)
      * @see DockingManager#getDockingPort(String)
      */
+    @Override
     public String getPersistentId() {
         return persistentId;
     }
@@ -1246,6 +1272,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingManager#getDockingPort(String)
      * @see DockingPortTracker#updateIndex(DockingPort)
      */
+    @Override
     public void setPersistentId(String id) {
         if (id == null) {
             id = UUID.randomUUID().toString();
@@ -1372,6 +1399,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see Component#getParent()
      * @see #getDockedComponent()
      */
+    @Override
     public boolean isParentDockingPort(Component comp) {
         if (comp == null) {
             return false;
@@ -1578,6 +1606,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the index of the component to be removed.
      * @see Container#remove(int)
      */
+    @Override
     public void remove(int index) {
         Component docked = getDockedComponent();
         Component comp = getComponent(index);
@@ -1593,6 +1622,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *
      * @see Container#removeAll()
      */
+    @Override
     public void removeAll() {
         super.removeAll();
         dockedComponent = null;
@@ -1678,6 +1708,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingPort#undock(Component comp)
      * @see DockingManager#undock(Dockable)
      */
+    @Override
     public boolean undock(Component comp) {
         // can't undock a component that isn't already docked within us
         if (!isParentDockingPort(comp)) {
@@ -1704,6 +1735,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *         all sub-{@code DockingPorts}.
      * @see DockingPort#getDockables()
      */
+    @Override
     public Set getDockables() {
         // return ALL dockables, recursing to maximum depth
         return getDockableSet(-1, 0, null);
@@ -1777,6 +1809,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #getDockingListeners()
      * @see #removeDockingListener(DockingListener)
      */
+    @Override
     public void addDockingListener(DockingListener listener) {
         if (listener != null) {
             dockingListeners.add(listener);
@@ -1794,6 +1827,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #addDockingListener(DockingListener)
      * @see #removeDockingListener(DockingListener)
      */
+    @Override
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
                .toArray(new DockingListener[0]);
@@ -1813,6 +1847,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see #addDockingListener(DockingListener)
      * @see #getDockingListeners()
      */
+    @Override
     public void removeDockingListener(DockingListener listener) {
         if (listener != null) {
             dockingListeners.remove(listener);
@@ -1827,6 +1862,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingCanceled(DockingEvent)
      */
+    @Override
     public void dockingCanceled(DockingEvent evt) {
     }
 
@@ -1837,6 +1873,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingComplete(DockingEvent)
      */
+    @Override
     public void dockingComplete(DockingEvent evt) {
         Dockable dockable = evt.getDockable();
         if (dockable == null || !isShowing() || evt.getNewDockingPort() != this) {
@@ -1855,6 +1892,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dragStarted(DockingEvent)
      */
+    @Override
     public void dragStarted(DockingEvent evt) {
     }
 
@@ -1866,6 +1904,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dropStarted(DockingEvent)
      */
+    @Override
     public void dropStarted(DockingEvent evt) {
     }
 
@@ -1877,6 +1916,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingComplete(DockingEvent)
      */
+    @Override
     public void undockingComplete(DockingEvent evt) {
     }
 
@@ -1888,6 +1928,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingStarted(DockingEvent)
      */
+    @Override
     public void undockingStarted(DockingEvent evt) {
     }
 
@@ -1906,6 +1947,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingPort#getDockingProperties()
      * @see org.flexdock.docking.props.PropertyManager#getDockingPortPropertySet(DockingPort)
      */
+    @Override
     public DockingPortPropertySet getDockingProperties() {
         return PropertyManager.getDockingPortPropertySet(this);
     }
@@ -1965,6 +2007,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *         another {@code DockingPort}, {@code true} otherwise.
      * @see DockingPort#isRoot()
      */
+    @Override
     public boolean isRoot() {
         return rootPort;
     }
@@ -2032,6 +2075,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *            the {@code Graphics} context in which to paint
      * @see JComponent#paint(java.awt.Graphics)
      */
+    @Override
     public void paint(Graphics g) {
         if (dragImage == null) {
             super.paint(g);
@@ -2064,6 +2108,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see SplitNode
      * @see DockableNode
      */
+    @Override
     public LayoutNode exportLayout() {
         return DockingManager.getLayoutManager().createLayout(this);
     }
@@ -2094,6 +2139,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see SplitNode
      * @see DockableNode
      */
+    @Override
     public void importLayout(LayoutNode node) {
         if (!(node instanceof DockingPortNode)) {
             return;
@@ -2164,8 +2210,10 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         //       So this method is probably useless... wait for a user feedback.
         if (false && timer == null) {
             timer = new Timer(15, new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     Runnable r = new Runnable() {
+                        @Override
                             public void run() {
                                 synchronized (lock) {
                                     if (timer != null) {
@@ -2236,6 +2284,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     // us again
     private MaximizationInstallInfo maximizationInstallInfo;
 
+    @Override
     public void installMaximizedDockable(Dockable dockable) {
         if (maximizationInstallInfo != null) {
             throw new IllegalStateException("Already maximized");
@@ -2249,6 +2298,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         revalidate();
     }
 
+    @Override
     public void uninstallMaximizedDockable() {
         if (maximizationInstallInfo == null) {
             throw new IllegalStateException("No dockable maximized.");
@@ -2264,6 +2314,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     // returns
     private MaximizationReleaseInfo maximizationReleaseInfo;
 
+    @Override
     public void releaseForMaximization(Dockable dockable) {
         if (maximizationReleaseInfo != null) {
             throw new IllegalStateException(
@@ -2313,6 +2364,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
         return -1;
     }
 
+    @Override
     public void returnFromMaximization() {
 
         Component comp = maximizationReleaseInfo.getContent();

@@ -303,6 +303,7 @@ public class SimpleInternalFrame extends JPanel {
     /**
      * Updates the UI. In addition to the superclass behavior, we need to update the header component.
      */
+    @Override
     public void updateUI() {
         super.updateUI();
         if (titleLabel != null) {
@@ -366,10 +367,12 @@ public class SimpleInternalFrame extends JPanel {
 
         private static final Insets INSETS = new Insets(1, 1, 1, 0);
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return INSETS;
         }
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
 
             g.translate(x, y);
@@ -390,6 +393,7 @@ public class SimpleInternalFrame extends JPanel {
             setBackground(background);
         }
 
+        @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
             if (!isOpaque()) {
@@ -410,10 +414,12 @@ public class SimpleInternalFrame extends JPanel {
     private static class ShadowBorder extends AbstractBorder {
         private static final Insets INSETS = new Insets(1, 1, 3, 3);
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return INSETS;
         }
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
 
             Color shadow = UIManager.getColor("controlShadow");

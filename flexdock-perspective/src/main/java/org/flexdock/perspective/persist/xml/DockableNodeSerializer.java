@@ -30,6 +30,7 @@ import org.w3c.dom.Element;
  */
 public class DockableNodeSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         DockableNode dockableNode = (DockableNode) object;
 
@@ -39,6 +40,7 @@ public class DockableNodeSerializer implements ISerializer {
         return dockableNodeElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         String dockableId = element.getAttribute(PersistenceConstants.DOCKABLE_NODE_ATTRIBUTE_DOCKABLE_ID);
 

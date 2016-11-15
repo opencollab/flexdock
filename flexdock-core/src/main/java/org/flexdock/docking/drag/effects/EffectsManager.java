@@ -174,6 +174,7 @@ public class EffectsManager {
         }
         // unable to load the preview class.  return a no-op preview delegate instead.
         return new DefaultPreview() {
+            @Override
             public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {
                 // noop
             }

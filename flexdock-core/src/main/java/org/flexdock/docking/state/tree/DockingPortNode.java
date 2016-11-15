@@ -32,6 +32,7 @@ import org.flexdock.docking.DockingStrategy;
 @SuppressWarnings(value = { "serial" })
 public class DockingPortNode extends DockingNode {
 
+    @Override
     public Object getDockingObject() {
         TreeNode parent = getParent();
         if(!(parent instanceof SplitNode)) {
@@ -61,6 +62,7 @@ public class DockingPortNode extends DockingNode {
         return getChildAt(0) instanceof SplitNode;
     }
 
+    @Override
     protected DockingNode shallowClone() {
         return new DockingPortNode();
     }

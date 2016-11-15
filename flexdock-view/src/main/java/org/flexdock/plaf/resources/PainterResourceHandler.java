@@ -32,6 +32,7 @@ public class PainterResourceHandler extends ResourceHandler {
 
     public static final String PAINTER_RESOURCE_KEY = "painter-resource";
 
+    @Override
     public Object getResource(String stringValue) {
         PropertySet propertySet = Configurator.getProperties(stringValue, PAINTER_RESOURCE_KEY);
         PainterResource pr = createResource( propertySet);

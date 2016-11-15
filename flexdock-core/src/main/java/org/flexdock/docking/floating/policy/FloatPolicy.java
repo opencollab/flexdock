@@ -76,6 +76,7 @@ public interface FloatPolicy {
          * @return {@code true}.
          * @see FloatPolicy#isFloatingAllowed(Dockable)
          */
+        @Override
         public boolean isFloatingAllowed(Dockable dockable) {
             return true;
         }
@@ -86,6 +87,7 @@ public interface FloatPolicy {
          * @return {@code true}.
          * @see FloatPolicy#isFloatDropAllowed(DockingEvent)
          */
+        @Override
         public boolean isFloatDropAllowed(DockingEvent evt) {
             return true;
         }

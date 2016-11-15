@@ -26,6 +26,7 @@ import org.flexdock.util.ResourceManager;
  */
 public class ImageIconResourceHandler extends ResourceHandler {
 
+    @Override
     public Object getResource(String url) {
         try {
             return ResourceManager.createIcon(url);

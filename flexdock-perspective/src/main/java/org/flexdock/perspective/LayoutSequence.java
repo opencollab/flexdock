@@ -142,6 +142,7 @@ public class LayoutSequence implements Cloneable, Serializable, DockingConstants
         return list;
     }
 
+    @Override
     public Object clone() {
         return new LayoutSequence(getSequenceClone());
     }

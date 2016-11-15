@@ -37,6 +37,7 @@ public class RectangleSerializer implements ISerializer {
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
+    @Override
     public Element serialize(Document document, Object object) {
         Rectangle rectangle = (Rectangle) object;
 
@@ -56,6 +57,7 @@ public class RectangleSerializer implements ISerializer {
         return rectangleElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         ISerializer pointSerializer = SerializerRegistry.getSerializer(Point.class);
         ISerializer dimensionSerializer = SerializerRegistry.getSerializer(Dimension.class);

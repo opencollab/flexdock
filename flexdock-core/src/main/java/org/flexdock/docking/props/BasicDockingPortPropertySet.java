@@ -69,36 +69,44 @@ public class BasicDockingPortPropertySet extends TypedHashtable implements Docki
 
 
 
+    @Override
     public RegionChecker getRegionChecker() {
         return (RegionChecker)get(REGION_CHECKER);
     }
 
+    @Override
     public Boolean isSingleTabsAllowed() {
         return getBoolean(SINGLE_TABS);
     }
 
+    @Override
     public Integer getTabPlacement() {
         return getInt(TAB_PLACEMENT);
     }
 
+    @Override
     public Float getRegionInset(String region) {
         String key = getRegionInsetKey(region);
         return key==null? null: (Float)get(key);
     }
 
 
+    @Override
     public void setRegionChecker(RegionChecker checker) {
         put(REGION_CHECKER, checker);
     }
 
+    @Override
     public void setSingleTabsAllowed(boolean allowed) {
         put(SINGLE_TABS, allowed);
     }
 
+    @Override
     public void setTabPlacement(int placement) {
         put(TAB_PLACEMENT, placement);
     }
 
+    @Override
     public void setRegionInset(String region, float inset) {
         String key = getRegionInsetKey(region);
         if(key!=null) {

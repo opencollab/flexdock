@@ -29,6 +29,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
  */
 public class SkinLFResolver extends RefResolver {
 
+    @Override
     public String getRef(String plaf) {
         Skin skin = SkinLookAndFeel.getSkin();
         String skinName = skin==null? null: skin.getClass().getName();
@@ -38,6 +39,7 @@ public class SkinLFResolver extends RefResolver {
         return view==null? getDefaultRef(): view;
     }
 
+    @Override
     public String getDefaultRef() {
         String systemPlaf = UIManager.getSystemLookAndFeelClassName();
         return PlafMappingFactory.getPlafReference(systemPlaf);

@@ -40,6 +40,7 @@ public abstract class DefaultPreview implements DragPreview {
     public static final int DEFAULT_TAB_WIDTH = 50;
     public static final int DEFAULT_TAB_HEIGHT = 20;
 
+    @Override
     public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo) {
         if(dockable==null || port==null || targetRegion==null || paintingTarget==null) {
             return null;
@@ -202,5 +203,6 @@ public abstract class DefaultPreview implements DragPreview {
                EAST_REGION.equals(region) || WEST_REGION.equals(region);
     }
 
+    @Override
     public abstract void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo);
 }

@@ -62,6 +62,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
         this.dockable = dockable;
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if(dockable==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE) {
             enabled = false;
@@ -71,6 +72,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent evt) {
         if(!enabled) {
             return;
@@ -108,10 +110,12 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
         pipeline.open(token);
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         // doesn't do anything
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         if(pipeline==null || dockable.getDockingProperties().isDockingEnabled()==Boolean.FALSE) {
             return;

@@ -39,6 +39,7 @@ public class DockableSimpleInternalFrame extends AbstractDockable {
         setTabText(sif.getTitle());
     }
 
+    @Override
     public Component getComponent() {
         return component;
     }

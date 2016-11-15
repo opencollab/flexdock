@@ -232,6 +232,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#getComponent()
      * @see #create(Component, String, String)
      */
+    @Override
     public Component getComponent() {
         return dragSrc;
     }
@@ -247,6 +248,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see #getComponent()
      * @see #create(Component, String, String)
      */
+    @Override
     public List getDragSources() {
         return dragListeners;
     }
@@ -259,6 +261,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#getPersistentId()
      * @see #create(Component, String, String)
      */
+    @Override
     public String getPersistentId() {
         return persistentId;
     }
@@ -275,6 +278,7 @@ public class DockableComponentWrapper implements Dockable {
      *         external dialog.
      * @see Dockable#getFrameDragSources()
      */
+    @Override
     public Set getFrameDragSources() {
         if (frameDragSources == null) {
             frameDragSources = new HashSet();
@@ -291,6 +295,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see #getDockingListeners()
      * @see #removeDockingListener(DockingListener)
      */
+    @Override
     public void addDockingListener(DockingListener listener) {
         if (listener != null) {
             dockingListeners.add(listener);
@@ -307,6 +312,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see #addDockingListener(DockingListener)
      * @see #removeDockingListener(DockingListener)
      */
+    @Override
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
                .toArray(new DockingListener[0]);
@@ -324,6 +330,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see #addDockingListener(DockingListener)
      * @see #getDockingListeners()
      */
+    @Override
     public void removeDockingListener(DockingListener listener) {
         if (listener != null) {
             dockingListeners.remove(listener);
@@ -338,6 +345,7 @@ public class DockableComponentWrapper implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingCanceled(DockingEvent)
      */
+    @Override
     public void dockingCanceled(DockingEvent evt) {
     }
 
@@ -349,6 +357,7 @@ public class DockableComponentWrapper implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingComplete(DockingEvent)
      */
+    @Override
     public void dockingComplete(DockingEvent evt) {
     }
 
@@ -360,6 +369,7 @@ public class DockableComponentWrapper implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingComplete(DockingEvent)
      */
+    @Override
     public void undockingComplete(DockingEvent evt) {
     }
 
@@ -371,6 +381,7 @@ public class DockableComponentWrapper implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingStarted(DockingEvent)
      */
+    @Override
     public void undockingStarted(DockingEvent evt) {
     }
 
@@ -382,6 +393,7 @@ public class DockableComponentWrapper implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dragStarted(DockingEvent)
      */
+    @Override
     public void dragStarted(DockingEvent evt) {
     }
 
@@ -393,6 +405,7 @@ public class DockableComponentWrapper implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dropStarted(DockingEvent)
      */
+    @Override
     public void dropStarted(DockingEvent evt) {
     }
 
@@ -414,6 +427,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#getClientProperty(Object)
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */
+    @Override
     public Object getClientProperty(Object key) {
         if (key == null) {
             return null;
@@ -447,6 +461,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see javax.swing.JComponent#putClientProperty(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     public void putClientProperty(Object key, Object value) {
         if (key == null) {
             return;
@@ -474,6 +489,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#getDockingProperties()
      * @see org.flexdock.docking.props.PropertyManager#getDockablePropertySet(Dockable)
      */
+    @Override
     public DockablePropertySet getDockingProperties() {
         return PropertyManager.getDockablePropertySet(this);
     }
@@ -492,6 +508,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#getDockingPort()
      * @see DockingManager#getDockingPort(Dockable)
      */
+    @Override
     public DockingPort getDockingPort() {
         return DockingManager.getDockingPort(this);
     }
@@ -509,6 +526,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#dock(Dockable)
      * @see DockingManager#dock(Dockable, Dockable)
      */
+    @Override
     public boolean dock(Dockable dockable) {
         return DockingManager.dock(dockable, this);
     }
@@ -530,6 +548,7 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#dock(Dockable, String)
      * @see DockingManager#dock(Dockable, Dockable, String)
      */
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion) {
         return DockingManager.dock(dockable, this, relativeRegion);
     }
@@ -553,14 +572,17 @@ public class DockableComponentWrapper implements Dockable {
      *         {@code false} otherwise.
      * @see DockingManager#dock(Dockable, Dockable, String, float)
      */
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
         return DockingManager.dock(dockable, this, relativeRegion, ratio);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         getDockingProperties().addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         getDockingProperties().removePropertyChangeListener(listener);
     }

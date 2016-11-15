@@ -147,6 +147,7 @@ public class DockingManager implements DockingConstants {
     private static class AutoPersist extends Thread {
         private boolean enabled;
 
+        @Override
         public void run() {
             store();
         }

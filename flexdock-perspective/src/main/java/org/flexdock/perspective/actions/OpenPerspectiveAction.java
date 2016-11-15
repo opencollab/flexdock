@@ -49,6 +49,7 @@ public class OpenPerspectiveAction extends AbstractAction {
         return PerspectiveManager.getInstance().getPerspective(this.perspective);
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (this.perspective != null) {
             PerspectiveManager.getInstance().loadPerspective(this.perspective);

@@ -240,12 +240,14 @@ public class PropertySet {
         return Class.forName(className);
     }
 
+    @Override
     public String toString() {
         return "PropertySet[name=\"" + name + "\"; hashmap=" + properties + "]";
     }
 
     private static class NumericStringSort implements Comparator {
 
+        @Override
         public int compare(Object o1, Object o2) {
             int i1 = Integer.parseInt((String)o1);
             int i2 = Integer.parseInt((String)o2);

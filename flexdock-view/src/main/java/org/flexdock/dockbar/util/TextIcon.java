@@ -139,6 +139,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
     // implement PropertyChangeListener
 
+    @Override
     public void propertyChange(PropertyChangeEvent e) {
         String prop = e.getPropertyName();
         if (prop.equals("font")) {
@@ -179,14 +180,17 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
     // Icon
 
+    @Override
     public int getIconWidth() {
         return mWidth;
     }
 
+    @Override
     public int getIconHeight() {
         return mHeight;
     }
 
+    @Override
     public void paintIcon(Component c, Graphics g, int x, int y) {
         Graphics2D g2d = (Graphics2D)g;
 

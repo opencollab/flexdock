@@ -48,10 +48,12 @@ public class ElegantPanel extends DockingStubTitlepane {
         DockingManager.dock(otherPanel, this, region, ratio);
     }
 
+    @Override
     protected JComponent createContentPane() {
         return null;
     }
 
+    @Override
     protected Titlebar createTitlebar(String title) {
         return new GradientTitlebar(title);
     }

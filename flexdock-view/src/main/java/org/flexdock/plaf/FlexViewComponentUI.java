@@ -27,14 +27,17 @@ import javax.swing.plaf.ComponentUI;
 public abstract class FlexViewComponentUI extends ComponentUI implements IFlexViewComponentUI {
     protected PropertySet creationParameters;
 
+    @Override
     public PropertySet getCreationParameters() {
         return creationParameters;
     }
 
+    @Override
     public void setCreationParameters(PropertySet creationParameters) {
         this.creationParameters = creationParameters;
         initializeCreationParameters();
     }
 
+    @Override
     public abstract void initializeCreationParameters();
 }

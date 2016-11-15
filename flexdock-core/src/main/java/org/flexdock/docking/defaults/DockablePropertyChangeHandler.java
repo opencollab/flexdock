@@ -34,6 +34,7 @@ import org.flexdock.docking.props.PropertyChangeListenerFactory;
 public class DockablePropertyChangeHandler implements PropertyChangeListener {
     public static final DockablePropertyChangeHandler DEFAULT_INSTANCE = new DockablePropertyChangeHandler();
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         Dockable dockable = evt.getSource() instanceof Dockable? (Dockable)evt.getSource(): null;
         if(dockable==null) {
@@ -60,6 +61,7 @@ public class DockablePropertyChangeHandler implements PropertyChangeListener {
     }
 
     public static class Factory extends PropertyChangeListenerFactory {
+        @Override
         public PropertyChangeListener getListener() {
             return DEFAULT_INSTANCE;
         }

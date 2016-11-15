@@ -50,6 +50,7 @@ public class MyDockingPort extends DefaultDockingPort {
         }
     }
 
+    @Override
     protected JTabbedPane createTabbedPane() {
         JTabbedPane tabbed = super.createTabbedPane();
         tabbed.putClientProperty("jgoodies.embeddedTabs", Boolean.TRUE);
@@ -59,6 +60,7 @@ public class MyDockingPort extends DefaultDockingPort {
     // ***************
 
     private static class MyDockingStrategy extends DefaultDockingStrategy {
+        @Override
         protected DockingPort createDockingPortImpl(DockingPort base) {
             return new MyDockingPort();
         }

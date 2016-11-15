@@ -37,14 +37,17 @@ public class DockbarEventHandler extends EventHandler {
      *
      * @param evt
      */
+    @Override
     public boolean acceptsEvent(Event evt) {
         return evt instanceof DockbarEvent;
     }
 
+    @Override
     public boolean acceptsListener(EventListener listener) {
         return listener instanceof DockbarListener;
     }
 
+    @Override
     public void handleEvent(Event event, EventListener consumer, int eventType) {
         DockbarEvent evt = (DockbarEvent) event;
         DockbarListener listener = (DockbarListener) consumer;

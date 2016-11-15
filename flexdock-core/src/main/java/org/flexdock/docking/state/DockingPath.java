@@ -245,6 +245,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         return d==null? null: d.getPersistentId();
     }
 
+    @Override
     public String toString() {
         if(stringForm==null) {
             StringBuffer sb = new StringBuffer("/RootPort[id=").append(rootPortId).append("]");
@@ -419,6 +420,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         final Component docked = dockable.getComponent();
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 resizeSplitPane(docked, percent);
             }
@@ -459,6 +461,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
         return indx<0 || indx>=getDepth()? null: (SplitNode)nodes.get(indx);
     }
 
+    @Override
     public Object clone() {
         ArrayList nodeList = null;
         if(nodes!=null) {

@@ -33,6 +33,7 @@ import org.flexdock.util.DockingUtility;
  */
 public class ActiveDockableHandler extends DockbarListener.Stub {
 
+    @Override
     public void dockableLocked(DockbarEvent evt) {
         Dockable d = (Dockable)evt.getSource();
         if(d!=null) {
@@ -40,6 +41,7 @@ public class ActiveDockableHandler extends DockbarListener.Stub {
         }
     }
 
+    @Override
     public void minimizeStarted(DockbarEvent evt) {
         Dockable d = (Dockable)evt.getSource();
         // block minimization on floating views

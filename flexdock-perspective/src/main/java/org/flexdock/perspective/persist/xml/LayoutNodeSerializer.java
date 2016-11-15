@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
  */
 public class LayoutNodeSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         if (object instanceof SplitNode) {
             return SerializerRegistry.getSerializer(SplitNode.class).serialize(document, object);
@@ -44,6 +45,7 @@ public class LayoutNodeSerializer implements ISerializer {
         throw new RuntimeException("Incorrect element: "+ object);
     }
 
+    @Override
     public Object deserialize(Element element) {
         if (element.getTagName().equals(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME)) {
             return SerializerRegistry.getSerializer(DockingPortNode.class).deserialize(element);

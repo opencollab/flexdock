@@ -57,57 +57,70 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
         init();
     }
 
+    @Override
     public List getLocals() {
         return locals;
     }
 
+    @Override
     public List getDefaults() {
         return DEFAULTS;
     }
 
+    @Override
     public List getGlobals() {
         return GLOBALS;
     }
 
+    @Override
     public Map getRoot() {
         return ROOT_PROPS;
     }
 
+    @Override
     public String getDockableDesc() {
         return (String)PropertyManager.getProperty(DESCRIPTION, this);
     }
 
+    @Override
     public Boolean isDockingEnabled() {
         return (Boolean)PropertyManager.getProperty(DOCKING_ENABLED, this);
     }
 
+    @Override
     public Boolean isActive() {
         return (Boolean)PropertyManager.getProperty(ACTIVE, this);
     }
 
+    @Override
     public Boolean isMouseMotionListenersBlockedWhileDragging() {
         return (Boolean)PropertyManager.getProperty(MOUSE_MOTION_DRAG_BLOCK, this);
     }
 
+    @Override
     public Float getRegionInset(String region) {
         String key = getRegionInsetKey(region);
         return key==null? null: (Float)PropertyManager.getProperty(key, this);
     }
 
+    @Override
     public Float getSiblingSize(String region) {
         String key = getSiblingSizeKey(region);
         return key==null? null: (Float)PropertyManager.getProperty(key, this);
     }
 
+    @Override
     public Boolean isTerritoryBlocked(String region) {
         String key = getTerritoryBlockedKey(region);
         return key==null? null: (Boolean)PropertyManager.getProperty(key, this);
     }
 
+    @Override
     public Float getDragThreshold() {
         return (Float)PropertyManager.getProperty(DRAG_THRESHOLD, this);
     }
 
+    @Override
     public Float getPreviewSize() {
         return (Float)PropertyManager.getProperty(PREVIEW_SIZE, this);
     }

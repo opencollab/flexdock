@@ -25,6 +25,7 @@ import javax.swing.UIManager;
  * @author Christopher Butler
  */
 public class PlafResourceHandler extends ResourceHandler {
+    @Override
     public Object getResource(String stringValue) {
         return UIManager.getDefaults().get(stringValue);
     }

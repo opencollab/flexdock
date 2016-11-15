@@ -49,6 +49,7 @@ public class DockableImpl extends AbstractDockable {
         DockingManager.registerDockable(this);
     }
 
+    @Override
     public Component getComponent() {
         return panel;
     }

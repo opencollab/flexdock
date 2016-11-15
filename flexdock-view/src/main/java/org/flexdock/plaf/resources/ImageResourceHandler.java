@@ -26,6 +26,7 @@ import org.flexdock.util.ResourceManager;
  */
 public class ImageResourceHandler extends ResourceHandler {
 
+    @Override
     public Object getResource(String url) {
         try {
             return ResourceManager.createImage(url);

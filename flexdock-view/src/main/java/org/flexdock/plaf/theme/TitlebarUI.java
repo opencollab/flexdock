@@ -82,6 +82,7 @@ public class TitlebarUI extends FlexViewComponentUI {
     protected int defaultHeight = MINIMUM_HEIGHT;
 
 
+    @Override
     public void installUI(JComponent c) {
         super.installUI(c);
         Dimension d = c.getPreferredSize();
@@ -99,10 +100,12 @@ public class TitlebarUI extends FlexViewComponentUI {
         }
     }
 
+    @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
     }
 
+    @Override
     public void paint(Graphics g, JComponent jc) {
         Titlebar titlebar = (Titlebar) jc;
         paintBackground(g, titlebar);
@@ -503,6 +506,7 @@ public class TitlebarUI extends FlexViewComponentUI {
                        RenderingHints.VALUE_ANTIALIAS_OFF;
     }
 
+    @Override
     public void initializeCreationParameters() {
         setActiveBackground(creationParameters.getColor(BACKGROUND_COLOR_ACTIVE));
         setActiveFont(creationParameters.getColor(FONT_COLOR_ACTIVE));

@@ -34,6 +34,7 @@ import org.flexdock.plaf.resources.ResourceHandler;
  */
 public class RaisedBorderResource extends ResourceHandler {
 
+    @Override
     public Object getResource(String data) {
         return new RaisedBorder();
     }
@@ -44,10 +45,12 @@ public class RaisedBorderResource extends ResourceHandler {
 
         private static final Insets INSETS = new Insets(1, 1, 1, 0);
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return INSETS;
         }
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int w, int h) {
             g.setColor(HIGHLIGHT_COLOR);
             g.fillRect(0, 0, w, 1);

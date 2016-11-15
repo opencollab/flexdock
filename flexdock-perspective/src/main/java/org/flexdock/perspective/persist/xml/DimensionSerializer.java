@@ -34,6 +34,7 @@ public class DimensionSerializer implements ISerializer {
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
+    @Override
     public Element serialize(Document document, Object object) {
         Dimension dimension = (Dimension) object;
 
@@ -45,6 +46,7 @@ public class DimensionSerializer implements ISerializer {
         return dimensionElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         String width = element.getAttribute(PersistenceConstants.DIMENSION_ATTRIBUTE_WIDTH);
         String height = element.getAttribute(PersistenceConstants.DIMENSION_ATTRIBUTE_HEIGHT);

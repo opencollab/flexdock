@@ -39,6 +39,7 @@ public class DefaultPinAction extends ViewAction {
 
     }
 
+    @Override
     public void actionPerformed(View view, ActionEvent evt) {
         boolean minimize = view.isMinimized()? false: true;
         DockingManager.setMinimized(view, minimize);
@@ -48,11 +49,13 @@ public class DefaultPinAction extends ViewAction {
         button.getModel().setSelected(info.isMinimized());
     }
 
+    @Override
     public ButtonModel createButtonModel() {
         return new PinButtonModel();
     }
 
     private static class PinButtonModel extends ViewButtonModel {
+        @Override
         public boolean isSelected() {
             DockingState info = getDockingState();
             if(info==null) {

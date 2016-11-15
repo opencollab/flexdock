@@ -53,6 +53,7 @@ public class MetalPainter extends DefaultPainter {
             MetalLookAndFeel.getControlDarkShadow(),
             MetalLookAndFeel.getControl() );
 
+    @Override
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         MetalBumps bumbs = active ? activeBumps : inactiveBumps;
         bumbs.setBumpArea( width, height);
@@ -132,10 +133,11 @@ class MetalBumps implements Icon {
         backColor = newBackColor;
     }
 
+    @Override
     public void paintIcon( Component c, Graphics g, int x, int y ) {
         GraphicsConfiguration gc = (g instanceof Graphics2D) ?
-                                   (GraphicsConfiguration)((Graphics2D)g).
-                                   getDeviceConfiguration() : null;
+                ((Graphics2D)g).
+                        getDeviceConfiguration() : null;
 
         buffer = getBuffer(gc, topColor, shadowColor, backColor);
 
@@ -160,10 +162,12 @@ class MetalBumps implements Icon {
         }
     }
 
+    @Override
     public int getIconWidth() {
         return xBumps * 2;
     }
 
+    @Override
     public int getIconHeight() {
         return yBumps * 2;
     }

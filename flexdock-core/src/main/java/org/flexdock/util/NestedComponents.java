@@ -164,6 +164,7 @@ public class NestedComponents {
      * @return a hash code value for this object.
      * @see #equals(Object)
      */
+    @Override
     public int hashCode() {
         int h = searchSrc.hashCode();
         h += child == null ? 0 : child.hashCode();
@@ -182,6 +183,7 @@ public class NestedComponents {
      * @return {@code true} if the specified {@code Object} is "equal" to this
      *         {@code NestedComponents} instance; {@code false} otherwise.
      */
+    @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof NestedComponents)) {
             return false;

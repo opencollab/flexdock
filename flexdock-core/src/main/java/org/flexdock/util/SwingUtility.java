@@ -273,6 +273,7 @@ public class SwingUtility {
 
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 c.requestFocus();
             }
@@ -489,6 +490,7 @@ public class SwingUtility {
         }
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 setSplitDivider(split, percent);
             }

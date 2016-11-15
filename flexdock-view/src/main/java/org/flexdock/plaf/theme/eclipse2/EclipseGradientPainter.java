@@ -32,6 +32,7 @@ import org.flexdock.plaf.resources.paint.DefaultPainter;
  */
 public class EclipseGradientPainter extends DefaultPainter {
 
+    @Override
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         float center = width / 1.3f;
 

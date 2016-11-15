@@ -41,6 +41,7 @@ public class PointSerializer implements ISerializer {
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
+    @Override
     public Element serialize(Document document, Object object) {
         Point point = (Point) object;
 
@@ -51,6 +52,7 @@ public class PointSerializer implements ISerializer {
         return pointElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         String xString = element.getAttribute(PersistenceConstants.POINT_ATTRIBUTE_X);
         String yString = element.getAttribute(PersistenceConstants.POINT_ATTRIBUTE_Y);

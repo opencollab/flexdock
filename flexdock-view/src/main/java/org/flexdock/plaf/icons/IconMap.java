@@ -27,11 +27,13 @@ import java.util.Map;
  *
  */
 public class IconMap extends HashMap {
+    @Override
     public Object put(Object key, Object value) {
         // do nothing
         return null;
     }
 
+    @Override
     public void putAll(Map m) {
         // do nothing
     }

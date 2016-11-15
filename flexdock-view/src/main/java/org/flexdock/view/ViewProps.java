@@ -64,6 +64,7 @@ public class ViewProps extends ScopedDockablePropertySet {
         put(ACTIVE_STATE_LOCKED, locked);
     }
 
+    @Override
     public void setActive(boolean active) {
         View view = getView();
         if(view==null) {

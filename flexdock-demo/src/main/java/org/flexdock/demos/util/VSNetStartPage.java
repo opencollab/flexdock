@@ -91,6 +91,7 @@ public class VSNetStartPage extends JPanel {
 
     private JPanel createTablePane() {
         return new JPanel() {
+            @Override
             protected void paintComponent(Graphics g) {
                 g.setColor(tableBG1);
                 g.fillRect(0, 0, getWidth(), 20);
@@ -106,6 +107,7 @@ public class VSNetStartPage extends JPanel {
 
     private JPanel createContentPane() {
         return new JPanel(null) {
+            @Override
             public void doLayout() {
                 int tableH = getHeight() - 120 - 55;
                 tableH = Math.max(tableH, 25);
@@ -117,6 +119,7 @@ public class VSNetStartPage extends JPanel {
                 openProjButton.setBounds(24 + d.width, buttonY, openProjButton.getPreferredSize().width, d.height);
             }
 
+            @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 int w = getWidth();
@@ -145,6 +148,7 @@ public class VSNetStartPage extends JPanel {
 
     private JTabbedPane createTabbedPane() {
         return new JTabbedPane(JTabbedPane.TOP) {
+            @Override
             protected void paintComponent(Graphics g) {
                 Color orig = g.getColor();
                 Rectangle tabBounds = getBoundsAt(0);

@@ -85,6 +85,7 @@ public class FocusTest extends JFrame implements DockingConstants {
 
         // create and show the GUI
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 runGUI();
             }
@@ -177,6 +178,7 @@ public class FocusTest extends JFrame implements DockingConstants {
 
     private static class DemoPerspectiveFactory implements PerspectiveFactory {
 
+        @Override
         public Perspective getPerspective(String persistentId) {
             if(P1.equals(persistentId)) {
                 return createPerspective1();
@@ -227,6 +229,7 @@ public class FocusTest extends JFrame implements DockingConstants {
 
     private static class ViewFactory extends DockableFactory.Stub {
 
+        @Override
         public Component getDockableComponent(String dockableId) {
             if(MAIN_VIEW.equals(dockableId)) {
                 return createMainView();

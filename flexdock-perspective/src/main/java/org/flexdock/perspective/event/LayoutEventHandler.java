@@ -30,13 +30,16 @@ import org.flexdock.perspective.Layout;
  */
 public class LayoutEventHandler extends EventHandler {
 
+    @Override
     public boolean acceptsEvent(Event evt) {
         return evt instanceof LayoutEvent;
     }
+    @Override
     public boolean acceptsListener(EventListener listener) {
         return listener instanceof LayoutListener;
     }
 
+    @Override
     public void handleEvent(Event evt, EventListener listener, int eventType) {
         LayoutEvent event = (LayoutEvent)evt;
         LayoutListener consumer = (LayoutListener)listener;
@@ -57,6 +60,7 @@ public class LayoutEventHandler extends EventHandler {
         }
     }
 
+    @Override
     public EventListener[] getListeners(Object eventTarget) {
         return eventTarget instanceof Layout?
                ((Layout)eventTarget).getListeners(): null;

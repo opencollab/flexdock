@@ -37,12 +37,14 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
 
     private DragManager dragListener;
 
+    @Override
     public void mouseDragged(MouseEvent me) {
         if(dragListener!=null) {
             dragListener.mouseDragged(me);
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent me) {
         if(dragListener!=null) {
             dragListener.mouseReleased(me);
@@ -50,6 +52,7 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
         dragListener = null;
     }
 
+    @Override
     public void mousePressed(MouseEvent me) {
         if(!(me.getSource() instanceof JTabbedPane)) {
             dragListener = null;
@@ -71,6 +74,7 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
         }
     }
 
+    @Override
     public void mouseMoved(MouseEvent me) {
         // does nothing
     }

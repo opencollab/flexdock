@@ -47,6 +47,7 @@ public class RoundedLineBorder extends LineBorder {
 
     // override
 
+    @Override
     public void paintBorder(Component component, Graphics g, int i, int j, int k, int l) {
         Graphics2D graphics2d = (Graphics2D) g;
 

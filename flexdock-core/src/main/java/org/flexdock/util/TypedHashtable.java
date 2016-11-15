@@ -211,6 +211,7 @@ public class TypedHashtable extends Hashtable {
      * @see #get(Object)
      * @see Hashtable#remove(java.lang.Object)
      */
+    @Override
     public Object put(Object key, Object value) {
         if(value==null) {
             return super.remove(key);

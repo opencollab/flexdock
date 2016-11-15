@@ -51,6 +51,7 @@ public class Titlebar extends JLabel {
         setBorder(new EmptyBorder(2, 4, 2, 2));
     }
 
+    @Override
     protected void paintBorder(Graphics g) {
         int w = getWidth();
         int h = getHeight();

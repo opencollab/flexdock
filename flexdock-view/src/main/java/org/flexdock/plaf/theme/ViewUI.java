@@ -30,18 +30,22 @@ import org.flexdock.plaf.FlexViewComponentUI;
  */
 public class ViewUI extends FlexViewComponentUI {
 
+    @Override
     public void installUI(JComponent c) {
         super.installUI(c);
     }
 
+    @Override
     public void paint(Graphics g, JComponent c) {
         super.paint(g, c);
     }
 
+    @Override
     public void uninstallUI(JComponent c) {
         super.uninstallUI(c);
     }
 
+    @Override
     public void initializeCreationParameters() {
 
     }

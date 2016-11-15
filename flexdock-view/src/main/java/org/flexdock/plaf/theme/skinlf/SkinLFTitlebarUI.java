@@ -32,6 +32,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
  */
 public class SkinLFTitlebarUI extends TitlebarUI {
 
+    @Override
     protected void paintBackground(Graphics g, Titlebar titlebar) {
         Rectangle paintArea = getPaintRect(titlebar);
         g.translate(paintArea.x, paintArea.y);
@@ -40,6 +41,7 @@ public class SkinLFTitlebarUI extends TitlebarUI {
     }
 
 
+    @Override
     public int getDefaultHeight() {
         return SkinLookAndFeel.getSkin().getFrame().getTopPreferredSize().height;
     }

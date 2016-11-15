@@ -67,6 +67,7 @@ public class DockablePanel extends JPanel {
             setTabText(getTitle());
         }
 
+        @Override
         public Component getComponent() {
             return DockablePanel.this;
         }

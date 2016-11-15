@@ -72,16 +72,22 @@ public interface DockingListener extends EventListener {
 
     class Stub implements DockingListener {
 
+        @Override
         public void dockingCanceled(DockingEvent evt) {}
 
+        @Override
         public void dockingComplete(DockingEvent evt) {}
 
+        @Override
         public void dragStarted(DockingEvent evt) {}
 
+        @Override
         public void dropStarted(DockingEvent evt) {}
 
+        @Override
         public void undockingComplete(DockingEvent evt) {}
 
+        @Override
         public void undockingStarted(DockingEvent evt) {}
 
     }

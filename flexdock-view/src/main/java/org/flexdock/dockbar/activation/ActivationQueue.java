@@ -42,6 +42,7 @@ public class ActivationQueue extends Thread {
     }
 
 
+    @Override
     public void run() {
         manager.setAnimating(true);
         if(deactivation!=null) {

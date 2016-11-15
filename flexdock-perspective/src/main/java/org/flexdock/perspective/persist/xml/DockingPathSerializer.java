@@ -36,6 +36,7 @@ import org.w3c.dom.NodeList;
  */
 public class DockingPathSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         DockingPath dockingPath = (DockingPath) object;
 
@@ -61,6 +62,7 @@ public class DockingPathSerializer implements ISerializer {
         return dockingPathElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         //DockingState dockingState = (DockingState) deserializationStack.popObject();
         DockingPath dockingPath = new DockingPath();

@@ -39,6 +39,7 @@ public class SlideoutBorder implements Border, DockingConstants {
     public SlideoutBorder() {
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         Insets insets = new Insets(0, 0, 0, 0);
         switch(orientation) {
@@ -59,9 +60,11 @@ public class SlideoutBorder implements Border, DockingConstants {
     }
 
 
+    @Override
     public boolean isBorderOpaque() {
         return true;
     }
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
         Color outer = Color.BLACK;
         Color inner = Color.GRAY;

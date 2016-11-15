@@ -62,6 +62,7 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
         PROP_EVENTS.add(ACTIVE_WINDOW);
 
         EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
                     focusManager.addPropertyChangeListener(SINGLETON);
@@ -78,6 +79,7 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
     private ActiveDockableListener() {
     }
 
+    @Override
     public void eventDispatched(AWTEvent event) {
         //catch all mousePressed events
         if(event.getID()!=MouseEvent.MOUSE_PRESSED) {
@@ -103,6 +105,7 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
         }
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String pName = evt.getPropertyName();
         if(!PROP_EVENTS.contains(pName)) {
@@ -155,6 +158,7 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
     }
 
 
+    @Override
     public void stateChanged(ChangeEvent e) {
         Object obj = e.getSource();
         if(obj instanceof JTabbedPane) {
@@ -182,6 +186,7 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
         // invokeLater because the new tab may not yet be showing, meaning the enumeration of its
         // focus-cycle will return empty.  the parent dockable in the new tab must be showing.
         EventQueue.invokeLater(new Runnable() {
+                @Override
                 public void run() {
                     ActiveDockableTracker.focusDockable(deep, dockable, true);
                 }

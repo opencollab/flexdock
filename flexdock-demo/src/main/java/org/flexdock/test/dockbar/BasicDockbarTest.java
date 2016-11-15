@@ -45,6 +45,7 @@ public class BasicDockbarTest {
         } catch(Exception e) {
         }
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 createAndShowGUI();
             }
@@ -82,6 +83,7 @@ public class BasicDockbarTest {
 
     private static ActionListener createMinimizeAction(final int edge) {
         return new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 View view = createView();
                 DockingManager.setMinimized(view, true, edge);

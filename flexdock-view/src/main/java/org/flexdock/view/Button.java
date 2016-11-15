@@ -39,6 +39,7 @@ public class Button extends JToggleButton {
         setModel(new ViewButtonModel());
     }
 
+    @Override
     public void setModel(ButtonModel newModel) {
         ButtonModel oldModel = getModel();
         if(newModel!=null && oldModel!=null) {
@@ -47,10 +48,12 @@ public class Button extends JToggleButton {
         super.setModel(newModel);
     }
 
+    @Override
     public void updateUI() {
         setUI(PlafManager.getUI(this));
     }
 
+    @Override
     public String getUIClassID() {
         return UI_CLASS_ID;
     }

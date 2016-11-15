@@ -30,6 +30,7 @@ import org.flexdock.plaf.Configurator;
  */
 public class ColorResourceHandler extends ResourceHandler {
 
+    @Override
     public Object getResource(String stringValue) {
         return parseHexColor(stringValue);
     }

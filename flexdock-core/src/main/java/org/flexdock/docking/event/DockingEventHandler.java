@@ -62,14 +62,17 @@ public class DockingEventHandler extends EventHandler {
         return list;
     }
 
+    @Override
     public boolean acceptsEvent(Event evt) {
         return evt instanceof DockingEvent;
     }
+    @Override
     public boolean acceptsListener(EventListener listener) {
         return listener instanceof DockingListener;
     }
 
 
+    @Override
     public void handleEvent(Event evt, EventListener listener, int eventType) {
         DockingEvent event = (DockingEvent)evt;
         DockingListener consumer = (DockingListener)listener;
@@ -96,6 +99,7 @@ public class DockingEventHandler extends EventHandler {
         }
     }
 
+    @Override
     public EventListener[] getListeners(Object eventTarget) {
         return eventTarget instanceof DockingMonitor?
                ((DockingMonitor)eventTarget).getDockingListeners(): null;

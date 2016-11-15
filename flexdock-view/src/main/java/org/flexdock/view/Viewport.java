@@ -65,6 +65,7 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
         }
     }
 
+    @Override
     public boolean isDockingAllowed(Component comp, String region) {
         // if we're already blocked, then no need to interrogate
         // the components in this dockingport
@@ -99,6 +100,7 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
         return dock(dockable, CENTER_REGION);
     }
 
+    @Override
     protected JTabbedPane createTabbedPane() {
         JTabbedPane pane = super.createTabbedPane();
         pane.addChangeListener(ActiveDockableListener.getInstance());
@@ -115,6 +117,7 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
         return getDockableSet(depth, 0, View.class);
     }
 
+    @Override
     protected String paramString() {
         return "id=" + getPersistentId() + "," + super.paramString();
     }

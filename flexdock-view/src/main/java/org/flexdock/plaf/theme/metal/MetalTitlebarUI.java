@@ -36,6 +36,7 @@ import org.flexdock.view.Titlebar;
  */
 public class MetalTitlebarUI extends TitlebarUI {
 
+    @Override
     protected void paintBackground(Graphics g, Titlebar titlebar) {
         Rectangle paintArea = getPaintRect( titlebar);
         g.translate(paintArea.x, paintArea.y);
@@ -49,6 +50,7 @@ public class MetalTitlebarUI extends TitlebarUI {
         g.translate(-paintAreaer.x, -paintAreaer.y);
     }
 
+    @Override
     protected Color getBackgroundColor(boolean active) {
         return active ? MetalLookAndFeel.getPrimaryControl() : MetalLookAndFeel.getControl();
     }

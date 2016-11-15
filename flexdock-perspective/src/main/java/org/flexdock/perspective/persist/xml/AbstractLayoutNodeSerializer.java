@@ -34,6 +34,7 @@ import org.w3c.dom.NodeList;
  */
 public abstract class AbstractLayoutNodeSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         LayoutNode layoutNode = (LayoutNode) object;
 
@@ -52,6 +53,7 @@ public abstract class AbstractLayoutNodeSerializer implements ISerializer {
 
     protected abstract Element getElement(Document document, Object o);
 
+    @Override
     public Object deserialize(Element element) {
         LayoutNode layoutNode = createLayoutNode();
 

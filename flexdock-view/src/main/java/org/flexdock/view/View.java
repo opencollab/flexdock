@@ -90,6 +90,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's preferred size
          */
+        @Override
         public Dimension preferredLayoutSize(Container parent) {
             Dimension rd, tpd;
             Insets i = getInsets();
@@ -115,6 +116,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's minimum size
          */
+        @Override
         public Dimension minimumLayoutSize(Container parent) {
             Dimension rd, tpd;
             Insets i = getInsets();
@@ -139,6 +141,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
          *            the Container for which this layout manager is being used
          * @return a Dimension object containing the layout's maximum size
          */
+        @Override
         public Dimension maximumLayoutSize(Container target) {
             Dimension rd, tpd;
             Insets i = getInsets();
@@ -165,6 +168,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
          * @param parent
          *            the Container for which this layout manager is being used
          */
+        @Override
         public void layoutContainer(Container parent) {
             Rectangle b = parent.getBounds();
             Insets i = getInsets();
@@ -182,23 +186,29 @@ public class View extends JComponent implements Dockable, DockingConstants {
             }
         }
 
+        @Override
         public void addLayoutComponent(String name, Component comp) {
         }
 
+        @Override
         public void removeLayoutComponent(Component comp) {
         }
 
+        @Override
         public void addLayoutComponent(Component comp, Object constraints) {
         }
 
+        @Override
         public float getLayoutAlignmentX(Container target) {
             return 0.0f;
         }
 
+        @Override
         public float getLayoutAlignmentY(Container target) {
             return 0.0f;
         }
 
+        @Override
         public void invalidateLayout(Container target) {
         }
     }
@@ -268,6 +278,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
         setTabText(tabText);
 
         addHierarchyListener(new HierarchyListener() {
+            @Override
             public void hierarchyChanged(HierarchyEvent e) {
                 clearButtonRollovers();
             }
@@ -278,11 +289,13 @@ public class View extends JComponent implements Dockable, DockingConstants {
         DockingManager.registerDockable((Dockable) this);
 
         getActionMap().put(ACTION_TOGGLE_NEXT, new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     SwingUtility.toggleFocus(+1);
                 }
             });
         getActionMap().put(ACTION_TOGGLE_PREVIOUS, new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     SwingUtility.toggleFocus(-1);
                 }
@@ -291,6 +304,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
 
     private static DockingStrategy createDockingStrategy() {
         return new DefaultDockingStrategy() {
+            @Override
             protected DockingPort createDockingPortImpl(DockingPort base) {
                 return new Viewport();
             }
@@ -325,6 +339,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return titlepane;
     }
 
+    @Override
     public DockablePropertySet getDockingProperties() {
         return PropertyManager.getDockablePropertySet(this);
     }
@@ -455,10 +470,12 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return tbar == null ? null : tbar.getText();
     }
 
+    @Override
     public void updateUI() {
         setUI(PlafManager.getUI(this));
     }
 
+    @Override
     public String getUIClassID() {
         return UI_CLASS_ID;
     }
@@ -466,6 +483,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
     /**
      * {@inheritDoc}
      */
+    @Override
     protected void addImpl(Component comp, Object constraints, int index) {
         if (comp instanceof Titlebar) {
             ((Titlebar) comp).setView(this);
@@ -478,6 +496,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
         }
     }
 
+    @Override
     public void remove(Component comp) {
         if (comp == contentPane) {
             super.remove(comp);
@@ -491,18 +510,22 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return tbar == null ? null : tbar.getActionButton(actionName);
     }
 
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    @Override
     public List getDragSources() {
         return dragSources;
     }
 
+    @Override
     public Set getFrameDragSources() {
         return frameDragSources;
     }
 
+    @Override
     public String getPersistentId() {
         return persistentId;
     }
@@ -532,10 +555,12 @@ public class View extends JComponent implements Dockable, DockingConstants {
         getDockingProperties().setTabIcon(icon);
     }
 
+    @Override
     public boolean dock(Dockable dockable) {
         return dock(dockable, CENTER_REGION);
     }
 
+    @Override
     public DockingPort getDockingPort() {
         return DockingManager.getDockingPort((Dockable) this);
     }
@@ -549,10 +574,12 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return port instanceof Viewport ? (Viewport) port : null;
     }
 
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion) {
         return DockingManager.dock(dockable, this, relativeRegion);
     }
 
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
         return DockingManager.dock(dockable, this, relativeRegion, ratio);
     }
@@ -581,22 +608,27 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return DockingUtility.getMinimizedConstraint(this);
     }
 
+    @Override
     public void addDockingListener(DockingListener listener) {
         dockingListeners.add(listener);
     }
 
+    @Override
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
                .toArray(new DockingListener[0]);
     }
 
+    @Override
     public void removeDockingListener(DockingListener listener) {
         dockingListeners.remove(listener);
     }
 
+    @Override
     public void dockingCanceled(DockingEvent evt) {
     }
 
+    @Override
     public void dockingComplete(DockingEvent evt) {
         setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
         if (titlepane != null) {
@@ -604,16 +636,20 @@ public class View extends JComponent implements Dockable, DockingConstants {
         }
     }
 
+    @Override
     public void dragStarted(DockingEvent evt) {
     }
 
+    @Override
     public void dropStarted(DockingEvent evt) {
     }
 
+    @Override
     public void undockingComplete(DockingEvent evt) {
         clearButtonRollovers();
     }
 
+    @Override
     public void undockingStarted(DockingEvent evt) {
     }
 
@@ -663,6 +699,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
         return DockingUtility.isFloating(this);
     }
 
+    @Override
     protected String paramString() {
         return "id=" + getPersistentId() + "," + super.paramString();
     }
@@ -691,6 +728,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
      *            the <code>LayoutManager</code>
      * @see #setContentPaneCheckingEnabled
      */
+    @Override
     public void setLayout(LayoutManager manager) {
         if (isContentPaneCheckingEnabled()) {
             getContentPane().setLayout(manager);

@@ -62,6 +62,7 @@ public class SiblingTest extends JFrame implements DockingConstants {
         //                SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
         //                SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 startup();
             }
@@ -135,6 +136,7 @@ public class SiblingTest extends JFrame implements DockingConstants {
 
         VSNetStartPage page = new VSNetStartPage();
         page.getNewProjButton().addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent ae) {
 
                 JDialog dialog = getSiblingTestDialog();
@@ -229,6 +231,7 @@ public class SiblingTest extends JFrame implements DockingConstants {
             add(getSiblingLabel(), gbc);
 
             ItemListener syncher = new ItemListener() {
+                @Override
                 public void itemStateChanged(ItemEvent evt) {
                     sync();
                 }

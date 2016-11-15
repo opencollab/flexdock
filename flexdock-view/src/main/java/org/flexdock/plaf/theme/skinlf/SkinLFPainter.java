@@ -31,6 +31,7 @@ import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
  * @author Claudio Romano
  */
 public class SkinLFPainter extends DefaultPainter {
+    @Override
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         SkinLookAndFeel.getSkin().getFrame().paintTop(g, titlebar, active, "");
     }

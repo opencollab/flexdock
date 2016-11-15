@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
  */
 public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         SplitNode splitNode = (SplitNode) object;
 
@@ -51,10 +52,12 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         return splitNodeElement;
     }
 
+    @Override
     protected Element getElement(Document document, Object o) {
         return document.createElement(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
     }
 
+    @Override
     public Object deserialize(Element element) {
 
         SplitNode splitNode = (SplitNode) super.deserialize(element);
@@ -96,6 +99,7 @@ public class SplitNodeSerializer extends AbstractLayoutNodeSerializer implements
         return splitNode;
     }
 
+    @Override
     protected LayoutNode createLayoutNode() {
         return new SplitNode(-1, -1, -1.0f, null);
     }

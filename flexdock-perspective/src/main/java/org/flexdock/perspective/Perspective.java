@@ -81,7 +81,7 @@ public class Perspective implements Cloneable, Serializable {
     }
 
     public Dockable getDockable(String dockableId) {
-        return (Dockable) getLayout().getDockable(dockableId);
+        return getLayout().getDockable(dockableId);
     }
 
     public void addLayoutListener(LayoutListener listener) {
@@ -172,6 +172,7 @@ public class Perspective implements Cloneable, Serializable {
         }
     }
 
+    @Override
     public Object clone() {
         Perspective clone = new Perspective(this.persistentId, this.perspectiveName);
         clone.layout = (Layout)this.layout.clone();

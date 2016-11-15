@@ -97,9 +97,9 @@ public class DockbarLayout {
         float viewSize = props.getPreviewSize().floatValue();
         int edge = manager.getActiveEdge();
         if(edge==MinimizationManager.LEFT || edge==MinimizationManager.RIGHT) {
-            return (int)(((float)rect.width)*viewSize);
+            return (int)(rect.width*viewSize);
         }
-        return (int)(((float)rect.height)*viewSize);
+        return (int)(rect.height*viewSize);
     }
 
     protected void layoutViewpane() {
@@ -216,7 +216,7 @@ public class DockbarLayout {
     private void toggleInsetBorder(int edge) {
         InsetBorder border = getInsetBorder(edge);
         if(border!=null) {
-            ((InsetBorder)border).toggleEdge(edge, true);
+            border.toggleEdge(edge, true);
         }
     }
 

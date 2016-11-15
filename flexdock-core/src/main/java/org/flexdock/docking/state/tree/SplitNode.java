@@ -79,6 +79,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
         this.siblingId = siblingId;
     }
 
+    @Override
     public String toString() {
         StringBuffer sb = new StringBuffer("SplitNode[");
         sb.append("orient=").append(getOrientationDesc()).append("; ");
@@ -105,6 +106,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
         return orientation==VERTICAL? "vertical": "horizontal";
     }
 
+    @Override
     public Object clone() {
         return new SplitNode(orientation, region, percentage, siblingId);
     }
@@ -116,6 +118,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
         this.dockingRegion = dockingRegion;
     }
 
+    @Override
     public Object getDockingObject() {
         if(dockingRegion==null) {
             return null;
@@ -160,6 +163,7 @@ public class SplitNode extends DockingNode implements DockingConstants {
         return (LayoutNode)getChildAt(indx);
     }
 
+    @Override
     protected DockingNode shallowClone() {
         SplitNode clone = new SplitNode(orientation, region, percentage, siblingId);
         clone.dockingRegion = dockingRegion;

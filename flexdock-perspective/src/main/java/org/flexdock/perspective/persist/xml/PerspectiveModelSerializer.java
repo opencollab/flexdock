@@ -35,6 +35,7 @@ import org.w3c.dom.NodeList;
  */
 public class PerspectiveModelSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         PerspectiveModel perspectiveModel = (PerspectiveModel) object;
 
@@ -55,6 +56,7 @@ public class PerspectiveModelSerializer implements ISerializer {
         return perspectiveModelElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         String currentPerspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_CURRENT_PERSPECTIVE_ID);
         String defaultPerspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_MODEL_ATTRIBUTE_DEFAULT_PERSPECTIVE_ID);

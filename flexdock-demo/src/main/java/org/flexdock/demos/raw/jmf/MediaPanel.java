@@ -93,6 +93,7 @@ public class MediaPanel extends Panel implements DockingStub {
 
             // add a listener to put us in an infinite loop
             mediaPlayer.addControllerListener(new ControllerListener() {
+                @Override
                 public void controllerUpdate(ControllerEvent evt) {
                     if(evt instanceof EndOfMediaEvent) {
                         mediaPlayer.setMediaTime(new Time(0));
@@ -153,6 +154,7 @@ public class MediaPanel extends Panel implements DockingStub {
         return f.toURL();
     }
 
+    @Override
     protected void finalize() {
         if(player!=null) {
             player.stop();
@@ -161,18 +163,22 @@ public class MediaPanel extends Panel implements DockingStub {
         }
     }
 
+    @Override
     public Component getDragSource() {
         return titlebar;
     }
 
+    @Override
     public Component getFrameDragSource() {
         return titlebar;
     }
 
+    @Override
     public String getPersistentId() {
         return dockingId;
     }
 
+    @Override
     public String getTabText() {
         return titlebar.getText();
     }

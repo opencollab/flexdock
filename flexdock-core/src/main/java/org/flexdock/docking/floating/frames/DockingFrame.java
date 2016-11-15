@@ -99,6 +99,7 @@ public class DockingFrame extends JDialog implements DockingConstants {
 
     // override
 
+    @Override
     protected JRootPane createRootPane() {
         return new RootPane(this);
     }
@@ -135,18 +136,22 @@ public class DockingFrame extends JDialog implements DockingConstants {
 
     private static class BoundsMonitor implements ComponentListener {
 
+        @Override
         public void componentHidden(ComponentEvent e) {
             // noop
         }
 
+        @Override
         public void componentMoved(ComponentEvent e) {
             updateBounds(e);
         }
 
+        @Override
         public void componentResized(ComponentEvent e) {
             updateBounds(e);
         }
 
+        @Override
         public void componentShown(ComponentEvent e) {
             updateBounds(e);
         }

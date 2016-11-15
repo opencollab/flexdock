@@ -43,6 +43,7 @@ public class DefaultDisplayAction extends ViewAction {
         }
     }
 
+    @Override
     public void actionPerformed(View view, ActionEvent evt) {
         DockingManager.display(view);
     }
