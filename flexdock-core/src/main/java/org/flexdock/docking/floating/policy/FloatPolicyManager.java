@@ -144,8 +144,9 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see FloatPolicy#isFloatDropAllowed(DockingEvent)
      */
     public void dropStarted(DockingEvent evt) {
-        if (evt.isOverWindow())
+        if (evt.isOverWindow()) {
             return;
+        }
 
         if (!isFloatingAllowed(evt.getDockable())) {
             evt.consume();
@@ -188,12 +189,14 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see #FLOATING_ALLOWED
      */
     public static boolean isFloatingAllowed(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
 
         Map context = DragManager.getDragContext(dockable);
-        if (context == null)
+        if (context == null) {
             return getInstance().isPolicyFloatingSupported(dockable);
+        }
 
         Boolean floatAllowed = (Boolean) context.get(FLOATING_ALLOWED);
         return floatAllowed == null ? true : floatAllowed.booleanValue();
@@ -218,13 +221,15 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see FloatPolicy#isFloatingAllowed(Dockable)
      */
     public boolean isPolicyFloatingSupported(Dockable dockable) {
-        if (dockable == null)
+        if (dockable == null) {
             return false;
+        }
 
         for (Iterator it = policies.iterator(); it.hasNext();) {
             FloatPolicy policy = (FloatPolicy) it.next();
-            if (!policy.isFloatingAllowed(dockable))
+            if (!policy.isFloatingAllowed(dockable)) {
                 return false;
+            }
         }
         return true;
     }
@@ -240,8 +245,9 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see #removePolicy(FloatPolicy)
      */
     public void addPolicy(FloatPolicy policy) {
-        if (policy != null)
+        if (policy != null) {
             policies.add(policy);
+        }
     }
 
     /**
@@ -256,8 +262,9 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see #addPolicy(FloatPolicy)
      */
     public void removePolicy(FloatPolicy policy) {
-        if (policy != null)
+        if (policy != null) {
             policies.remove(policy);
+        }
     }
 
     /**

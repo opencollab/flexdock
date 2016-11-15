@@ -49,17 +49,20 @@ public class AdapterFactory {
      * @return a docking adapter, or {@code null} if {@code comp} is null.
      */
     public static DockingAdapter getAdapter(Component comp) {
-        if (comp == null)
+        if (comp == null) {
             return null;
+        }
 
         AdapterMapping mapping = getMapping(comp);
-        if (mapping == null)
+        if (mapping == null) {
             return null;
+        }
 
         DockingAdapter adapter = new DockingAdapter(comp, mapping);
         // validate the adapter before returning
-        if (adapter.getComponent() == null || adapter.getPersistentId() == null)
+        if (adapter.getComponent() == null || adapter.getPersistentId() == null) {
             return null;
+        }
 
         return adapter;
     }
@@ -79,9 +82,10 @@ public class AdapterFactory {
             document = ResourceManager.getDocument(DEFAULT_ADAPTER_RESOURCE);
         }
 
-        if (document == null)
+        if (document == null) {
             //TODO this should probably throw a runtime exception
             return;
+        }
 
         MappingReader reader = new MappingReader();
         AdapterMapping[] mappings = reader.readMappings(document);

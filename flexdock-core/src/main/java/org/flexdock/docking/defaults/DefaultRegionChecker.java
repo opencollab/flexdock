@@ -63,8 +63,9 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see #getWestRegion(Component)
      */
     public String getRegion(Component comp, Point point) {
-        if (comp == null || point == null)
+        if (comp == null || point == null) {
             return UNKNOWN_REGION;
+        }
 
         // make sure the point is actually inside of the target dockingport
         Rectangle targetArea = comp.getBounds();
@@ -73,15 +74,18 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
         // have returned a target area relative to the dockingport's parent.
         // reset
         // relative to the dockingport.
-        if (comp instanceof DockingPort)
+        if (comp instanceof DockingPort) {
             targetArea.setLocation(0, 0);
-        if (!targetArea.contains(point))
+        }
+        if (!targetArea.contains(point)) {
             return UNKNOWN_REGION;
+        }
 
         // if our target component is the dockingport, then the dockingport is
         // currently empty and all points within it are in the CENTER
-        if (comp instanceof DockingPort)
+        if (comp instanceof DockingPort) {
             return CENTER_REGION;
+        }
 
         // start with the north region
         Rectangle north = getNorthRegion(comp);
@@ -137,11 +141,13 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
         // don't have to
         // check for NE, SE, NW, and SW anymore.
         Rectangle east = getEastRegion(comp);
-        if (east.contains(point))
+        if (east.contains(point)) {
             return EAST_REGION;
+        }
         Rectangle west = getWestRegion(comp);
-        if (west.contains(point))
+        if (west.contains(point)) {
             return WEST_REGION;
+        }
 
         // not in any of the outer regions, so return CENTER.
         return CENTER_REGION;
@@ -289,19 +295,20 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
 
     protected Rectangle calculateRegionalBounds(Component c, String region,
             float size) {
-        if (c == null || region == null)
+        if (c == null || region == null) {
             return null;
+        }
 
         Rectangle bounds = c.getBounds();
 
         if (NORTH_REGION.equals(region) || SOUTH_REGION.equals(region)) {
-            int h = (int) ((float) bounds.height * size);
+            int h = (int) (bounds.height * size);
             int y = NORTH_REGION.equals(region) ? 0 : bounds.height - h;
             return new Rectangle(0, y, bounds.width, h);
         }
 
         if (WEST_REGION.equals(region) || EAST_REGION.equals(region)) {
-            int w = (int) ((float) bounds.width * size);
+            int w = (int) (bounds.width * size);
             int x = WEST_REGION.equals(region) ? 0 : bounds.width - w;
             return new Rectangle(x, 0, w, bounds.height);
         }
@@ -377,8 +384,9 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
     protected static float getDockingInset(Float value, float defaultVal,
                                            float max, float min) {
         float f = value == null ? -1 : value.floatValue();
-        if (f == -1)
+        if (f == -1) {
             f = defaultVal;
+        }
         return checkBounds(f, max, min);
     }
 

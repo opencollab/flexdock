@@ -61,7 +61,7 @@ public class MaximizationDemo {
 
         Dockable topComp = createFramePanel("Top");
         DockingManager.registerDockable(topComp);
-        DockingManager.dock(topComp, (DockingPort) dockingPort, DockingConstants.CENTER_REGION);
+        DockingManager.dock(topComp, dockingPort, DockingConstants.CENTER_REGION);
 
         Dockable south = createFramePanel("South");
         DockingManager.registerDockable(south);

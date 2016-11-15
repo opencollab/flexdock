@@ -13,12 +13,14 @@ public class DockableImpl extends AbstractDockable {
 
     public DockableImpl(ElegantPanel dockable, JComponent dragInit, String id) {
         super(id);
-        if(dockable==null)
+        if(dockable==null) {
             new IllegalArgumentException(
-                "Cannot create DockableImpl with a null DockablePanel.");
-        if(dragInit==null)
+                    "Cannot create DockableImpl with a null DockablePanel.");
+        }
+        if(dragInit==null) {
             new IllegalArgumentException(
-                "Cannot create DockableImpl with a null drag initiator.");
+                    "Cannot create DockableImpl with a null drag initiator.");
+        }
 
         panel = dockable;
         dragInitiator = dragInit;

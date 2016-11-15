@@ -70,8 +70,9 @@ public class DockbarLayout {
 
     public int getDesiredViewpaneSize() {
         Dockable dockable = manager.getActiveDockable();
-        if(dockable==null)
+        if(dockable==null) {
             return 0;
+        }
 
         Rectangle rect = DockbarLayoutManager.getManager().getViewArea(manager, dockable);
         DockablePropertySet props = dockable.getDockingProperties();
@@ -95,8 +96,9 @@ public class DockbarLayout {
 
         int edge = manager.getActiveEdge();
         int viewpaneSize = viewPane.getPrefSize();
-        if(viewpaneSize==ViewPane.UNSPECIFIED_PREFERRED_SIZE)
+        if(viewpaneSize==ViewPane.UNSPECIFIED_PREFERRED_SIZE) {
             viewpaneSize = getDesiredViewpaneSize();
+        }
 
         Rectangle rect = DockbarLayoutManager.getManager().getViewArea(manager, dockable);
         if(edge==MinimizationManager.LEFT || edge==MinimizationManager.RIGHT) {
@@ -174,8 +176,9 @@ public class DockbarLayout {
         }
 
         // if there is no new edge-guide, then we can't set an InsetBorder for it
-        if(newGuide==null)
+        if(newGuide==null) {
             return setCurrentEdgeGuide(edge, newGuide) || changed;
+        }
 
         Border border = newGuide.getBorder();
         // if the new edge-guide doesn't have an InsetBorder, then install one
@@ -226,12 +229,14 @@ public class DockbarLayout {
 
     private int getDockbarInset(Dockbar dockbar) {
         boolean visible = dockbar.isVisible();
-        if(!visible)
+        if(!visible) {
             return 0;
+        }
 
         Dimension dim = dockbar.getPreferredSize();
-        if(dockbar==manager.getLeftBar() || dockbar==manager.getRightBar())
+        if(dockbar==manager.getLeftBar() || dockbar==manager.getRightBar()) {
             return dim.width;
+        }
         return dim.height;
     }
 
@@ -268,7 +273,8 @@ public class DockbarLayout {
     }
 
     private void add(Set set, Object obj) {
-        if(obj!=null)
+        if(obj!=null) {
             set.add(obj);
+        }
     }
 }

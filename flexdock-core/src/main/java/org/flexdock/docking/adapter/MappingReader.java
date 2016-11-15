@@ -30,8 +30,9 @@ public class MappingReader {
     public static final String CLIENT_KEY = "client";
 
     public AdapterMapping[] readMappings(Document mappingDoc) {
-        if (mappingDoc == null)
+        if (mappingDoc == null) {
             return new AdapterMapping[0];
+        }
 
         NodeList nodes = mappingDoc.getElementsByTagName(ADAPTER_KEY);
         ArrayList mappings = new ArrayList(nodes.getLength());
@@ -58,8 +59,9 @@ public class MappingReader {
             Element elem = (Element) nodes.item(i);
             String key = elem.getAttribute(FLEXDOCK_KEY);
             String value = elem.getAttribute(CLIENT_KEY);
-            if (key != null && value != null)
+            if (key != null && value != null) {
                 p.setProperty(key, value);
+            }
         }
 
         return createMapping(p);
@@ -71,14 +73,16 @@ public class MappingReader {
 
         for (int i = 0; i < setters.length; i++) {
             String methodName = setters[i].getName();
-            if (!methodName.startsWith("set"))
+            if (!methodName.startsWith("set")) {
                 continue;
+            }
 
             String key = Character.toLowerCase(methodName.charAt(3))
                          + methodName.substring(4);
             String clientMethod = props.getProperty(key);
-            if (clientMethod == null)
+            if (clientMethod == null) {
                 continue;
+            }
 
             Method setter = setters[i];
             try {

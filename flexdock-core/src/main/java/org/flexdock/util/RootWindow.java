@@ -65,15 +65,18 @@ public class RootWindow {
     private HashMap clientProperties;
 
     private static Component getRoot(Component c) {
-        if (c == null)
+        if (c == null) {
             return null;
+        }
 
-        if (isValidRootContainer(c))
+        if (isValidRootContainer(c)) {
             return c;
+        }
 
         Container parent = c.getParent();
-        while (parent != null && !isValidRootContainer(parent))
+        while (parent != null && !isValidRootContainer(parent)) {
             parent = parent.getParent();
+        }
 
         return parent;
     }
@@ -89,8 +92,9 @@ public class RootWindow {
      */
     public static RootWindow getRootContainer(Component c) {
         Component root = getRoot(c);
-        if (!isValidRootContainer(root))
+        if (!isValidRootContainer(root)) {
             return null;
+        }
 
         RootWindow container = (RootWindow) MAP_BY_ROOT_CONTAINER.get(root);
         if (container == null) {
@@ -98,8 +102,9 @@ public class RootWindow {
             MAP_BY_ROOT_CONTAINER.put(root, container);
         }
 
-        if (container.getRootContainer() != root)
+        if (container.getRootContainer() != root) {
             container.setRootContainer(root);
+        }
 
         return container;
     }
@@ -120,23 +125,27 @@ public class RootWindow {
     public static RootWindow[] getVisibleWindows() {
         Frame[] frames = Frame.getFrames();
         HashSet cache = new HashSet(frames.length);
-        for (int i = 0; i < frames.length; i++)
+        for (int i = 0; i < frames.length; i++) {
             populateWindowList(new RootWindow(frames[i]), cache, true);
+        }
         return (RootWindow[]) cache.toArray(new RootWindow[0]);
     }
 
     private static void populateWindowList(RootWindow win, HashSet winCache,
                                            boolean visOnly) {
-        if (win == null || winCache.contains(win))
+        if (win == null || winCache.contains(win)) {
             return;
+        }
 
-        if (visOnly && !win.getRootContainer().isVisible())
+        if (visOnly && !win.getRootContainer().isVisible()) {
             return;
+        }
 
         winCache.add(win);
         Window[] children = win.getOwnedWindows();
-        for (int i = 0; i < children.length; i++)
+        for (int i = 0; i < children.length; i++) {
             populateWindowList(new RootWindow(children[i]), winCache, visOnly);
+        }
     }
 
     /**
@@ -259,8 +268,9 @@ public class RootWindow {
      */
     public void revalidateContentPane() {
         Container c = getContentPane();
-        if (c instanceof JComponent)
-            ((JComponent) c).revalidate();
+        if (c instanceof JComponent) {
+            c.revalidate();
+        }
     }
 
     /**
@@ -305,14 +315,15 @@ public class RootWindow {
      * @return all the windows currently owned by this root window.
      */
     public Window[] getOwnedWindows() {
-        if (getRootContainer() instanceof JFrame)
-            return ((JFrame) getRootContainer()).getOwnedWindows();
-        else if (getRootContainer() instanceof JWindow)
-            return ((JWindow) getRootContainer()).getOwnedWindows();
-        else if (getRootContainer() instanceof JDialog)
-            return ((JDialog) getRootContainer()).getOwnedWindows();
-        else
+        if (getRootContainer() instanceof JFrame) {
+            return ((Window) getRootContainer()).getOwnedWindows();
+        } else if (getRootContainer() instanceof JWindow) {
+            return ((Window) getRootContainer()).getOwnedWindows();
+        } else if (getRootContainer() instanceof JDialog) {
+            return ((Window) getRootContainer()).getOwnedWindows();
+        } else {
             return new Window[0];
+        }
     }
 
     /**
@@ -325,8 +336,9 @@ public class RootWindow {
      * @deprecated dead code last used in 0.2.0
      */
     public void setMaximizationLayer(Integer layer) {
-        if (layer == null)
+        if (layer == null) {
             layer = DEFAULT_MAXED_LAYER;
+        }
         maximizationLayer = layer;
     }
 
@@ -360,43 +372,47 @@ public class RootWindow {
 
     public void pack() {
         Component root = getRootContainer();
-        if (root instanceof JFrame)
-            ((JFrame) root).pack();
-        else if (root instanceof JWindow)
-            ((JWindow) root).pack();
-        else if (root instanceof JDialog)
-            ((JDialog) root).pack();
+        if (root instanceof JFrame) {
+            ((Window) root).pack();
+        } else if (root instanceof JWindow) {
+            ((Window) root).pack();
+        } else if (root instanceof JDialog) {
+            ((Window) root).pack();
+        }
     }
 
     public void toFront() {
         Component root = getRootContainer();
-        if (root instanceof JFrame)
-            ((JFrame) root).toFront();
-        else if (root instanceof JWindow)
-            ((JWindow) root).toFront();
-        else if (root instanceof JDialog)
-            ((JDialog) root).toFront();
+        if (root instanceof JFrame) {
+            ((Window) root).toFront();
+        } else if (root instanceof JWindow) {
+            ((Window) root).toFront();
+        } else if (root instanceof JDialog) {
+            ((Window) root).toFront();
+        }
     }
 
     public boolean isActive() {
         Component root = getRootContainer();
-        if (root instanceof JFrame)
-            return ((JFrame) root).isActive();
-        else if (root instanceof JWindow)
-            return ((JWindow) root).isActive();
-        else if (root instanceof JDialog)
-            return ((JDialog) root).isActive();
+        if (root instanceof JFrame) {
+            return ((Window) root).isActive();
+        } else if (root instanceof JWindow) {
+            return ((Window) root).isActive();
+        } else if (root instanceof JDialog) {
+            return ((Window) root).isActive();
+        }
         return false;
     }
 
     public Window getOwner() {
         Component root = getRootContainer();
-        if (root instanceof JFrame)
-            return ((JFrame) root).getOwner();
-        else if (root instanceof JWindow)
-            return ((JWindow) root).getOwner();
-        else if (root instanceof JDialog)
-            return ((JDialog) root).getOwner();
+        if (root instanceof JFrame) {
+            return ((Window) root).getOwner();
+        } else if (root instanceof JWindow) {
+            return ((Window) root).getOwner();
+        } else if (root instanceof JDialog) {
+            return ((Window) root).getOwner();
+        }
         return null;
     }
 
@@ -405,13 +421,15 @@ public class RootWindow {
     }
 
     public void putClientProperty(Object key, Object value) {
-        if (key == null)
+        if (key == null) {
             return;
+        }
 
-        if (value == null)
+        if (value == null) {
             clientProperties.remove(key);
-        else
+        } else {
             clientProperties.put(key, value);
+        }
     }
 
     public Object getClientProperty(Object key) {

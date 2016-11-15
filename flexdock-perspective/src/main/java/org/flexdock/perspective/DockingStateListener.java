@@ -79,8 +79,9 @@ public class DockingStateListener extends DockingListener.Stub {
     }
 
     public void updateState(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
         if(DockingUtility.isEmbedded(dockable)) {
             updateEmbedded(dockable);
@@ -88,8 +89,9 @@ public class DockingStateListener extends DockingListener.Stub {
     }
 
     private void updateEmbedded(Dockable dockable) {
-        if(!dockable.getComponent().isValid())
+        if(!dockable.getComponent().isValid()) {
             return;
+        }
 
         updateCenterPoint(dockable);
         updateDockingPath(dockable);
@@ -152,8 +154,9 @@ public class DockingStateListener extends DockingListener.Stub {
 
         // don't update relative info for tabbed layout, since we
         // technically have more than one relative.
-        if(port.getDockedComponent()!=dockable.getComponent())
+        if(port.getDockedComponent()!=dockable.getComponent()) {
             return;
+        }
 
         Component comp = ((Component)port).getParent();
         // if we're not inside a split pane, then there is no relative

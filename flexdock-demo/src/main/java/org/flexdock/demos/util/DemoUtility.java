@@ -15,10 +15,11 @@ public class DemoUtility {
     }
 
     public static void setCloseOperation(JFrame f) {
-        if (!Boolean.getBoolean("disable.system.exit"))
+        if (!Boolean.getBoolean("disable.system.exit")) {
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        else
+        } else {
             f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        }
     }
 
     /**

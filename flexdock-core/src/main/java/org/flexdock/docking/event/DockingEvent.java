@@ -102,8 +102,9 @@ public class DockingEvent extends Event {
     }
 
     public void setRegion(String region) {
-        if (!DockingManager.isValidDockingRegion(region))
+        if (!DockingManager.isValidDockingRegion(region)) {
             region = UNKNOWN_REGION;
+        }
         this.region = region;
     }
 

@@ -26,8 +26,9 @@ public class DemoBorderManager implements BorderManager {
     }
 
     public void managePortSimpleChild(DockingPort port) {
-        if (port == null || port.getDockedComponent() == null)
+        if (port == null || port.getDockedComponent() == null) {
             return;
+        }
 
         Component docked = port.getDockedComponent();
         setBorder(docked, null);
@@ -35,8 +36,9 @@ public class DemoBorderManager implements BorderManager {
     }
 
     public void managePortSplitChild(DockingPort port) {
-        if (port == null || !(port.getDockedComponent() instanceof JSplitPane))
+        if (port == null || !(port.getDockedComponent() instanceof JSplitPane)) {
             return;
+        }
 
         // clear the borders on the split pane and divider
         JSplitPane split = (JSplitPane)port.getDockedComponent();
@@ -58,13 +60,15 @@ public class DemoBorderManager implements BorderManager {
 
     public void managePortTabbedChild(DockingPort port) {
         setBorder(port, null);
-        if (port == null || !(port.getDockedComponent() instanceof JTabbedPane))
+        if (port == null || !(port.getDockedComponent() instanceof JTabbedPane)) {
             return;
+        }
 
         JTabbedPane tabs = (JTabbedPane) port.getDockedComponent();
         int tc = tabs.getTabCount();
-        for (int i = 0; i < tc; i++)
+        for (int i = 0; i < tc; i++) {
             setBorder(tabs.getComponentAt(i), new TitledBorder(tabs.getTitleAt(i)));
+        }
     }
 
 
@@ -74,26 +78,30 @@ public class DemoBorderManager implements BorderManager {
         if (split.getUI() instanceof BasicSplitPaneUI) {
             //  grab the divider from the UI and remove the border from it
             BasicSplitPaneDivider divider = ((BasicSplitPaneUI) split.getUI()).getDivider();
-            if (divider != null && divider.getBorder() != null)
+            if (divider != null && divider.getBorder() != null) {
                 divider.setBorder(null);
+            }
         }
     }
 
     private void setBorder(DockingPort port, Border border) {
-        if (port instanceof JComponent)
+        if (port instanceof JComponent) {
             ((JComponent) port).setBorder(border);
+        }
     }
 
     private void setBorder(Component cmp, Border border) {
-        if (cmp instanceof JComponent)
+        if (cmp instanceof JComponent) {
             ((JComponent) cmp).setBorder(border);
+        }
     }
 
     // pulls the title out of a DockablePanel to create a titled border.
     // returns the dummy border if a DockablePanel isn't found
     private Border getDesiredBorder(Component cmp) {
-        if (cmp instanceof DefaultDockingPort)
-            cmp = ((DefaultDockingPort) cmp).getDockedComponent();
+        if (cmp instanceof DefaultDockingPort) {
+            cmp = ((DockingPort) cmp).getDockedComponent();
+        }
 
         if (cmp instanceof DockablePanel) {
             String title = ((DockablePanel) cmp).getDockable().getDockingProperties().getDockableDesc();
@@ -104,8 +112,9 @@ public class DemoBorderManager implements BorderManager {
 
     // convenience method for drilling down into a 'potential' docking port
     private Component getDocked(Component c) {
-        if (c instanceof DefaultDockingPort)
-            return ((DefaultDockingPort) c).getDockedComponent();
+        if (c instanceof DefaultDockingPort) {
+            return ((DockingPort) c).getDockedComponent();
+        }
         return c;
     }
 

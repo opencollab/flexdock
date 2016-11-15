@@ -40,45 +40,55 @@ public class SwingUtility {
     }
 
     public static void revalidate(Component comp) {
-        if (comp instanceof JComponent)
-            ((JComponent) comp).revalidate();
+        if (comp instanceof JComponent) {
+            comp.revalidate();
+        }
     }
 
     public static void repaint(Component comp) {
-        if(comp instanceof JComponent)
-            ((JComponent)comp).repaint();
+        if(comp instanceof JComponent) {
+            comp.repaint();
+        }
     }
 
     public static void drawRect(Graphics g, Rectangle r) {
-        if(g==null || r==null)
+        if(g==null || r==null) {
             return;
+        }
 
         g.drawRect(r.x, r.y, r.width, r.height);
     }
 
     public static DockingPort[] getChildPorts(DockingPort port) {
-        if(!(port instanceof DefaultDockingPort))
+        if(!(port instanceof DefaultDockingPort)) {
             return new DockingPort[0];
+        }
 
         DefaultDockingPort parent = (DefaultDockingPort)port;
         Component docked = parent.getDockedComponent();
-        if(!(docked instanceof JSplitPane))
+        if(!(docked instanceof JSplitPane)) {
             return new DockingPort[0];
+        }
 
         JSplitPane split = (JSplitPane)docked;
         DockingPort left = null;
         DockingPort right = null;
-        if(split.getLeftComponent() instanceof DockingPort)
+        if(split.getLeftComponent() instanceof DockingPort) {
             left = (DockingPort)split.getLeftComponent();
-        if(split.getRightComponent() instanceof DockingPort)
+        }
+        if(split.getRightComponent() instanceof DockingPort) {
             right = (DockingPort)split.getRightComponent();
+        }
 
-        if(left==null && right==null)
+        if(left==null && right==null) {
             return new DockingPort[0];
-        if(left==null)
+        }
+        if(left==null) {
             return new DockingPort[] {right};
-        if(right==null)
+        }
+        if(right==null) {
             return new DockingPort[] {left};
+        }
         return new DockingPort[] {left, right};
 
     }
@@ -88,13 +98,15 @@ public class SwingUtility {
     }
 
     public static Point[] getPoints(Rectangle rect, Component convertFromScreen) {
-        if(rect==null)
+        if(rect==null) {
             return null;
+        }
 
         Rectangle r = (Rectangle)rect.clone();
         Point p = r.getLocation();
-        if(convertFromScreen!=null)
+        if(convertFromScreen!=null) {
             SwingUtilities.convertPointFromScreen(p, convertFromScreen);
+        }
 
         r.setLocation(p);
 
@@ -110,11 +122,13 @@ public class SwingUtility {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension windowSize = window.getSize();
 
-        if (windowSize.height > screenSize.height)
+        if (windowSize.height > screenSize.height) {
             windowSize.height = screenSize.height;
+        }
 
-        if (windowSize.width > screenSize.width)
+        if (windowSize.width > screenSize.width) {
             windowSize.width = screenSize.width;
+        }
 
         window.setLocation((screenSize.width - windowSize.width) / 2,
                            (screenSize.height - windowSize.height) / 2);
@@ -135,15 +149,17 @@ public class SwingUtility {
 
         // does it fit on screen?
 
-        if (x < 0)
+        if (x < 0) {
             x = 0;
-        else if (x + w > screenSize.getWidth())
+        } else if (x + w > screenSize.getWidth()) {
             x = ((int) screenSize.getWidth()) - w;
+        }
 
-        if (y < 0)
+        if (y < 0) {
             y = 0;
-        else if (y + h > screenSize.getHeight())
+        } else if (y + h > screenSize.getHeight()) {
             y = ((int) screenSize.getHeight()) - h;
+        }
 
         // done
 
@@ -151,7 +167,7 @@ public class SwingUtility {
     }
 
     public static Container getContentPane(Component c) {
-        RootWindow rootWin = RootWindow.getRootContainer((Component)c);
+        RootWindow rootWin = RootWindow.getRootContainer(c);
         return rootWin==null? null: rootWin.getContentPane();
     }
 
@@ -161,8 +177,9 @@ public class SwingUtility {
     }
 
     public static void setPlaf(String lookAndFeelClassName) {
-        if(loadSkinLF(lookAndFeelClassName))
+        if(loadSkinLF(lookAndFeelClassName)) {
             return;
+        }
 
         try {
             UIManager.setLookAndFeel(lookAndFeelClassName);
@@ -173,8 +190,9 @@ public class SwingUtility {
     }
 
     private static boolean loadSkinLF(String themePack) {
-        if(themePack==null || !themePack.endsWith(".zip") || !isSkinLFInstalled())
+        if(themePack==null || !themePack.endsWith(".zip") || !isSkinLFInstalled()) {
             return false;
+        }
 
         try {
             Skin skin = SkinLookAndFeel.loadThemePack(ResourceManager.getResource(themePack));
@@ -203,8 +221,9 @@ public class SwingUtility {
     }
 
     public static void translate(Component src, Polygon poly, Component dest) {
-        if(src==null || poly==null || dest==null)
+        if(src==null || poly==null || dest==null) {
             return;
+        }
 
         Rectangle srcRect = src.getBounds();
         srcRect.setLocation(0, 0);
@@ -223,8 +242,9 @@ public class SwingUtility {
 
     public static void focus(final Component c) {
         RootWindow window = RootWindow.getRootContainer(c);
-        if(window==null)
+        if(window==null) {
             return;
+        }
 
         Component root = window.getRootContainer();
         Component comp = c;
@@ -249,31 +269,36 @@ public class SwingUtility {
     }
 
     public static Component getNearestFocusableComponent(Component c, Container desiredRoot) {
-        if(c==null)
+        if(c==null) {
             c = desiredRoot;
-        if(c==null)
+        }
+        if(c==null) {
             c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        }
 
         boolean cachedFocusCycleRoot = false;
         // make the desiredRoot into a focusCycleRoot
         if(desiredRoot!=null) {
             cachedFocusCycleRoot = desiredRoot.isFocusCycleRoot();
-            if(!cachedFocusCycleRoot)
+            if(!cachedFocusCycleRoot) {
                 desiredRoot.setFocusCycleRoot(true);
+            }
         }
 
         Container focusRoot = null;
         if(c instanceof Container) {
             Container cnt = (Container)c;
             focusRoot = cnt.isFocusCycleRoot(cnt)? cnt: cnt.getFocusCycleRootAncestor();
-        } else
+        } else {
             focusRoot = c.getFocusCycleRootAncestor();
+        }
 
         Component focuser = null;
-        if (focusRoot != null)
+        if (focusRoot != null) {
             //zw, remarked - selected component should become focused
             //focuser = focusRoot.getFocusTraversalPolicy().getLastComponent(focusRoot);
             focuser = c; //zw, added - selected component should become focused
+        }
 
         // restore the desiredRoot to its previous state
         if(desiredRoot!=null && !cachedFocusCycleRoot) {
@@ -284,8 +309,9 @@ public class SwingUtility {
 
     public static void activateWindow(Component c) {
         RootWindow window = RootWindow.getRootContainer(c);
-        if(window!=null && !window.isActive())
+        if(window!=null && !window.isActive()) {
             window.toFront();
+        }
     }
 
     /* Color utility */
@@ -342,8 +368,9 @@ public class SwingUtility {
     }
 
     public static BufferedImage createImage(Component comp) {
-        if(comp==null)
+        if(comp==null) {
             return null;
+        }
 
         BufferedImage image = (BufferedImage)comp.createImage(comp.getWidth(), comp.getHeight());
         Graphics g = image.createGraphics();
@@ -352,21 +379,24 @@ public class SwingUtility {
     }
 
     public static float getDividerProportion(JSplitPane splitPane) {
-        if(splitPane==null)
+        if(splitPane==null) {
             return 0;
+        }
 
         int size = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? splitPane.getWidth(): splitPane.getHeight();
         int divLoc = splitPane.getDividerLocation();
-        return size==0? 0: (float)divLoc/((float)size - splitPane.getDividerSize());
+        return size==0? 0: divLoc/((float)size - splitPane.getDividerSize());
     }
 
     public static Component getOtherComponent(JSplitPane split, Component current) {
-        if(split==null || current==null)
+        if(split==null || current==null) {
             return null;
+        }
 
         Component other = split.getLeftComponent();
-        if(other==current)
+        if(other==current) {
             other = split.getRightComponent();
+        }
         return other;
     }
 
@@ -396,8 +426,9 @@ public class SwingUtility {
     }
 
     public static int getSplitPaneSize(JSplitPane splitPane) {
-        if(splitPane==null)
+        if(splitPane==null) {
             return 0;
+        }
 
         boolean horiz = splitPane.getOrientation()==JSplitPane.HORIZONTAL_SPLIT? true: false;
         return horiz? splitPane.getWidth(): splitPane.getHeight();
@@ -427,8 +458,9 @@ public class SwingUtility {
      * @see JSplitPane#setDividerLocation(double)
      */
     public static void setSplitDivider(final JSplitPane split, float proportion) {
-        if(split==null)
+        if(split==null) {
             return;
+        }
 
         proportion = Math.max(0f, proportion);
         final float percent = Math.min(1f, proportion);
@@ -513,7 +545,7 @@ public class SwingUtility {
 
     private static Component getFirstComponent(Component c, int direction) {
 	while (c instanceof DefaultDockingPort) {
-	    c = ((DefaultDockingPort) c).getDockedComponent();
+	    c = ((DockingPort) c).getDockedComponent();
 	    if (c instanceof DockingSplitPane) {
 		DockingSplitPane pane = (DockingSplitPane) c;
 		c = direction > 0 ? pane.getLeftComponent() : pane.getRightComponent();

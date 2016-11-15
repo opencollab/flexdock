@@ -122,8 +122,9 @@ public class SiblingTest extends JFrame implements DockingConstants {
             public void actionPerformed(ActionEvent ae) {
 
                 JDialog dialog = getSiblingTestDialog();
-                if(dialog.isVisible())
+                if(dialog.isVisible()) {
                     return;
+                }
 
                 dialog.setVisible(true);
                 dialog.pack();
@@ -157,8 +158,9 @@ public class SiblingTest extends JFrame implements DockingConstants {
         }
 
         private JComboBox getDockableList() {
-            if (dockableList != null)
+            if (dockableList != null) {
                 return dockableList;
+            }
 
             ArrayList list = new ArrayList(DockingManager.getDockableIds());
             Collections.sort(list);
@@ -168,8 +170,9 @@ public class SiblingTest extends JFrame implements DockingConstants {
         }
 
         private JComboBox getRegionList() {
-            if (regionList != null)
+            if (regionList != null) {
                 return regionList;
+            }
 
             String[] regions = { NORTH_REGION, SOUTH_REGION, EAST_REGION, WEST_REGION };
             regionList = new JComboBox(regions);
@@ -177,8 +180,9 @@ public class SiblingTest extends JFrame implements DockingConstants {
         }
 
         private JLabel getSiblingLabel() {
-            if(siblingLabel==null)
+            if(siblingLabel==null) {
                 siblingLabel = new JLabel();
+            }
             return siblingLabel;
         }
 

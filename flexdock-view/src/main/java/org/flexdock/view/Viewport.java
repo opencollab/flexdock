@@ -53,22 +53,26 @@ public class Viewport extends DefaultDockingPort implements DockingConstants {
         // if we're already blocked, then no need to interrogate
         // the components in this dockingport
         boolean blocked = !super.isDockingAllowed(comp, region);
-        if(blocked)
+        if(blocked) {
             return false;
+        }
 
         // check to see if the region itself has been blocked for some reason
-        if(blockedRegions.contains(region))
+        if(blockedRegions.contains(region)) {
             return false;
+        }
 
         // by default, allow docking in non-CENTER regions
-        if(!CENTER_REGION.equals(region))
+        if(!CENTER_REGION.equals(region)) {
             return true;
+        }
 
         // allow docking in the CENTER if there's nothing already there,
         // or if there's no Dockable associated with the component there
         Dockable dockable = getCenterDockable();
-        if(dockable==null)
+        if(dockable==null) {
             return true;
+        }
 
         // otherwise, only allow docking in the CENTER if the dockable
         // doesn't mind

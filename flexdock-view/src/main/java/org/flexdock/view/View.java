@@ -225,9 +225,10 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public View(String persistentId, String title, String tabText) {
-        if (persistentId == null)
+        if (persistentId == null) {
             throw new IllegalArgumentException(
-                "The 'persistentId' parameter cannot be null.");
+                    "The 'persistentId' parameter cannot be null.");
+        }
 
         this.persistentId = persistentId;
 
@@ -240,12 +241,14 @@ public class View extends JComponent implements Dockable, DockingConstants {
         setLayout(createLayout());
         setContentPaneCheckingEnabled(true);
 
-        if (title == null)
+        if (title == null) {
             title = "";
+        }
         setTitle(title);
 
-        if (tabText == null)
+        if (tabText == null) {
             tabText = title;
+        }
         setTabText(tabText);
 
         addHierarchyListener(new HierarchyListener() {
@@ -315,23 +318,27 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public void addAction(Action action) {
-        if (titlepane != null)
+        if (titlepane != null) {
             titlepane.addAction(action);
+        }
     }
 
     public void addAction(String action) {
-        if (titlepane != null)
+        if (titlepane != null) {
             titlepane.addAction(action);
+        }
     }
 
     public void removeActions() {
-        if (titlepane != null)
+        if (titlepane != null) {
             titlepane.removeAllActions();
+        }
     }
 
     public void setIcon(Icon icon) {
-        if (titlepane != null)
+        if (titlepane != null) {
             titlepane.setIcon(icon);
+        }
     }
 
     public void setIcon(String imgUri) {
@@ -351,12 +358,14 @@ public class View extends JComponent implements Dockable, DockingConstants {
      * @see #getTitlePane()
      */
     public void setContentPane(Container c) throws IllegalArgumentException {
-        if (c == null)
+        if (c == null) {
             throw new IllegalArgumentException(
-                "Unable to set a null content pane.");
-        if (c == titlepane)
+                    "Unable to set a null content pane.");
+        }
+        if (c == titlepane) {
             throw new IllegalArgumentException(
-                "Cannot use the same component as both content pane and titlebar.");
+                    "Cannot use the same component as both content pane and titlebar.");
+        }
 
         if (contentPane != null) {
             remove(contentPane);
@@ -442,8 +451,9 @@ public class View extends JComponent implements Dockable, DockingConstants {
      * {@inheritDoc}
      */
     protected void addImpl(Component comp, Object constraints, int index) {
-        if (comp instanceof Titlebar)
+        if (comp instanceof Titlebar) {
             ((Titlebar) comp).setView(this);
+        }
 
         if (isContentPaneCheckingEnabled()) {
             getContentPane().add(comp, constraints, index);
@@ -573,8 +583,9 @@ public class View extends JComponent implements Dockable, DockingConstants {
 
     public void dockingComplete(DockingEvent evt) {
         setActionBlocked(DockingConstants.PIN_ACTION, isFloating());
-        if (titlepane != null)
+        if (titlepane != null) {
             titlepane.revalidate();
+        }
     }
 
     public void dragStarted(DockingEvent evt) {
@@ -591,8 +602,9 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     private void clearButtonRollovers() {
-        if (titlepane == null)
+        if (titlepane == null) {
             return;
+        }
 
         Component[] comps = titlepane.getComponents();
         for (int i = 0; i < comps.length; i++) {
@@ -605,15 +617,17 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public void setActionBlocked(String actionName, boolean blocked) {
-        if (actionName == null)
+        if (actionName == null) {
             return;
+        }
 
         Set actions = getBlockedActions();
-        if (blocked)
+        if (blocked) {
             actions.add(actionName);
-        else {
-            if (actions != null)
+        } else {
+            if (actions != null) {
                 actions.remove(actionName);
+            }
         }
     }
 
@@ -623,8 +637,9 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     private HashSet getBlockedActions() {
-        if (blockedActions == null)
+        if (blockedActions == null) {
             blockedActions = new HashSet(1);
+        }
         return blockedActions;
     }
 

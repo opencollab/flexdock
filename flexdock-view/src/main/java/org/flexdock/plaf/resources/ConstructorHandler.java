@@ -35,8 +35,9 @@ public class ConstructorHandler extends ResourceHandler {
         String[] supplied = parseArguments(data);
         Object[] arguments = new Object[supplied.length];
         Class[] paramTypes = constructor.getParameterTypes();
-        if(arguments.length!=paramTypes.length)
+        if(arguments.length!=paramTypes.length) {
             throw new IllegalArgumentException("Cannot match '" + data + "' to constructor " + constructor + ".");
+        }
 
         for(int i=0; i<paramTypes.length; i++) {
             arguments[i] = toObject(supplied[i], paramTypes[i]);
@@ -45,27 +46,35 @@ public class ConstructorHandler extends ResourceHandler {
     }
 
     private Object toObject(String data, Class type) {
-        if(type==int.class)
+        if(type==int.class) {
             return new Integer(data);
-        if(type==long.class)
+        }
+        if(type==long.class) {
             return new Long(data);
-        if(type==boolean.class)
+        }
+        if(type==boolean.class) {
             return new Boolean(data);
-        if(type==float.class)
+        }
+        if(type==float.class) {
             return new Float(data);
-        if(type==double.class)
+        }
+        if(type==double.class) {
             return new Double(data);
-        if(type==byte.class)
+        }
+        if(type==byte.class) {
             return new Byte(data);
-        if(type==short.class)
+        }
+        if(type==short.class) {
             return new Short(data);
+        }
 
         return data;
     }
 
     private String[] parseArguments(String data) {
-        if(!data.endsWith(","))
+        if(!data.endsWith(",")) {
             data += ",";
+        }
 
         ArrayList args = new ArrayList();
         StringTokenizer st = new StringTokenizer(data, ",");

@@ -30,15 +30,17 @@ public abstract class EventHandler {
 
     public void addListener(EventListener listener) {
         synchronized (globalListeners) {
-            if (listener != null)
+            if (listener != null) {
                 globalListeners.add(listener);
+            }
         }
     }
 
     public void removeListener(EventListener listener) {
         synchronized (globalListeners) {
-            if (listener != null)
+            if (listener != null) {
                 globalListeners.remove(listener);
+            }
         }
     }
 
@@ -54,8 +56,9 @@ public abstract class EventHandler {
      *            the local listeners to pass the event to.
      */
     public void handleEvent(Event evt, Object[] targets) {
-        if (evt == null)
+        if (evt == null) {
             return;
+        }
 
         int evtType = evt.getEventType();
 
@@ -67,8 +70,9 @@ public abstract class EventHandler {
 
         // if there were no specified targets for the event, then we can quit
         // now
-        if (targets == null)
+        if (targets == null) {
             return;
+        }
 
         // for each of the targets, get their local event listeners
         // and dispatch the event to them
@@ -76,8 +80,9 @@ public abstract class EventHandler {
             // get the local event listeners
             EventListener[] targetListeners = targets[i] == null ? null
                                               : getListeners(targets[i]);
-            if (targetListeners == null)
+            if (targetListeners == null) {
                 continue;
+            }
 
             // for each local event listener, dispatch the event
             for (int j = 0; j < targetListeners.length; j++) {

@@ -33,12 +33,14 @@ public class InsetBorder extends CompoundEmptyBorder {
     }
 
     public static InsetBorder createBorder(Border border, boolean inner, Insets base) {
-        if(base==null)
+        if(base==null) {
             base = new Insets(0, 0, 0, 0);
+        }
 
         MutableEmptyBorder empty = new MutableEmptyBorder(base.top, base.left, base.bottom, base.right);
-        if(inner)
+        if(inner) {
             return new InsetBorder(border, empty, inner);
+        }
         return new InsetBorder(empty, border, inner);
     }
 

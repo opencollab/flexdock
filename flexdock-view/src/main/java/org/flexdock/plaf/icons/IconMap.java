@@ -21,8 +21,9 @@ public class IconMap extends HashMap {
     }
 
     public void addAll(IconMap map) {
-        if(map!=null)
+        if(map!=null) {
             super.putAll(map);
+        }
     }
 
     public IconResource getIcons(String key) {
@@ -30,7 +31,8 @@ public class IconMap extends HashMap {
     }
 
     public void addIcons(String key, IconResource icons) {
-        if(key!=null && icons!=null)
+        if(key!=null && icons!=null) {
             super.put(key, icons);
+        }
     }
 }

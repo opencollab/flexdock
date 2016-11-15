@@ -29,8 +29,9 @@ public class GhostPreview extends DefaultPreview {
     public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo) {
         // create the standard preview polygon
         Polygon polygon = super.createPreviewPolygon(dockable, port, hover, targetRegion, paintingTarget, dragInfo);
-        if(polygon==null)
+        if(polygon==null) {
             return null;
+        }
 
         // check to see if the current polygon bounds differ from the
         // last time we calculated them.
@@ -61,8 +62,9 @@ public class GhostPreview extends DefaultPreview {
     public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {
         // grab the preview image created in createPreviewPolygon()
         BufferedImage image = (BufferedImage)dragInfo.get(PREVIEW_IMG);
-        if(image==null)
+        if(image==null) {
             return;
+        }
 
         // create a solid preview outline
         Rectangle bounds = poly.getBounds();
@@ -77,8 +79,9 @@ public class GhostPreview extends DefaultPreview {
     }
 
     protected Rectangle createTabbedPaneRect(DockingPort port, Component hover) {
-        if(hover!=null)
+        if(hover!=null) {
             return hover.getBounds();
+        }
         return super.createTabbedPaneRect(port, hover);
     }
 }

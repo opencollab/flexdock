@@ -59,8 +59,9 @@ public class AlphaPreview extends DefaultPreview {
     }
 
     public void setPreviewColor(Color color) {
-        if(!immutable)
+        if(!immutable) {
             previewColor = color==null? DEFAULT_COLOR: color;
+        }
     }
 
     public void setAlpha(float alpha) {
@@ -72,8 +73,9 @@ public class AlphaPreview extends DefaultPreview {
     }
 
     public void setBorderColor(Color color) {
-        if(!immutable)
+        if(!immutable) {
             borderColor = color==null? DEFAULT_BORDER: color;
+        }
     }
 
     public void drawPreview(Graphics2D g, Polygon p, Dockable dockable, Map dragInfo) {

@@ -64,8 +64,9 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
 
     public void eventDispatched(AWTEvent event) {
         //catch all mousePressed events
-        if(event.getID()!=MouseEvent.MOUSE_PRESSED)
+        if(event.getID()!=MouseEvent.MOUSE_PRESSED) {
             return;
+        }
 
         MouseEvent evt = (MouseEvent)event;
 
@@ -88,17 +89,19 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
 
     public void propertyChange(PropertyChangeEvent evt) {
         String pName = evt.getPropertyName();
-        if(!PROP_EVENTS.contains(pName))
+        if(!PROP_EVENTS.contains(pName)) {
             return;
+        }
 
         Component oldVal = SwingUtility.toComponent(evt.getOldValue());
         Component newVal = SwingUtility.toComponent(evt.getNewValue());
         boolean switchTo = newVal!=null;
 
-        if(ACTIVE_WINDOW.equals(pName))
+        if(ACTIVE_WINDOW.equals(pName)) {
             handleWindowChange(evt, oldVal, newVal, switchTo);
-        else
+        } else {
             handleFocusChange(evt, oldVal, newVal, switchTo);
+        }
     }
 
     private void handleWindowChange(PropertyChangeEvent evt, Component oldVal, Component newVal, boolean activate) {
@@ -107,23 +110,27 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
 
         Component srcComponent = activate? newVal: oldVal;
         ActiveDockableTracker tracker = ActiveDockableTracker.getTracker(srcComponent);
-        if(tracker!=null)
+        if(tracker!=null) {
             tracker.setActive(activate);
+        }
     }
 
     private void handleFocusChange(PropertyChangeEvent evt, Component oldVal, Component newVal, boolean switchTo) {
-        if(!switchTo)
+        if(!switchTo) {
             return;
+        }
 
-        if(newVal instanceof JTabbedPane)
+        if(newVal instanceof JTabbedPane) {
             newVal = ((JTabbedPane)newVal).getSelectedComponent();
+        }
         activateComponent(newVal);
     }
 
     private void activateComponent(Component c) {
         Dockable dockable = DockingUtility.getAncestorDockable(c);
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
         ActiveDockableTracker tracker = ActiveDockableTracker.getTracker(dockable.getComponent());
         if(tracker!=null) {
@@ -148,8 +155,9 @@ public class ActiveDockableListener implements DockingConstants, PropertyChangeL
     private void udpateTabChangeFocus(final Dockable dockable) {
         KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         Dockable focusParent = DockingUtility.getAncestorDockable(mgr.getFocusOwner());
-        if(focusParent==null || focusParent==dockable)
+        if(focusParent==null || focusParent==dockable) {
             return;
+        }
 
         // the current focusParent-dockable is different than the currently active dockable.
         // we'll need to update the focus component

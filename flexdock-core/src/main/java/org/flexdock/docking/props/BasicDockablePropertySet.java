@@ -23,40 +23,53 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
     private PropertyChangeSupport changeSupport;
 
     public static String getRegionInsetKey(String region) {
-        if(NORTH_REGION.equals(region))
+        if(NORTH_REGION.equals(region)) {
             return REGION_SIZE_NORTH;
-        if(SOUTH_REGION.equals(region))
+        }
+        if(SOUTH_REGION.equals(region)) {
             return REGION_SIZE_SOUTH;
-        if(EAST_REGION.equals(region))
+        }
+        if(EAST_REGION.equals(region)) {
             return REGION_SIZE_EAST;
-        if(WEST_REGION.equals(region))
+        }
+        if(WEST_REGION.equals(region)) {
             return REGION_SIZE_WEST;
+        }
         return null;
     }
 
     public static String getSiblingSizeKey(String region) {
-        if(NORTH_REGION.equals(region))
+        if(NORTH_REGION.equals(region)) {
             return SIBLING_SIZE_NORTH;
-        if(SOUTH_REGION.equals(region))
+        }
+        if(SOUTH_REGION.equals(region)) {
             return SIBLING_SIZE_SOUTH;
-        if(EAST_REGION.equals(region))
+        }
+        if(EAST_REGION.equals(region)) {
             return SIBLING_SIZE_EAST;
-        if(WEST_REGION.equals(region))
+        }
+        if(WEST_REGION.equals(region)) {
             return SIBLING_SIZE_WEST;
+        }
         return null;
     }
 
     public static String getTerritoryBlockedKey(String region) {
-        if(NORTH_REGION.equals(region))
+        if(NORTH_REGION.equals(region)) {
             return TERRITORY_BLOCKED_NORTH;
-        if(SOUTH_REGION.equals(region))
+        }
+        if(SOUTH_REGION.equals(region)) {
             return TERRITORY_BLOCKED_SOUTH;
-        if(EAST_REGION.equals(region))
+        }
+        if(EAST_REGION.equals(region)) {
             return TERRITORY_BLOCKED_EAST;
-        if(WEST_REGION.equals(region))
+        }
+        if(WEST_REGION.equals(region)) {
             return TERRITORY_BLOCKED_WEST;
-        if(CENTER_REGION.equals(region))
+        }
+        if(CENTER_REGION.equals(region)) {
             return TERRITORY_BLOCKED_CENTER;
+        }
         return null;
     }
 
@@ -82,7 +95,7 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 
     private void init(Dockable dockable) {
         this.dockingId = dockable==null? null: dockable.getPersistentId();
-        Object changeSrc = dockable==null? (Object)this: dockable;
+        Object changeSrc = dockable==null? this: dockable;
         changeSupport = new PropertyChangeSupport(changeSrc);
     }
 
@@ -183,8 +196,9 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
 
     public void setActive(boolean active) {
         Boolean oldValue = isActive();
-        if(oldValue==null)
+        if(oldValue==null) {
             oldValue = Boolean.FALSE;
+        }
 
         put(ACTIVE, active);
         firePropertyChange(ACTIVE, oldValue.booleanValue(), active);
@@ -246,17 +260,20 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
     }
 
     protected void firePropertyChange(String property, Object oldValue, Object newValue) {
-        if(Utilities.isChanged(oldValue, newValue))
+        if(Utilities.isChanged(oldValue, newValue)) {
             changeSupport.firePropertyChange(property, oldValue, newValue);
+        }
     }
 
     protected void firePropertyChange(String property, int oldValue, int newValue) {
-        if(oldValue!=newValue)
+        if(oldValue!=newValue) {
             changeSupport.firePropertyChange(property, oldValue, newValue);
+        }
     }
 
     protected void firePropertyChange(String property, boolean oldValue, boolean newValue) {
-        if(oldValue!=newValue)
+        if(oldValue!=newValue) {
             changeSupport.firePropertyChange(property, oldValue, newValue);
+        }
     }
 }

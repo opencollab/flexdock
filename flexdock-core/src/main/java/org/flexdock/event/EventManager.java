@@ -76,20 +76,23 @@ public class EventManager {
 
 
     public void addEventHandler(EventHandler handler) {
-        if(handler!=null)
+        if(handler!=null) {
             handlers.push(handler);
+        }
     }
 
     public void removeEventHandler(EventHandler handler) {
-        if(handler!=null)
+        if(handler!=null) {
             handlers.remove(handler);
+        }
     }
 
     private EventHandler getHandler(Event evt) {
         for(Iterator it=handlers.iterator(); it.hasNext();) {
             EventHandler handler = (EventHandler)it.next();
-            if(handler.acceptsEvent(evt))
+            if(handler.acceptsEvent(evt)) {
                 return handler;
+            }
         }
         return null;
     }
@@ -97,22 +100,25 @@ public class EventManager {
     private EventHandler getHandler(EventListener listener) {
         for(Iterator it=handlers.iterator(); it.hasNext();) {
             EventHandler handler = (EventHandler)it.next();
-            if(handler.acceptsListener(listener))
+            if(handler.acceptsListener(listener)) {
                 return handler;
+            }
         }
         return null;
     }
 
     public void addEventListener(EventListener listener) {
         EventHandler handler = listener==null? null: getHandler(listener);
-        if(handler!=null)
+        if(handler!=null) {
             handler.addListener(listener);
+        }
     }
 
     public void removeEventListener(EventListener listener) {
         EventHandler handler = listener==null? null: getHandler(listener);
-        if(handler!=null)
+        if(handler!=null) {
             handler.removeListener(listener);
+        }
     }
 
 
@@ -134,7 +140,8 @@ public class EventManager {
 
     public void dispatchEvent(Event evt, Object[] targets) {
         EventHandler handler = evt==null? null: getHandler(evt);
-        if(handler!=null)
+        if(handler!=null) {
             handler.handleEvent(evt, targets);
+        }
     }
 }

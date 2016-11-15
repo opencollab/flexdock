@@ -43,16 +43,18 @@ public class RootDockingPortInfo {
     }
 
     public synchronized void add(DockingPort port) {
-        if(containsPortId(port))
+        if(containsPortId(port)) {
             return;
+        }
 
         portsById.put(port.getPersistentId(), port);
         rootPorts.add(port);
     }
 
     public synchronized void remove(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return;
+        }
 
         String key = port.getPersistentId();
         if(!contains(key)) {
@@ -67,8 +69,9 @@ public class RootDockingPortInfo {
             }
         }
 
-        if(key!=null)
+        if(key!=null) {
             portsById.remove(key);
+        }
         rootPorts.remove(port);
     }
 

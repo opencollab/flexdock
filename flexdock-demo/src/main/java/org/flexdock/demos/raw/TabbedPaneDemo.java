@@ -93,14 +93,18 @@ public class TabbedPaneDemo extends JPanel implements DockingConstants {
     }
 
     private static int getTabPosition(String desc) {
-        if ("North".equals(desc))
+        if ("North".equals(desc)) {
             return JTabbedPane.TOP;
-        if ("South".equals(desc))
+        }
+        if ("South".equals(desc)) {
             return JTabbedPane.BOTTOM;
-        if ("East".equals(desc))
+        }
+        if ("East".equals(desc)) {
             return JTabbedPane.RIGHT;
-        if ("West".equals(desc))
+        }
+        if ("West".equals(desc)) {
             return JTabbedPane.LEFT;
+        }
         return JTabbedPane.TOP;
     }
 

@@ -90,8 +90,9 @@ public class DockbarManager {
     }
 
     public static DockbarManager getInstance(RootWindow window) {
-        if(window==null)
+        if(window==null) {
             return null;
+        }
 
         // DockingFrames should not be allowed to contain dockbars.
         // This may change in the future, but for now if our window is a
@@ -111,8 +112,9 @@ public class DockbarManager {
             mgr.install();
         }
 
-        if(currentManager==null)
+        if(currentManager==null) {
             currentManager = mgr;
+        }
 
         return mgr;
     }
@@ -127,8 +129,9 @@ public class DockbarManager {
      * @see DockbarManager#setDockbarManager(String)
      */
     private static DockbarManager createDockbarManager(RootWindow window) {
-        if (dockbarManagerClassName == null)
+        if (dockbarManagerClassName == null) {
             return new DockbarManager(window);
+        }
 
         DockbarManager mgr = null;
         try {
@@ -152,14 +155,16 @@ public class DockbarManager {
     }
 
     public static DockbarManager getCurrent(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         synchronized(MANAGERS_BY_WINDOW) {
             for(Iterator it=MANAGERS_BY_WINDOW.values().iterator(); it.hasNext();) {
                 DockbarManager mgr = (DockbarManager)it.next();
-                if(mgr.isOwner(dockable))
+                if(mgr.isOwner(dockable)) {
                     return mgr;
+                }
             }
         }
         return null;
@@ -183,16 +188,19 @@ public class DockbarManager {
     }
 
     public static void activate(Dockable dockable, boolean locked) {
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
         DockbarManager mgr = getCurrent(dockable);
-        if(mgr==null || !mgr.contains(dockable))
+        if(mgr==null || !mgr.contains(dockable)) {
             return;
+        }
 
         mgr.setActiveDockable(dockable);
-        if(locked)
+        if(locked) {
             mgr.getActivationListener().lockViewpane();
+        }
     }
 
 
@@ -233,8 +241,9 @@ public class DockbarManager {
 
     protected void install() {
         RootWindow window = getWindow();
-        if(window==null)
+        if(window==null) {
             return;
+        }
 
         JLayeredPane layerPane = window.getLayeredPane();
         boolean changed = install(leftBar, layerPane);
@@ -245,8 +254,9 @@ public class DockbarManager {
         if(changed) {
             layerPane.addComponentListener(new ComponentAdapter() {
                 public void componentResized(ComponentEvent evt) {
-                    if(evt.getSource() instanceof JLayeredPane)
+                    if(evt.getSource() instanceof JLayeredPane) {
                         revalidate();
+                    }
                 }
             });
         }
@@ -255,8 +265,9 @@ public class DockbarManager {
 
     private boolean install(Component c, JLayeredPane layerPane) {
         if(c.getParent()!=layerPane) {
-            if(c.getParent()!=null)
+            if(c.getParent()!=null) {
                 c.getParent().remove(c);
+            }
             layerPane.add(c, DOCKBAR_LAYER);
             return true;
         }
@@ -317,8 +328,9 @@ public class DockbarManager {
 
     private int findDockbarEdge(Dockable dockable) {
         RootWindow window = RootWindow.getRootContainer(dockable.getComponent());
-        if(window==null)
+        if(window==null) {
             return DEFAULT_EDGE;
+        }
 
         // get the dockable component and it's containing content pane
         Component cmp = dockable.getComponent();
@@ -363,25 +375,32 @@ public class DockbarManager {
     public int getEdge(Dockable dockable) {
         Dockbar dockbar = getDockbar(dockable);
 
-        if(dockbar==leftBar)
+        if(dockbar==leftBar) {
             return MinimizationManager.LEFT;
-        if(dockbar==rightBar)
+        }
+        if(dockbar==rightBar) {
             return MinimizationManager.RIGHT;
-        if(dockbar==bottomBar)
+        }
+        if(dockbar==bottomBar) {
             return MinimizationManager.BOTTOM;
+        }
         return MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT;
     }
 
     public Dockbar getDockbar(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
-        if(leftBar.contains(dockable))
+        if(leftBar.contains(dockable)) {
             return leftBar;
-        if(rightBar.contains(dockable))
+        }
+        if(rightBar.contains(dockable)) {
             return rightBar;
-        if(bottomBar.contains(dockable))
+        }
+        if(bottomBar.contains(dockable)) {
             return bottomBar;
+        }
         return null;
     }
 
@@ -403,8 +422,9 @@ public class DockbarManager {
 
 
     public void minimize(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
         int edge = DEFAULT_EDGE;
         RootWindow window = getWindow();
@@ -416,11 +436,13 @@ public class DockbarManager {
     }
 
     public void minimize(Dockable dockable, int edge) {
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
-        if(isDockingCancelled(dockable, edge))
+        if(isDockingCancelled(dockable, edge)) {
             return;
+        }
 
         // install the dockable
         edge = Dockbar.getValidOrientation(edge);
@@ -436,12 +458,14 @@ public class DockbarManager {
 
     public void reAdd(Dockable dockable) {
         // can't re-add if the dockable is null, or we already contain it
-        if(dockable==null || contains(dockable))
+        if(dockable==null || contains(dockable)) {
             return;
+        }
 
         Integer edge = (Integer)dockables.get(dockable.getPersistentId());
-        if(edge!=null)
+        if(edge!=null) {
             install(dockable, edge.intValue());
+        }
     }
 
     private void install(Dockable dockable, int edge) {
@@ -491,15 +515,18 @@ public class DockbarManager {
     }
 
     public boolean remove(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return false;
+        }
 
-        if(getActiveDockable()==dockable)
+        if(getActiveDockable()==dockable) {
             setActiveDockable((Dockable)null);
+        }
 
         Dockbar dockbar = getDockbar(dockable);
-        if(dockbar==null)
+        if(dockbar==null) {
             return false;
+        }
 
         dockbar.undock(dockable);
         // restore drag capability to the dockable after removing
@@ -571,8 +598,9 @@ public class DockbarManager {
         // we cannot activate the specified dockable.  instead, set the
         // active dockable to null
         final int newEdge = getEdge(dockable);
-        if(newEdge==MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT)
+        if(newEdge==MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT) {
             dockable = null;
+        }
 
         // check for dockable changes
         Dockable oldDockable = getActiveDockable();

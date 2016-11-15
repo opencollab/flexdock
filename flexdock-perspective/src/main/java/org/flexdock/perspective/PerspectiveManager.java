@@ -122,34 +122,42 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public void add(Perspective perspective, boolean isDefault) {
-        if (perspective == null) throw new NullPointerException("perspective cannot be null");
+        if (perspective == null) {
+            throw new NullPointerException("perspective cannot be null");
+        }
 
         m_perspectives.put(perspective.getPersistentId(), perspective);
-        if(isDefault)
+        if(isDefault) {
             setDefaultPerspective(perspective.getPersistentId());
+        }
 
         EventManager.dispatch(new RegistrationEvent(perspective, this, true));
     }
 
     public void remove(String perspectiveId) {
-        if (perspectiveId == null) throw new NullPointerException("perspectiveId cannot be null");
+        if (perspectiveId == null) {
+            throw new NullPointerException("perspectiveId cannot be null");
+        }
 
         Perspective perspective = getPerspective(perspectiveId);
-        if (perspective == null)
+        if (perspective == null) {
             return;
+        }
 
         m_perspectives.remove(perspectiveId);
 
         //set defaultPerspective
-        if(m_defaultPerspective.equals(perspectiveId))
+        if(m_defaultPerspective.equals(perspectiveId)) {
             setDefaultPerspective(EMPTY_PERSPECTIVE);
+        }
 
         EventManager.dispatch(new RegistrationEvent(perspective, this, false));
     }
 
     public Perspective getPerspective(String perspectiveId) {
-        if (perspectiveId == null)
+        if (perspectiveId == null) {
             return null;
+        }
 
         Perspective perspective = (Perspective) m_perspectives.get(perspectiveId);
         if(perspective==null) {
@@ -162,12 +170,13 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public Perspective createPerspective(String perspectiveId) {
-        if(EMPTY_PERSPECTIVE.equals(perspectiveId))
+        if(EMPTY_PERSPECTIVE.equals(perspectiveId)) {
             return new Perspective(EMPTY_PERSPECTIVE, EMPTY_PERSPECTIVE) {
-            public void load(DockingPort port, boolean defaultSetting) {
-                // noop
-            }
-        };
+                public void load(DockingPort port, boolean defaultSetting) {
+                    // noop
+                }
+            };
+        }
 
         Perspective p = null;
 
@@ -224,8 +233,9 @@ public class PerspectiveManager implements LayoutManager {
     public void setCurrentPerspective(String perspectiveId, boolean asDefault) {
         perspectiveId = perspectiveId==null? m_defaultPerspective: perspectiveId;
         setCurrentPerspectiveName(perspectiveId);
-        if(asDefault)
+        if(asDefault) {
             setDefaultPerspective(perspectiveId);
+        }
     }
 
     public Perspective getDefaultPerspective() {
@@ -260,8 +270,9 @@ public class PerspectiveManager implements LayoutManager {
 
     public void reset() {
         RootWindow[] windows = DockingManager.getDockingWindows();
-        if(windows.length!=0)
+        if(windows.length!=0) {
             reset(windows[0].getRootContainer());
+        }
     }
 
     public void reset(Component window) {
@@ -307,18 +318,20 @@ public class PerspectiveManager implements LayoutManager {
             String id = perspectives[i].getPersistentId();
             if (!id.equals(EMPTY_PERSPECTIVE)) {
                 //TODO reset layout, maybe there is a better way
-                if (reset)
+                if (reset) {
                     perspectives[i].getLayout().setRestorationLayout(null);
-                //p.unload();
-                //p.reset(port);
+                    //p.unload();
+                    //p.reset(port);
+                }
             }
         }
         loadPerspectiveImpl(key, port, reset);
 
         // if perspective load fails, then rollback the perspective name
         // to its previous value (instead of null)
-        if(!Utilities.isEqual(getCurrentPerspectiveName(), key))
+        if(!Utilities.isEqual(getCurrentPerspectiveName(), key)) {
             setCurrentPerspectiveName(current);
+        }
     }
 
     public void restore(Window w) throws IOException, PersistenceException {
@@ -346,8 +359,9 @@ public class PerspectiveManager implements LayoutManager {
         loadPerspective(key);
         // if the perspective load failed, then rollback the perspective name
         // to its previous value (instead of null)
-        if(!Utilities.isEqual(getCurrentPerspectiveName(), key))
+        if(!Utilities.isEqual(getCurrentPerspectiveName(), key)) {
             setCurrentPerspectiveName(current);
+        }
     }
 
     public void loadPerspective() {
@@ -359,8 +373,9 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public void loadPerspectiveAsDefault(String perspectiveId, boolean reset) {
-        if(perspectiveId!=null)
+        if(perspectiveId!=null) {
             setDefaultPerspective(perspectiveId);
+        }
         loadPerspective(perspectiveId, reset);
     }
 
@@ -376,8 +391,9 @@ public class PerspectiveManager implements LayoutManager {
         }
 
         DockingPort rootPort = findMainDockingPort();
-        if(rootPort!=null)
+        if(rootPort!=null) {
             loadPerspective(perspectiveId, rootPort, reset);
+        }
     }
 
     public void loadPerspective(String perspectiveId, Component window) {
@@ -399,14 +415,16 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public void loadPerspective(String perspectiveId, DockingPort rootPort, boolean reset) {
-        if(perspectiveId==null || perspectiveId.equals(getCurrentPerspectiveName()))
+        if(perspectiveId==null || perspectiveId.equals(getCurrentPerspectiveName())) {
             return;
+        }
         loadPerspectiveImpl(perspectiveId, rootPort, reset);
     }
 
     private void loadPerspectiveImpl(String perspectiveId, final DockingPort rootPort, boolean reset) {
-        if(perspectiveId==null)
+        if(perspectiveId==null) {
             return;
+        }
 
         Perspective current = getCurrentPerspective();
         final Perspective perspective = getPerspective(perspectiveId);
@@ -419,8 +437,9 @@ public class PerspectiveManager implements LayoutManager {
         }
 
         // if the new perspective isn't available, then we're done
-        if(perspective==null)
+        if(perspective==null) {
             return;
+        }
 
         synchronized(this) {
             setCurrentPerspectiveName(perspectiveId);
@@ -443,8 +462,9 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     private void cacheLayoutState(Perspective p, DockingPort port) {
-        if(p!=null)
+        if(p!=null) {
             p.cacheLayoutState(port);
+        }
     }
 
 
@@ -475,8 +495,9 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     static void updateDockingStates(final Dockable[] dockables) {
-        if(dockables==null)
+        if(dockables==null) {
             return;
+        }
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -492,8 +513,9 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public synchronized boolean store(String persistenceKey) throws IOException, PersistenceException {
-        if(m_persistHandler==null)
+        if(m_persistHandler==null) {
             return false;
+        }
 
         DockingPort rootPort = findMainDockingPort();
         cacheLayoutState(getCurrentPerspective(), rootPort);
@@ -513,13 +535,15 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public synchronized boolean load(String persistenceKey) throws IOException, PersistenceException {
-        if(m_persistHandler==null)
+        if(m_persistHandler==null) {
             return false;
+        }
 
         String pKey = persistenceKey==null? m_defaultPersistenceKey: persistenceKey;
         PerspectiveModel info = m_persistHandler.load(pKey);
-        if(info==null)
+        if(info==null) {
             return false;
+        }
 
         Perspective[] perspectives = info.getPerspectives();
 
@@ -545,15 +569,17 @@ public class PerspectiveManager implements LayoutManager {
         RootWindow[] windows = DockingManager.getDockingWindows();
         // if the DockingManager couldn't resolve any windows using the
         // standard mechanism, we can try our own custom search
-        if(windows.length==0)
+        if(windows.length==0) {
             windows = resolveDockingWindows();
+        }
 
         // TODO: fix this code to keep track of the proper dialog owner
         RootWindow window = null;
         for(int i=0; i<windows.length; i++) {
             window = windows[i];
-            if(window.getOwner()==null)
+            if(window.getOwner()==null) {
                 break;
+            }
         }
         return window;
     }
@@ -566,8 +592,9 @@ public class PerspectiveManager implements LayoutManager {
         for(Iterator it=rootPorts.iterator(); it.hasNext();) {
             DockingPort port = (DockingPort)it.next();
             RootWindow window = RootWindow.getRootContainer((Component)port);
-            if(window!=null)
+            if(window!=null) {
                 windows.add(window);
+            }
         }
         return (RootWindow[])windows.toArray(new RootWindow[0]);
     }
@@ -597,8 +624,9 @@ public class PerspectiveManager implements LayoutManager {
         for(Iterator it=rootPorts.iterator(); it.hasNext();) {
             DockingPort port = (DockingPort)it.next();
             Window win = SwingUtilities.getWindowAncestor((Component)port);
-            if(win instanceof Dialog)
+            if(win instanceof Dialog) {
                 continue;
+            }
 
             rootPort = port;
             break;

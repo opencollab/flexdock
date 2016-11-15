@@ -19,8 +19,9 @@ public class ColorResourceHandler extends ResourceHandler {
     }
 
     public static ColorUIResource parseHexColor(String hexColor) {
-        if(Configurator.isNull(hexColor))
+        if(Configurator.isNull(hexColor)) {
             return null;
+        }
 
         StringBuffer sb = new StringBuffer(6);
         int len = hexColor.length();
@@ -28,8 +29,9 @@ public class ColorResourceHandler extends ResourceHandler {
         // strip out non-hex characters
         for(int i=0; i<len; i++) {
             char c = hexColor.charAt(i);
-            if(isHex(c))
+            if(isHex(c)) {
                 sb.append(c);
+            }
         }
 
         try {

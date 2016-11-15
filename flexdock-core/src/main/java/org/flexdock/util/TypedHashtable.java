@@ -196,10 +196,11 @@ public class TypedHashtable extends Hashtable {
      * @see Hashtable#remove(java.lang.Object)
      */
     public Object put(Object key, Object value) {
-        if(value==null)
+        if(value==null) {
             return super.remove(key);
-        else
+        } else {
             return super.put(key, value);
+        }
     }
 
 
@@ -241,7 +242,7 @@ public class TypedHashtable extends Hashtable {
      */
     public byte get(Object key, byte defaultValue) {
         Object obj = get(key);
-        return obj instanceof Byte? defaultValue: ((Byte)obj).byteValue();
+        return obj instanceof Byte? defaultValue: ((Number)obj).byteValue();
     }
 
     /**
@@ -260,7 +261,7 @@ public class TypedHashtable extends Hashtable {
      */
     public short get(Object key, short defaultValue) {
         Object obj = get(key);
-        return obj instanceof Short? defaultValue: ((Short)obj).shortValue();
+        return obj instanceof Short? defaultValue: ((Number)obj).shortValue();
     }
 
     /**
@@ -279,7 +280,7 @@ public class TypedHashtable extends Hashtable {
      */
     public int get(Object key, int defaultValue) {
         Object obj = get(key);
-        return obj instanceof Integer? defaultValue: ((Integer)obj).intValue();
+        return obj instanceof Integer? defaultValue: ((Number)obj).intValue();
     }
 
     /**
@@ -298,7 +299,7 @@ public class TypedHashtable extends Hashtable {
      */
     public long get(Object key, long defaultValue) {
         Object obj = get(key);
-        return obj instanceof Long? defaultValue: ((Long)obj).longValue();
+        return obj instanceof Long? defaultValue: ((Number)obj).longValue();
     }
 
     /**
@@ -317,7 +318,7 @@ public class TypedHashtable extends Hashtable {
      */
     public float get(Object key, float defaultValue) {
         Object obj = get(key);
-        return obj instanceof Float? defaultValue: ((Float)obj).floatValue();
+        return obj instanceof Float? defaultValue: ((Number)obj).floatValue();
     }
 
     /**
@@ -336,7 +337,7 @@ public class TypedHashtable extends Hashtable {
      */
     public double get(Object key, double defaultValue) {
         Object obj = get(key);
-        return obj instanceof Double? defaultValue: ((Double)obj).doubleValue();
+        return obj instanceof Double? defaultValue: ((Number)obj).doubleValue();
     }
 
     /**

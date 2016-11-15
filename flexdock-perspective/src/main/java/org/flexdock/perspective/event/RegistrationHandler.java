@@ -38,16 +38,18 @@ public class RegistrationHandler extends EventHandler {
     }
 
     private void register(RegistrationEvent evt, RegistrationListener listener) {
-        if(evt.getSource() instanceof Perspective)
+        if(evt.getSource() instanceof Perspective) {
             listener.perspectiveAdded(evt);
-        else if(evt.getSource() instanceof Dockable)
+        } else if(evt.getSource() instanceof Dockable) {
             listener.dockableAdded(evt);
+        }
     }
 
     private void unregister(RegistrationEvent evt, RegistrationListener listener) {
-        if(evt.getSource() instanceof Perspective)
+        if(evt.getSource() instanceof Perspective) {
             listener.perspectiveRemoved(evt);
-        else if(evt.getSource() instanceof Dockable)
+        } else if(evt.getSource() instanceof Dockable) {
             listener.dockableRemoved(evt);
+        }
     }
 }

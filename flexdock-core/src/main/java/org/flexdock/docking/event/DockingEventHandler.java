@@ -34,8 +34,9 @@ public class DockingEventHandler extends EventHandler {
     }
 
     private static Vector getDockingListenersList(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         Vector list = (Vector)dockable.getClientProperty(DOCKING_LISTENERS_KEY);
         if(list==null) {

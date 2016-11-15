@@ -18,13 +18,15 @@ public abstract class PropertyChangeListenerFactory {
     private static final Vector FACTORIES = new Vector();
 
     public static void addFactory(PropertyChangeListenerFactory factory) {
-        if(factory!=null)
+        if(factory!=null) {
             FACTORIES.add(factory);
+        }
     }
 
     public static void removeFactory(PropertyChangeListenerFactory factory) {
-        if(factory!=null)
+        if(factory!=null) {
             FACTORIES.remove(factory);
+        }
     }
 
     public static PropertyChangeListener[] getListeners() {
@@ -32,8 +34,9 @@ public abstract class PropertyChangeListenerFactory {
         for(Iterator it=FACTORIES.iterator(); it.hasNext();) {
             PropertyChangeListenerFactory factory = (PropertyChangeListenerFactory)it.next();
             PropertyChangeListener listener = factory.getListener();
-            if(listener!=null)
+            if(listener!=null) {
                 list.add(listener);
+            }
         }
         return (PropertyChangeListener[])list.toArray(new PropertyChangeListener[list.size()]);
     }

@@ -86,10 +86,11 @@ public class FloatingGroup implements Cloneable, Serializable {
         if(rect==null) {
             windowBounds = null;
         } else {
-            if(windowBounds==null)
+            if(windowBounds==null) {
                 windowBounds = (Rectangle)rect.clone();
-            else
+            } else {
                 windowBounds.setBounds(rect);
+            }
         }
     }
 

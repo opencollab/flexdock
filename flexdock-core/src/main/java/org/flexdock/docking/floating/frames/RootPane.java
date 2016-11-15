@@ -71,16 +71,18 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
         // the frame.
 
         // x
-        if (attemptedPoint.x < mMouseLimits.x)
+        if (attemptedPoint.x < mMouseLimits.x) {
             attemptedPoint.x = mMouseLimits.x;
-        else if (attemptedPoint.x > (mMouseLimits.x + mMouseLimits.width))
+        } else if (attemptedPoint.x > (mMouseLimits.x + mMouseLimits.width)) {
             attemptedPoint.x = mMouseLimits.x + mMouseLimits.width;
+        }
 
         // y
-        if (attemptedPoint.y < mMouseLimits.y)
+        if (attemptedPoint.y < mMouseLimits.y) {
             attemptedPoint.y = mMouseLimits.y;
-        else if (attemptedPoint.y > (mMouseLimits.y + mMouseLimits.height))
+        } else if (attemptedPoint.y > (mMouseLimits.y + mMouseLimits.height)) {
             attemptedPoint.y = mMouseLimits.y + mMouseLimits.height;
+        }
     }
 
     void computeMouseLimits(Point p) {
@@ -159,49 +161,54 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
         // left
 
         if (p.x <= insets.left) {
-            if (p.y <= CORNER_MARGIN)
+            if (p.y <= CORNER_MARGIN) {
                 return Cursor.NW_RESIZE_CURSOR;
-            else if (p.y >= getHeight() - CORNER_MARGIN)
+            } else if (p.y >= getHeight() - CORNER_MARGIN) {
                 return Cursor.SW_RESIZE_CURSOR;
-            else
+            } else {
                 return Cursor.W_RESIZE_CURSOR;
+            }
         } // if
 
         // right
 
         else if (p.x >= getWidth() - insets.right) {
-            if (p.y <= CORNER_MARGIN)
+            if (p.y <= CORNER_MARGIN) {
                 return Cursor.NE_RESIZE_CURSOR;
-            else if (p.y >= getHeight() - CORNER_MARGIN)
+            } else if (p.y >= getHeight() - CORNER_MARGIN) {
                 return Cursor.SE_RESIZE_CURSOR;
-            else
+            } else {
                 return Cursor.E_RESIZE_CURSOR;
+            }
         } // if
 
         // top
 
         else if (p.y <= insets.top) {
-            if (p.x <= CORNER_MARGIN)
+            if (p.x <= CORNER_MARGIN) {
                 return Cursor.NW_RESIZE_CURSOR;
-            else if (p.x >= getWidth() - CORNER_MARGIN)
+            } else if (p.x >= getWidth() - CORNER_MARGIN) {
                 return Cursor.NE_RESIZE_CURSOR;
-            else
+            } else {
                 return Cursor.N_RESIZE_CURSOR;
+            }
         } // if
 
         // bottom
 
         else if (p.y >= getHeight() - insets.bottom) {
-            if (p.x <= CORNER_MARGIN)
+            if (p.x <= CORNER_MARGIN) {
                 return Cursor.SW_RESIZE_CURSOR;
-            else if (p.x >= getWidth() - CORNER_MARGIN)
+            } else if (p.x >= getWidth() - CORNER_MARGIN) {
                 return Cursor.SE_RESIZE_CURSOR;
-            else
+            } else {
                 return Cursor.S_RESIZE_CURSOR;
+            }
         } // if
 
-        else
+        else {
             return Cursor.DEFAULT_CURSOR;
+        }
     }
 
 
@@ -218,8 +225,9 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     }
 
     public void mouseDragged(MouseEvent e) {
-        if(currentResizeRegion==0)
+        if(currentResizeRegion==0) {
             return;
+        }
 
         Point p = (Point) e.getPoint().clone();
 
@@ -281,8 +289,9 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     }
 
     public void mouseEntered(MouseEvent e) {
-        if (currentResizeRegion == 0) // no dragging on!
+        if (currentResizeRegion == 0) { // no dragging on!
             mLastCursor = getCursor();
+        }
     }
 
     public void mouseExited(MouseEvent e) {

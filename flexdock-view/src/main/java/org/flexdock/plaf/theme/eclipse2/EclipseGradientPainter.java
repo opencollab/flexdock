@@ -20,10 +20,11 @@ public class EclipseGradientPainter extends DefaultPainter {
         float center = width / 1.3f;
 
         GradientPaint firstHalf;
-        if( active)
+        if( active) {
             firstHalf = new GradientPaint(0, 0, getBackgroundColorActive(), center, 0, getBackgroundColorInactive());
-        else
+        } else {
             firstHalf = new GradientPaint(0, 0, getBackgroundColorInactive(), center, 0, getBackgroundColorInactive());
+        }
 
         Graphics2D g2 = (Graphics2D) g;
         g2.setPaint(firstHalf);

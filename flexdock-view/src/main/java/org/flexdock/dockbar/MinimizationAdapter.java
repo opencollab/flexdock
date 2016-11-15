@@ -33,18 +33,21 @@ public class MinimizationAdapter implements MinimizationManager {
 
     public void setMinimized(Dockable dockable, boolean minimizing, Component window, int edge) {
         DockbarManager mgr = DockbarManager.getInstance(window);
-        if(mgr==null)
+        if(mgr==null) {
             return;
+        }
 
         // if minimizing, send to the dockbar
         if(minimizing) {
-            if(edge==MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT)
+            if(edge==MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT) {
                 mgr.minimize(dockable);
-            else
+            } else {
                 mgr.minimize(dockable, edge);
+            }
         }
         // otherwise, restore from the dockbar
-        else
+        else {
             mgr.restore(dockable);
+        }
     }
 }

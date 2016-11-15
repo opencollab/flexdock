@@ -118,23 +118,26 @@ public class DockableComponentWrapper implements Dockable {
      */
     public static DockableComponentWrapper create(Component src, String id,
             String desc) {
-        if (src == null || id == null)
+        if (src == null || id == null) {
             return null;
+        }
 
         return new DockableComponentWrapper(src, id, desc);
     }
 
     public static DockableComponentWrapper create(DockingStub stub) {
-        if (!(stub instanceof Component))
+        if (!(stub instanceof Component)) {
             return null;
+        }
 
         return create((Component) stub, stub.getPersistentId(), stub
                       .getTabText());
     }
 
     public static DockableComponentWrapper create(DockingAdapter adapter) {
-        if (adapter == null)
+        if (adapter == null) {
             return null;
+        }
 
         Component comp = adapter.getComponent();
         String id = adapter.getPersistentId();
@@ -155,8 +158,9 @@ public class DockableComponentWrapper implements Dockable {
             dockable.getFrameDragSources().addAll(frameDragSources);
         }
 
-        if (icon != null)
+        if (icon != null) {
             dockable.getDockingProperties().setDockbarIcon(icon);
+        }
 
         return dockable;
     }
@@ -193,25 +197,29 @@ public class DockableComponentWrapper implements Dockable {
             // if the stub defines a specific drag source, then
             // replace wrapped source component with the specified
             // drag source
-            if (c != null)
+            if (c != null) {
                 draggable = c;
+            }
             // if the stub defines a specified frame drag source, then
             // use it
             frameDragger = stub.getFrameDragSource();
         }
 
         // add the "docking" drag source to the list
-        if (draggable != null)
+        if (draggable != null) {
             dragListeners.add(draggable);
+        }
 
         // add the floating frame drag source to the list
-        if (frameDragger != null)
+        if (frameDragger != null) {
             getFrameDragSources().add(frameDragger);
+        }
     }
 
     private Hashtable getInternalClientProperties() {
-        if (clientProperties == null)
+        if (clientProperties == null) {
             clientProperties = new Hashtable(2);
+        }
         return clientProperties;
     }
 
@@ -268,8 +276,9 @@ public class DockableComponentWrapper implements Dockable {
      * @see Dockable#getFrameDragSources()
      */
     public Set getFrameDragSources() {
-        if (frameDragSources == null)
+        if (frameDragSources == null) {
             frameDragSources = new HashSet();
+        }
         return frameDragSources;
     }
 
@@ -283,8 +292,9 @@ public class DockableComponentWrapper implements Dockable {
      * @see #removeDockingListener(DockingListener)
      */
     public void addDockingListener(DockingListener listener) {
-        if (listener != null)
+        if (listener != null) {
             dockingListeners.add(listener);
+        }
     }
 
     /**
@@ -315,8 +325,9 @@ public class DockableComponentWrapper implements Dockable {
      * @see #getDockingListeners()
      */
     public void removeDockingListener(DockingListener listener) {
-        if (listener != null)
+        if (listener != null) {
             dockingListeners.remove(listener);
+        }
     }
 
     /**
@@ -404,12 +415,14 @@ public class DockableComponentWrapper implements Dockable {
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */
     public Object getClientProperty(Object key) {
-        if (key == null)
+        if (key == null) {
             return null;
+        }
 
         Component c = getComponent();
-        if (c instanceof JComponent)
+        if (c instanceof JComponent) {
             return ((JComponent) c).getClientProperty(key);
+        }
 
         return getInternalClientProperties().get(key);
     }
@@ -435,8 +448,9 @@ public class DockableComponentWrapper implements Dockable {
      *      java.lang.Object)
      */
     public void putClientProperty(Object key, Object value) {
-        if (key == null)
+        if (key == null) {
             return;
+        }
 
         Component c = getComponent();
         if (c instanceof JComponent) {

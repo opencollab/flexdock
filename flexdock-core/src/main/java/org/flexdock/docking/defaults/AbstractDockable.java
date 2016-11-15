@@ -127,8 +127,9 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#getFrameDragSources()
      */
     public Set getFrameDragSources() {
-        if (frameDragSources == null)
+        if (frameDragSources == null) {
             frameDragSources = new HashSet();
+        }
         return frameDragSources;
     }
 
@@ -234,8 +235,9 @@ public abstract class AbstractDockable implements Dockable {
      * @see #removeDockingListener(DockingListener)
      */
     public void addDockingListener(DockingListener listener) {
-        if (listener != null)
+        if (listener != null) {
             dockingListeners.add(listener);
+        }
     }
 
     /**
@@ -266,8 +268,9 @@ public abstract class AbstractDockable implements Dockable {
      * @see #getDockingListeners()
      */
     public void removeDockingListener(DockingListener listener) {
-        if (listener != null)
+        if (listener != null) {
             dockingListeners.remove(listener);
+        }
     }
 
     /**
@@ -289,12 +292,14 @@ public abstract class AbstractDockable implements Dockable {
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */
     public Object getClientProperty(Object key) {
-        if (key == null)
+        if (key == null) {
             return null;
+        }
 
         Component c = getComponent();
-        if (c instanceof JComponent)
+        if (c instanceof JComponent) {
             return ((JComponent) c).getClientProperty(key);
+        }
 
         return clientProperties.get(key);
     }
@@ -320,8 +325,9 @@ public abstract class AbstractDockable implements Dockable {
      *      java.lang.Object)
      */
     public void putClientProperty(Object key, Object value) {
-        if (key == null)
+        if (key == null) {
             return;
+        }
 
         Component c = getComponent();
         if (c instanceof JComponent) {

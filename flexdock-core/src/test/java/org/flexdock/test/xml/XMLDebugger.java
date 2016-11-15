@@ -42,8 +42,9 @@ public class XMLDebugger {
     }
 
     public String getXML(Object obj) {
-        if(obj==null)
+        if(obj==null) {
             return null;
+        }
 
         Document document = createDocument();
         Element rootElem = document.getDocumentElement();
@@ -86,8 +87,9 @@ public class XMLDebugger {
         Field[] fields = getFields(obj);
         for(int i=0; i<fields.length; i++) {
             String modifiers = Modifier.toString(fields[i].getModifiers());
-            if(modifiers.indexOf("static")!=-1 || modifiers.indexOf("transient")!=-1)
+            if(modifiers.indexOf("static")!=-1 || modifiers.indexOf("transient")!=-1) {
                 continue;
+            }
 
             Object fieldValue = getValue(fields[i], obj);
             String fieldName = fields[i].getName();
@@ -179,8 +181,9 @@ public class XMLDebugger {
             try {
                 return c.getDeclaredField(fieldName);
             } catch(Exception e) {
-                if(c==Object.class)
+                if(c==Object.class) {
                     return null;
+                }
                 c = c.getSuperclass();
             }
         }
@@ -189,8 +192,9 @@ public class XMLDebugger {
     private static Object getValue(Field field, Object owner) {
         boolean toggle = !field.isAccessible();
 
-        if(toggle)
+        if(toggle) {
             field.setAccessible(true);
+        }
 
         Object obj = null;
         try {
@@ -199,8 +203,9 @@ public class XMLDebugger {
             t.printStackTrace();
         }
 
-        if(toggle)
+        if(toggle) {
             field.setAccessible(false);
+        }
 
         return obj;
     }
@@ -210,12 +215,14 @@ public class XMLDebugger {
 
         String name = clazz.getName();
         int indx = name.lastIndexOf('.');
-        if(indx!=-1)
+        if(indx!=-1) {
             name = name.substring(indx+1, name.length());
+        }
 
         indx = name.lastIndexOf('$');
-        if(indx!=-1)
+        if(indx!=-1) {
             name = name.substring(indx+1, name.length());
+        }
         return name;
     }
 

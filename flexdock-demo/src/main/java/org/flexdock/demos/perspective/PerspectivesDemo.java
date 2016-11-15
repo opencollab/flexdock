@@ -158,12 +158,15 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
     private static class DemoPerspectiveFactory implements PerspectiveFactory {
 
         public Perspective getPerspective(String persistentId) {
-            if(P1.equals(persistentId))
+            if(P1.equals(persistentId)) {
                 return createPerspective1();
-            if(P2.equals(persistentId))
+            }
+            if(P2.equals(persistentId)) {
                 return createPerspective2();
-            if(P3.equals(persistentId))
+            }
+            if(P3.equals(persistentId)) {
                 return createPerspective3();
+            }
             return null;
         }
 
@@ -205,16 +208,21 @@ public class PerspectivesDemo extends JFrame implements DockingConstants {
     private static class ViewFactory extends DockableFactory.Stub {
 
         public Component getDockableComponent(String dockableId) {
-            if(MAIN_VIEW.equals(dockableId))
+            if(MAIN_VIEW.equals(dockableId)) {
                 return createMainView();
-            if(BIRD_VIEW.equals(dockableId))
+            }
+            if(BIRD_VIEW.equals(dockableId)) {
                 return createView(BIRD_VIEW, "Bird View", "birdView001.png");
-            if(MESSAGE_VIEW.equals(dockableId))
+            }
+            if(MESSAGE_VIEW.equals(dockableId)) {
                 return createView(MESSAGE_VIEW, "Message Log", "msgLog001.png");
-            if(PROBLEM_VIEW.equals(dockableId))
+            }
+            if(PROBLEM_VIEW.equals(dockableId)) {
                 return createView(PROBLEM_VIEW, "Problems", "problems001.png");
-            if(CONSOLE_VIEW.equals(dockableId))
+            }
+            if(CONSOLE_VIEW.equals(dockableId)) {
                 return createView(CONSOLE_VIEW, "Console", "console001.png");
+            }
             return null;
         }
 

@@ -49,8 +49,9 @@ public class DockingPortTracker implements HierarchyListener {
     }
 
     public static RootDockingPortInfo getRootDockingPortInfo(RootWindow window) {
-        if(window==null)
+        if(window==null) {
             return null;
+        }
 
         RootDockingPortInfo info = (RootDockingPortInfo)TRACKERS_BY_WINDOW.get(window);
         if(info==null) {
@@ -63,29 +64,33 @@ public class DockingPortTracker implements HierarchyListener {
     }
 
     public static DockingPort findById(String portId) {
-        if(portId==null)
+        if(portId==null) {
             return null;
+        }
 
         synchronized(TRACKERS_BY_WINDOW) {
             for(Iterator it=TRACKERS_BY_WINDOW.values().iterator(); it.hasNext();) {
                 RootDockingPortInfo info = (RootDockingPortInfo)it.next();
                 DockingPort port = info.getPort(portId);
-                if(port!=null)
+                if(port!=null) {
                     return port;
+                }
             }
         }
         return null;
     }
 
     private static RootDockingPortInfo findInfoByPort(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return null;
+        }
 
         synchronized(TRACKERS_BY_WINDOW) {
             for(Iterator it=TRACKERS_BY_WINDOW.values().iterator(); it.hasNext();) {
                 RootDockingPortInfo info = (RootDockingPortInfo)it.next();
-                if(info.contains(port))
+                if(info.contains(port)) {
                     return info;
+                }
             }
         }
         return null;
@@ -123,16 +128,18 @@ public class DockingPortTracker implements HierarchyListener {
 
     public static DockingPort findByWindow(RootWindow window) {
         RootDockingPortInfo info = getRootDockingPortInfo(window);
-        if(info==null)
+        if(info==null) {
             return null;
+        }
 
         return info.getPort(0);
     }
 
 
     public static void updateIndex(DockingPort port) {
-        if(port==null)
+        if(port==null) {
             return;
+        }
 
         synchronized(DOCKING_PORTS) {
             DOCKING_PORTS.put(port, NULL);
@@ -148,8 +155,9 @@ public class DockingPortTracker implements HierarchyListener {
 
 
     private boolean isParentChange(HierarchyEvent evt) {
-        if(evt.getID()!=HierarchyEvent.HIERARCHY_CHANGED || evt.getChangeFlags()!=HierarchyEvent.PARENT_CHANGED)
+        if(evt.getID()!=HierarchyEvent.HIERARCHY_CHANGED || evt.getChangeFlags()!=HierarchyEvent.PARENT_CHANGED) {
             return false;
+        }
         return true;
     }
 
@@ -160,42 +168,49 @@ public class DockingPortTracker implements HierarchyListener {
 
     public void hierarchyChanged(HierarchyEvent evt) {
         // only work with DockingPorts
-        if(!(evt.getSource() instanceof DockingPort))
+        if(!(evt.getSource() instanceof DockingPort)) {
             return;
+        }
 
         // we don't want to work with sub-ports
         DockingPort port = (DockingPort)evt.getSource();
-        if(!port.isRoot())
+        if(!port.isRoot()) {
             return;
+        }
 
         // only work with parent-change events
-        if(!isParentChange(evt))
+        if(!isParentChange(evt)) {
             return;
+        }
 
         // root-ports are tracked by window.  if we can't find a parent window, then we
         // can track the dockingport.
         Container changedParent = evt.getChangedParent();
         RootWindow window = RootWindow.getRootContainer(changedParent);
-        if(window==null)
+        if(window==null) {
             return;
+        }
 
         boolean removal = isRemoval(evt);
-        if(removal)
+        if(removal) {
             dockingPortRemoved(window, port);
-        else
+        } else {
             dockingPortAdded(window, port);
+        }
     }
 
     public void dockingPortAdded(RootWindow window, DockingPort port) {
         RootDockingPortInfo info = getRootDockingPortInfo(window);
-        if(info!=null)
+        if(info!=null) {
             info.add(port);
+        }
     }
 
     public void dockingPortRemoved(RootWindow window, DockingPort port) {
         RootDockingPortInfo info = getRootDockingPortInfo(window);
-        if(info!=null)
+        if(info!=null) {
             info.remove(port);
+        }
     }
 
     public static Set getDockingWindows() {
@@ -221,21 +236,24 @@ public class DockingPortTracker implements HierarchyListener {
 
         for(Iterator it=globalSet.iterator(); it.hasNext();) {
             DockingPort port = (DockingPort)it.next();
-            if(port.isRoot())
+            if(port.isRoot()) {
                 rootSet.add(port);
+            }
         }
         return rootSet;
     }
 
     public static DockingPort getRootDockingPort(Dockable dockable) {
-        if(dockable==null || !DockingManager.isDocked(dockable))
+        if(dockable==null || !DockingManager.isDocked(dockable)) {
             return null;
+        }
 
         DockingPort port = dockable.getDockingPort();
         Container parent = ((Component)port).getParent();
         while(!isWindowRoot(parent)) {
-            if(parent instanceof DockingPort)
+            if(parent instanceof DockingPort) {
                 port = (DockingPort)parent;
+            }
             parent = parent.getParent();
         }
 

@@ -32,8 +32,9 @@ public class FrameDragListener implements MouseListener, MouseMotionListener {
     public void mousePressed(MouseEvent e) {
         dragOffset = e.getPoint();
         Component c = (Component)e.getSource();
-        if(c!=frame)
+        if(c!=frame) {
             dragOffset = SwingUtilities.convertPoint(c, dragOffset, frame);
+        }
     }
 
     public void mouseDragged(MouseEvent e) {

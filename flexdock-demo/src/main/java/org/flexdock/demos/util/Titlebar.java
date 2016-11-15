@@ -48,8 +48,9 @@ public class Titlebar extends JLabel {
     }
 
     public void setTitle(String title) {
-        if(title==null)
+        if(title==null) {
             title = "";
+        }
         title = title.trim();
         setText(title);
     }

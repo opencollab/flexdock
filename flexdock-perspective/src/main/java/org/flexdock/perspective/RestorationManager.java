@@ -61,8 +61,9 @@ public class RestorationManager {
         boolean ret = false;
         if(handler!=null) {
             ret = restorationHandlers.remove(handler);
-            if(ret)
+            if(ret) {
                 EventManager.dispatch(new RegistrationEvent(handler, this, false));
+            }
         }
         return ret;
     }
@@ -74,8 +75,9 @@ public class RestorationManager {
             HashMap context = new HashMap();
             for(Iterator it=restorationHandlers.iterator(); it.hasNext();) {
                 RestorationHandler handler = (RestorationHandler)it.next();
-                if(handler.restore(dockable, info, context))
+                if(handler.restore(dockable, info, context)) {
                     return true;
+                }
             }
         }
 

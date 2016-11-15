@@ -83,8 +83,9 @@ public class NestedComponents {
      */
     public static NestedComponents find(Component searchSrc, Class childClass,
                                         Class parentClass) {
-        if (searchSrc == null || childClass == null || parentClass == null)
+        if (searchSrc == null || childClass == null || parentClass == null) {
             return null;
+        }
 
         NestedComponents nest = new NestedComponents(searchSrc, null, null);
 
@@ -105,13 +106,15 @@ public class NestedComponents {
     private static boolean isParentContainer(Component c, Class parentClass) {
         if (parentClass == RootWindow.class) {
             return RootWindow.isValidRootContainer(c);
-        } else
+        } else {
             return parentClass.isAssignableFrom(c.getClass());
+        }
     }
 
     private static boolean isInstanceOf(Object obj, Class clazz) {
-        if (clazz.isAssignableFrom(obj.getClass()))
+        if (clazz.isAssignableFrom(obj.getClass())) {
             return true;
+        }
 
         // special case
         if (clazz == Dockable.class) {
@@ -164,8 +167,9 @@ public class NestedComponents {
      *         {@code NestedComponents} instance; {@code false} otherwise.
      */
     public boolean equals(Object obj) {
-        if (!(obj instanceof NestedComponents))
+        if (!(obj instanceof NestedComponents)) {
             return false;
+        }
 
         NestedComponents other = (NestedComponents) obj;
         return searchSrc == other.searchSrc && child == other.child

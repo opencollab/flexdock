@@ -59,8 +59,9 @@ public class LookAndFeelSettings {
             Element prop = (Element)nodes.item(i);
             String key = prop.getAttribute(KEY);
             String value = prop.getAttribute(VALUE);
-            if(key!=null && value!=null)
+            if(key!=null && value!=null) {
                 p.setProperty(key, value);
+            }
         }
         return p;
     }
@@ -73,10 +74,11 @@ public class LookAndFeelSettings {
     private void setProperty(String propType, String key, String value) {
         Properties p = key==null? null: (Properties)propertyMappings.get(propType);
         if(p!=null) {
-            if(value==null)
+            if(value==null) {
                 p.remove(key);
-            else
+            } else {
                 p.setProperty(key, value);
+            }
         }
     }
 
@@ -89,12 +91,14 @@ public class LookAndFeelSettings {
         String edgeStr = SINGLETON.getProperty(TAB_EDGE_INSET_KEY, plafKey);
         Integer edge = getInteger(edgeStr);
 
-        if(edge!=null && edge.intValue()>0)
+        if(edge!=null && edge.intValue()>0) {
             return edge.intValue();
+        }
 
         Insets tabInsets = UIManager.getInsets(TAB_PANE_BORDER_INSETS);
-        if(tabInsets==null)
+        if(tabInsets==null) {
             return 1;
+        }
 
         switch(tabPlacement) {
         case JTabbedPane.TOP:
@@ -118,8 +122,9 @@ public class LookAndFeelSettings {
 
     private String getCurrentPlafName() {
         LookAndFeel laf = UIManager.getLookAndFeel();
-        if(laf==null)
+        if(laf==null) {
             return null;
+        }
 
         // return a special case for SkinLF
         if(isSkinLFSupported()) {

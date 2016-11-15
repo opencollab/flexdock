@@ -155,8 +155,9 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
     private static class DemoPerspectiveFactory implements PerspectiveFactory {
 
         public Perspective getPerspective(String persistentId) {
-            if(P1.equals(persistentId))
+            if(P1.equals(persistentId)) {
                 return createPerspective1();
+            }
 
 //			if(P2.equals(persistentId))
 //				return createPerspective2();
@@ -202,16 +203,21 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
     private static class ViewFactory extends DockableFactory.Stub {
 
         public Component getDockableComponent(String dockableId) {
-            if(MAIN_VIEW.equals(dockableId))
+            if(MAIN_VIEW.equals(dockableId)) {
                 return createMainView();
-            if(BIRD_VIEW.equals(dockableId))
+            }
+            if(BIRD_VIEW.equals(dockableId)) {
                 return createView(BIRD_VIEW, "Bird View");
-            if(MESSAGE_VIEW.equals(dockableId))
+            }
+            if(MESSAGE_VIEW.equals(dockableId)) {
                 return createView(MESSAGE_VIEW, "Message Log");
-            if(PROBLEM_VIEW.equals(dockableId))
+            }
+            if(PROBLEM_VIEW.equals(dockableId)) {
                 return createView(PROBLEM_VIEW, "Problems");
-            if(CONSOLE_VIEW.equals(dockableId))
+            }
+            if(CONSOLE_VIEW.equals(dockableId)) {
                 return createView(CONSOLE_VIEW, "Console");
+            }
             return null;
         }
 

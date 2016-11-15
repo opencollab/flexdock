@@ -51,8 +51,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     private ArrayList getLayoutListeners() {
-        if(layoutListeners==null)
+        if(layoutListeners==null) {
             layoutListeners = new ArrayList();
+        }
         return layoutListeners;
     }
 
@@ -82,8 +83,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public void add(String dockableId) {
-        if(dockableId==null)
+        if(dockableId==null) {
             return;
+        }
 
         DockingState info = null;
         synchronized(dockingInfo) {
@@ -101,16 +103,18 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public DockingState remove(String dockableId) {
-        if(dockableId==null)
+        if(dockableId==null) {
             return null;
+        }
 
         DockingState info = null;
         synchronized(dockingInfo) {
             info = (DockingState)dockingInfo.remove(dockableId);
         }
         // dispatch event notification if we actually removed something
-        if(info!=null)
+        if(info!=null) {
             EventManager.dispatch(new RegistrationEvent(info, this, false));
+        }
         return info;
     }
 
@@ -123,8 +127,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public Dockable getDockable(String id) {
-        if(dockingInfo.containsKey(id))
+        if(dockingInfo.containsKey(id)) {
             return DockingManager.getDockable(id);
+        }
         return null;
     }
 
@@ -133,8 +138,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         for(Iterator it=dockingInfo.keySet().iterator(); it.hasNext();) {
             String dockingId = (String)it.next();
             Dockable d = DockingManager.getDockable(dockingId);
-            if(d!=null)
+            if(d!=null) {
                 list.add(d);
+            }
         }
         return (Dockable[])list.toArray(new Dockable[0]);
     }
@@ -148,15 +154,17 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public DockingState getDockingState(Dockable dockable, boolean load) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         return getDockingState(dockable.getPersistentId(), load);
     }
 
     public DockingState getDockingState(String dockableId, boolean load) {
-        if(dockableId==null)
+        if(dockableId==null) {
             return null;
+        }
 
         if(load) {
             Dockable dockable = DockingManager.getDockable(dockableId);
@@ -177,9 +185,10 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 
     public void apply(DockingPort dockingPort) {
         Component comp = (Component)dockingPort;
-        if(comp==null || !isInitialized())
-//		if(comp==null || comp.getParent()==null || !isInitialized())
+        if(comp==null || !isInitialized()) {
+            //		if(comp==null || comp.getParent()==null || !isInitialized())
             return;
+        }
 
         // clear out the existing components
         PerspectiveManager.clear(dockingPort);
@@ -226,8 +235,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     private void restoreDeferredMinimizedDockables(final ArrayList deferred) {
-        if(deferred==null || deferred.size()==0)
+        if(deferred==null || deferred.size()==0) {
             return;
+        }
 
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -250,17 +260,20 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     private boolean isMaintained(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return false;
+        }
 
-        if(!contains(dockable))
+        if(!contains(dockable)) {
             add(dockable);
+        }
         return true;
     }
 
     public void hide(Dockable dockable) {
-        if(!isMaintained(dockable))
+        if(!isMaintained(dockable)) {
             return;
+        }
 
         boolean hidden = false;
         if(DockingManager.isDocked((Dockable)dockable)) {
@@ -276,8 +289,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public void show(Dockable dockable, DockingPort dockingPort) {
-        if(!isMaintained(dockable) || DockingManager.isDocked(dockable))
+        if(!isMaintained(dockable) || DockingManager.isDocked(dockable)) {
             return;
+        }
     }
 
     public Object clone() {
@@ -310,8 +324,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
 
     private DockingFrame getDockingFrame(Dockable dockable, Component frameOwner) {
         FloatingGroup group = getGroup(dockable);
-        if(group==null)
+        if(group==null) {
             group = new FloatingGroup(getFloatingGroup(dockable));
+        }
 
         DockingFrame frame = group.getFrame();
         if(frame==null) {
@@ -323,13 +338,15 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public DockingFrame floatDockable(Dockable dockable, Component frameOwner, Rectangle screenBounds) {
-        if(dockable==null || screenBounds==null)
+        if(dockable==null || screenBounds==null) {
             return null;
+        }
 
         // create the frame
         DockingFrame frame = getDockingFrame(dockable, frameOwner);
-        if(screenBounds!=null)
+        if(screenBounds!=null) {
             frame.setBounds(screenBounds);
+        }
 
         // undock the current Dockable instance from it's current parent container
         DockingManager.undock(dockable);
@@ -338,8 +355,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         frame.addDockable(dockable);
 
         // display and return
-        if(!frame.isVisible())
+        if(!frame.isVisible()) {
             frame.setVisible(true);
+        }
         return frame;
     }
 
@@ -349,8 +367,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         if(bounds==null) {
             if(dockable.getComponent().isValid()) {
                 bounds = dockable.getComponent().getBounds();
-            } else
+            } else {
                 bounds = new Rectangle(0, 0, 200, 200);
+            }
 
             Rectangle ownerBounds = frameOwner instanceof DockingFrame?
                                     ((DockingFrame)frameOwner).getOwner().getBounds():
@@ -365,8 +384,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     }
 
     public FloatingGroup getGroup(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         String groupId = getFloatingGroup(dockable);
         return getGroup(groupId);
@@ -401,8 +421,9 @@ public class Layout implements Cloneable, FloatManager, Serializable {
     public void removeFromGroup(Dockable dockable) {
         FloatingGroup group = getGroup(dockable);
         if(dockable!=null) {
-            if(group!=null)
+            if(group!=null) {
                 group.removeDockable(dockable.getPersistentId());
+            }
             setFloatingGroup(dockable, null);
         }
 

@@ -38,8 +38,9 @@ public class OsInfo {
     }
 
     public OsInfo(Properties systemProps) {
-        if(systemProps==null)
+        if(systemProps==null) {
             systemProps = System.getProperties();
+        }
 
         Document doc = ResourceManager.getDocument(XML_RESOURCE);
         osArch = getSystemArch(doc, systemProps);
@@ -85,8 +86,9 @@ public class OsInfo {
             osElem = (Element)osElem.getParentNode();
         }
 
-        if(list.isEmpty())
+        if(list.isEmpty()) {
             list.add(osName);
+        }
         return list;
     }
 
@@ -100,8 +102,9 @@ public class OsInfo {
         NodeList list = doc.getElementsByTagName(tagName);
         for(int i=0; i<list.getLength(); i++) {
             Element elem = (Element)list.item(i);
-            if(nameAttrib.equals(elem.getAttribute("name")))
+            if(nameAttrib.equals(elem.getAttribute("name"))) {
                 return elem;
+            }
         }
         return null;
     }
@@ -111,8 +114,9 @@ public class OsInfo {
     }
 
     private boolean isNested(Element elem, String tagName) {
-        if(elem==null)
+        if(elem==null) {
             return false;
+        }
 
         Element parent = (Element)elem.getParentNode();
         return parent==null? false: tagName.equals(parent.getTagName());

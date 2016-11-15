@@ -63,8 +63,9 @@ public class ActiveDockableTracker {
     }
 
     private static ActiveDockableTracker getTracker(RootWindow window) {
-        if(window==null)
+        if(window==null) {
             return null;
+        }
 
         ActiveDockableTracker tracker = (ActiveDockableTracker)window.getClientProperty(KEY);
 
@@ -102,8 +103,9 @@ public class ActiveDockableTracker {
     }
 
     public static void requestDockableActivation(Component c, boolean forceChange) {
-        if(c==null)
+        if(c==null) {
             return;
+        }
 
         Dockable dockable = DockingUtility.getAncestorDockable(c);
         if(dockable!=null) {
@@ -112,8 +114,9 @@ public class ActiveDockableTracker {
     }
 
     public static void requestDockableActivation(final Component c, final Dockable dockable, final boolean forceChange) {
-        if(c==null || dockable==null)
+        if(c==null || dockable==null) {
             return;
+        }
 
         // make sure the window is currently active
         SwingUtility.activateWindow(c);
@@ -123,14 +126,16 @@ public class ActiveDockableTracker {
     static void focusDockable(Component child, final Dockable parentDockable, boolean forceChange) {
         // if the dockable is already active, then leave it alone.
         // skip this check if they're trying to force a change
-        if(!forceChange && parentDockable.getDockingProperties().isActive().booleanValue())
+        if(!forceChange && parentDockable.getDockingProperties().isActive().booleanValue()) {
             return;
+        }
 
         Component parentComp = parentDockable.getComponent();
         Container focusRoot = parentComp instanceof Container? (Container)parentComp: null;
         Component focuser = focusRoot==null? null: SwingUtility.getNearestFocusableComponent(child, focusRoot);
-        if(focuser==null)
+        if(focuser==null) {
             focuser = parentComp;
+        }
 
         /*
           requestDockableActivation is called when one clicks in the window (cf ActiveDockableListener.eventDispatched)
@@ -163,8 +168,9 @@ public class ActiveDockableTracker {
         if(parentComp.getParent() instanceof JTabbedPane) {
             JTabbedPane tabPane = (JTabbedPane)parentComp.getParent();
             int indx = tabPane.indexOfComponent(parentComp);
-            if(indx!=tabPane.getSelectedIndex())
+            if(indx!=tabPane.getSelectedIndex()) {
                 tabPane.setSelectedIndex(indx);
+            }
         }
     }
 
@@ -204,8 +210,9 @@ public class ActiveDockableTracker {
     public boolean containsPropertyChangeListener(PropertyChangeListener listener) {
         PropertyChangeListener[] listeners = getPropertyChangeListeners();
         for(int i=0; i<listeners.length; i++) {
-            if(listeners[i]==listener)
+            if(listeners[i]==listener) {
                 return true;
+            }
         }
         return false;
     }

@@ -35,8 +35,9 @@ public class DockingAdapter {
     public List getDragSources() {
         // first, try to get a list of drag sources
         Object obj = get(component, mapping.getDragSourceList());
-        if(obj instanceof List)
+        if(obj instanceof List) {
             return (List)obj;
+        }
 
         // if we couldn't find a list, then try to get an individual drag source
         // and create a List from it
@@ -54,8 +55,9 @@ public class DockingAdapter {
     public Set getFrameDragSources() {
         // first, try to get a set of frame drag sources
         Object obj = get(component, mapping.getFrameDragSourceList());
-        if(obj instanceof Set)
+        if(obj instanceof Set) {
             return (Set)obj;
+        }
 
         // if we couldn't find a set, then try to get an individual
         // frame drag source and create a Set from it
@@ -86,8 +88,9 @@ public class DockingAdapter {
     }
 
     private Object get(Object obj, String methodName) {
-        if(obj==null || methodName==null)
+        if(obj==null || methodName==null) {
             return null;
+        }
 
         try {
             Class c = obj.getClass();

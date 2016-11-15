@@ -77,13 +77,15 @@ public class Titlebar extends JComponent {
         }
 
         removeAllActions();
-        for (int i = 0; i < actions.length; i++)
+        for (int i = 0; i < actions.length; i++) {
             addAction(actions[i]);
+        }
     }
 
     public synchronized void addAction(String actionName) {
-        if (actionName == null || !(ui instanceof TitlebarUI))
+        if (actionName == null || !(ui instanceof TitlebarUI)) {
             return;
+        }
 
         TitlebarUI tbarUI = (TitlebarUI) ui;
         Action action = tbarUI.getAction(actionName);
@@ -91,8 +93,9 @@ public class Titlebar extends JComponent {
     }
 
     public synchronized void addAction(Action action) {
-        if (action == null)
+        if (action == null) {
             return;
+        }
 
         String key = getKey(action);
         if (key == null) {
@@ -101,8 +104,9 @@ public class Titlebar extends JComponent {
         }
 
         // don't add the same action more than once
-        if (hasAction(key))
+        if (hasAction(key)) {
             return;
+        }
 
         // create the button
         Button button = createActionButton(action);
@@ -131,14 +135,16 @@ public class Titlebar extends JComponent {
     }
 
     public Action getAction(String key) {
-        if (key == null)
+        if (key == null) {
             return null;
+        }
 
         for (Iterator it = actionList.iterator(); it.hasNext();) {
             Action action = (Action) it.next();
             String actionName = (String) action.getValue(Action.NAME);
-            if (key.equals(actionName))
+            if (key.equals(actionName)) {
                 return action;
+            }
         }
         return null;
     }
@@ -168,16 +174,18 @@ public class Titlebar extends JComponent {
     }
 
     public void removeAction(Action action) {
-        if (action == null)
+        if (action == null) {
             return;
+        }
 
         String key = getKey(action);
         removeAction(key);
     }
 
     public synchronized void removeAction(String key) {
-        if (!hasAction(key))
+        if (!hasAction(key)) {
             return;
+        }
 
         // Remove button associated with this action.
         Button button = getButton(key);
@@ -191,8 +199,9 @@ public class Titlebar extends JComponent {
     }
 
     protected synchronized void removeAllActions() {
-        if (actionList == null)
+        if (actionList == null) {
             return;
+        }
 
         while (actionList.size() > 0) {
             Action action = (Action) actionList.get(0);
@@ -236,14 +245,16 @@ public class Titlebar extends JComponent {
 
     public Button createActionButton(Action action) {
         Button button = new Button(action);
-        if (ui instanceof TitlebarUI)
+        if (ui instanceof TitlebarUI) {
             ((TitlebarUI) ui).configureAction(action);
+        }
 
         // sync up the button model
         if (action instanceof ViewAction) {
             ButtonModel model = ((ViewAction) action).createButtonModel();
-            if (model != null)
+            if (model != null) {
                 button.setModel(model);
+            }
         }
 
         return button;
@@ -256,8 +267,9 @@ public class Titlebar extends JComponent {
         for (int i = 0; i < comps.length; i++) {
             Button button = comps[i] instanceof Button ? (Button) comps[i]
                             : null;
-            if (button == null)
+            if (button == null) {
                 continue;
+            }
 
             ButtonModel bm = button.getModel();
             if (bm instanceof ViewButtonModel) {
@@ -267,8 +279,9 @@ public class Titlebar extends JComponent {
     }
 
     public void doLayout() {
-        if (ui instanceof TitlebarUI)
+        if (ui instanceof TitlebarUI) {
             ((TitlebarUI) ui).layoutComponents(this);
+        }
     }
 
     public void updateUI() {

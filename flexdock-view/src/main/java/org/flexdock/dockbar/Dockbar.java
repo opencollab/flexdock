@@ -58,14 +58,16 @@ public class Dockbar extends JPanel {
     }
 
     public DockbarLabel getLabel(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return null;
+        }
 
         for (Iterator docks = mDocks.iterator(); docks.hasNext();) {
             DockbarLabel label = (DockbarLabel) docks.next();
 
-            if (label.getDockable() == dockable)
+            if (label.getDockable() == dockable) {
                 return label;
+            }
         } // for
 
         return null;
@@ -76,8 +78,9 @@ public class Dockbar extends JPanel {
     }
 
     public void dock(Dockable dockable) {
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
         DockbarLabel currentLabel = getLabel(dockable);
         if (currentLabel!=null) {
@@ -102,8 +105,9 @@ public class Dockbar extends JPanel {
         this.orientation = orientation;
 
         Border border = getBorder();
-        if(border instanceof SlideoutBorder)
+        if(border instanceof SlideoutBorder) {
             ((SlideoutBorder)border).setOrientation(orientation);
+        }
 
         int boxConstraint = orientation==MinimizationManager.TOP ||
                             orientation==MinimizationManager.BOTTOM? BoxLayout.LINE_AXIS: BoxLayout.PAGE_AXIS;
@@ -111,8 +115,9 @@ public class Dockbar extends JPanel {
     }
 
     public Dimension getPreferredSize() {
-        if(mDocks.size()==0)
+        if(mDocks.size()==0) {
             return new Dimension(0,0);
+        }
 
         DockbarLabel label = (DockbarLabel)getComponent(0);
         return label.getPreferredSize();
@@ -121,8 +126,9 @@ public class Dockbar extends JPanel {
     void activate(String dockableId, boolean lock) {
         if(manager!=null) {
             manager.setActiveDockable(dockableId);
-            if(lock)
+            if(lock) {
                 manager.getActivationListener().lockViewpane();
+            }
         }
     }
 }

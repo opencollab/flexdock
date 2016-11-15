@@ -20,8 +20,9 @@ public class DockablePropertyChangeHandler implements PropertyChangeListener {
 
     public void propertyChange(PropertyChangeEvent evt) {
         Dockable dockable = evt.getSource() instanceof Dockable? (Dockable)evt.getSource(): null;
-        if(dockable==null)
+        if(dockable==null) {
             return;
+        }
 
         if (evt.getPropertyName().equals(DockablePropertySet.TAB_ICON)
                 || evt.getPropertyName().equals(DockablePropertySet.DESCRIPTION)) {

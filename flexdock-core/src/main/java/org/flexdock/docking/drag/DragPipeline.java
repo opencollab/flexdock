@@ -43,8 +43,9 @@ public class DragPipeline {
     }
 
     public void open(DragOperation token) {
-        if(token==null)
+        if(token==null) {
             throw new NullPointerException("'token' parameter cannot be null.");
+        }
 
         if(EventQueue.isDispatchThread()) {
             openImpl(token);
@@ -85,8 +86,9 @@ public class DragPipeline {
         }
 
         // kill the rubberband if floating is not allowed
-        if(!DragManager.isFloatingAllowed(operation.getDockableReference()))
+        if(!DragManager.isFloatingAllowed(operation.getDockableReference())) {
             rubberBand = null;
+        }
 
         operation.start();
         open = true;
@@ -108,8 +110,9 @@ public class DragPipeline {
 
 
     public void close() {
-        if(!open)
+        if(!open) {
             return;
+        }
 
         clearRubberBand();
         for(int i=0; i<windows.length; i++) {
@@ -132,8 +135,9 @@ public class DragPipeline {
     }
 
     public void processDragEvent(MouseEvent me) {
-        if(!open)
+        if(!open) {
             return;
+        }
 
         if(EventQueue.isDispatchThread()) {
             processDragEventImpl(me);
@@ -151,8 +155,9 @@ public class DragPipeline {
     private void processDragEventImpl(MouseEvent me) {
         dragToken.updateMouse(me);
 
-        if(heavyweightDockableSupportted)
+        if(heavyweightDockableSupportted) {
             preprocessHeavyweightDockables();
+        }
 
         me.consume();
 
@@ -277,24 +282,28 @@ public class DragPipeline {
     }
 
     private void clearRubberBand() {
-        if(rubberBand!=null)
+        if(rubberBand!=null) {
             rubberBand.clear();
+        }
     }
 
     private void paintRubberBand(Rectangle rect) {
-        if(rubberBand!=null)
+        if(rubberBand!=null) {
             rubberBand.paint(rect);
+        }
     }
 
     private void setCurrentDragOperation(DragOperation operation) {
         DragOperation current = DragManager.getCurrentDragOperation();
-        if(operation==current)
+        if(operation==current) {
             return;
+        }
 
         DockingPort srcPort = operation==null? current.getSourcePort(): operation.getSourcePort();
         DragManager.setCurrentDragOperation(operation);
-        if(srcPort instanceof Component)
+        if(srcPort instanceof Component) {
             SwingUtility.repaint((Component)srcPort);
+        }
 
         // TODO: We want to get rid of this code in the future.  I don't like
         // having a public setDragInProgress() method on the default docking port
@@ -322,8 +331,9 @@ public class DragPipeline {
     private RootWindow getTargetWindow() {
         Point screenLoc = dragToken.getCurrentMouse(true);
         for(int i=0; i<windowBounds.length; i++) {
-            if(windowBounds[i].contains(screenLoc))
+            if(windowBounds[i].contains(screenLoc)) {
                 return (RootWindow)rootWindowsByBounds.get(windowBounds[i]);
+            }
         }
         return null;
     }

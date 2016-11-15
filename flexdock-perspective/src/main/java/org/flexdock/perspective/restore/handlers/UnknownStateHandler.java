@@ -45,16 +45,19 @@ public class UnknownStateHandler implements RestorationHandler, DockingConstants
 
     public boolean restore(Dockable dockable, DockingState info, Map context) {
         DockingPort port = PerspectiveManager.getMainDockingPort();
-        if(port==null)
+        if(port==null) {
             return false;
+        }
 
         Component comp = port.getDockedComponent();
-        if(comp==null)
+        if(comp==null) {
             return dock(dockable, port);
+        }
 
         DockingInfo dockingInfo = getDeepestWest(port);
-        if(dockingInfo.dockable==null)
+        if(dockingInfo.dockable==null) {
             return dock(dockable, dockingInfo.port);
+        }
         return dock(dockable, dockingInfo.dockable);
     }
 
@@ -74,8 +77,9 @@ public class UnknownStateHandler implements RestorationHandler, DockingConstants
             } else {
                 ret = DockingManager.dock(dockable, parent, REGIONS[i]);
             }
-            if(ret)
+            if(ret) {
                 return true;
+            }
         }
         return false;
     }
@@ -89,8 +93,9 @@ public class UnknownStateHandler implements RestorationHandler, DockingConstants
 
         if(comp instanceof JSplitPane) {
             comp = ((JSplitPane)comp).getLeftComponent();
-            if(comp instanceof DockingPort)
+            if(comp instanceof DockingPort) {
                 return getDeepestWest((DockingPort)comp);
+            }
         }
 
         return new DockingInfo(DockingManager.getDockable(comp), port);

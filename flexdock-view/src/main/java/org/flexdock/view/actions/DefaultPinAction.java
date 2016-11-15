@@ -39,8 +39,9 @@ public class DefaultPinAction extends ViewAction {
     private static class PinButtonModel extends ViewButtonModel {
         public boolean isSelected() {
             DockingState info = getDockingState();
-            if(info==null)
+            if(info==null) {
                 return super.isSelected();
+            }
             return info.isMinimized();
         }
     }

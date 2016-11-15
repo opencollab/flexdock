@@ -170,19 +170,22 @@ public class DockbarLabel extends JLabel implements MouseListener {
 
     private void updateIcon() {
         Object obj = getIcon();
-        if(!(obj instanceof TextIcon))
+        if(!(obj instanceof TextIcon)) {
             return;
+        }
 
         Dockable d = getDockable();
         DockablePropertySet p = d==null? null: d.getDockingProperties();
-        if(p==null)
+        if(p==null) {
             return;
+        }
 
         int orientation = getOrientation();
         int rotation = ROTATIONS[orientation];
         Icon dockIcon = p.getDockbarIcon();
-        if(dockIcon==null)
+        if(dockIcon==null) {
             dockIcon = p.getTabIcon();
+        }
         String text = p.getDockableDesc();
 
         TextIcon icon = (TextIcon)obj;
@@ -234,15 +237,17 @@ public class DockbarLabel extends JLabel implements MouseListener {
 
     public int getOrientation() {
         Container cnt = getParent();
-        if(cnt instanceof Dockbar)
+        if(cnt instanceof Dockbar) {
             return ((Dockbar)cnt).getOrientation();
+        }
         return mDefaultOrientation;
     }
 
     public Dimension getPreferredSize() {
         Icon  tmp = getIcon();
-        if(!(tmp instanceof TextIcon))
+        if(!(tmp instanceof TextIcon)) {
             return super.getPreferredSize();
+        }
 
         Insets insets = getInsets();
         TextIcon icon = (TextIcon)tmp;
@@ -263,8 +268,9 @@ public class DockbarLabel extends JLabel implements MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        if(e.getButton() != MouseEvent.BUTTON1)
+        if(e.getButton() != MouseEvent.BUTTON1) {
             return;
+        }
 
         activate(true);
     }

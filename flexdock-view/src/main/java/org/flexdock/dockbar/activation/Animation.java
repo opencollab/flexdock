@@ -50,19 +50,20 @@ public class Animation implements Runnable, ActionListener {
         if(frameCount==getTotalFrameCount()-1) {
             timer.stop();
             wakeUp();
-        } else
+        } else {
             frameCount++;
+        }
     }
 
     private void resetViewpaneSize() {
         ViewPane viewPane = dockManager.getViewPane();
         int prefSize = dockManager.getPreferredViewpaneSize();
 
-        if(frameCount==0)
+        if(frameCount==0) {
             prefSize = getStartSize(prefSize);
-        else if(frameCount==getTotalFrameCount()-1)
+        } else if(frameCount==getTotalFrameCount()-1) {
             prefSize = getEndSize(prefSize);
-        else {
+        } else {
             int newSize = (int)((float)prefSize * (frameCount*frameDelta));
             prefSize = hiding? prefSize-newSize: newSize;
         }
@@ -71,14 +72,16 @@ public class Animation implements Runnable, ActionListener {
     }
 
     private int getStartSize(int prefSize) {
-        if(hiding)
+        if(hiding) {
             return prefSize;
+        }
         return 0;
     }
 
     private int getEndSize(int prefSize) {
-        if(hiding)
+        if(hiding) {
             return 0;
+        }
         return prefSize;
     }
 

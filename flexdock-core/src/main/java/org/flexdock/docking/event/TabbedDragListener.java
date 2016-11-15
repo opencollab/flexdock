@@ -22,13 +22,15 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
     private DragManager dragListener;
 
     public void mouseDragged(MouseEvent me) {
-        if(dragListener!=null)
+        if(dragListener!=null) {
             dragListener.mouseDragged(me);
+        }
     }
 
     public void mouseReleased(MouseEvent me) {
-        if(dragListener!=null)
+        if(dragListener!=null) {
             dragListener.mouseReleased(me);
+        }
         dragListener = null;
     }
 
@@ -48,8 +50,9 @@ public class TabbedDragListener extends MouseAdapter implements MouseMotionListe
 
         Dockable dockable = DockingManager.getDockable(pane.getComponentAt(tabIndex));
         dragListener = DockingManager.getDragListener(dockable);
-        if(dragListener!=null)
+        if(dragListener!=null) {
             dragListener.mousePressed(me);
+        }
     }
 
     public void mouseMoved(MouseEvent me) {

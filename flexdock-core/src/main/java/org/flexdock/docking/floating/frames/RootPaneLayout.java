@@ -119,20 +119,23 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
         int h = bounds.height - insets.top - insets.bottom;
 
         JLayeredPane layeredPane = pane.getLayeredPane();
-        if (layeredPane != null)
+        if (layeredPane != null) {
             layeredPane.setBounds(insets.left, insets.top, w, h); // x, y, w, h
+        }
 
         Component glassPane = pane.getGlassPane();
-        if (glassPane != null)
+        if (glassPane != null) {
             glassPane.setBounds(insets.left, insets.top, w, h);
+        }
 
         // Note: This is laying out the children in the layeredPane,
         // technically, these are not our children.
 
         int contentY = 0;
         Container contentPane = pane.getContentPane();
-        if (contentPane != null)
+        if (contentPane != null) {
             contentPane.setBounds(0, contentY, w, h - contentY); // x, y, w, h
+        }
     }
 
     // more...
