@@ -42,7 +42,7 @@ public class DockingPathSerializer implements ISerializer {
         Element dockingPathElement = document.createElement(PersistenceConstants.DOCKING_PATH_ELEMENT_NAME);
         dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_ROOT_PORT_ID, dockingPath.getRootPortId());
 
-        if (dockingPath.getSiblingId() != null && !dockingPath.getSiblingId().equals("")) {
+        if (dockingPath.getSiblingId() != null && dockingPath.getSiblingId().length() != 0) {
             dockingPathElement.setAttribute(PersistenceConstants.DOCKING_PATH_ATTRIBUTE_SIBLING_ID, dockingPath.getSiblingId());
         }
 

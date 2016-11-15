@@ -70,7 +70,7 @@ public class StatusDockbar extends Dockbar {
 
     public Dimension getPreferredSize() {
         if (statusBarComponent == null || statusBarComponent.getComponentCount() == 0) {
-            if (mDocks.size() == 0) {
+            if (mDocks.isEmpty()) {
                 return new Dimension(0, 0);
             } else {
                 return labelPanel.getComponent(0).getPreferredSize();

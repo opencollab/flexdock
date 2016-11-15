@@ -151,7 +151,7 @@ public class IconResourceFactory implements XMLConstants {
             }
         }
         // if all our resources were already cached, then we can return immediately
-        if(notCached.size()==0) {
+        if(notCached.isEmpty()) {
             return iconMap;
         }
 

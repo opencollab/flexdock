@@ -91,7 +91,7 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
         }
 
         Set frameDragSources = dockable.getFrameDragSources();
-        if (frameDragSources == null || frameDragSources.size() == 0) {
+        if (frameDragSources == null || frameDragSources.isEmpty()) {
             return false;
         }
 

@@ -263,7 +263,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
 
         DockingPort rootPort = getRootDockingPort();
         String region = CENTER_REGION;
-        if(nodes.size()==0) {
+        if(nodes.isEmpty()) {
             return dockFullPath(dockable, rootPort, region);
         }
 
@@ -390,7 +390,7 @@ public class DockingPath implements Cloneable, DockingConstants, Serializable {
     }
 
     public SplitNode getLastNode() {
-        return nodes.size()==0? null: (SplitNode)nodes.get(nodes.size()-1);
+        return nodes.isEmpty()? null: (SplitNode)nodes.get(nodes.size()-1);
     }
 
     private boolean dock(Dockable dockable, DockingPort port, String region, SplitNode ctrlNode) {
