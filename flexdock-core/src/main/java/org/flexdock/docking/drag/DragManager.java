@@ -1,5 +1,21 @@
 /*
- * Created on Mar 14, 2005
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.docking.drag;
 
@@ -124,7 +140,7 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
         DockingEvent evt = new DockingEvent(dockable, currentPort, targetPort, DockingEvent.DROP_STARTED, mouseEvt, getDragContext());
         evt.setRegion(region);
         evt.setOverWindow(token.isOverWindow());
-//		EventManager.notifyDockingMonitor(dockable, evt);
+//                EventManager.notifyDockingMonitor(dockable, evt);
         EventManager.dispatch(evt, dockable);
 
 
@@ -157,8 +173,8 @@ public class DragManager extends MouseAdapter implements MouseMotionListener {
         // before dragging, so normally we'll try to do that.  However, if developers really want to
         // keep them in there, then they can implement the Dockable interface for their dragSource and
         // let mouseMotionListenersBlockedWhileDragging() return false
-//		if (!dockableImpl.mouseMotionListenersBlockedWhileDragging())
-//			return;
+//                if (!dockableImpl.mouseMotionListenersBlockedWhileDragging())
+//                        return;
 
         Component dragSrc = token.getDragSource();
         EventListener[] cachedListeners = dragSrc.getListeners(MouseMotionListener.class);

@@ -1,3 +1,22 @@
+/*
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.flexdock.docking.drag;
 
 import java.awt.Component;
@@ -8,8 +27,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
-
-
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.defaults.DefaultDockingPort;
@@ -17,7 +34,6 @@ import org.flexdock.docking.drag.effects.EffectsManager;
 import org.flexdock.docking.drag.effects.RubberBand;
 import org.flexdock.util.RootWindow;
 import org.flexdock.util.SwingUtility;
-import org.flexdock.util.Utilities;
 
 public class DragPipeline {
 
@@ -121,7 +137,7 @@ public class DragPipeline {
                 DragGlasspane pane = (DragGlasspane)cmp;
                 pane.setVisible(false);
                 cmp = pane.getCachedGlassPane();
-//				pane.dispose();
+//                                pane.dispose();
                 windows[i].setGlassPane(cmp);
                 windows[i] = null;
             }
@@ -208,7 +224,7 @@ public class DragPipeline {
         // otherwise, process the drag event on the current glasspane
         // and repaint it.
         // TODO: Fix post-painter on unchanged glasspane.
-//		currentGlasspane.setPostPainter(getPostPainter(screenRect));
+//                currentGlasspane.setPostPainter(getPostPainter(screenRect));
         currentGlasspane.setPostPainter(null);
         currentGlasspane.processDragEvent(dragToken);
     }
@@ -241,13 +257,13 @@ public class DragPipeline {
 
 
     private Runnable getPostPainter(final Rectangle rect) {
-//		if(!ResourceManager.isWindowsPlatform())
-//			return null;
+//                if(!ResourceManager.isWindowsPlatform())
+//                        return null;
 
         return new Runnable() {
             public void run() {
                 deferRubberBandDrawing(rect);
-//				drawRubberBand(rect);
+//                                drawRubberBand(rect);
             }
         };
     }

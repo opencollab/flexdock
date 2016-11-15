@@ -1,3 +1,22 @@
+/*
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package org.flexdock.demos.perspective;
 
 import java.awt.BorderLayout;
@@ -117,8 +136,8 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
         JMenu perspectiveMenu = new JMenu("Perspective");
         //pobieramy perspektywe nr 1
         perspectiveMenu.add(new OpenPerspectiveAction(P1));
-//		perspectiveMenu.add(new OpenPerspectiveAction(P2));
-//		perspectiveMenu.add(new OpenPerspectiveAction(P3));
+//                perspectiveMenu.add(new OpenPerspectiveAction(P2));
+//                perspectiveMenu.add(new OpenPerspectiveAction(P3));
 
         menuBar.add(showViewMenu);
         menuBar.add(perspectiveMenu);
@@ -159,10 +178,10 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
                 return createPerspective1();
             }
 
-//			if(P2.equals(persistentId))
-//				return createPerspective2();
-//			if(P3.equals(persistentId))
-//				return createPerspective3();
+//                        if(P2.equals(persistentId))
+//                                return createPerspective2();
+//                        if(P3.equals(persistentId))
+//                                return createPerspective3();
             return null;
         }
 
@@ -179,25 +198,25 @@ public class XMLPerspectivesDemo extends JFrame implements DockingConstants {
             return perspective;
         }
 
-//		private Perspective createPerspective2() {
-//			Perspective perspective = new Perspective(P2, "Perspective2");
-//			LayoutSequence sequence = perspective.getInitialSequence(true);
+//                private Perspective createPerspective2() {
+//                        Perspective perspective = new Perspective(P2, "Perspective2");
+//                        LayoutSequence sequence = perspective.getInitialSequence(true);
 //
-//			sequence.add("main.view");
-//			sequence.add(BIRD_VIEW, "main.view", WEST_REGION, .3f);
-//			sequence.add(MESSAGE_VIEW, BIRD_VIEW, SOUTH_REGION, .5f);
-//			sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
-//			sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, EAST_REGION, .5f);
+//                        sequence.add("main.view");
+//                        sequence.add(BIRD_VIEW, "main.view", WEST_REGION, .3f);
+//                        sequence.add(MESSAGE_VIEW, BIRD_VIEW, SOUTH_REGION, .5f);
+//                        sequence.add(PROBLEM_VIEW, MESSAGE_VIEW);
+//                        sequence.add(CONSOLE_VIEW, MESSAGE_VIEW, EAST_REGION, .5f);
 //
-//			return perspective;
-//		}
+//                        return perspective;
+//                }
 //
-//		private Perspective createPerspective3() {
-//			Perspective perspective = new Perspective(P3, "Perspective3");
-//			LayoutSequence sequence = perspective.getInitialSequence(true);
-//			sequence.add("main.view");
-//			return perspective;
-//		}
+//                private Perspective createPerspective3() {
+//                        Perspective perspective = new Perspective(P3, "Perspective3");
+//                        LayoutSequence sequence = perspective.getInitialSequence(true);
+//                        sequence.add("main.view");
+//                        return perspective;
+//                }
     }
 
     private static class ViewFactory extends DockableFactory.Stub {

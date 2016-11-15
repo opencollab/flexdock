@@ -31,38 +31,38 @@ import org.flexdock.perspective.Perspective;
  */
 public class PerspectiveModel implements Serializable {
 
-    private String m_defaultPerspective;
-    private String m_currentPerspective;
-    private Perspective[] m_perspectives;
+    private String defaultPerspective;
+    private String currentPerspective;
+    private Perspective[] perspectives;
 
     public PerspectiveModel(String defaultId, String current, Perspective[] perspectives) {
-        m_defaultPerspective = defaultId;
-        m_currentPerspective = current;
-        m_perspectives = perspectives;
+        this.defaultPerspective = defaultId;
+        this.currentPerspective = current;
+        this.perspectives = perspectives;
     }
 
     public String getDefaultPerspective() {
-        return m_defaultPerspective;
+        return this.defaultPerspective;
     }
 
     public void setDefaultPerspective(String defaultPerspective) {
-        m_defaultPerspective = defaultPerspective;
+        this.defaultPerspective = defaultPerspective;
     }
 
     public Perspective[] getPerspectives() {
-        return m_perspectives;
+        return this.perspectives;
     }
 
     public void setPerspectives(Perspective[] perspectives) {
-        m_perspectives = perspectives;
+        this.perspectives = perspectives;
     }
 
     public String getCurrentPerspective() {
-        return m_currentPerspective;
+        return this.currentPerspective;
     }
 
     public void setCurrentPerspective(String currentPerspective) {
-        m_currentPerspective = currentPerspective;
+        this.currentPerspective = currentPerspective;
     }
 
 }

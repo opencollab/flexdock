@@ -1,5 +1,21 @@
 /*
- * Created on Aug 23, 2004
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.util;
 
@@ -111,11 +127,11 @@ public class SwingUtility {
         r.setLocation(p);
 
         return new Point[] {
-                   p,
-                   new Point(p.x + r.width, p.y),
-                   new Point(p.x + r.width, p.y+r.height),
-                   new Point(p.x, p.y+r.height)
-               };
+            p,
+            new Point(p.x + r.width, p.y),
+            new Point(p.x + r.width, p.y+r.height),
+            new Point(p.x, p.y+r.height)
+        };
     }
 
     public static final void centerOnScreen(Window window) {
@@ -485,73 +501,73 @@ public class SwingUtility {
     }
 
     public static void toggleFocus(int direction) {
-	KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         Component focused = manager.getFocusOwner();
-	Component newFocused = getNext(focused, direction);
-	if (newFocused != null) {
-	    SwingUtility.focus(newFocused);
-	}
+        Component newFocused = getNext(focused, direction);
+        if (newFocused != null) {
+            SwingUtility.focus(newFocused);
+        }
     }
 
     private static Component getNext(Component comp, int direction) {
-	Component next = null;
-	JTabbedPane tab;
-	if (comp instanceof JTabbedPane) {
-	    tab = (JTabbedPane) comp;
-	} else {
-	    tab = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, comp);
-	}
+        Component next = null;
+        JTabbedPane tab;
+        if (comp instanceof JTabbedPane) {
+            tab = (JTabbedPane) comp;
+        } else {
+            tab = (JTabbedPane) SwingUtilities.getAncestorOfClass(JTabbedPane.class, comp);
+        }
 
-	if (tab != null) {
-	    int index = tab.getSelectedIndex();
-	    if (direction > 0 && index < tab.getTabCount() - 1) {
-		tab.setSelectedIndex(index + 1);
-		next = tab;
-	    } else if (direction <= 0 && index > 0) {
-		tab.setSelectedIndex(index - 1);
-		next = tab;
-	    } else {
-		DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, tab);
-		next = getNext(port, direction);
-	    }
-	} else {
-	    DockingSplitPane pane = (DockingSplitPane) SwingUtilities.getAncestorOfClass(DockingSplitPane.class, comp);
-	    if (pane == null) {
-		return getFirstComponent(comp, direction);
-	    }
-	    
-	    Component left = pane.getLeftComponent();
-	    Component right = pane.getRightComponent();
-	    
-	    if (SwingUtilities.isDescendingFrom(comp, left)) {
-		if (direction > 0) {
-		    next = getFirstComponent(right, direction);
-		} else {
-		    DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, pane);
-		    next = getNext(port, direction);
-		}
-	    } else {
-		if (direction > 0) {
-		    DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, pane);
-		    next = getNext(port, direction);
-		} else {
-		    next = getFirstComponent(left, direction);
-		}
-	    }
-	}
+        if (tab != null) {
+            int index = tab.getSelectedIndex();
+            if (direction > 0 && index < tab.getTabCount() - 1) {
+                tab.setSelectedIndex(index + 1);
+                next = tab;
+            } else if (direction <= 0 && index > 0) {
+                tab.setSelectedIndex(index - 1);
+                next = tab;
+            } else {
+                DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, tab);
+                next = getNext(port, direction);
+            }
+        } else {
+            DockingSplitPane pane = (DockingSplitPane) SwingUtilities.getAncestorOfClass(DockingSplitPane.class, comp);
+            if (pane == null) {
+                return getFirstComponent(comp, direction);
+            }
 
-	return next;
+            Component left = pane.getLeftComponent();
+            Component right = pane.getRightComponent();
+
+            if (SwingUtilities.isDescendingFrom(comp, left)) {
+                if (direction > 0) {
+                    next = getFirstComponent(right, direction);
+                } else {
+                    DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, pane);
+                    next = getNext(port, direction);
+                }
+            } else {
+                if (direction > 0) {
+                    DefaultDockingPort port = (DefaultDockingPort) SwingUtilities.getAncestorOfClass(DefaultDockingPort.class, pane);
+                    next = getNext(port, direction);
+                } else {
+                    next = getFirstComponent(left, direction);
+                }
+            }
+        }
+
+        return next;
     }
 
     private static Component getFirstComponent(Component c, int direction) {
-	while (c instanceof DefaultDockingPort) {
-	    c = ((DockingPort) c).getDockedComponent();
-	    if (c instanceof DockingSplitPane) {
-		DockingSplitPane pane = (DockingSplitPane) c;
-		c = direction > 0 ? pane.getLeftComponent() : pane.getRightComponent();
-	    }
-	}
+        while (c instanceof DefaultDockingPort) {
+            c = ((DockingPort) c).getDockedComponent();
+            if (c instanceof DockingSplitPane) {
+                DockingSplitPane pane = (DockingSplitPane) c;
+                c = direction > 0 ? pane.getLeftComponent() : pane.getRightComponent();
+            }
+        }
 
-	return c;
+        return c;
     }
 }

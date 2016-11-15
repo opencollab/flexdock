@@ -1,5 +1,21 @@
 /*
- * Created on Mar 14, 2005
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.docking.defaults;
 
@@ -23,13 +39,11 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.docking.defaults.DockingSplitPane;
 import org.flexdock.docking.drag.DragManager;
 import org.flexdock.docking.drag.DragOperation;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.floating.frames.DockingFrame;
 import org.flexdock.docking.floating.frames.FloatingDockingPort;
-import org.flexdock.docking.props.DockablePropertySet;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.event.EventManager;
 import org.flexdock.util.DockingUtility;
@@ -749,7 +763,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      */
     public JSplitPane createSplitPane(DockingPort base, String region, float percent) {
         JSplitPane split = createSplitPaneImpl(base, region);
-	split.setVisible(false);
+        split.setVisible(false);
         // mark the creation region on the split pane
         SwingUtility.putClientProperty(split, DockingConstants.REGION, region);
 
@@ -799,20 +813,20 @@ public class DefaultDockingStrategy implements DockingStrategy,
             divider.addMouseListener(new MouseAdapter() {
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e)
-                    && e.getClickCount() == 2) {
+                            && e.getClickCount() == 2) {
                         // TODO should be not override, but placed logic here
                         ((JSplitPane) divider.getParent())
-                        .resetToPreferredSizes();
+                                .resetToPreferredSizes();
                     }
                 }
             });
         }
 
-	if (percent != -1) {
-	    split.setDividerLocation(percent);
-	}
-	
-	split.setVisible(true);
+        if (percent != -1) {
+            split.setDividerLocation(percent);
+        }
+
+        split.setVisible(true);
 
         return split;
     }
@@ -860,7 +874,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see JSplitPane#setResizeWeight(double)
      */
     public JSplitPane createSplitPane(DockingPort base, String region) {
-	return createSplitPane(base, region, -1f);
+        return createSplitPane(base, region, -1f);
     }
 
     protected JSplitPane createSplitPaneImpl(DockingPort base, String region) {

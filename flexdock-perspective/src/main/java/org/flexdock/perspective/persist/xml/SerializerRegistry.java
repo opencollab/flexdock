@@ -28,7 +28,7 @@ import java.util.HashMap;
  */
 public class SerializerRegistry {
 
-    private static HashMap m_serializers = new HashMap();
+    private static HashMap serializers = new HashMap();
 
     public static void registerSerializer(Class clazz, ISerializer serializer) {
         if (clazz == null) {
@@ -38,7 +38,7 @@ public class SerializerRegistry {
             throw new IllegalArgumentException("serializer cannot be null");
         }
 
-        m_serializers.put(clazz, serializer);
+        serializers.put(clazz, serializer);
     }
 
     public static ISerializer getSerializer(Class clazz) {
@@ -46,7 +46,7 @@ public class SerializerRegistry {
             throw new IllegalArgumentException("clazz cannot be null");
         }
 
-        return (ISerializer) m_serializers.get(clazz);
+        return (ISerializer) serializers.get(clazz);
     }
 
 }

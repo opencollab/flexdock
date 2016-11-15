@@ -1,5 +1,3 @@
-package org.flexdock.dockbar.util;
-
 /* Copyright (c) 2004 Andreas Ernst
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
@@ -18,6 +16,7 @@ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIG
 HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
 CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
 OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. */
+package org.flexdock.dockbar.util;
 
 import java.awt.Component;
 import java.awt.FontMetrics;
@@ -117,12 +116,12 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
     public static int getValidRotation(int rotation) {
         switch(rotation) {
-        case ROTATE_LEFT:
-            return ROTATE_LEFT;
-        case ROTATE_RIGHT:
-            return ROTATE_RIGHT;
-        default:
-            return ROTATE_NONE;
+            case ROTATE_LEFT:
+                return ROTATE_LEFT;
+            case ROTATE_RIGHT:
+                return ROTATE_RIGHT;
+            default:
+                return ROTATE_NONE;
         }
     }
 
@@ -169,8 +168,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
         if (mRotation == ROTATE_NONE) {
             mHeight = Math.max(mCharHeight, mIcon != null ? mIcon.getIconHeight() : 0);
             mWidth  = fm.stringWidth(mText) + (mIcon != null ? (mIcon.getIconWidth() + mIconSpace) : 0);
-        } // if
-        else {
+        } else {
             mWidth  = Math.max(mCharHeight, mIcon != null ? mIcon.getIconHeight() : 0);
             mHeight = fm.stringWidth(mText) + (mIcon != null ? (mIcon.getIconWidth() + mIconSpace) : 0);
         } // else
@@ -214,9 +212,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, renderingHint);
 
-        } // if
-
-        else if (mRotation == ROTATE_LEFT) { // Bottom up
+        } else if (mRotation == ROTATE_LEFT) { // Bottom up
             int translateX = x + mWidth  - mInset;
             int translateY = y + mHeight - mInset;
 
@@ -239,9 +235,7 @@ public class TextIcon implements Icon, PropertyChangeListener {
 
             g2d.rotate(NINETY_DEGREES);
             g2d.translate(-translateX, -translateY);
-        } // if
-
-        else if (mRotation == ROTATE_RIGHT) { // top down
+        } else if (mRotation == ROTATE_RIGHT) { // top down
             int translateX = x + mInset;
             int translateY = y + mInset;
 

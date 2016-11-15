@@ -1,5 +1,21 @@
 /*
- * Created on Mar 4, 2005
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.test.perspective;
 
@@ -37,14 +53,14 @@ public class ViewRestorationTest extends JFrame implements DockingConstants {
     private static View view4 = null;
 
     public static void main(String[] args) throws Exception {
-//		Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
+//                Skin theSkinToUse = SkinLookAndFeel.loadThemePack("themepack.zip");
 //        SkinLookAndFeel.setSkin(theSkinToUse);
 
-//		http://dev.l2fprod.com/javadoc/com/l2fprod/gui/plaf/skin/SkinLookAndFeel.html
-//		SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
+//                http://dev.l2fprod.com/javadoc/com/l2fprod/gui/plaf/skin/SkinLookAndFeel.html
+//                SwingUtility.setPlaf("com.l2fprod.gui.plaf.skin.SkinLookAndFeel");
         SwingUtility.setPlaf("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-//		SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
-//		SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
+//                SwingUtility.setPlaf("com.sun.java.swing.plaf.motif.MotifLookAndFeel");
+//                SwingUtility.setPlaf("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
 
         JFrame f = new ViewRestorationTest();
         f.setSize(800, 600);
@@ -120,17 +136,17 @@ public class ViewRestorationTest extends JFrame implements DockingConstants {
 
     private class ShowViewAction extends AbstractAction {
 
-        private String m_commonView = null;
+        private String commonView = null;
 
         private ShowViewAction(String commonView) {
-            m_commonView = commonView;
+            this.commonView = commonView;
         }
 
         /**
          * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
          */
         public void actionPerformed(ActionEvent e) {
-            DockingManager.display(m_commonView);
+            DockingManager.display(commonView);
         }
 
     }

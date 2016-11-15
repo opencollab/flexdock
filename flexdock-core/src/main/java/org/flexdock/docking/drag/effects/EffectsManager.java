@@ -1,5 +1,21 @@
 /*
- * Created on Mar 15, 2005
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.docking.drag.effects;
 
@@ -28,10 +44,10 @@ public class EffectsManager {
     private static final String CONFIG_URI = "org/flexdock/docking/drag/effects/drag-effects.xml";
     private static final Object LOCK = new Object();
 
-    private static DragPreview DEFAULT_PREVIEW;
-    private static DragPreview CUSTOM_PREVIEW;
-    private static RubberBand DEFAULT_RUBBERBAND;
-    private static RubberBand CUSTOM_RUBBERBAND;
+    private static DragPreview defaultPreview;
+    private static DragPreview customPreview;
+    private static RubberBand defaultRubberband;
+    private static RubberBand customRubberband;
 
     static {
         prime();
@@ -39,19 +55,19 @@ public class EffectsManager {
 
     public static void prime() {
         Document config = ResourceManager.getDocument(CONFIG_URI);
-        DEFAULT_PREVIEW = loadDefaultPreview(config);
-        DEFAULT_RUBBERBAND = loadSystemRubberband(config);
+        defaultPreview = loadDefaultPreview(config);
+        defaultRubberband = loadSystemRubberband(config);
     }
 
     public static RubberBand getRubberBand() {
         synchronized(LOCK) {
-            return CUSTOM_RUBBERBAND==null? DEFAULT_RUBBERBAND: CUSTOM_RUBBERBAND;
+            return customRubberband==null? defaultRubberband: customRubberband;
         }
     }
 
     public static DragPreview getPreview(Dockable dockable, DockingPort target) {
         synchronized(LOCK) {
-            return CUSTOM_PREVIEW==null? DEFAULT_PREVIEW: CUSTOM_PREVIEW;
+            return customPreview==null? defaultPreview: customPreview;
         }
     }
 
@@ -67,7 +83,7 @@ public class EffectsManager {
 
     public static void setRubberBand(RubberBand rubberBand) {
         synchronized(LOCK) {
-            CUSTOM_RUBBERBAND = rubberBand;
+            customRubberband = rubberBand;
         }
     }
 
@@ -83,7 +99,7 @@ public class EffectsManager {
 
     public static void setPreview(DragPreview preview) {
         synchronized(LOCK) {
-            CUSTOM_PREVIEW = preview;
+            customPreview = preview;
         }
     }
 

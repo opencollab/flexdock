@@ -1,12 +1,23 @@
 /*
- * Created on 2005-03-24
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- * TODO To change the template for this generated file go to
- * Window - Preferences - Java - Code Style - Code Templates
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 package org.flexdock.perspective;
-
-
 
 import java.io.Serializable;
 
@@ -23,10 +34,10 @@ import org.flexdock.perspective.event.PerspectiveEvent;
  * @author Mateusz Szczap
  */
 public class Perspective implements Cloneable, Serializable {
-    private String m_persistentId;
-    private String m_perspectiveName;
-    private Layout m_layout;
-    private LayoutSequence m_initalSequence;
+    private String persistentId;
+    private String perspectiveName;
+    private Layout layout;
+    private LayoutSequence initalSequence;
 
 
     public Perspective(String persistentId, String perspectiveName) {
@@ -48,17 +59,17 @@ public class Perspective implements Cloneable, Serializable {
         if (perspectiveName == null) {
             throw new IllegalArgumentException("perspectiveName cannot be null");
         }
-        m_persistentId = persistentId;
-        m_perspectiveName = perspectiveName;
-        m_layout = new Layout();
+        this.persistentId = persistentId;
+        this.perspectiveName = perspectiveName;
+        this.layout = new Layout();
     }
 
     public String getName() {
-        return m_perspectiveName;
+        return this.perspectiveName;
     }
 
     public String getPersistentId() {
-        return m_persistentId;
+        return this.persistentId;
     }
 
     public void addDockable(String dockableId) {
@@ -106,31 +117,31 @@ public class Perspective implements Cloneable, Serializable {
     }
 
     public LayoutSequence getInitialSequence(boolean create) {
-        if(m_initalSequence==null && create) {
-            m_initalSequence = new LayoutSequence();
+        if(this.initalSequence==null && create) {
+            this.initalSequence = new LayoutSequence();
         }
-        return m_initalSequence;
+        return this.initalSequence;
     }
 
     public void setInitialSequence(LayoutSequence sequence) {
-        m_initalSequence = sequence;
+        this.initalSequence = sequence;
     }
 
     public Layout getLayout() {
-        return m_layout;
+        return this.layout;
     }
 
     public void setLayout(Layout layout) {
-        m_layout = layout;
+        this.layout = layout;
     }
 
     public void reset(DockingPort port) {
-        if(m_initalSequence!=null) {
-            m_initalSequence.apply(port);
+        if(this.initalSequence!=null) {
+            this.initalSequence.apply(port);
 
             Layout layout = getLayout();
             if(layout!=null) {
-                layout.update(m_initalSequence);
+                layout.update(this.initalSequence);
                 EventManager.getInstance().dispatchEvent(new PerspectiveEvent(this, null, PerspectiveEvent.RESET));
             }
         }
@@ -162,9 +173,9 @@ public class Perspective implements Cloneable, Serializable {
     }
 
     public Object clone() {
-        Perspective clone = new Perspective(m_persistentId, m_perspectiveName);
-        clone.m_layout = (Layout)m_layout.clone();
-        clone.m_initalSequence = m_initalSequence==null? null: (LayoutSequence)m_initalSequence.clone();
+        Perspective clone = new Perspective(this.persistentId, this.perspectiveName);
+        clone.layout = (Layout)this.layout.clone();
+        clone.initalSequence = this.initalSequence==null? null: (LayoutSequence)this.initalSequence.clone();
         return clone;
     }
 

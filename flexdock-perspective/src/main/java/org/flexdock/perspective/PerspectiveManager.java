@@ -60,16 +60,16 @@ public class PerspectiveManager implements LayoutManager {
 
     public static final String EMPTY_PERSPECTIVE = "PerspectiveManager.EMPTY_PERSPECTIVE";
     public static final String DEFAULT_PERSISTENCE_KEY_VALUE = "perspectiveFile.data";
-    private static PerspectiveManager SINGLETON = new PerspectiveManager();
-    private static DockingStateListener UPDATE_LISTENER = new DockingStateListener();
+    private static final PerspectiveManager SINGLETON = new PerspectiveManager();
+    private static final DockingStateListener UPDATE_LISTENER = new DockingStateListener();
 
-    private HashMap m_perspectives = new HashMap();
+    private HashMap perspectives = new HashMap();
     private PerspectiveFactory perspectiveFactory;
-    private String m_defaultPerspective;
-    private String m_currentPerspective;
-    private PersistenceHandler m_persistHandler;
+    private String defaultPerspective;
+    private String currentPerspective;
+    private PersistenceHandler persistHandler;
     private boolean restoreFloatingOnLoad;
-    private String m_defaultPersistenceKey;
+    private String defaultPersistenceKey;
 
     static {
         initialize();
@@ -104,17 +104,17 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public static void setPersistenceHandler(PersistenceHandler handler) {
-        getInstance().m_persistHandler = handler;
+        getInstance().persistHandler = handler;
     }
 
     public static PersistenceHandler getPersistenceHandler() {
-        return getInstance().m_persistHandler;
+        return getInstance().persistHandler;
     }
 
 
     private PerspectiveManager() {
         setDefaultPerspective(EMPTY_PERSPECTIVE);
-        loadPerspective(m_defaultPerspective, (DockingPort)null);
+        loadPerspective(this.defaultPerspective, (DockingPort)null);
     }
 
     public void add(Perspective perspective) {
@@ -126,7 +126,7 @@ public class PerspectiveManager implements LayoutManager {
             throw new NullPointerException("perspective cannot be null");
         }
 
-        m_perspectives.put(perspective.getPersistentId(), perspective);
+        this.perspectives.put(perspective.getPersistentId(), perspective);
         if(isDefault) {
             setDefaultPerspective(perspective.getPersistentId());
         }
@@ -144,10 +144,10 @@ public class PerspectiveManager implements LayoutManager {
             return;
         }
 
-        m_perspectives.remove(perspectiveId);
+        this.perspectives.remove(perspectiveId);
 
         //set defaultPerspective
-        if(m_defaultPerspective.equals(perspectiveId)) {
+        if(this.defaultPerspective.equals(perspectiveId)) {
             setDefaultPerspective(EMPTY_PERSPECTIVE);
         }
 
@@ -159,7 +159,7 @@ public class PerspectiveManager implements LayoutManager {
             return null;
         }
 
-        Perspective perspective = (Perspective) m_perspectives.get(perspectiveId);
+        Perspective perspective = (Perspective) this.perspectives.get(perspectiveId);
         if(perspective==null) {
             perspective = createPerspective(perspectiveId);
             if(perspective!=null) {
@@ -195,8 +195,8 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public Perspective[] getPerspectives() {
-        synchronized(m_perspectives) {
-            ArrayList list = new ArrayList(m_perspectives.values());
+        synchronized(this.perspectives) {
+            ArrayList list = new ArrayList(this.perspectives.values());
             return (Perspective[])list.toArray(new Perspective[0]);
         }
 
@@ -215,7 +215,7 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public void setDefaultPerspective(String perspectiveId) {
-        m_defaultPerspective = perspectiveId;
+        this.defaultPerspective = perspectiveId;
     }
 
     public void setCurrentPerspective(String perspectiveId) {
@@ -223,15 +223,15 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public String getCurrentPerspectiveName() {
-        return m_currentPerspective;
+        return this.currentPerspective;
     }
 
     private void setCurrentPerspectiveName(String name) {
-        m_currentPerspective = "".equals(name)? null: name;
+        this.currentPerspective = "".equals(name)? null: name;
     }
 
     public void setCurrentPerspective(String perspectiveId, boolean asDefault) {
-        perspectiveId = perspectiveId==null? m_defaultPerspective: perspectiveId;
+        perspectiveId = perspectiveId==null? this.defaultPerspective: perspectiveId;
         setCurrentPerspectiveName(perspectiveId);
         if(asDefault) {
             setDefaultPerspective(perspectiveId);
@@ -239,7 +239,7 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public Perspective getDefaultPerspective() {
-        return getPerspective(m_defaultPerspective);
+        return getPerspective(this.defaultPerspective);
     }
 
     public Perspective getCurrentPerspective() {
@@ -305,7 +305,7 @@ public class PerspectiveManager implements LayoutManager {
     public void reload(Window w, boolean reset) {
         String current = getCurrentPerspectiveName();
         // if the current perspective is null, use the default value
-        String key = current == null ? m_defaultPerspective : current;
+        String key = current == null ? this.defaultPerspective : current;
 
         // null-out the current perspective name to force a reload
         // otherwise, the loadPerspective() call will short-circuit since
@@ -340,7 +340,7 @@ public class PerspectiveManager implements LayoutManager {
         reload(w, false);
         /*DockingPort port = DockingManager.getRootDockingPort(w);
         String current = getCurrentPerspectiveName();
-        String key = current == null ? m_defaultPerspective : current;
+        String key = current == null ? this.defaultPerspective : current;
         setCurrentPerspectiveName(null);
         loadPerspectiveImpl(key, port, false);
         if(!Utilities.isEqual(getCurrentPerspectiveName(), key))
@@ -350,7 +350,7 @@ public class PerspectiveManager implements LayoutManager {
     public void reload() {
         String current = getCurrentPerspectiveName();
         // if the current perspective is null, the use the default value
-        String key = current==null? m_defaultPerspective: current;
+        String key = current==null? this.defaultPerspective: current;
         // null-out the current perspective name to force a reload.
         // otherwise, the loadPerspective() call will short-circuit since
         // it'll detect that the requested perspective is already loaded.
@@ -365,7 +365,7 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public void loadPerspective() {
-        loadPerspective(m_defaultPerspective);
+        loadPerspective(this.defaultPerspective);
     }
 
     public void loadPerspectiveAsDefault(String perspectiveId) {
@@ -513,7 +513,7 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public synchronized boolean store(String persistenceKey) throws IOException, PersistenceException {
-        if(m_persistHandler==null) {
+        if(this.persistHandler==null) {
             return false;
         }
 
@@ -525,9 +525,9 @@ public class PerspectiveManager implements LayoutManager {
             items[i] = (Perspective)items[i].clone();
         }
 
-        PerspectiveModel info = new PerspectiveModel(m_defaultPerspective, getCurrentPerspectiveName(), items);
-        String pKey = persistenceKey==null? m_defaultPersistenceKey: persistenceKey;
-        return m_persistHandler.store(pKey, info);
+        PerspectiveModel info = new PerspectiveModel(this.defaultPerspective, getCurrentPerspectiveName(), items);
+        String pKey = persistenceKey==null? this.defaultPersistenceKey: persistenceKey;
+        return this.persistHandler.store(pKey, info);
     }
 
     public synchronized boolean load() throws IOException, PersistenceException {
@@ -535,19 +535,19 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public synchronized boolean load(String persistenceKey) throws IOException, PersistenceException {
-        if(m_persistHandler==null) {
+        if(this.persistHandler==null) {
             return false;
         }
 
-        String pKey = persistenceKey==null? m_defaultPersistenceKey: persistenceKey;
-        PerspectiveModel info = m_persistHandler.load(pKey);
+        String pKey = persistenceKey==null? this.defaultPersistenceKey: persistenceKey;
+        PerspectiveModel info = this.persistHandler.load(pKey);
         if(info==null) {
             return false;
         }
 
         Perspective[] perspectives = info.getPerspectives();
 
-        m_perspectives.clear();
+        this.perspectives.clear();
         for(int i=0; i<perspectives.length; i++) {
             add(perspectives[i]);
         }
@@ -611,11 +611,11 @@ public class PerspectiveManager implements LayoutManager {
     }
 
     public String getDefaultPersistenceKey() {
-        return m_defaultPersistenceKey;
+        return this.defaultPersistenceKey;
     }
 
     public void setDefaultPersistenceKey(String key) {
-        m_defaultPersistenceKey = key;
+        this.defaultPersistenceKey = key;
     }
 
     private DockingPort findMainDockingPort() {

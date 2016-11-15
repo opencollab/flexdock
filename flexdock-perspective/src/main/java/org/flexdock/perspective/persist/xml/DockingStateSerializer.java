@@ -94,22 +94,20 @@ public class DockingStateSerializer implements ISerializer {
 
     private String getPresentationMinimizeConstraint(int constraint) {
         switch (constraint) {
-
-        case MinimizationManager.LEFT:
-            return "left";
-        case MinimizationManager.BOTTOM:
-            return "bottom";
-        case MinimizationManager.CENTER:
-            return "center";
-        case MinimizationManager.RIGHT:
-            return "right";
-        case MinimizationManager.TOP:
-            return "top";
-        case MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT:
-            return "unspecified";
-
-        default:
-            throw new RuntimeException("Unknown dockbarEdge");
+            case MinimizationManager.LEFT:
+                return "left";
+            case MinimizationManager.BOTTOM:
+                return "bottom";
+            case MinimizationManager.CENTER:
+                return "center";
+            case MinimizationManager.RIGHT:
+                return "right";
+            case MinimizationManager.TOP:
+                return "top";
+            case MinimizationManager.UNSPECIFIED_LAYOUT_CONSTRAINT:
+                return "unspecified";
+            default:
+                throw new RuntimeException("Unknown dockbarEdge");
         }
     }
 

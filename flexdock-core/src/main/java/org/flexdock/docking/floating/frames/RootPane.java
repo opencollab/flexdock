@@ -39,7 +39,7 @@ import javax.swing.SwingUtilities;
  */
 @SuppressWarnings(value = { "serial" })
 public class RootPane extends JRootPane implements MouseListener, MouseMotionListener {
-    private static int CORNER_MARGIN = 5;
+    private static final int CORNER_MARGIN = 5;
 
     // instance data
     private int currentResizeRegion;
@@ -107,50 +107,50 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
         int minHeight = minSize.height;
 
         switch (currentResizeRegion) {
-        case Cursor.NW_RESIZE_CURSOR:
-            mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
-            mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
-            offset.setLocation(-p.x, -p.y);
-            break;
+            case Cursor.NW_RESIZE_CURSOR:
+                mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
+                mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
+                offset.setLocation(-p.x, -p.y);
+                break;
 
-        case Cursor.N_RESIZE_CURSOR:
-            mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
-            offset.setLocation(0, -p.y);
-            break;
+            case Cursor.N_RESIZE_CURSOR:
+                mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
+                offset.setLocation(0, -p.y);
+                break;
 
-        case Cursor.NE_RESIZE_CURSOR:
-            mMouseLimits.x = currFrameRect.x + minWidth;
-            mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
-            offset.setLocation(getWidth() - p.x, -p.y);
-            break;
+            case Cursor.NE_RESIZE_CURSOR:
+                mMouseLimits.x = currFrameRect.x + minWidth;
+                mMouseLimits.height = currFrameRect.y + currFrameRect.height - minHeight - mMouseLimits.y;
+                offset.setLocation(getWidth() - p.x, -p.y);
+                break;
 
 
-        case Cursor.E_RESIZE_CURSOR:
-            mMouseLimits.x = currFrameRect.x + minWidth;
-            offset.setLocation(getWidth() - p.x, 0);
-            break;
+            case Cursor.E_RESIZE_CURSOR:
+                mMouseLimits.x = currFrameRect.x + minWidth;
+                offset.setLocation(getWidth() - p.x, 0);
+                break;
 
-        case Cursor.SE_RESIZE_CURSOR:
-            mMouseLimits.y = currFrameRect.y + minHeight;
-            mMouseLimits.x = currFrameRect.x + minWidth;
-            offset.setLocation(getWidth() - p.x, getHeight() - p.y);
-            break;
+            case Cursor.SE_RESIZE_CURSOR:
+                mMouseLimits.y = currFrameRect.y + minHeight;
+                mMouseLimits.x = currFrameRect.x + minWidth;
+                offset.setLocation(getWidth() - p.x, getHeight() - p.y);
+                break;
 
-        case Cursor.S_RESIZE_CURSOR:
-            mMouseLimits.y = currFrameRect.y + minHeight;
-            offset.setLocation(0, getHeight() - p.y);
-            break;
+            case Cursor.S_RESIZE_CURSOR:
+                mMouseLimits.y = currFrameRect.y + minHeight;
+                offset.setLocation(0, getHeight() - p.y);
+                break;
 
-        case Cursor.SW_RESIZE_CURSOR:
-            mMouseLimits.y = currFrameRect.y + minHeight;
-            mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
-            offset.setLocation(-p.x, getHeight() - p.y);
-            break;
+            case Cursor.SW_RESIZE_CURSOR:
+                mMouseLimits.y = currFrameRect.y + minHeight;
+                mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
+                offset.setLocation(-p.x, getHeight() - p.y);
+                break;
 
-        case Cursor.W_RESIZE_CURSOR:
-            mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
-            offset.setLocation(-p.x, 0);
-            break;
+            case Cursor.W_RESIZE_CURSOR:
+                mMouseLimits.width = currFrameRect.x + currFrameRect.width - minWidth - mMouseLimits.x;
+                offset.setLocation(-p.x, 0);
+                break;
 
         } // switch
     }
@@ -158,9 +158,8 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
     private int getCursor(Point p) {
         Insets insets = getInsets();
 
-        // left
-
         if (p.x <= insets.left) {
+            //left
             if (p.y <= CORNER_MARGIN) {
                 return Cursor.NW_RESIZE_CURSOR;
             } else if (p.y >= getHeight() - CORNER_MARGIN) {
@@ -168,11 +167,8 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
             } else {
                 return Cursor.W_RESIZE_CURSOR;
             }
-        } // if
-
-        // right
-
-        else if (p.x >= getWidth() - insets.right) {
+        } else if (p.x >= getWidth() - insets.right) {
+            //right
             if (p.y <= CORNER_MARGIN) {
                 return Cursor.NE_RESIZE_CURSOR;
             } else if (p.y >= getHeight() - CORNER_MARGIN) {
@@ -180,11 +176,8 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
             } else {
                 return Cursor.E_RESIZE_CURSOR;
             }
-        } // if
-
-        // top
-
-        else if (p.y <= insets.top) {
+        } else if (p.y <= insets.top) {
+            //top
             if (p.x <= CORNER_MARGIN) {
                 return Cursor.NW_RESIZE_CURSOR;
             } else if (p.x >= getWidth() - CORNER_MARGIN) {
@@ -192,11 +185,8 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
             } else {
                 return Cursor.N_RESIZE_CURSOR;
             }
-        } // if
-
-        // bottom
-
-        else if (p.y >= getHeight() - insets.bottom) {
+        } else if (p.y >= getHeight() - insets.bottom) {
+            //buttom
             if (p.x <= CORNER_MARGIN) {
                 return Cursor.SW_RESIZE_CURSOR;
             } else if (p.x >= getWidth() - CORNER_MARGIN) {
@@ -204,9 +194,7 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
             } else {
                 return Cursor.S_RESIZE_CURSOR;
             }
-        } // if
-
-        else {
+        } else {
             return Cursor.DEFAULT_CURSOR;
         }
     }
@@ -241,37 +229,37 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
         Rectangle bounds = frame.getBounds();
 
         switch (currentResizeRegion) {
-        case Cursor.NW_RESIZE_CURSOR:
-            frame.setBounds(p.x, p.y, bounds.width + bounds.x - p.x, bounds.height + bounds.y - p.y);
-            break;
+            case Cursor.NW_RESIZE_CURSOR:
+                frame.setBounds(p.x, p.y, bounds.width + bounds.x - p.x, bounds.height + bounds.y - p.y);
+                break;
 
-        case Cursor.N_RESIZE_CURSOR:
-            frame.setBounds(bounds.x, p.y, bounds.width, bounds.height + bounds.y - p.y);
-            break;
+            case Cursor.N_RESIZE_CURSOR:
+                frame.setBounds(bounds.x, p.y, bounds.width, bounds.height + bounds.y - p.y);
+                break;
 
-        case Cursor.NE_RESIZE_CURSOR:
-            frame.setBounds(bounds.x, p.y, p.x - bounds.x, bounds.height + bounds.y - p.y);
-            break;
+            case Cursor.NE_RESIZE_CURSOR:
+                frame.setBounds(bounds.x, p.y, p.x - bounds.x, bounds.height + bounds.y - p.y);
+                break;
 
-        case Cursor.W_RESIZE_CURSOR:
-            frame.setBounds(p.x, bounds.y, bounds.x + bounds.width - p.x, bounds.height);
-            break;
+            case Cursor.W_RESIZE_CURSOR:
+                frame.setBounds(p.x, bounds.y, bounds.x + bounds.width - p.x, bounds.height);
+                break;
 
-        case Cursor.E_RESIZE_CURSOR:
-            frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, bounds.height);
-            break;
+            case Cursor.E_RESIZE_CURSOR:
+                frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, bounds.height);
+                break;
 
-        case Cursor.SW_RESIZE_CURSOR:
-            frame.setBounds(p.x, bounds.y, bounds.width + bounds.x - p.x, p.y - bounds.y);
-            break;
+            case Cursor.SW_RESIZE_CURSOR:
+                frame.setBounds(p.x, bounds.y, bounds.width + bounds.x - p.x, p.y - bounds.y);
+                break;
 
-        case Cursor.S_RESIZE_CURSOR:
-            frame.setBounds(bounds.x, bounds.y, bounds.width, p.y - bounds.y);
-            break;
+            case Cursor.S_RESIZE_CURSOR:
+                frame.setBounds(bounds.x, bounds.y, bounds.width, p.y - bounds.y);
+                break;
 
-        case Cursor.SE_RESIZE_CURSOR:
-            frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, p.y - bounds.y);
-            break;
+            case Cursor.SE_RESIZE_CURSOR:
+                frame.setBounds(bounds.x, bounds.y, p.x - bounds.x, p.y - bounds.y);
+                break;
         } // switch
 
         setCursor(Cursor.getPredefinedCursor(currentResizeRegion));
