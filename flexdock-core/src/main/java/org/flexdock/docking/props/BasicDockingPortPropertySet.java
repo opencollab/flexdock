@@ -19,17 +19,17 @@
  */
 package org.flexdock.docking.props;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.RegionChecker;
-import org.flexdock.util.TypedHashtable;
 
 /**
  * @author Christopher Butler
  */
-@SuppressWarnings(value = { "serial" })
-public class BasicDockingPortPropertySet extends TypedHashtable implements DockingPortPropertySet, DockingConstants {
+public class BasicDockingPortPropertySet implements DockingPortPropertySet, DockingConstants {
+    private static final Float DEFAULT_REGION_INSET = RegionChecker.DEFAULT_REGION_SIZE;
 
     public static String getRegionInsetKey(String region) {
         if(NORTH_REGION.equals(region)) {
@@ -47,70 +47,67 @@ public class BasicDockingPortPropertySet extends TypedHashtable implements Docki
         return null;
     }
 
+    private RegionChecker regionChecker;
+    private boolean singleTabsAllowed;
+    private int tabPlacement;
+    private Map<String, Float> regionInsetMap = new HashMap<String, Float>();
+
     public BasicDockingPortPropertySet() {
-        super();
+        regionInsetMap.put(REGION_SIZE_NORTH, DEFAULT_REGION_INSET);
+        regionInsetMap.put(REGION_SIZE_SOUTH, DEFAULT_REGION_INSET);
+        regionInsetMap.put(REGION_SIZE_EAST, DEFAULT_REGION_INSET);
+        regionInsetMap.put(REGION_SIZE_WEST, DEFAULT_REGION_INSET);
     }
 
-    public BasicDockingPortPropertySet(int initialCapacity) {
-        super(initialCapacity);
+    public BasicDockingPortPropertySet(RegionChecker regionChecker,
+            boolean singleTabsAllowed,
+            int tabPlacement) {
+        this.regionChecker = regionChecker;
+        this.singleTabsAllowed = singleTabsAllowed;
+        this.tabPlacement = tabPlacement;
     }
-
-    public BasicDockingPortPropertySet(int initialCapacity, float loadFactor) {
-        super(initialCapacity, loadFactor);
-    }
-
-    public BasicDockingPortPropertySet(Map t) {
-        super(t);
-    }
-
-
-
-
-
-
 
     @Override
     public RegionChecker getRegionChecker() {
-        return (RegionChecker)get(REGION_CHECKER);
+        return regionChecker;
     }
 
     @Override
     public Boolean isSingleTabsAllowed() {
-        return getBoolean(SINGLE_TABS);
+        return singleTabsAllowed;
     }
 
     @Override
     public Integer getTabPlacement() {
-        return getInt(TAB_PLACEMENT);
+        return tabPlacement;
     }
 
     @Override
     public Float getRegionInset(String region) {
         String key = getRegionInsetKey(region);
-        return key==null? null: (Float)get(key);
+        return regionInsetMap.get(key);
     }
-
 
     @Override
     public void setRegionChecker(RegionChecker checker) {
-        put(REGION_CHECKER, checker);
+        this.regionChecker = checker;
     }
 
     @Override
     public void setSingleTabsAllowed(boolean allowed) {
-        put(SINGLE_TABS, allowed);
+        this.singleTabsAllowed = allowed;
     }
 
     @Override
     public void setTabPlacement(int placement) {
-        put(TAB_PLACEMENT, placement);
+        this.tabPlacement = placement;
     }
 
     @Override
     public void setRegionInset(String region, float inset) {
         String key = getRegionInsetKey(region);
         if(key!=null) {
-            put(key, new Float(inset));
+            regionInsetMap.put(key, inset);
         }
     }
 }

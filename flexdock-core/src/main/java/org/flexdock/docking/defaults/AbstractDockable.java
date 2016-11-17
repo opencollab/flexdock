@@ -24,9 +24,10 @@ package org.flexdock.docking.defaults;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JComponent;
@@ -36,8 +37,8 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.props.BasicDockablePropertySet;
 import org.flexdock.docking.props.DockablePropertySet;
-import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
 
@@ -56,9 +57,10 @@ public abstract class AbstractDockable implements Dockable {
 
     private ArrayList dragListeners;
 
-    private Hashtable clientProperties;
+    private final Map<Object,Object> clientProperties;
 
     private HashSet frameDragSources;
+    private final DockablePropertySet dockablePropertySet;
 
     /**
      * Creates a new {@code AbstractDockable} instance. This constructor is
@@ -73,7 +75,8 @@ public abstract class AbstractDockable implements Dockable {
         persistentId = id;
         dockingListeners = new ArrayList(2);
         dragListeners = new ArrayList();
-        clientProperties = new Hashtable(2);
+        clientProperties = new HashMap<Object,Object>(2);
+        this.dockablePropertySet = new BasicDockablePropertySet(this);
 
         dragListeners.add(getComponent());
     }
@@ -369,7 +372,7 @@ public abstract class AbstractDockable implements Dockable {
      */
     @Override
     public DockablePropertySet getDockingProperties() {
-        return PropertyManager.getDockablePropertySet(this);
+        return this.dockablePropertySet;
     }
 
     /**

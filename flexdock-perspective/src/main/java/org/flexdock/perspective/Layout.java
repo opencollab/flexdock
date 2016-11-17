@@ -26,9 +26,9 @@ import java.awt.Window;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingManager;
@@ -52,16 +52,18 @@ import org.flexdock.util.SwingUtility;
 public class Layout implements Cloneable, FloatManager, Serializable {
 
     private HashMap dockingInfo;  // contains DockingState objects
-    private Hashtable floatingGroups;  // contains FloatingGroup objects
+    private Map<String, FloatingGroup> floatingGroups;  // contains FloatingGroup objects
     private LayoutNode restorationLayout;
 
     private transient ArrayList layoutListeners;
 
     public Layout() {
-        this(new HashMap(), new ArrayList(), new Hashtable());
+        this(new HashMap(), new ArrayList(), new HashMap<String, FloatingGroup>());
     }
 
-    private Layout(HashMap info, ArrayList listeners, Hashtable floatGroups) {
+    private Layout(HashMap info,
+            ArrayList listeners,
+            Map<String, FloatingGroup> floatGroups) {
         dockingInfo = info;
         layoutListeners = listeners;
         floatingGroups = floatGroups;
@@ -323,11 +325,11 @@ public class Layout implements Cloneable, FloatManager, Serializable {
                 infoMap.put(key, info.clone());
             }
 
-            Hashtable floatTable = (Hashtable)floatingGroups.clone();
-            for(Iterator it=floatingGroups.keySet().iterator(); it.hasNext();) {
-                Object key = it.next();
-                FloatingGroup group = (FloatingGroup)floatingGroups.get(key);
-                floatTable.put(key, group.clone());
+            Map<String, FloatingGroup> floatTable = new HashMap<String, FloatingGroup>(floatingGroups);
+            for(Iterator<String> it=floatingGroups.keySet().iterator(); it.hasNext();) {
+                String key = it.next();
+                FloatingGroup group = floatingGroups.get(key);
+                floatTable.put(key, (FloatingGroup) group.clone());
             }
 
             // note, we're using a shallow copy of the listener list.

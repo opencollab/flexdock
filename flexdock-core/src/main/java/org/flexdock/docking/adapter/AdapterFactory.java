@@ -20,7 +20,8 @@
 package org.flexdock.docking.adapter;
 
 import java.awt.Component;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.flexdock.util.ResourceManager;
 import org.w3c.dom.Document;
@@ -48,7 +49,7 @@ public class AdapterFactory {
      */
     public static final String DEFAULT_ADAPTER_RESOURCE = "flexdock-adapters.xml";
 
-    private static final Hashtable MAPPINGS_BY_CLASS = new Hashtable();
+    private static final Map<Class<?>, AdapterMapping> MAPPINGS_BY_CLASS = new HashMap<Class<?>, AdapterMapping>();
 
     /**
      * Loads the mappings for this factory.
@@ -84,8 +85,8 @@ public class AdapterFactory {
     }
 
     private static AdapterMapping getMapping(Object obj) {
-        String className = obj.getClass().getName();
-        return (AdapterMapping) MAPPINGS_BY_CLASS.get(className);
+        Class<?> clazz = obj.getClass();
+        return MAPPINGS_BY_CLASS.get(clazz);
     }
 
     private static void loadMappings() {
@@ -106,7 +107,7 @@ public class AdapterFactory {
         MappingReader reader = new MappingReader();
         AdapterMapping[] mappings = reader.readMappings(document);
         for (int i = 0; i < mappings.length; i++) {
-            MAPPINGS_BY_CLASS.put(mappings[i].getClassName(), mappings[i]);
+            MAPPINGS_BY_CLASS.put(mappings[i].getClass(), mappings[i]);
         }
     }
 }

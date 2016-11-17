@@ -20,7 +20,6 @@
 package org.flexdock.util;
 
 import java.awt.Insets;
-import java.util.Hashtable;
 import java.util.Properties;
 
 import javax.swing.JTabbedPane;
@@ -34,6 +33,8 @@ import org.w3c.dom.NodeList;
 
 import com.l2fprod.gui.plaf.skin.Skin;
 import com.l2fprod.gui.plaf.skin.SkinLookAndFeel;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Christopher Butler
@@ -49,11 +50,11 @@ public class LookAndFeelSettings {
 
 
     private static final LookAndFeelSettings SINGLETON = new LookAndFeelSettings();
-    private Hashtable propertyMappings;
+    private Map<String, Properties> propertyMappings;
     private boolean skinLFSupport;
 
     private LookAndFeelSettings() {
-        propertyMappings = new Hashtable();
+        propertyMappings = new HashMap<String, Properties>();
         Document document = ResourceManager.getDocument(DOM_RESOURCE);
         NodeList nodes = document.getDocumentElement().getChildNodes();
         for(int i=0; i<nodes.getLength(); i++) {
@@ -83,12 +84,12 @@ public class LookAndFeelSettings {
     }
 
     private String getProperty(String propType, String key) {
-        Properties p = key==null? null: (Properties)propertyMappings.get(propType);
+        Properties p = key==null? null: propertyMappings.get(propType);
         return p==null? null: p.getProperty(key);
     }
 
     private void setProperty(String propType, String key, String value) {
-        Properties p = key==null? null: (Properties)propertyMappings.get(propType);
+        Properties p = key==null? null: propertyMappings.get(propType);
         if(p!=null) {
             if(value==null) {
                 p.remove(key);
@@ -107,8 +108,8 @@ public class LookAndFeelSettings {
         String edgeStr = SINGLETON.getProperty(TAB_EDGE_INSET_KEY, plafKey);
         Integer edge = getInteger(edgeStr);
 
-        if(edge!=null && edge.intValue()>0) {
-            return edge.intValue();
+        if(edge!=null && edge>0) {
+            return edge;
         }
 
         Insets tabInsets = UIManager.getInsets(TAB_PANE_BORDER_INSETS);

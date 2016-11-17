@@ -50,8 +50,8 @@ import org.flexdock.docking.DockingStrategy;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.props.BasicDockablePropertySet;
 import org.flexdock.docking.props.DockablePropertySet;
-import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.ViewUI;
 import org.flexdock.util.DockingUtility;
@@ -236,10 +236,10 @@ public class View extends JComponent implements Dockable, DockingConstants {
     protected HashSet frameDragSources;
 
     private transient HashSet blockedActions;
+    private final DockablePropertySet dockablePropertySet;
 
     static {
         DockingManager.setDockingStrategy(View.class, VIEW_DOCKING_STRATEGY);
-        PropertyManager.setDockablePropertyType(View.class, ViewProps.class);
     }
 
     public View(String persistentId) {
@@ -261,6 +261,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
         dragSources = new ArrayList(1);
         frameDragSources = new HashSet(1);
         dockingListeners = new ArrayList(1);
+        this.dockablePropertySet = new BasicDockablePropertySet(this);
 
         setContentPane(createContentPane());
         setTitlebar(createTitlebar());
@@ -341,7 +342,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
 
     @Override
     public DockablePropertySet getDockingProperties() {
-        return PropertyManager.getDockablePropertySet(this);
+        return this.dockablePropertySet;
     }
 
     public ViewProps getViewProperties() {
@@ -589,7 +590,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public boolean isActive() {
-        return getViewProperties().isActive().booleanValue();
+        return getViewProperties().isActive();
     }
 
     public void setActiveStateLocked(boolean b) {
@@ -597,7 +598,7 @@ public class View extends JComponent implements Dockable, DockingConstants {
     }
 
     public boolean isActiveStateLocked() {
-        return getViewProperties().isActiveStateLocked().booleanValue();
+        return getViewProperties().isActiveStateLocked();
     }
 
     public boolean isMinimized() {

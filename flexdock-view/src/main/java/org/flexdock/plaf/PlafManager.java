@@ -21,7 +21,8 @@ package org.flexdock.plaf;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JComponent;
@@ -44,9 +45,10 @@ public class PlafManager {
 
     private static final String UI_CHANGE_EVENT = "lookAndFeel";
 
-    private static final Hashtable UI_DEFAULTS = new Hashtable();
+    private static final Map<Class<?>, ComponentUI> UI_DEFAULTS = new HashMap<Class<?>, ComponentUI>();
+    private static final Map<String, String> UI_NAMES_DEFAULTS = new HashMap<String, String>();
 
-    private static final Hashtable CUSTOM_THEMES = new Hashtable();
+    private static final Map<String, Theme> CUSTOM_THEMES = new HashMap<String, Theme>();
 
     static {
         initialize();
@@ -85,15 +87,15 @@ public class PlafManager {
     }
 
     public static void setPreferredTheme(String themeName, boolean reload) {
-        String oldPref = (String) UI_DEFAULTS.get(PREFERRED_THEME_KEY);
+        String oldPref = UI_NAMES_DEFAULTS.get(PREFERRED_THEME_KEY);
 
         if (Configurator.isNull(themeName)) {
-            UI_DEFAULTS.remove(PREFERRED_THEME_KEY);
+            UI_NAMES_DEFAULTS.remove(PREFERRED_THEME_KEY);
         } else {
-            UI_DEFAULTS.put(PREFERRED_THEME_KEY, themeName);
+            UI_NAMES_DEFAULTS.put(PREFERRED_THEME_KEY, themeName);
         }
 
-        String newPref = (String) UI_DEFAULTS.get(PREFERRED_THEME_KEY);
+        String newPref = UI_NAMES_DEFAULTS.get(PREFERRED_THEME_KEY);
 
         // this will handle the case where we switch from null to something
         // else,
@@ -127,9 +129,9 @@ public class PlafManager {
 
     private static Theme getPreferredTheme() {
         Theme theme = null;
-        String themeName = (String) UI_DEFAULTS.get(PREFERRED_THEME_KEY);
+        String themeName = UI_NAMES_DEFAULTS.get(PREFERRED_THEME_KEY);
         if (themeName != null) {
-            theme = (Theme) CUSTOM_THEMES.get(themeName);
+            theme = CUSTOM_THEMES.get(themeName);
             if (theme == null) {
                 theme = UIFactory.getTheme(themeName);
             }
@@ -169,10 +171,10 @@ public class PlafManager {
     }
 
     public static Theme removeCustomTheme(String themeName) {
-        return Configurator.isNull(themeName) ? null : (Theme) CUSTOM_THEMES.remove(themeName);
+        return Configurator.isNull(themeName) ? null : CUSTOM_THEMES.remove(themeName);
     }
 
-    private static void setProperty(Object key, Object value) {
+    private static void setProperty(Class<?> key, ComponentUI value) {
         if (key != null && value != null) {
             UI_DEFAULTS.put(key, value);
         }

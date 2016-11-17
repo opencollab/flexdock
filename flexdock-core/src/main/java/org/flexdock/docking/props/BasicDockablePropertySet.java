@@ -22,21 +22,35 @@ package org.flexdock.docking.props;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Map;
+import java.util.HashMap;
 
 import javax.swing.Icon;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
-import org.flexdock.util.TypedHashtable;
+import org.flexdock.docking.DockingManager;
+import org.flexdock.docking.RegionChecker;
 import org.flexdock.util.Utilities;
 
 /**
  * @author Christopher Butler
  */
-@SuppressWarnings(value = { "serial" })
-public class BasicDockablePropertySet extends TypedHashtable implements DockablePropertySet, DockingConstants {
+public class BasicDockablePropertySet implements DockablePropertySet, DockingConstants {
+    private static final Float DEFAULT_REGION_INSETS = RegionChecker.DEFAULT_REGION_SIZE;
+    private static final Float DEFAULT_SIBLING_INSETS = DockingManager.getDefaultSiblingSize();
     private String dockingId;
     private PropertyChangeSupport changeSupport;
+    private Icon dockbarIcon;
+    private Icon tabIcon;
+    private String dockableDesc;
+    private boolean dockingEnabled;
+    private boolean active;
+    private boolean mouseMotionListenersBlockedWhileDragging;
+    private Map<String, Float> regionInsetMap = new HashMap<String, Float>();
+    private Map<String, Float> siblingSizeMap = new HashMap<String, Float>();
+    private Map<String, Boolean> territoryBlockedMap = new HashMap<String, Boolean>();
+    private float dragThreshold;
+    private float previewSize;
 
     public static String getRegionInsetKey(String region) {
         if(NORTH_REGION.equals(region)) {
@@ -90,139 +104,158 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
     }
 
     public BasicDockablePropertySet(Dockable dockable) {
-        super();
-        init(dockable);
-    }
-
-    public BasicDockablePropertySet(int initialCapacity, Dockable dockable) {
-        super(initialCapacity);
-        init(dockable);
-    }
-
-    public BasicDockablePropertySet(int initialCapacity, float loadFactor, Dockable dockable) {
-        super(initialCapacity, loadFactor);
-        init(dockable);
-    }
-
-    public BasicDockablePropertySet(Map t, Dockable dockable) {
-        super(t);
-        init(dockable);
-    }
-
-    private void init(Dockable dockable) {
         this.dockingId = dockable==null? null: dockable.getPersistentId();
         Object changeSrc = dockable==null? this: dockable;
         changeSupport = new PropertyChangeSupport(changeSrc);
+
+        regionInsetMap.put(REGION_SIZE_NORTH, DEFAULT_REGION_INSETS);
+        regionInsetMap.put(REGION_SIZE_SOUTH, DEFAULT_REGION_INSETS);
+        regionInsetMap.put(REGION_SIZE_EAST, DEFAULT_REGION_INSETS);
+        regionInsetMap.put(REGION_SIZE_WEST, DEFAULT_REGION_INSETS);
+
+        siblingSizeMap.put(SIBLING_SIZE_NORTH, DEFAULT_SIBLING_INSETS);
+        siblingSizeMap.put(SIBLING_SIZE_SOUTH, DEFAULT_SIBLING_INSETS);
+        siblingSizeMap.put(SIBLING_SIZE_EAST, DEFAULT_SIBLING_INSETS);
+        siblingSizeMap.put(SIBLING_SIZE_WEST, DEFAULT_SIBLING_INSETS);
+
+        territoryBlockedMap.put(TERRITORY_BLOCKED_NORTH, Boolean.FALSE);
+        territoryBlockedMap.put(TERRITORY_BLOCKED_SOUTH, Boolean.FALSE);
+        territoryBlockedMap.put(TERRITORY_BLOCKED_EAST, Boolean.FALSE);
+        territoryBlockedMap.put(TERRITORY_BLOCKED_WEST, Boolean.FALSE);
+        territoryBlockedMap.put(TERRITORY_BLOCKED_CENTER, Boolean.FALSE);
     }
 
+    public BasicDockablePropertySet(Dockable dockable,
+            String dockableDesc,
+            boolean dockingEnabled,
+            boolean active,
+            boolean mouseMotionListenersBlockedWhileDragging,
+            float dragThreshold,
+            float previewSize) {
+        this(dockable);
+        this.dockableDesc = dockableDesc;
+        this.dockingEnabled = dockingEnabled;
+        this.active = active;
+        this.mouseMotionListenersBlockedWhileDragging = mouseMotionListenersBlockedWhileDragging;
+        this.dragThreshold = dragThreshold;
+        this.previewSize = previewSize;
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    /**
+     * @return the dockbarIcon
+     */
     @Override
     public Icon getDockbarIcon() {
-        return (Icon)get(DOCKBAR_ICON);
+        return dockbarIcon;
     }
 
+    /**
+     * @return the tabIcon
+     */
     @Override
     public Icon getTabIcon() {
-        return (Icon)get(TAB_ICON);
+        return tabIcon;
     }
 
+    /**
+     * @return the description
+     */
     @Override
     public String getDockableDesc() {
-        return (String)get(DESCRIPTION);
+        return dockableDesc;
     }
 
+    /**
+     * @return the dockingEnabled
+     */
     @Override
     public Boolean isDockingEnabled() {
-        return getBoolean(DOCKING_ENABLED);
+        return dockingEnabled;
     }
 
+    /**
+     * @return the active
+     */
     @Override
     public Boolean isActive() {
-        return getBoolean(ACTIVE);
+        return active;
     }
 
+    /**
+     * @return the mouseMotionListenersBlockedWhileDragging
+     */
     @Override
     public Boolean isMouseMotionListenersBlockedWhileDragging() {
-        return getBoolean(MOUSE_MOTION_DRAG_BLOCK);
+        return mouseMotionListenersBlockedWhileDragging;
     }
 
-
+    /**
+     * @return the regionInsetMap
+     */
     @Override
     public Float getRegionInset(String region) {
         String key = getRegionInsetKey(region);
-        return key==null? null: (Float)get(key);
+        return regionInsetMap.get(key);
     }
 
+    /**
+     * @return the siblingSizeMap
+     */
     @Override
     public Float getSiblingSize(String region) {
         String key = getSiblingSizeKey(region);
-        return key==null? null: (Float)get(key);
+        return siblingSizeMap.get(key);
     }
 
+    /**
+     * @return the territoryBlockedMap
+     */
     @Override
     public Boolean isTerritoryBlocked(String region) {
         String key = getTerritoryBlockedKey(region);
-        return key==null? null: (Boolean)get(key);
+        return territoryBlockedMap.get(key);
     }
 
+    /**
+     * @return the dragThreshold
+     */
     @Override
     public Float getDragThreshold() {
-        return getFloat(DRAG_THRESHOLD);
+        return dragThreshold;
     }
 
+    /**
+     * @return the previewSize
+     */
     @Override
     public Float getPreviewSize() {
-        return getFloat(PREVIEW_SIZE);
+        return previewSize;
     }
-
-
-
-
-
-
-
-
-
-
-
 
     @Override
     public void setDockbarIcon(Icon icon) {
         Icon oldValue = getDockbarIcon();
-        put(DOCKBAR_ICON, icon);
+        this.dockbarIcon = icon;
         firePropertyChange(DOCKBAR_ICON, oldValue, icon);
     }
 
     @Override
     public void setTabIcon(Icon icon) {
         Icon oldValue = getTabIcon();
-        put(TAB_ICON, icon);
+        this.tabIcon = icon;
         firePropertyChange(TAB_ICON, oldValue, icon);
     }
 
     @Override
     public void setDockableDesc(String dockableDesc) {
         String oldValue = getDockableDesc();
-        put(DESCRIPTION, dockableDesc);
+        this.dockableDesc = dockableDesc;
         firePropertyChange(DESCRIPTION, oldValue, dockableDesc);
     }
 
     @Override
     public void setDockingEnabled(boolean enabled) {
-        put(DOCKING_ENABLED, enabled);
+        this.dockingEnabled = enabled;
     }
 
     @Override
@@ -231,22 +264,21 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
         if(oldValue==null) {
             oldValue = Boolean.FALSE;
         }
-
-        put(ACTIVE, active);
+        this.active = active;
         firePropertyChange(ACTIVE, oldValue.booleanValue(), active);
     }
 
     @Override
     public void setMouseMotionListenersBlockedWhileDragging(boolean blocked) {
-        put(MOUSE_MOTION_DRAG_BLOCK, blocked);
+        this.mouseMotionListenersBlockedWhileDragging = blocked;
     }
 
     @Override
     public void setRegionInset(String region, float inset) {
         String key = getRegionInsetKey(region);
         if(key!=null) {
-            Float f = new Float(inset);
-            put(key, f);
+            Float f = inset;
+            regionInsetMap.put(key, f);
         }
     }
 
@@ -254,8 +286,8 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
     public void setSiblingSize(String region, float size) {
         String key = getSiblingSizeKey(region);
         if(key!=null) {
-            Float f = new Float(size);
-            put(key, f);
+            Float f = size;
+            siblingSizeMap.put(key, f);
         }
     }
 
@@ -264,22 +296,21 @@ public class BasicDockablePropertySet extends TypedHashtable implements Dockable
         String key = getTerritoryBlockedKey(region);
         if(key!=null) {
             Boolean bool = blocked? Boolean.TRUE: Boolean.FALSE;
-            put(key, bool);
+            territoryBlockedMap.put(key, bool);
         }
     }
-
 
     @Override
     public void setDragTheshold(float threshold) {
         threshold = Math.max(threshold, 0);
-        put(DRAG_THRESHOLD, threshold);
+        this.dragThreshold = threshold;
     }
 
     @Override
     public void setPreviewSize(float previewSize) {
         previewSize = Math.max(previewSize, 0f);
         previewSize = Math.min(previewSize, 1f);
-        put(PREVIEW_SIZE, previewSize);
+        this.previewSize = previewSize;
     }
 
     /**

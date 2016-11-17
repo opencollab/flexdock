@@ -19,10 +19,6 @@
  */
 package org.flexdock.view;
 
-import java.util.Map;
-
-import org.flexdock.docking.props.PropertyManager;
-import org.flexdock.docking.props.RootDockablePropertySet;
 import org.flexdock.docking.props.ScopedDockablePropertySet;
 
 /**
@@ -30,26 +26,15 @@ import org.flexdock.docking.props.ScopedDockablePropertySet;
  */
 public class ViewProps extends ScopedDockablePropertySet {
     public static final String ACTIVE_STATE_LOCKED = "View.ACTIVE_STATE_LOCKED";
+    private boolean activeStateLocked;
 
     public ViewProps(View view) {
         super(view);
         init();
     }
 
-    public ViewProps(int initialCapacity, View view) {
-        super(initialCapacity, view);
-        init();
-    }
-
     protected void init() {
-        constrainRoot(ACTIVE_STATE_LOCKED, Boolean.FALSE);
-    }
-
-    protected void constrainRoot(Object key, Object value) {
-        Map map = getRoot();
-        if(map instanceof RootDockablePropertySet) {
-            ((RootDockablePropertySet)map).constrain(key, value);
-        }
+        setActiveStateLocked(false);
     }
 
     private View getView() {
@@ -57,11 +42,11 @@ public class ViewProps extends ScopedDockablePropertySet {
     }
 
     public Boolean isActiveStateLocked() {
-        return (Boolean)PropertyManager.getProperty(ACTIVE_STATE_LOCKED, this);
+        return activeStateLocked;
     }
 
     public void setActiveStateLocked(boolean locked) {
-        put(ACTIVE_STATE_LOCKED, locked);
+        this.activeStateLocked = activeStateLocked;
     }
 
     @Override

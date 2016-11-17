@@ -31,8 +31,8 @@ import org.flexdock.docking.DockingPort;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingEventHandler;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.props.BasicDockablePropertySet;
 import org.flexdock.docking.props.DockablePropertySet;
-import org.flexdock.docking.props.PropertyManager;
 
 /**
  * @author Christopher Butler
@@ -41,10 +41,12 @@ public class DockableTitlepane extends Titlepane implements Dockable {
     private String dockingId;
     private ArrayList dragSources;
     private HashSet frameDragSources;
+    private final DockablePropertySet dockablePropertySet;
 
     public DockableTitlepane(String id, String title) {
         super(title);
         dockingId = id;
+        this.dockablePropertySet = new BasicDockablePropertySet(this);
 
         // initialize the drag sources
         dragSources = new ArrayList();
@@ -52,6 +54,11 @@ public class DockableTitlepane extends Titlepane implements Dockable {
         // use the titlebar as a drag source
         dragSources.add(getTitlebar());
         frameDragSources.add(getTitlebar());
+    }
+
+    @Override
+    public DockablePropertySet getDockingProperties() {
+        return this.dockablePropertySet;
     }
 
     // Begin user-defined methods
@@ -100,11 +107,6 @@ public class DockableTitlepane extends Titlepane implements Dockable {
     @Override
     public DockingPort getDockingPort() {
         return DockingManager.getDockingPort((Dockable)this);
-    }
-
-    @Override
-    public DockablePropertySet getDockingProperties() {
-        return PropertyManager.getDockablePropertySet(this);
     }
 
     @Override
