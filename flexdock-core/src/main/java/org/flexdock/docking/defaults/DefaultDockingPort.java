@@ -64,9 +64,9 @@ import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
 import org.flexdock.docking.event.TabbedDragListener;
 import org.flexdock.docking.event.hierarchy.DockingPortTracker;
+import org.flexdock.docking.props.BasicDockingPortPropertySet;
 import org.flexdock.docking.props.DockingPortPropertySet;
 import org.flexdock.docking.props.PropertyChangeListenerFactory;
-import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.docking.state.LayoutNode;
 import org.flexdock.docking.state.tree.DockableNode;
 import org.flexdock.docking.state.tree.DockingPortNode;
@@ -283,6 +283,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     private Timer timer;
 
     private Object lock = new Object();
+    private final DockingPortPropertySet dockingPortPropertySet = new BasicDockingPortPropertySet();
 
     static {
         // setup PropertyChangeListenerFactory to respond to
@@ -1340,7 +1341,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @see DockingPortPropertySet#setSingleTabsAllowed(boolean)
      */
     public boolean isSingleTabAllowed() {
-        return getDockingProperties().isSingleTabsAllowed().booleanValue();
+        return getDockingProperties().isSingleTabsAllowed();
     }
 
     /**
@@ -1949,7 +1950,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      */
     @Override
     public DockingPortPropertySet getDockingProperties() {
-        return PropertyManager.getDockingPortPropertySet(this);
+        return this.dockingPortPropertySet;
     }
 
     /**

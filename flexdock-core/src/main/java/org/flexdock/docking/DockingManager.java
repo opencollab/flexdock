@@ -52,7 +52,9 @@ import org.flexdock.docking.event.hierarchy.DockingPortTracker;
 import org.flexdock.docking.event.hierarchy.RootDockingPortInfo;
 import org.flexdock.docking.floating.policy.FloatPolicyManager;
 import org.flexdock.docking.props.DockablePropertySet;
-import org.flexdock.docking.props.PropertyManager;
+import org.flexdock.docking.props.DockingPortPropertySet;
+import org.flexdock.docking.props.ScopedDockablePropertySet;
+import org.flexdock.docking.props.ScopedDockingPortPropertySet;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.docking.state.FloatManager;
 import org.flexdock.docking.state.LayoutManager;
@@ -668,7 +670,7 @@ public class DockingManager implements DockingConstants {
      * @see org.flexdock.docking.props.DockingPortPropertySet#isSingleTabsAllowed()
      */
     public static boolean isSingleTabsAllowed() {
-        return PropertyManager.getDockingPortRoot().isSingleTabsAllowed()
+        return getDockingPortRoot().isSingleTabsAllowed()
                .booleanValue();
     }
 
@@ -873,8 +875,7 @@ public class DockingManager implements DockingConstants {
 
         // make sure we have docking-properties initialized (must come after
         // ID-caching)
-        DockablePropertySet props = PropertyManager
-                                    .getDockablePropertySet(dockable);
+        DockablePropertySet props = dockable.getDockingProperties();
 
         // dispatch a registration event
         EventManager.dispatch(new RegistrationEvent(dockable,
@@ -913,9 +914,6 @@ public class DockingManager implements DockingConstants {
 
         // remove the dockable as its own listener
         dockable.removeDockingListener(dockable);
-
-        // unlink the propertySet
-        PropertyManager.removePropertySet(dockable);
 
         // remove the dockable by ID
         synchronized (DOCKABLES_BY_ID) {
@@ -2489,7 +2487,7 @@ public class DockingManager implements DockingConstants {
      * @see org.flexdock.docking.props.DockingPortPropertySet#setSingleTabsAllowed(boolean)
      */
     public static void setSingleTabsAllowed(boolean allowed) {
-        PropertyManager.getDockingPortRoot().setSingleTabsAllowed(allowed);
+        getDockingPortRoot().setSingleTabsAllowed(allowed);
     }
 
     /**
@@ -2814,5 +2812,13 @@ public class DockingManager implements DockingConstants {
 
     private static MaximizedState getMaximizedState(DockingPort rootPort) {
         return (MaximizedState) MAXIMIZED_STATES_BY_ROOT_PORT.get(rootPort);
+    }
+
+    public static DockingPortPropertySet getDockingPortRoot() {
+        return ScopedDockingPortPropertySet.ROOT_PROPS;
+    }
+
+    public static DockablePropertySet getDockableRoot() {
+        return ScopedDockablePropertySet.ROOT_PROPS;
     }
 }

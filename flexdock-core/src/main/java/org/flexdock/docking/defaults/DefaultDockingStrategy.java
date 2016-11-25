@@ -446,8 +446,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
 
         // don't allow them to dock into this region if the territory there is
         // blocked.
-        if (docked.getDockingProperties().isTerritoryBlocked(region)
-                .booleanValue()) {
+        if (docked.getDockingProperties().isTerritoryBlocked(region)) {
             return false;
         }
 
@@ -474,11 +473,6 @@ public class DefaultDockingStrategy implements DockingStrategy,
 
         return true;
     }
-
-
-
-
-
 
     protected boolean isFloatable(Dockable dockable, DragOperation token) {
         // can't float null objects

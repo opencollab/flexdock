@@ -24,9 +24,10 @@ package org.flexdock.docking.defaults;
 import java.awt.Component;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.Icon;
@@ -39,8 +40,8 @@ import org.flexdock.docking.DockingStub;
 import org.flexdock.docking.adapter.DockingAdapter;
 import org.flexdock.docking.event.DockingEvent;
 import org.flexdock.docking.event.DockingListener;
+import org.flexdock.docking.props.BasicDockablePropertySet;
 import org.flexdock.docking.props.DockablePropertySet;
-import org.flexdock.docking.props.PropertyManager;
 import org.flexdock.util.SwingUtility;
 import org.flexdock.util.Utilities;
 
@@ -82,9 +83,10 @@ public class DockableComponentWrapper implements Dockable {
 
     private ArrayList dragListeners;
 
-    private Hashtable clientProperties;
+    private Map<Object, Object> clientProperties;
 
     private HashSet frameDragSources;
+    private final DockablePropertySet dockablePropertySet;
 
     /**
      * Creates a {@code DockableComponentWrapper} instance using the specified
@@ -173,6 +175,7 @@ public class DockableComponentWrapper implements Dockable {
      */
     private DockableComponentWrapper(Component src, String id, String desc) {
         dragSrc = src;
+        this.dockablePropertySet = new BasicDockablePropertySet(this);
         getDockingProperties().setDockableDesc(desc);
         persistentId = id;
 
@@ -216,9 +219,9 @@ public class DockableComponentWrapper implements Dockable {
         }
     }
 
-    private Hashtable getInternalClientProperties() {
+    private Map<Object, Object> getInternalClientProperties() {
         if (clientProperties == null) {
-            clientProperties = new Hashtable(2);
+            clientProperties = new HashMap<Object, Object>(2);
         }
         return clientProperties;
     }
@@ -491,7 +494,7 @@ public class DockableComponentWrapper implements Dockable {
      */
     @Override
     public DockablePropertySet getDockingProperties() {
-        return PropertyManager.getDockablePropertySet(this);
+        return this.dockablePropertySet;
     }
 
     /**

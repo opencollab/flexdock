@@ -21,10 +21,8 @@ package org.flexdock.docking.props;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.flexdock.docking.Dockable;
-
 
 /**
  * @author Christopher Butler
@@ -38,22 +36,7 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
     private ArrayList locals;
 
     public ScopedDockablePropertySet(Dockable dockable) {
-        this(6, dockable);
-        init();
-    }
-
-    public ScopedDockablePropertySet(int initialCapacity, Dockable dockable) {
-        super(initialCapacity, dockable);
-        init();
-    }
-
-    public ScopedDockablePropertySet(int initialCapacity, float loadFactor, Dockable dockable) {
-        super(initialCapacity, loadFactor, dockable);
-        init();
-    }
-
-    public ScopedDockablePropertySet(Map t, Dockable dockable) {
-        super(t, dockable);
+        super(dockable);
         init();
     }
 
@@ -73,56 +56,8 @@ public class ScopedDockablePropertySet extends BasicDockablePropertySet implemen
     }
 
     @Override
-    public Map getRoot() {
+    public RootDockablePropertySet getRoot() {
         return ROOT_PROPS;
-    }
-
-    @Override
-    public String getDockableDesc() {
-        return (String)PropertyManager.getProperty(DESCRIPTION, this);
-    }
-
-    @Override
-    public Boolean isDockingEnabled() {
-        return (Boolean)PropertyManager.getProperty(DOCKING_ENABLED, this);
-    }
-
-    @Override
-    public Boolean isActive() {
-        return (Boolean)PropertyManager.getProperty(ACTIVE, this);
-    }
-
-    @Override
-    public Boolean isMouseMotionListenersBlockedWhileDragging() {
-        return (Boolean)PropertyManager.getProperty(MOUSE_MOTION_DRAG_BLOCK, this);
-    }
-
-    @Override
-    public Float getRegionInset(String region) {
-        String key = getRegionInsetKey(region);
-        return key==null? null: (Float)PropertyManager.getProperty(key, this);
-    }
-
-    @Override
-    public Float getSiblingSize(String region) {
-        String key = getSiblingSizeKey(region);
-        return key==null? null: (Float)PropertyManager.getProperty(key, this);
-    }
-
-    @Override
-    public Boolean isTerritoryBlocked(String region) {
-        String key = getTerritoryBlockedKey(region);
-        return key==null? null: (Boolean)PropertyManager.getProperty(key, this);
-    }
-
-    @Override
-    public Float getDragThreshold() {
-        return (Float)PropertyManager.getProperty(DRAG_THRESHOLD, this);
-    }
-
-    @Override
-    public Float getPreviewSize() {
-        return (Float)PropertyManager.getProperty(PREVIEW_SIZE, this);
     }
 
     private void init() {

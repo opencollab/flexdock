@@ -55,8 +55,6 @@ public interface DockablePropertySet {
 
     public static final String ACTIVE = "Dockable.ACTIVE";
 
-
-
     public String getDockableDesc();
 
     public Boolean isDockingEnabled();
@@ -81,10 +79,6 @@ public interface DockablePropertySet {
 
     public Boolean isActive();
 
-
-
-
-
     public void setDockableDesc(String desc);
 
     public void setDockingEnabled(boolean enabled);
@@ -106,10 +100,6 @@ public interface DockablePropertySet {
     public void setPreviewSize(float size);
 
     public void setActive(boolean active);
-
-    public Object put(Object key, Object value);
-
-    public Object remove(Object key);
 
     public void addPropertyChangeListener(PropertyChangeListener listener);
 
