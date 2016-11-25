@@ -55,17 +55,21 @@ public class DockableTitlepane extends Titlepane implements Dockable {
     }
 
     // Begin user-defined methods
+    @Override
     public Component getComponent() {
         return this;
     }
 
+    @Override
     public List getDragSources() {
         return dragSources;
     }
+    @Override
     public Set getFrameDragSources() {
         return frameDragSources;
     }
 
+    @Override
     public String getPersistentId() {
         return dockingId;
     }
@@ -78,34 +82,42 @@ public class DockableTitlepane extends Titlepane implements Dockable {
 
     // Begin framework-provided methods
 
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
         return DockingManager.dock(dockable, this, relativeRegion, ratio);
     }
 
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion) {
         return DockingManager.dock(dockable, this, relativeRegion);
     }
 
+    @Override
     public boolean dock(Dockable dockable) {
         return DockingManager.dock(dockable, this);
     }
 
+    @Override
     public DockingPort getDockingPort() {
         return DockingManager.getDockingPort((Dockable)this);
     }
 
+    @Override
     public DockablePropertySet getDockingProperties() {
         return PropertyManager.getDockablePropertySet(this);
     }
 
+    @Override
     public void addDockingListener(DockingListener listener) {
         DockingEventHandler.addDockingListener(this, listener);
     }
 
+    @Override
     public DockingListener[] getDockingListeners() {
         return DockingEventHandler.getDockingListeners(this);
     }
 
+    @Override
     public void removeDockingListener(DockingListener listener) {
         DockingEventHandler.removeDockingListener(this, listener);
     }
@@ -118,21 +130,27 @@ public class DockableTitlepane extends Titlepane implements Dockable {
 
     // Begin event handler methods
 
+    @Override
     public void dockingCanceled(DockingEvent evt) {
     }
 
+    @Override
     public void dockingComplete(DockingEvent evt) {
     }
 
+    @Override
     public void dragStarted(DockingEvent evt) {
     }
 
+    @Override
     public void dropStarted(DockingEvent evt) {
     }
 
+    @Override
     public void undockingComplete(DockingEvent evt) {
     }
 
+    @Override
     public void undockingStarted(DockingEvent evt) {
     }
 

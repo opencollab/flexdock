@@ -109,6 +109,7 @@ public class StandardBorderManager implements BorderManager {
      *
      * @see BorderManager#managePortNullChild(DockingPort)
      */
+    @Override
     public void managePortNullChild(DockingPort port) {
         setBorder(port, assignedBorder);
     }
@@ -120,6 +121,7 @@ public class StandardBorderManager implements BorderManager {
      *
      * @see BorderManager#managePortSimpleChild(DockingPort)
      */
+    @Override
     public void managePortSimpleChild(DockingPort port) {
         if (port != null) {
             setBorder(port.getDockedComponent(), null);
@@ -134,6 +136,7 @@ public class StandardBorderManager implements BorderManager {
      *
      * @see BorderManager#managePortSplitChild(DockingPort)
      */
+    @Override
     public void managePortSplitChild(DockingPort port) {
         if (port == null || !(port.getDockedComponent() instanceof JSplitPane)) {
             return;
@@ -173,6 +176,7 @@ public class StandardBorderManager implements BorderManager {
      *
      * @see BorderManager#managePortTabbedChild(DockingPort)
      */
+    @Override
     public void managePortTabbedChild(DockingPort port) {
         managePortSimpleChild(port);
         if (port == null || !(port.getDockedComponent() instanceof JTabbedPane)) {
@@ -212,6 +216,7 @@ public class StandardBorderManager implements BorderManager {
     }
 
     private static class SimpleTabbedPaneUI extends BasicTabbedPaneUI {
+        @Override
         protected void paintContentBorderBottomEdge(Graphics g,
                 int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == BOTTOM) {
@@ -220,6 +225,7 @@ public class StandardBorderManager implements BorderManager {
             }
         }
 
+        @Override
         protected void paintContentBorderLeftEdge(Graphics g, int tabPlacement,
                 int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == LEFT) {
@@ -228,6 +234,7 @@ public class StandardBorderManager implements BorderManager {
             }
         }
 
+        @Override
         protected void paintContentBorderRightEdge(Graphics g,
                 int tabPlacement, int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == RIGHT) {
@@ -236,6 +243,7 @@ public class StandardBorderManager implements BorderManager {
             }
         }
 
+        @Override
         protected void paintContentBorderTopEdge(Graphics g, int tabPlacement,
                 int selectedIndex, int x, int y, int w, int h) {
             if (tabPlacement == TOP) {

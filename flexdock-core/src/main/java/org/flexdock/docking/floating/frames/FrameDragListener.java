@@ -41,10 +41,12 @@ public class FrameDragListener implements MouseListener, MouseMotionListener {
         this.frame = frame;
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         // noop
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         dragOffset = e.getPoint();
         Component c = (Component)e.getSource();
@@ -53,6 +55,7 @@ public class FrameDragListener implements MouseListener, MouseMotionListener {
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if(enabled) {
             Point loc = e.getPoint();
@@ -62,12 +65,16 @@ public class FrameDragListener implements MouseListener, MouseMotionListener {
         }
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
+    @Override
     public void mouseExited(MouseEvent e) {
     }
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 

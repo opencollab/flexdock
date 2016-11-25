@@ -86,6 +86,7 @@ public abstract class AbstractDockable implements Dockable {
      *         instance.
      * @see Dockable#getComponent()
      */
+    @Override
     public abstract Component getComponent();
 
     /**
@@ -98,6 +99,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#getDragSources()
      * @see #getComponent()
      */
+    @Override
     public List getDragSources() {
         return dragListeners;
     }
@@ -110,6 +112,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#getPersistentId()
      * @see #AbstractDockable(String)
      */
+    @Override
     public String getPersistentId() {
         return persistentId;
     }
@@ -126,6 +129,7 @@ public abstract class AbstractDockable implements Dockable {
      *         external dialog.
      * @see Dockable#getFrameDragSources()
      */
+    @Override
     public Set getFrameDragSources() {
         if (frameDragSources == null) {
             frameDragSources = new HashSet();
@@ -166,6 +170,7 @@ public abstract class AbstractDockable implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingCanceled(DockingEvent)
      */
+    @Override
     public void dockingCanceled(DockingEvent evt) {
     }
 
@@ -177,6 +182,7 @@ public abstract class AbstractDockable implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dockingComplete(DockingEvent)
      */
+    @Override
     public void dockingComplete(DockingEvent evt) {
     }
 
@@ -188,6 +194,7 @@ public abstract class AbstractDockable implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dragStarted(DockingEvent)
      */
+    @Override
     public void dragStarted(DockingEvent evt) {
     }
 
@@ -199,6 +206,7 @@ public abstract class AbstractDockable implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#dropStarted(DockingEvent)
      */
+    @Override
     public void dropStarted(DockingEvent evt) {
     }
 
@@ -210,6 +218,7 @@ public abstract class AbstractDockable implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingComplete(DockingEvent)
      */
+    @Override
     public void undockingComplete(DockingEvent evt) {
 
     }
@@ -222,6 +231,7 @@ public abstract class AbstractDockable implements Dockable {
      *            the {@code DockingEvent} to respond to.
      * @see DockingListener#undockingStarted(DockingEvent)
      */
+    @Override
     public void undockingStarted(DockingEvent evt) {
     }
 
@@ -234,6 +244,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see #getDockingListeners()
      * @see #removeDockingListener(DockingListener)
      */
+    @Override
     public void addDockingListener(DockingListener listener) {
         if (listener != null) {
             dockingListeners.add(listener);
@@ -250,6 +261,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see #addDockingListener(DockingListener)
      * @see #removeDockingListener(DockingListener)
      */
+    @Override
     public DockingListener[] getDockingListeners() {
         return (DockingListener[]) dockingListeners
                .toArray(new DockingListener[0]);
@@ -267,6 +279,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see #addDockingListener(DockingListener)
      * @see #getDockingListeners()
      */
+    @Override
     public void removeDockingListener(DockingListener listener) {
         if (listener != null) {
             dockingListeners.remove(listener);
@@ -291,6 +304,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#getClientProperty(Object)
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */
+    @Override
     public Object getClientProperty(Object key) {
         if (key == null) {
             return null;
@@ -324,6 +338,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see javax.swing.JComponent#putClientProperty(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     public void putClientProperty(Object key, Object value) {
         if (key == null) {
             return;
@@ -352,6 +367,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#getDockingProperties()
      * @see org.flexdock.docking.props.PropertyManager#getDockablePropertySet(Dockable)
      */
+    @Override
     public DockablePropertySet getDockingProperties() {
         return PropertyManager.getDockablePropertySet(this);
     }
@@ -372,6 +388,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#getDockingPort()
      * @see DockingManager#getDockingPort(Dockable)
      */
+    @Override
     public DockingPort getDockingPort() {
         return DockingManager.getDockingPort(this);
     }
@@ -389,6 +406,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#dock(Dockable)
      * @see DockingManager#dock(Dockable, Dockable)
      */
+    @Override
     public boolean dock(Dockable dockable) {
         return DockingManager.dock(dockable, this);
     }
@@ -410,6 +428,7 @@ public abstract class AbstractDockable implements Dockable {
      * @see Dockable#dock(Dockable, String)
      * @see DockingManager#dock(Dockable, Dockable, String)
      */
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion) {
         return DockingManager.dock(dockable, this, relativeRegion);
     }
@@ -433,14 +452,17 @@ public abstract class AbstractDockable implements Dockable {
      *         {@code false} otherwise.
      * @see DockingManager#dock(Dockable, Dockable, String, float)
      */
+    @Override
     public boolean dock(Dockable dockable, String relativeRegion, float ratio) {
         return DockingManager.dock(dockable, this, relativeRegion, ratio);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         getDockingProperties().addPropertyChangeListener(listener);
     }
 
+    @Override
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         getDockingProperties().removePropertyChangeListener(listener);
     }

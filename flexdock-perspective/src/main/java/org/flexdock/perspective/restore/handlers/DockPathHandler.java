@@ -33,6 +33,7 @@ import org.flexdock.docking.state.DockingState;
  */
 public class DockPathHandler implements RestorationHandler {
 
+    @Override
     public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
         DockingPath dockingPath = dockingState.getPath();
         if (dockingPath == null) {

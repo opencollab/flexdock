@@ -44,6 +44,7 @@ public class DockbarTracker implements DockingConstants, PropertyChangeListener,
 
     public static void register() {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 DockbarTracker tracker = new DockbarTracker();
                 // register a propertyChangeListener to update the 'currrent'
@@ -58,6 +59,7 @@ public class DockbarTracker implements DockingConstants, PropertyChangeListener,
         });
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(ACTIVE_WINDOW.equals(evt.getPropertyName())) {
             Component newWindow = SwingUtility.toComponent(evt.getNewValue());
@@ -65,6 +67,7 @@ public class DockbarTracker implements DockingConstants, PropertyChangeListener,
         }
     }
 
+    @Override
     public void eventDispatched(AWTEvent event) {
         //catch all mouseMoved events
         int evtType = event.getID();

@@ -42,6 +42,7 @@ import org.flexdock.util.RootWindow;
  */
 public class PointHandler implements RestorationHandler, DockingConstants {
 
+    @Override
     public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
         if(DockingManager.isDocked(dockable)) {
             return false;
@@ -75,12 +76,12 @@ public class PointHandler implements RestorationHandler, DockingConstants {
             return null;
         }
 
-        float percentX = (float)dockingState.getCenterX()/100f;
-        float percentY = (float)dockingState.getCenterY()/100f;
+        float percentX = dockingState.getCenterX()/100f;
+        float percentY = dockingState.getCenterY()/100f;
 
         Point dropPoint = new Point();
-        dropPoint.x = Math.round((float)contentPane.getWidth() * percentX);
-        dropPoint.y = Math.round((float)contentPane.getHeight() * percentY);
+        dropPoint.x = Math.round(contentPane.getWidth() * percentX);
+        dropPoint.y = Math.round(contentPane.getHeight() * percentY);
 
         return dropPoint;
     }

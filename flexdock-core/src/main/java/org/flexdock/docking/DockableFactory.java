@@ -83,6 +83,7 @@ public interface DockableFactory {
          *
          * @return {@code null}.
          */
+        @Override
         public Dockable getDockable(String dockableId) {
             return null;
         }
@@ -92,6 +93,7 @@ public interface DockableFactory {
          *
          * @return {@code null}.
          */
+        @Override
         public Component getDockableComponent(String dockableId) {
             return null;
         }

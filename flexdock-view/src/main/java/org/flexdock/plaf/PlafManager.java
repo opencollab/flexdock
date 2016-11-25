@@ -202,6 +202,7 @@ public class PlafManager {
     }
 
     private static class UiUpdater implements PropertyChangeListener {
+        @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (UI_CHANGE_EVENT.equals(evt.getPropertyName())
                 && evt.getOldValue() != evt.getNewValue()) {

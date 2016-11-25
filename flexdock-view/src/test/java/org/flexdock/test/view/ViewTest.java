@@ -189,6 +189,7 @@ public class ViewTest implements DockingConstants {
             putValue(Action.NAME, "Apply custom theme");
         }
 
+        @Override
         public void actionPerformed(ActionEvent arg0) {
             Properties p = new Properties();
             if( viewUIList.getSelectedValue() != null) {
@@ -218,6 +219,7 @@ public class ViewTest implements DockingConstants {
             putValue(Action.NAME, lfInfo.getName());
         }
 
+        @Override
         public void actionPerformed(ActionEvent event) {
             SwingUtility.setPlaf(lfInfo.getClassName());
             PlafManager.setPreferredTheme("custom.theme", true);
@@ -230,6 +232,7 @@ public class ViewTest implements DockingConstants {
             putValue(Action.NAME, name);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
         }
     }
@@ -245,6 +248,7 @@ public class ViewTest implements DockingConstants {
         public JPanel createPanel() {
 
             JPanel panel = new JPanel(null) {
+                @Override
                 public void doLayout() {
                     int x = 10;
                     int row = 1;

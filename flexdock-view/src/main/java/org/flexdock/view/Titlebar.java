@@ -294,16 +294,19 @@ public class Titlebar extends JComponent {
         }
     }
 
+    @Override
     public void doLayout() {
         if (ui instanceof TitlebarUI) {
             ((TitlebarUI) ui).layoutComponents(this);
         }
     }
 
+    @Override
     public void updateUI() {
         setUI(PlafManager.getUI(this));
     }
 
+    @Override
     public String getUIClassID() {
         return UI_CLASS_ID;
     }

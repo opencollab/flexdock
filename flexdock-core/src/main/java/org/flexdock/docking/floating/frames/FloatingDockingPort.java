@@ -49,6 +49,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
         dragListener = new FrameDragListener(frame);
     }
 
+    @Override
     public String getRegion(Point p) {
         // only allow docking in CENTER
         return CENTER_REGION;
@@ -62,6 +63,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
         return super.isDockingAllowed(comp, region);
     }
 
+    @Override
     public boolean dock(Dockable dockable, String region) {        // only dock to the CENTER region
         boolean ret = super.dock(dockable, CENTER_REGION);
         if(ret) {
@@ -70,6 +72,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
         return ret;
     }
 
+    @Override
     public boolean undock(Component comp) {
         boolean ret = super.undock(comp);
         if(ret) {
@@ -78,6 +81,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
         return ret;
     }
 
+    @Override
     public void dragStarted(DockingEvent evt) {
         super.dragStarted(evt);
 
@@ -91,6 +95,7 @@ public class FloatingDockingPort extends DefaultDockingPort {
         }
     }
 
+    @Override
     public void undockingComplete(DockingEvent evt) {
         super.undockingComplete(evt);
         if(evt.getOldDockingPort()==this && getDockableCount()==0) {

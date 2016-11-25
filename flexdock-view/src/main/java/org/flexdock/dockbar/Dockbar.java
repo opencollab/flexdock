@@ -130,6 +130,7 @@ public class Dockbar extends JPanel {
         setLayout(new BoxLayout(this, boxConstraint));
     }
 
+    @Override
     public Dimension getPreferredSize() {
         if(mDocks.isEmpty()) {
             return new Dimension(0,0);

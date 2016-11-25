@@ -64,6 +64,7 @@ public class GradientTitlebar extends Titlebar {
         gradient.setMidColor(color==null? DEFAULT_MID_COLOR: color);
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         gradient.paintGradient(this, g);
         super.paintComponent(g);

@@ -66,6 +66,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean store(String persistenceKey, PerspectiveModel perspectiveModel) throws IOException, PersistenceException {
         File file = getPerspectiveFile(persistenceKey);
         validatePerspectiveFile(file);
@@ -83,6 +84,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public PerspectiveModel load(String persistenceKey) throws IOException, PersistenceException {
         File file = getPerspectiveFile(persistenceKey);
         if(file==null || !file.exists()) {
@@ -136,6 +138,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
         defaultPerspectiveFile = new File(absolutePath);
     }
 
+    @Override
     public Persister createDefaultPersister() {
 //                return new DefaultFilePersister();
         return XMLPersister.newDefaultInstance();

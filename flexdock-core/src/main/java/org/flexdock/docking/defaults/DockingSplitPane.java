@@ -98,6 +98,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 
         addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
 
+                @Override
                 public void propertyChange(PropertyChangeEvent pce) {
                     if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
                         BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
@@ -105,6 +106,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
                             dividerHashCode = ui.getDivider().hashCode();
                             ui.getDivider().addMouseListener(new MouseAdapter() {
 
+                                @Override
                                     public void mouseReleased(MouseEvent e) {
                                         DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
                                         DockingSplitPane.this.setResizeWeight(percent);
@@ -116,6 +118,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             });
 
         getActionMap().put("toggleFocus", new AbstractAction() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     SwingUtility.toggleFocus(+1);
                 }
@@ -137,6 +140,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         }
     }
 
+    @Override
     public void resetToPreferredSizes() {
         Insets i = getInsets();
 
@@ -177,6 +181,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         return getOrientation() == JSplitPane.HORIZONTAL_SPLIT ? getWidth() : getHeight();
     }
 
+    @Override
     public void setDividerLocation(double percent) {
         this.percent = percent;
         super.setDividerLocation(percent);
@@ -294,6 +299,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * @see java.awt.Container#doLayout()
      * @see JSplitPane#setDividerLocation(double)
      */
+    @Override
     public void doLayout() {
         // if they setup the docking configuration while the application
         // was first starting up, then the dividerLocation was calculated before
@@ -337,6 +343,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         initialDividerRatio = ratio;
     }
 
+    @Override
     protected void finalize() throws Throwable {
         cleanup();
         super.finalize();

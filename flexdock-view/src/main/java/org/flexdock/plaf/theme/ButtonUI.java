@@ -57,6 +57,7 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
     protected Border borderActiveHover;
     protected Border borderPressed;
 
+    @Override
     public void paint(Graphics g, JComponent c) {
         AbstractButton b = (AbstractButton) c;
         ButtonModel model = b.getModel();
@@ -268,6 +269,7 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
     }
 
 
+    @Override
     public void installUI(JComponent c) {
         super.installUI(c);
         AbstractButton button = (AbstractButton)c;
@@ -281,15 +283,18 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
         updateTooltip(button);
     }
 
+    @Override
     public void uninstallUI(JComponent c) {
         AbstractButton button = (AbstractButton)c;
         super.uninstallUI(c);
     }
 
+    @Override
     protected void installKeyboardActions(AbstractButton b) {
         // do nothing
     }
 
+    @Override
     protected BasicButtonListener createButtonListener(AbstractButton b) {
         return new ButtonListener(b);
     }
@@ -298,8 +303,10 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
         protected ButtonListener(AbstractButton b) {
             super(b);
         }
+        @Override
         public void focusGained(FocusEvent e) {
         }
+        @Override
         public void focusLost(FocusEvent e) {
         }
     }
@@ -324,14 +331,17 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
         this.borderPressed = borderPressed;
     }
 
+    @Override
     public PropertySet getCreationParameters() {
         return creationParameters;
     }
+    @Override
     public void setCreationParameters(PropertySet creationParameters) {
         this.creationParameters = creationParameters;
         initializeCreationParameters();
     }
 
+    @Override
     public void initializeCreationParameters() {
         setBorderDefault(creationParameters.getBorder(BORDER));
         setBorderDefaultHover(creationParameters.getBorder(BORDER_HOVER));
@@ -341,6 +351,7 @@ public class ButtonUI extends BasicButtonUI implements IFlexViewComponentUI {
     }
 
     private class ToggleListener implements ItemListener {
+        @Override
         public void itemStateChanged(ItemEvent e) {
             if(e.getStateChange()!=ItemEvent.SELECTED && e.getStateChange()!=ItemEvent.DESELECTED) {
                 return;

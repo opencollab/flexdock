@@ -39,6 +39,7 @@ public class SquareBevelBorderResource extends ResourceHandler {
 
     private static final ColorUIResource DEFAULT_COLOR = new ColorUIResource(Color.WHITE);
 
+    @Override
     public Object getResource(String data) {
         // pattern should be "lineWidth, lightColor, darkColor"
         String[] args = getArgs(data);
@@ -77,14 +78,17 @@ public class SquareBevelBorderResource extends ResourceHandler {
             insets = new Insets(lineWidth, lineWidth, lineWidth, lineWidth);
         }
 
+        @Override
         public Insets getBorderInsets(Component c) {
             return insets;
         }
 
+        @Override
         public boolean isBorderOpaque() {
             return true;
         }
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
             Color saved = g.getColor();
 

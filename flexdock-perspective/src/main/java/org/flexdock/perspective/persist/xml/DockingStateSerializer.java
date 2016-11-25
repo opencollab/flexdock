@@ -43,6 +43,7 @@ public class DockingStateSerializer implements ISerializer {
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
+    @Override
     public Element serialize(Document document, Object object) {
         DockingState dockingState = (DockingState) object;
 
@@ -127,6 +128,7 @@ public class DockingStateSerializer implements ISerializer {
         throw new RuntimeException("Minimization conversion error!");
     }
 
+    @Override
     public Object deserialize(Element element) {
         String dockableId = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_DOCKABLE_ID);
         String relativeParentId = element.getAttribute(PersistenceConstants.DOCKING_STATE_ATTRIBUTE_RELATIVE_PARENT_ID);

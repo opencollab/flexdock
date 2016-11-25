@@ -37,6 +37,7 @@ public class ConstructorHandler extends ResourceHandler {
         this.constructor = constructor;
     }
 
+    @Override
     public Object getResource(String stringValue) {
         Object[] arguments = getArguments(stringValue);
         try {

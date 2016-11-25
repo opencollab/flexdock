@@ -72,6 +72,7 @@ public class DragPipeline {
         final DragOperation dToken = token;
         try {
             EventQueue.invokeAndWait(new Runnable() {
+                @Override
                 public void run() {
                     openImpl(dToken);
                 }
@@ -162,6 +163,7 @@ public class DragPipeline {
 
         final MouseEvent evt = me;
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 processDragEventImpl(evt);
             }
@@ -261,6 +263,7 @@ public class DragPipeline {
 //                        return null;
 
         return new Runnable() {
+            @Override
             public void run() {
                 deferRubberBandDrawing(rect);
 //                                drawRubberBand(rect);
@@ -269,6 +272,7 @@ public class DragPipeline {
     }
     private void deferRubberBandDrawing(final Rectangle rect) {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 drawRubberBand(rect);
             }
@@ -281,6 +285,7 @@ public class DragPipeline {
 
 
     private class GlassPaneMonitor extends MouseAdapter {
+        @Override
         public void mouseEntered(MouseEvent me) {
             Object obj = me.getSource();
             if(obj instanceof DragGlasspane) {
@@ -288,6 +293,7 @@ public class DragPipeline {
             }
         }
 
+        @Override
         public void mouseExited(MouseEvent me) {
             setCurrentGlassPane(null);
         }

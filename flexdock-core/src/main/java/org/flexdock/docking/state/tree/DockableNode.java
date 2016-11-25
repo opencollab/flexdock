@@ -50,14 +50,17 @@ public class DockableNode extends DockingNode {
         return DockingManager.getDockable(dockableId);
     }
 
+    @Override
     public void add(MutableTreeNode newChild) {
         // noop
     }
 
+    @Override
     public Object getDockingObject() {
         return getDockable();
     }
 
+    @Override
     protected DockingNode shallowClone() {
         return new DockableNode(dockableId);
     }

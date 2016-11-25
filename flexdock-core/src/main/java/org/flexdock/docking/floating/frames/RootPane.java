@@ -207,11 +207,13 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
 
     // implement MouseListener, MouseMotionListener
 
+    @Override
     public void mousePressed(MouseEvent e) {
         currentResizeRegion = getCursor(e.getPoint());
         computeMouseLimits(e.getPoint());
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if(currentResizeRegion==0) {
             return;
@@ -268,30 +270,36 @@ public class RootPane extends JRootPane implements MouseListener, MouseMotionLis
 
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         currentResizeRegion = 0;
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         setCursor(Cursor.getPredefinedCursor(getCursor(e.getPoint())));
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         if (currentResizeRegion == 0) { // no dragging on!
             mLastCursor = getCursor();
         }
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
         setCursor(mLastCursor);
     }
 
     // defaults
 
+    @Override
     public void mouseClicked(MouseEvent e) {
     }
 
 
+    @Override
     protected LayoutManager createRootLayout() {
         return new RootPaneLayout(this);
     }

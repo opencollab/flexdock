@@ -247,10 +247,12 @@ public class PerspectiveManager implements LayoutManager {
     }
 
 
+    @Override
     public DockingState getDockingState(Dockable dockable) {
         return getCurrentPerspective().getDockingState(dockable);
     }
 
+    @Override
     public DockingState getDockingState(String dockable) {
         return getCurrentPerspective().getDockingState(dockable);
     }
@@ -264,6 +266,7 @@ public class PerspectiveManager implements LayoutManager {
     }
 
 
+    @Override
     public FloatManager getFloatManager() {
         return getCurrentPerspective().getLayout();
     }
@@ -455,6 +458,7 @@ public class PerspectiveManager implements LayoutManager {
         }
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 cacheLayoutState(perspective, rootPort);
             }
@@ -469,10 +473,12 @@ public class PerspectiveManager implements LayoutManager {
 
 
 
+    @Override
     public LayoutNode createLayout(DockingPort port) {
         return LayoutBuilder.getInstance().createLayout(port);
     }
 
+    @Override
     public boolean display(Dockable dockable) {
         return RestorationManager.getInstance().restore(dockable);
     }
@@ -500,6 +506,7 @@ public class PerspectiveManager implements LayoutManager {
         }
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 for(int i=0; i<dockables.length; i++) {
                     UPDATE_LISTENER.updateState(dockables[i]);
@@ -508,10 +515,12 @@ public class PerspectiveManager implements LayoutManager {
         });
     }
 
+    @Override
     public synchronized boolean store() throws IOException, PersistenceException {
         return store(null);
     }
 
+    @Override
     public synchronized boolean store(String persistenceKey) throws IOException, PersistenceException {
         if(this.persistHandler==null) {
             return false;
@@ -530,10 +539,12 @@ public class PerspectiveManager implements LayoutManager {
         return this.persistHandler.store(pKey, info);
     }
 
+    @Override
     public synchronized boolean load() throws IOException, PersistenceException {
         return load(null);
     }
 
+    @Override
     public synchronized boolean load(String persistenceKey) throws IOException, PersistenceException {
         if(this.persistHandler==null) {
             return false;
@@ -604,16 +615,19 @@ public class PerspectiveManager implements LayoutManager {
         return window==null? null: DockingManager.getRootDockingPort(window.getRootContainer());
     }
 
+    @Override
     public boolean restore(boolean loadFromStorage) throws IOException, PersistenceException {
         boolean loaded = loadFromStorage? load(): true;
         reload();
         return loaded;
     }
 
+    @Override
     public String getDefaultPersistenceKey() {
         return this.defaultPersistenceKey;
     }
 
+    @Override
     public void setDefaultPersistenceKey(String key) {
         this.defaultPersistenceKey = key;
     }

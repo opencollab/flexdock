@@ -59,10 +59,12 @@ public class StatusDockbar extends Dockbar {
         return statusBarComponent;
     }
 
+    @Override
     public Component add(Component c) {
         return labelPanel.add(c);
     }
 
+    @Override
     void undock(Dockable dockable) {
         DockbarLabel label = getLabel(dockable);
 
@@ -87,6 +89,7 @@ public class StatusDockbar extends Dockbar {
         labelPanel.setLayout(new BoxLayout(labelPanel, boxConstraint));
     }
 
+    @Override
     public Dimension getPreferredSize() {
         if (statusBarComponent == null || statusBarComponent.getComponentCount() == 0) {
             if (mDocks.isEmpty()) {

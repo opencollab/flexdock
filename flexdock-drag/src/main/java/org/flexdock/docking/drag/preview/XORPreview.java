@@ -32,6 +32,7 @@ import org.flexdock.docking.drag.effects.DefaultPreview;
 
 public class XORPreview extends DefaultPreview {
 
+    @Override
     public void drawPreview(Graphics2D g, Polygon p, Dockable dockable, Map dragInfo) {
         float[] pattern = { 1.0f, 1.0f };
         Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1f, pattern, 0f);

@@ -78,6 +78,7 @@ public class AlphaPreview extends DefaultPreview {
         }
     }
 
+    @Override
     public void drawPreview(Graphics2D g, Polygon p, Dockable dockable, Map dragInfo) {
         Rectangle rect = p.getBounds();
 

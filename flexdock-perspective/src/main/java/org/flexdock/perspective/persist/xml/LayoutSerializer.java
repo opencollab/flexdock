@@ -39,6 +39,7 @@ public class LayoutSerializer implements ISerializer {
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
+    @Override
     public Element serialize(Document document, Object object) {
         Layout layout = (Layout) object;
 
@@ -73,6 +74,7 @@ public class LayoutSerializer implements ISerializer {
         return layoutElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         Layout layout = new Layout();
 

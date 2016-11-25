@@ -107,6 +107,7 @@ public class MaximizationDemo {
         final Dockable dockable = new DockableSimpleInternalFrame(sif);
 
         maxButton.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 //System.out.println("Calling DockingManager to maximize: " + dockable);
                 DockingManager.toggleMaximized(dockable);

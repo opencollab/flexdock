@@ -36,6 +36,7 @@ public class GradientPainter extends DefaultPainter {
 
     public static final String GRAYSCALE = "grayscale";
 
+    @Override
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         int mid = width / 2;
 

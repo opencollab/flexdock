@@ -29,6 +29,7 @@ import org.flexdock.util.Utilities;
  */
 public class ActionResourceHandler extends ResourceHandler {
 
+    @Override
     public Object getResource(String stringValue) {
         Object obj = Utilities.createInstance(stringValue);
         if(!(obj instanceof Action)) {

@@ -56,6 +56,7 @@ public class RootDockingPortPropertySet extends BasicDockingPortPropertySet {
         constraints.add(key);
     }
 
+    @Override
     public synchronized Object remove(Object key) {
         return constraints.contains(key)? null: super.remove(key);
     }

@@ -27,14 +27,17 @@ import java.util.EventListener;
  */
 public class RegistrationHandler extends EventHandler {
 
+    @Override
     public boolean acceptsEvent(Event evt) {
         return evt instanceof RegistrationEvent;
     }
 
+    @Override
     public boolean acceptsListener(EventListener listener) {
         return listener instanceof RegistrationListener;
     }
 
+    @Override
     public void handleEvent(Event evt, EventListener listener, int eventType) {
         RegistrationEvent regEvt = (RegistrationEvent)evt;
         RegistrationListener regListener = (RegistrationListener)listener;

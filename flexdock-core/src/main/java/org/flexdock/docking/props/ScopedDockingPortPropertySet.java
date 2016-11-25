@@ -60,35 +60,43 @@ public class ScopedDockingPortPropertySet extends BasicDockingPortPropertySet im
         locals.add(this);
     }
 
+    @Override
     public List getLocals() {
         return locals;
     }
 
+    @Override
     public List getDefaults() {
         return DEFAULTS;
     }
 
+    @Override
     public List getGlobals() {
         return GLOBALS;
     }
 
+    @Override
     public Map getRoot() {
         return ROOT_PROPS;
     }
 
+    @Override
     public RegionChecker getRegionChecker() {
         return (RegionChecker)PropertyManager.getProperty(REGION_CHECKER, this);
     }
 
+    @Override
     public Float getRegionInset(String region) {
         String key = getRegionInsetKey(region);
         return key==null? null: (Float)PropertyManager.getProperty(key, this);
     }
 
+    @Override
     public Integer getTabPlacement() {
         return (Integer)PropertyManager.getProperty(TAB_PLACEMENT, this);
     }
 
+    @Override
     public Boolean isSingleTabsAllowed() {
         return (Boolean)PropertyManager.getProperty(SINGLE_TABS, this);
     }

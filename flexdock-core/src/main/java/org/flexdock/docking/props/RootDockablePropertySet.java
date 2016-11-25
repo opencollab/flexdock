@@ -74,6 +74,7 @@ public class RootDockablePropertySet extends BasicDockablePropertySet {
     }
 
 
+    @Override
     public synchronized Object remove(Object key) {
         return constraints.contains(key)? null: super.remove(key);
     }

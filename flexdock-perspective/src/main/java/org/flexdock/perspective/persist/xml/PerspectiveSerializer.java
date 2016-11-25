@@ -36,6 +36,7 @@ public class PerspectiveSerializer implements ISerializer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Element serialize(Document document, Object object) {
         Perspective perspective = (Perspective) object;
 
@@ -60,6 +61,7 @@ public class PerspectiveSerializer implements ISerializer {
     /**
      * {@inheritDoc}
      */
+    @Override
     public Object deserialize(Element element) {
         String perspectiveId = element.getAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_ID);
         String perspectiveName = element.getAttribute(PersistenceConstants.PERSPECTIVE_ATTRIBUTE_NAME);

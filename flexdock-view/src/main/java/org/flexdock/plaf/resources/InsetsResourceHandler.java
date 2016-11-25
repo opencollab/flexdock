@@ -26,6 +26,7 @@ import java.awt.Insets;
  */
 public class InsetsResourceHandler extends ResourceHandler {
 
+    @Override
     public Object getResource(String data) {
 //      pattern should be "top, left, bottom, right"
         String[] args = getArgs(data);

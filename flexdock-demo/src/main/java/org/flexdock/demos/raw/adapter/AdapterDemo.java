@@ -43,6 +43,7 @@ public class AdapterDemo extends JFrame {
         DockingManager.setFloatingEnabled(true);
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 createAndShowGui();
             }

@@ -34,18 +34,22 @@ public class DockingStubTitlepane extends Titlepane implements DockingStub {
         dockingId = id;
     }
 
+    @Override
     public Component getDragSource() {
         return getTitlebar();
     }
 
+    @Override
     public Component getFrameDragSource() {
         return getTitlebar();
     }
 
+    @Override
     public String getPersistentId() {
         return dockingId;
     }
 
+    @Override
     public String getTabText() {
         return getTitle();
     }

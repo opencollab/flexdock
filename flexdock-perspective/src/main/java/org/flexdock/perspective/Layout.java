@@ -22,6 +22,7 @@ package org.flexdock.perspective;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -256,6 +257,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         }
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 restoreMinimizedDockables(deferred);
             }
@@ -292,7 +294,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         }
 
         boolean hidden = false;
-        if(DockingManager.isDocked((Dockable)dockable)) {
+        if(DockingManager.isDocked(dockable)) {
             hidden = DockingManager.undock(dockable);
         } else if (DockingUtility.isMinimized(dockable)) {
             hidden = DockingManager.getMinimizeManager().close(dockable);
@@ -310,6 +312,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         }
     }
 
+    @Override
     public Object clone() {
         synchronized(this) {
             ArrayList listeners = (ArrayList)getLayoutListeners().clone();
@@ -353,6 +356,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         return frame;
     }
 
+    @Override
     public DockingFrame floatDockable(Dockable dockable, Component frameOwner, Rectangle screenBounds) {
         if(dockable==null || screenBounds==null) {
             return null;
@@ -377,6 +381,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         return frame;
     }
 
+    @Override
     public DockingFrame floatDockable(Dockable dockable, Component frameOwner) {
         FloatingGroup group = getGroup(dockable);
         Rectangle bounds = group==null? null: group.getBounds();
@@ -388,7 +393,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
             }
 
             Rectangle ownerBounds = frameOwner instanceof DockingFrame?
-                                    ((DockingFrame)frameOwner).getOwner().getBounds():
+                                    ((Window)frameOwner).getOwner().getBounds():
                                     RootWindow.getRootContainer(frameOwner).getRootContainer().getBounds();
 
             int x = (ownerBounds.x + ownerBounds.width/2) - bounds.width/2;
@@ -399,6 +404,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         return floatDockable(dockable, frameOwner, bounds);
     }
 
+    @Override
     public FloatingGroup getGroup(Dockable dockable) {
         if(dockable==null) {
             return null;
@@ -412,6 +418,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         return (String[]) this.floatingGroups.keySet().toArray(new String[] {});
     }
 
+    @Override
     public FloatingGroup getGroup(String groupId) {
         return groupId==null? null: (FloatingGroup)floatingGroups.get(groupId);
     }
@@ -423,6 +430,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         floatingGroups.put(floatingGroup.getName(), floatingGroup);
     }
 
+    @Override
     public void addToGroup(Dockable dockable, String groupId) {
         // floating groups are mutually exclusive
         removeFromGroup(dockable);
@@ -434,6 +442,7 @@ public class Layout implements Cloneable, FloatManager, Serializable {
         }
     }
 
+    @Override
     public void removeFromGroup(Dockable dockable) {
         FloatingGroup group = getGroup(dockable);
         if(dockable!=null) {

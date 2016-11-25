@@ -162,6 +162,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
         repaint();
     }
 
+    @Override
     public void paint(Graphics g) {
         paintComponentImpl(g);
         postPaint(g);
@@ -186,6 +187,7 @@ public class DragGlasspane extends JComponent implements DockingConstants {
 
     private void deferPostPaint() {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 postPaint(getGraphics());
             }

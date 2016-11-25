@@ -139,6 +139,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
         this.relativeParentId = relativeParentId;
     }
 
+    @Override
     public String toString() {
         return "DockingState[id=" + this.dockableId +
                "; center=[" + centerX + "%," + centerY + "%]" +
@@ -176,6 +177,7 @@ public class DockingState implements Cloneable, Serializable, DockingConstants {
         return (centerX != DockingConstants.UNINITIALIZED && centerY != DockingConstants.UNINITIALIZED);
     }
 
+    @Override
     public Object clone() {
         DockingState dockingStateClone = new DockingState(this.dockableId);
 

@@ -25,6 +25,7 @@ import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.lang.ref.WeakReference;
@@ -115,7 +116,7 @@ public class DockbarManager {
         // DockingFrame, reroute to its owner.
         Component root = window.getRootContainer();
         if(root instanceof DockingFrame) {
-            root = ((DockingFrame)root).getOwner();
+            root = ((Window)root).getOwner();
             return getInstance(root);
         }
 
@@ -251,6 +252,7 @@ public class DockbarManager {
 
         if(changed) {
             layerPane.addComponentListener(new ComponentAdapter() {
+                @Override
                 public void componentResized(ComponentEvent evt) {
                     if(evt.getSource() instanceof JLayeredPane) {
                         revalidate();
@@ -300,6 +302,7 @@ public class DockbarManager {
 
     public void revalidate() {
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 validate();
             }
@@ -630,6 +633,7 @@ public class DockbarManager {
     private void startAnimation(final Dockable oldDockable, final Dockable newDockable, final String newDockableId, final int newEdge) {
         Animation deactivation = oldDockable==null? null: new Animation(this, true);
         Runnable updater1 = new Runnable() {
+            @Override
             public void run() {
                 setActiveEdge(newEdge);
                 setActiveDockableId(newDockableId);
@@ -639,6 +643,7 @@ public class DockbarManager {
         };
         Animation activation = newDockableId==null? null: new Animation(this, false);
         Runnable updater2 = new Runnable() {
+            @Override
             public void run() {
                 viewPane.setPrefSize(ViewPane.UNSPECIFIED_PREFERRED_SIZE);
                 viewPane.updateOrientation();

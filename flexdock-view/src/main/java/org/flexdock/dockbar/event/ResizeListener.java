@@ -55,10 +55,12 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
         dragGlassPane.setOpaque(false);
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         // noop
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         dockable = manager.getActiveDockable();
         rootWindow = manager.getWindow();
@@ -69,6 +71,7 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
         manager.setDragging(true);
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         dockable = null;
         dragGlassPane.setVisible(false);
@@ -81,6 +84,7 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
         }
     }
 
+    @Override
     public void mouseDragged(MouseEvent e) {
         if(dockable!=null) {
             handleResizeEvent(e);
@@ -105,8 +109,8 @@ public class ResizeListener extends MouseAdapter implements MouseMotionListener 
             loc = dim - loc;
         }
 
-        float percent = (float)loc/(float)dim;
-        float minPercent = (float)DockbarLayout.MINIMUM_VIEW_SIZE/(float)dim;
+        float percent = loc/(float)dim;
+        float minPercent = DockbarLayout.MINIMUM_VIEW_SIZE/(float)dim;
         percent = Math.max(percent, minPercent);
 
         DockablePropertySet props = dockable.getDockingProperties();

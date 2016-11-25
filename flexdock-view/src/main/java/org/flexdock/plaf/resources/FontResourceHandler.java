@@ -31,6 +31,7 @@ import javax.swing.plaf.FontUIResource;
 public class FontResourceHandler extends ResourceHandler {
     public static final String BASE_FONT_KEY = "Panel.font";
 
+    @Override
     public Object getResource(String fontData) {
         if(fontData==null) {
             return null;

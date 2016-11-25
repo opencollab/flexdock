@@ -34,15 +34,18 @@ public class ShadowBorder implements Border {
         insets = new Insets(1, 1, 3, 3);
     }
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return insets;
     }
 
+    @Override
     public boolean isBorderOpaque() {
         // we'll be filling in our own background.
         return true;
     }
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x,
                             int y, int w, int h) {
         // choose which colors we want to use

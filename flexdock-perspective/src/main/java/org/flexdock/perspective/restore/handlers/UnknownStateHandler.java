@@ -43,6 +43,7 @@ public class UnknownStateHandler implements RestorationHandler, DockingConstants
         CENTER_REGION, WEST_REGION, EAST_REGION, SOUTH_REGION, NORTH_REGION
     };
 
+    @Override
     public boolean restore(Dockable dockable, DockingState info, Map context) {
         DockingPort port = PerspectiveManager.getMainDockingPort();
         if(port==null) {

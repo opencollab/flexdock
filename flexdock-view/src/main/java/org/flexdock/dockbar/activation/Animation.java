@@ -46,16 +46,18 @@ public class Animation implements Runnable, ActionListener {
     public Animation(DockbarManager mgr, boolean hide) {
         dockManager = mgr;
         timer = new Timer(ANIMATION_INTERVAL, this);
-        frameDelta = (100f/(float)getTotalFrameCount())/100f;
+        frameDelta = (100f/getTotalFrameCount())/100f;
         hiding = hide;
         lock = new Object();
     }
 
+    @Override
     public void run() {
         timer.start();
         sleep();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         resetViewpaneSize();
         dockManager.revalidate();
@@ -76,7 +78,7 @@ public class Animation implements Runnable, ActionListener {
         } else if(frameCount==getTotalFrameCount()-1) {
             prefSize = getEndSize(prefSize);
         } else {
-            int newSize = (int)((float)prefSize * (frameCount*frameDelta));
+            int newSize = (int)(prefSize * (frameCount*frameDelta));
             prefSize = hiding? prefSize-newSize: newSize;
         }
 

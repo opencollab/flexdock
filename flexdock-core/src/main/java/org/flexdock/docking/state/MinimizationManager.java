@@ -50,12 +50,15 @@ public interface MinimizationManager {
     void setMinimized(Dockable dockable, boolean minimized, Component window, int constraint);
 
     class Stub implements MinimizationManager {
+        @Override
         public boolean close(Dockable dockable) {
             return false;
         }
 
+        @Override
         public void preview(Dockable dockable, boolean locked) {}
 
+        @Override
         public void setMinimized(Dockable dockable, boolean minimized, Component window, int edge) {}
 
     }

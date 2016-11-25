@@ -302,6 +302,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see Dockable#getDockingProperties()
      * @see DockablePropertySet#isTerritoryBlocked(String)
      */
+    @Override
     public boolean dock(Dockable dockable, DockingPort port, String region) {
         return dock(dockable, port, region, null);
     }
@@ -355,6 +356,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see Dockable#getDockingProperties()
      * @see DockablePropertySet#isTerritoryBlocked(String)
      */
+    @Override
     public boolean dock(Dockable dockable, DockingPort port, String region,
                         DragOperation operation) {
         if (!isDockingPossible(dockable, port, region, operation)) {
@@ -576,6 +578,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      *         {@code false} otherwise.
      * @see #dock(Dockable, DockingPort, String)
      */
+    @Override
     public boolean undock(Dockable dockable) {
         if (dockable == null) {
             return false;
@@ -700,6 +703,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see DefaultDockingPort#setTabsAsDragSource(boolean)
      * @see DefaultDockingPort#setRoot(boolean)
      */
+    @Override
     public DockingPort createDockingPort(DockingPort base) {
         DockingPort port = createDockingPortImpl(base);
 
@@ -761,6 +765,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see #createSplitPaneImpl(DockingPort, String)
      * @see JSplitPane#setResizeWeight(double)
      */
+    @Override
     public JSplitPane createSplitPane(DockingPort base, String region, float percent) {
         JSplitPane split = createSplitPaneImpl(base, region);
         split.setVisible(false);
@@ -811,6 +816,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
             divider.setBorder(null);
 
             divider.addMouseListener(new MouseAdapter() {
+                @Override
                 public void mouseClicked(MouseEvent e) {
                     if (SwingUtilities.isLeftMouseButton(e)
                             && e.getClickCount() == 2) {
@@ -873,6 +879,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see #createSplitPaneImpl(DockingPort, String)
      * @see JSplitPane#setResizeWeight(double)
      */
+    @Override
     public JSplitPane createSplitPane(DockingPort base, String region) {
         return createSplitPane(base, region, -1f);
     }
@@ -911,6 +918,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see DockingStrategy#getInitialDividerLocation(DockingPort, JSplitPane)
      * @see #getDividerProportion(DockingPort, JSplitPane)
      */
+    @Override
     public int getInitialDividerLocation(DockingPort port, JSplitPane splitPane) {
         if (port == null || splitPane == null) {
             return 0;
@@ -986,6 +994,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * @see DockingManager#getDockable(Component)
      * @see RegionChecker#getSiblingSize(Component, String)
      */
+    @Override
     public double getDividerProportion(DockingPort port, JSplitPane splitPane) {
         if (port == null || splitPane == null) {
             return DockingManager.getDefaultSiblingSize();

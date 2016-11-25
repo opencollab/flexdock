@@ -33,16 +33,19 @@ import javax.swing.border.Border;
  */
 public class RootPaneBorder implements Border {
 
+    @Override
     public Insets getBorderInsets(Component c) {
         return new Insets(3, 3, 3, 3);
     }
 
     // implement Border
 
+    @Override
     public boolean isBorderOpaque() {
         return false;
     }
 
+    @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
 
         RootPane pane = (RootPane)c;

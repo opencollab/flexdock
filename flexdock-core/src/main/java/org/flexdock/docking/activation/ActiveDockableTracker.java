@@ -169,6 +169,7 @@ public class ActiveDockableTracker {
         if (!forceChange) {
             final Component c = focuser;
             c.addFocusListener(new FocusAdapter() {
+                @Override
                 public void focusGained(FocusEvent e) {
                     if(!DockingUtility.isActive(parentDockable)) {
                         parentDockable.getDockingProperties().setActive(true);

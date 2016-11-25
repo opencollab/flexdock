@@ -83,6 +83,7 @@ public class AllDemos extends JFrame {
             getContentPane().add(button);
 
             button.addActionListener(new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent event) {
                     launchClass(fullClassName);
                 }
@@ -115,6 +116,7 @@ public class AllDemos extends JFrame {
             for (int i = 0; i < args.length; i++) {
                 final String fullClassName = args[i];
                 SwingUtilities.invokeLater(new Runnable() {
+                    @Override
                     public void run() {
                         a.launchClass(fullClassName);
                     }

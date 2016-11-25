@@ -65,6 +65,7 @@ public class ViewFrameTest extends JFrame implements ActionListener, DockingCons
         dockingFrame = createDockingFrame();
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if(!dockingFrame.isVisible()) {
             dockingFrame.setSize(300, 300);
@@ -95,6 +96,7 @@ public class ViewFrameTest extends JFrame implements ActionListener, DockingCons
 
     private Action createAction(String name, String tooltip) {
         Action a = new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) {
             }
         };

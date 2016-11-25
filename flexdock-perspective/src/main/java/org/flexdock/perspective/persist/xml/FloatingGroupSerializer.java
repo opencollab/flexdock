@@ -38,6 +38,7 @@ public class FloatingGroupSerializer implements ISerializer {
     /**
      * @see org.flexdock.perspective.persist.xml.ISerializer#serialize(org.w3c.dom.Document, java.lang.Object)
      */
+    @Override
     public Element serialize(Document document, Object object) {
         FloatingGroup floatingGroup = (FloatingGroup) object;
 
@@ -58,6 +59,7 @@ public class FloatingGroupSerializer implements ISerializer {
         return floatingGroupElement;
     }
 
+    @Override
     public Object deserialize(Element element) {
         String floatingGroupName = element.getAttribute(PersistenceConstants.FLOATING_GROUP_ATTRIBUTE_NAME);
 

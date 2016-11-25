@@ -184,6 +184,7 @@ public class FloatingGroup implements Cloneable, Serializable {
         setBounds(null);
     }
 
+    @Override
     public Object clone() {
         HashSet set = (HashSet)dockables.clone();
         FloatingGroup clone = new FloatingGroup(name, set);

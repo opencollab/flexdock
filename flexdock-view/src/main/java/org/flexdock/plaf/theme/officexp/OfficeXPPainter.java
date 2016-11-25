@@ -37,6 +37,7 @@ public class OfficeXPPainter extends DefaultPainter {
     public static final String GRADIENT_COLOR_ACTIVE = "gradient.color.active";
 
 
+    @Override
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         int center = (int)(height / 1.2);
 

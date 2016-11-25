@@ -31,6 +31,7 @@ import org.w3c.dom.Element;
  */
 public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer implements ISerializer {
 
+    @Override
     public Element serialize(Document document, Object object) {
         DockingPortNode dockingPortNode = (DockingPortNode) object;
         Element dockingPortNodeElement = super.serialize(document, dockingPortNode);
@@ -38,14 +39,17 @@ public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer impl
         return dockingPortNodeElement;
     }
 
+    @Override
     protected Element getElement(Document document, Object o) {
         return document.createElement(PersistenceConstants.DOCKING_PORT_NODE_ELEMENT_NAME);
     }
 
+    @Override
     public Object deserialize(Element element) {
-        return (DockingPortNode) super.deserialize(element);
+        return super.deserialize(element);
     }
 
+    @Override
     protected LayoutNode createLayoutNode() {
         return new DockingPortNode();
     }

@@ -100,12 +100,14 @@ public class DockbarLabel extends JLabel implements MouseListener {
 
     // stuff
 
+    @Override
     public Border getBorder() {
         return mInPaint ? null : super.getBorder();
     }
 
     // override
 
+    @Override
     public void paintComponent(Graphics g) {
         mInPaint = false;
 
@@ -116,6 +118,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
         super.paintComponent(g);
     }
 
+    @Override
     public void paint(Graphics g) {
         mInPaint = true;
 
@@ -162,6 +165,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
         } // if
     }
 
+    @Override
     protected void validateTree() {
         updateBorderInsets();
         updateIcon();
@@ -194,6 +198,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
         icon.setRotation(rotation);
     }
 
+    @Override
     public void setIcon(Icon icon) {
         Icon currIcon = getIcon();
         if(currIcon instanceof TextIcon) {
@@ -204,6 +209,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
         revalidate();
     }
 
+    @Override
     public void setText(String text) {
         Icon currIcon = getIcon();
         if(currIcon instanceof TextIcon) {
@@ -243,6 +249,7 @@ public class DockbarLabel extends JLabel implements MouseListener {
         return mDefaultOrientation;
     }
 
+    @Override
     public Dimension getPreferredSize() {
         Icon  tmp = getIcon();
         if(!(tmp instanceof TextIcon)) {
@@ -259,14 +266,17 @@ public class DockbarLabel extends JLabel implements MouseListener {
 
     // override MouseListener
 
+    @Override
     public void mousePressed(MouseEvent e) {
 
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
 
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
         if(e.getButton() != MouseEvent.BUTTON1) {
             return;
@@ -275,10 +285,12 @@ public class DockbarLabel extends JLabel implements MouseListener {
         activate(true);
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
         activate(false);
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
 
     }

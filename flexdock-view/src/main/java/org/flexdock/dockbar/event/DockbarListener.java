@@ -37,14 +37,19 @@ public interface DockbarListener extends EventListener {
 
     static class Stub implements DockbarListener {
 
+        @Override
         public void dockableExpanded(DockbarEvent evt) {}
 
+        @Override
         public void dockableLocked(DockbarEvent evt) {}
 
+        @Override
         public void dockableCollapsed(DockbarEvent evt) {}
 
+        @Override
         public void minimizeStarted(DockbarEvent evt) {}
 
+        @Override
         public void minimizeCompleted(DockbarEvent evt) {}
 
     }

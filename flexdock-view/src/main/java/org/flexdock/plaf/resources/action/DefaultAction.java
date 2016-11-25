@@ -29,6 +29,7 @@ import javax.swing.AbstractAction;
 public class DefaultAction extends AbstractAction {
     public static final DefaultAction SINGLETON = new DefaultAction();
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         // noop
     }

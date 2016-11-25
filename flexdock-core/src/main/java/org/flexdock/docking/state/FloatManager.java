@@ -62,25 +62,31 @@ public interface FloatManager {
 
     public static class Stub implements FloatManager {
 
+        @Override
         public void addToGroup(Dockable dockable, String groupId) {
         }
 
+        @Override
         public DockingFrame floatDockable(Dockable dockable, Component frameOwner, Rectangle screenBounds) {
             return null;
         }
 
+        @Override
         public DockingFrame floatDockable(Dockable dockable, Component frameOwner) {
             return null;
         }
 
+        @Override
         public FloatingGroup getGroup(Dockable dockable) {
             return null;
         }
 
+        @Override
         public FloatingGroup getGroup(String groupName) {
             return null;
         }
 
+        @Override
         public void removeFromGroup(Dockable dockable) {
         }
 

@@ -41,14 +41,17 @@ public class PerspectiveEventHandler extends EventHandler {
 
     }
 
+    @Override
     public boolean acceptsEvent(Event evt) {
         return evt instanceof PerspectiveEvent;
     }
 
+    @Override
     public boolean acceptsListener(EventListener listener) {
         return listener instanceof PerspectiveListener;
     }
 
+    @Override
     public void handleEvent(Event evt, EventListener listener, int eventType) {
         PerspectiveEvent event = (PerspectiveEvent)evt;
         PerspectiveListener consumer = (PerspectiveListener)listener;

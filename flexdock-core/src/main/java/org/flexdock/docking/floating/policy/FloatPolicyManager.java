@@ -115,6 +115,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see #isPolicyFloatingSupported(Dockable)
      * @see #FLOATING_ALLOWED
      */
+    @Override
     public void dragStarted(DockingEvent evt) {
         Map context = evt.getDragContext();
         Dockable d = evt.getDockable();
@@ -159,6 +160,7 @@ public class FloatPolicyManager extends DockingListener.Stub {
      * @see #isFloatingAllowed(Dockable)
      * @see FloatPolicy#isFloatDropAllowed(DockingEvent)
      */
+    @Override
     public void dropStarted(DockingEvent evt) {
         if (evt.isOverWindow()) {
             return;

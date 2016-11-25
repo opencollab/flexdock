@@ -38,15 +38,18 @@ public class MinimizationAdapter implements MinimizationManager {
         Class c = DockbarManager.class;
     }
 
+    @Override
     public boolean close(Dockable dockable) {
         DockbarManager mgr = DockbarManager.getCurrent(dockable);
         return mgr==null? false: mgr.remove(dockable);
     }
 
+    @Override
     public void preview(Dockable dockable, boolean locked) {
         DockbarManager.activate(dockable, true);
     }
 
+    @Override
     public void setMinimized(Dockable dockable, boolean minimizing, Component window, int edge) {
         DockbarManager mgr = DockbarManager.getInstance(window);
         if(mgr==null) {

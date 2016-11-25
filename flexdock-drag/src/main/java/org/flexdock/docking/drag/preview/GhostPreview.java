@@ -42,6 +42,7 @@ public class GhostPreview extends DefaultPreview {
     private static final String PREVIOUS_BOUNDS = "TestPreview.PREVIOUS_BOUNDS";
     private static final String PREVIEW_IMG = "TestPreview.PREVIEW_IMG";
 
+    @Override
     public Polygon createPreviewPolygon(Component dockable, DockingPort port, Dockable hover, String targetRegion, Component paintingTarget, Map dragInfo) {
         // create the standard preview polygon
         Polygon polygon = super.createPreviewPolygon(dockable, port, hover, targetRegion, paintingTarget, dragInfo);
@@ -75,6 +76,7 @@ public class GhostPreview extends DefaultPreview {
         return polygon;
     }
 
+    @Override
     public void drawPreview(Graphics2D g, Polygon poly, Dockable dockable, Map dragInfo) {
         // grab the preview image created in createPreviewPolygon()
         BufferedImage image = (BufferedImage)dragInfo.get(PREVIEW_IMG);
@@ -94,6 +96,7 @@ public class GhostPreview extends DefaultPreview {
         g.drawImage(image, bounds.x, bounds.y, null);
     }
 
+    @Override
     protected Rectangle createTabbedPaneRect(DockingPort port, Component hover) {
         if(hover!=null) {
             return hover.getBounds();

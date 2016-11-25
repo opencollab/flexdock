@@ -35,6 +35,7 @@ import org.flexdock.plaf.resources.ResourceHandler;
 public class RoundedBorderResource extends ResourceHandler {
     private static final ColorUIResource DEFAULT_COLOR = new ColorUIResource(Color.BLACK);
 
+    @Override
     public Object getResource(String data) {
         //pattern should be "color"
         String[] args = getArgs(data);
@@ -55,6 +56,7 @@ public class RoundedBorderResource extends ResourceHandler {
             this.color = color;
         }
 
+        @Override
         public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
             g.setColor(color);
             int y2 = y + height - 1;

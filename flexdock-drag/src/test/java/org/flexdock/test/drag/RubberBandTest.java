@@ -91,17 +91,21 @@ public class RubberBandTest extends JFrame {
     }
 
     private class DragListener extends MouseAdapter implements MouseMotionListener {
+        @Override
         public void mouseDragged(MouseEvent me) {
             processDrag(me);
         }
+        @Override
         public void mouseMoved(MouseEvent me) {
             // do nothing
         }
 
+        @Override
         public void mousePressed(MouseEvent me) {
             startDrag(me);
         }
 
+        @Override
         public void mouseReleased(MouseEvent me) {
             stopDrag(me);
         }

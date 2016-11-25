@@ -31,6 +31,7 @@ import org.flexdock.docking.state.LayoutNode;
  */
 public abstract class DockingNode extends DefaultMutableTreeNode implements LayoutNode, DockingConstants {
 
+    @Override
     public Object getUserObject() {
         Object obj = super.getUserObject();
         if(obj==null) {
@@ -40,10 +41,12 @@ public abstract class DockingNode extends DefaultMutableTreeNode implements Layo
         return obj;
     }
 
+    @Override
     public abstract Object getDockingObject();
 
     protected abstract DockingNode shallowClone();
 
+    @Override
     public Object clone() {
         return deepClone();
     }

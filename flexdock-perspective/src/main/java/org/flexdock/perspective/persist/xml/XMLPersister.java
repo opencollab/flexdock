@@ -68,6 +68,7 @@ public class XMLPersister implements Persister {
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean store(OutputStream os, PerspectiveModel perspectiveModel) throws IOException, PersistenceException {
         DocumentBuilder documentBuilder = createDocumentBuilder();
         Document document = documentBuilder.newDocument();
@@ -105,6 +106,7 @@ public class XMLPersister implements Persister {
     /**
      * {@inheritDoc}
      */
+    @Override
     public PerspectiveModel load(InputStream is) throws IOException, PersistenceException {
         try {
             InputSource inputSource = new InputSource(is);

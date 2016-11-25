@@ -36,6 +36,7 @@ import org.flexdock.perspective.RestorationManager;
  */
 public class FloatingHandler implements RestorationHandler {
 
+    @Override
     public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
         if(dockingState == null || !dockingState.isFloating()) {
             return false;

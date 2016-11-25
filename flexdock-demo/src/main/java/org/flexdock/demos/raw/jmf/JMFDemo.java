@@ -44,6 +44,7 @@ public class JMFDemo extends JFrame {
         System.setProperty(DockingConstants.HEAVYWEIGHT_DOCKABLES, "true");
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 try {
                     createAndShowGui();

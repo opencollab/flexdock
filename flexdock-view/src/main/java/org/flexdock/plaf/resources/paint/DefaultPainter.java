@@ -34,6 +34,7 @@ public class DefaultPainter implements Painter {
 
     protected PainterResource painterResource;
 
+    @Override
     public void paint(Graphics g, int width, int height, boolean active, JComponent titlebar) {
         Color c = getBackgroundColor(active);
 
@@ -57,6 +58,7 @@ public class DefaultPainter implements Painter {
     /**
      * @return Returns the painterResource.
      */
+    @Override
     public PainterResource getPainterResource() {
         return painterResource;
     }
@@ -64,6 +66,7 @@ public class DefaultPainter implements Painter {
     /**
      * @param painterResource The painterResource to set.
      */
+    @Override
     public void setPainterResource(PainterResource painterResource) {
         this.painterResource = painterResource;
     }

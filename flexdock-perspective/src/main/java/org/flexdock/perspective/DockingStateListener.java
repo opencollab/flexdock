@@ -60,6 +60,7 @@ public class DockingStateListener extends DockingListener.Stub {
         this.isEnabled = isEnabled;
     }
 
+    @Override
     public void dockingComplete(final DockingEvent dockingEvent) {
         if(!isEnabled()) {
             return;
@@ -82,12 +83,14 @@ public class DockingStateListener extends DockingListener.Stub {
         }
 
         EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 updateState(dockingEvent);
             }
         });
     }
 
+    @Override
     public void undockingStarted(DockingEvent evt) {
         if(isEnabled()) {
             updateState(evt);
@@ -148,8 +151,8 @@ public class DockingStateListener extends DockingListener.Stub {
         p = SwingUtilities.convertPoint(comp, p, contentPane);
 
         // now, convert to a proportional location on the rootPane
-        float x = (float)p.x/(float)contentPane.getWidth() * 100f;
-        float y = (float)p.y/(float)contentPane.getHeight() * 100f;
+        float x = p.x/(float)contentPane.getWidth() * 100f;
+        float y = p.y/(float)contentPane.getHeight() * 100f;
         p.x = Math.round(x);
         p.y = Math.round(y);
 
@@ -212,7 +215,7 @@ public class DockingStateListener extends DockingListener.Stub {
     }
 
     private void setNullRelative(DockingState info) {
-        info.setRelativeParentId((String)null);
+        info.setRelativeParentId(null);
         info.setSplitRatio(DockingConstants.UNINITIALIZED);
         info.setRegion(DockingConstants.CENTER_REGION);
     }

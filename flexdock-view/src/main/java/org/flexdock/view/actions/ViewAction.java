@@ -48,6 +48,7 @@ public abstract class ViewAction extends AbstractAction {
         return view;
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         View view = getView(e);
         actionPerformed(view, e);
@@ -57,6 +58,7 @@ public abstract class ViewAction extends AbstractAction {
 
     private static ViewAction createDefault() {
         return new ViewAction() {
+            @Override
             public void actionPerformed(View view, ActionEvent evt) {
 
             }

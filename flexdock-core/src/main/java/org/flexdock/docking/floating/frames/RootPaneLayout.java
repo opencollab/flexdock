@@ -41,6 +41,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
     RootPaneLayout(RootPane pane) {
         this.pane = pane;
     }
+    @Override
     public Dimension preferredLayoutSize(Container parent) {
         Insets insets = pane.getInsets();
 
@@ -66,6 +67,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
     }
 
 
+    @Override
     public Dimension minimumLayoutSize(Container parent) {
         Insets insets = pane.getInsets();
 
@@ -87,6 +89,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
                              minimumHeight + insets.top + insets.bottom);
     }
 
+    @Override
     public Dimension maximumLayoutSize(Container target) {
         Dimension rd, mbd;
         Insets i = pane.getInsets();
@@ -108,6 +111,7 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
 
     // layout engine...
 
+    @Override
     public void layoutContainer(Container parent) {
         Rectangle bounds = parent.getBounds();
         Insets insets = pane.getInsets();
@@ -138,23 +142,29 @@ public class RootPaneLayout implements LayoutManager2, Serializable {
 
     // more...
 
+    @Override
     public void addLayoutComponent(String name, Component comp) {
     }
 
+    @Override
     public void removeLayoutComponent(Component comp) {
     }
 
+    @Override
     public void addLayoutComponent(Component comp, Object constraints) {
     }
 
+    @Override
     public float getLayoutAlignmentX(Container target) {
         return 0.0f;
     }
 
+    @Override
     public float getLayoutAlignmentY(Container target) {
         return 0.0f;
     }
 
+    @Override
     public void invalidateLayout(Container target) {
     }
 }

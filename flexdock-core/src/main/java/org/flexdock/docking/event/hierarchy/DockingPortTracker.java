@@ -182,6 +182,7 @@ public class DockingPortTracker implements HierarchyListener {
     }
 
 
+    @Override
     public void hierarchyChanged(HierarchyEvent evt) {
         // only work with DockingPorts
         if(!(evt.getSource() instanceof DockingPort)) {

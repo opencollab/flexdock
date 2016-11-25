@@ -71,6 +71,7 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
      * @see FloatingDockingPort#getDockableCount()
      * @see DockingEvent#consume()
      */
+    @Override
     public boolean isFloatDropAllowed(DockingEvent evt) {
         DockingPort oldPort = evt.getOldDockingPort();
         // if we're already floating, and we're the only dockable
@@ -101,6 +102,7 @@ public class DefaultFloatPolicy extends NullFloatPolicy {
      * @see Dockable#getFrameDragSources()
      * @see FloatPolicyManager#isGlobalFloatingEnabled()
      */
+    @Override
     public boolean isFloatingAllowed(Dockable dockable) {
         if (dockable == null || !FloatPolicyManager.isGlobalFloatingEnabled()) {
             return false;

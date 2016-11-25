@@ -63,6 +63,7 @@ public class TabbedPaneDemo extends JPanel implements DockingConstants {
         return titlebar.getText().trim();
     }
 
+    @Override
     public void doLayout() {
         Insets in = getInsets();
         titlebar.setBounds(in.left, in.top, getWidth() - in.left - in.right, 25);
@@ -80,6 +81,7 @@ public class TabbedPaneDemo extends JPanel implements DockingConstants {
             setTabText(getTitle());
         }
 
+        @Override
         public Component getComponent() {
             return TabbedPaneDemo.this;
         }

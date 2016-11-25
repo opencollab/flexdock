@@ -113,6 +113,7 @@ public class InsetBorder extends CompoundEmptyBorder {
         setBottomEdge(false);
     }
 
+    @Override
     public boolean setEmptyInsets(int top, int left, int bottom, int right) {
         left = isLeftEdge()? left: 0;
         right = isRightEdge()? right: 0;

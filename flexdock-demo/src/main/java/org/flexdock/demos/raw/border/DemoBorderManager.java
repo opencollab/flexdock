@@ -40,10 +40,12 @@ public class DemoBorderManager implements BorderManager {
         dummyBorder = new TitledBorder("");
     }
 
+    @Override
     public void managePortNullChild(DockingPort port) {
         setBorder(port, dummyBorder);
     }
 
+    @Override
     public void managePortSimpleChild(DockingPort port) {
         if (port == null || port.getDockedComponent() == null) {
             return;
@@ -54,6 +56,7 @@ public class DemoBorderManager implements BorderManager {
         setBorder(port, getDesiredBorder(docked));
     }
 
+    @Override
     public void managePortSplitChild(DockingPort port) {
         if (port == null || !(port.getDockedComponent() instanceof JSplitPane)) {
             return;
@@ -77,6 +80,7 @@ public class DemoBorderManager implements BorderManager {
         setBorder(getDocked(right), rightBorder);
     }
 
+    @Override
     public void managePortTabbedChild(DockingPort port) {
         setBorder(port, null);
         if (port == null || !(port.getDockedComponent() instanceof JTabbedPane)) {

@@ -35,6 +35,7 @@ import org.flexdock.util.DockingUtility;
  */
 public class RelativeHandler implements RestorationHandler {
 
+    @Override
     public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
         final Dockable parent = dockingState==null? null: dockingState.getRelativeParent();
 

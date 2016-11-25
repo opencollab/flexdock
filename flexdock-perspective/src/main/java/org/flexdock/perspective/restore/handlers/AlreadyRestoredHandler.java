@@ -35,6 +35,7 @@ import org.flexdock.util.SwingUtility;
  */
 public class AlreadyRestoredHandler implements RestorationHandler {
 
+    @Override
     public boolean restore(Dockable dockable, DockingState info, Map context) {
         if (!DockingManager.isDocked(dockable)) {
             return false;

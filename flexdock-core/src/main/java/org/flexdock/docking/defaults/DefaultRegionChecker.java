@@ -78,6 +78,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see #getEastRegion(Component)
      * @see #getWestRegion(Component)
      */
+    @Override
     public String getRegion(Component comp, Point point) {
         if (comp == null || point == null) {
             return UNKNOWN_REGION;
@@ -184,6 +185,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see RegionChecker#getNorthRegion(Component)
      * @see #getRegionBounds(Component, String)
      */
+    @Override
     public Rectangle getNorthRegion(Component c) {
         return getRegionBounds(c, NORTH_REGION);
     }
@@ -203,6 +205,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see RegionChecker#getSouthRegion(Component)
      * @see #getRegionBounds(Component, String)
      */
+    @Override
     public Rectangle getSouthRegion(Component c) {
         return getRegionBounds(c, SOUTH_REGION);
     }
@@ -222,6 +225,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see RegionChecker#getEastRegion(Component)
      * @see #getRegionBounds(Component, String)
      */
+    @Override
     public Rectangle getEastRegion(Component c) {
         return getRegionBounds(c, EAST_REGION);
     }
@@ -241,6 +245,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see RegionChecker#getWestRegion(Component)
      * @see #getRegionBounds(Component, String)
      */
+    @Override
     public Rectangle getWestRegion(Component c) {
         return getRegionBounds(c, WEST_REGION);
     }
@@ -268,6 +273,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see RegionChecker#getRegionBounds(Component, String)
      * @see #getRegionSize(Component, String)
      */
+    @Override
     public Rectangle getRegionBounds(Component c, String region) {
         if (c != null && region != null) {
             float size = getRegionSize(c, region);
@@ -301,6 +307,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see RegionChecker#getSiblingBounds(Component, String)
      * @see #getSiblingSize(Component, String)
      */
+    @Override
     public Rectangle getSiblingBounds(Component c, String region) {
         if (c != null && region != null) {
             float size = getSiblingSize(c, region);
@@ -359,6 +366,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see #getRegionPreference(Dockable, String)
      * @see Dockable#getDockingProperties()
      */
+    @Override
     public float getRegionSize(Component c, String region) {
         Dockable d = DockingManager.getDockable(c);
         return getRegionPreference(d, region);
@@ -392,6 +400,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * @see #getSiblingPreference(Dockable, String)
      * @see Dockable#getDockingProperties()
      */
+    @Override
     public float getSiblingSize(Component c, String region) {
         Dockable d = DockingManager.getDockable(c);
         return getSiblingPreference(d, region);
