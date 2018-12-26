@@ -13,7 +13,7 @@
     <artifactId>flexdock</artifactId>
     <version>1.2.3</version>
     <packaging>pom</packaging>
-    
+
     <modules>
         <module>flexdock-core</module>
         <module>flexdock-demo</module>
@@ -25,11 +25,11 @@
     <name>${project.artifactId}</name>
     <description>${project.name}</description>
 
-    <url>https://forge.scilab.org/index.php/p/flexdock/</url>
+    <url>https://github.com/opencollab/flexdock/</url>
 
     <scm>
-        <url>https://forge.scilab.org/index.php/p/flexdock/source/tree/master/</url>
-        <connection>scm:git:git://git.forge.scilab.org/flexdock.git</connection>
+        <url>https://github.com/opencollab/flexdock/</url>
+        <connection>scm:git:https://github.com/opencollab/flexdock.git</connection>
     </scm>
 
     <licenses>
@@ -44,7 +44,7 @@
         <javaVersion>1.6</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <dependencies>
         <dependency>
             <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
