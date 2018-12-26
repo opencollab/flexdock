@@ -295,8 +295,6 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
     /**
      * Creates a new {@code DefaultDockingPort} with a persistent ID equal to
      * the {@code String} value of this a random UUID.
-     *
-     * @see org.flexdock.util.UUID
      */
     public DefaultDockingPort() {
         this(UUID.randomUUID().toString());
@@ -1686,7 +1684,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * there i s a container hierarchy to manage tabbed interfaces, split
      * layouts, and sub-docking. As components are removed from this hierarchy,
      * the hierarchy itself must be reevaluated. Removing a component from a
-     * child code>DefaultDockingPort} within a {@code JSplitPane} renders the
+     * child {@code DefaultDockingPort} within a {@code JSplitPane} renders the
      * child {@code DefaultDockingPort} unnecessary, which, in turn, renders the
      * notion of splitting the layout with a {@code JSplitPane} unnecessary
      * (since there are no longer two components to split the layout between).
@@ -1805,7 +1803,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *
      * @param listener
      *            the {@code DockingListener} to add to this {@code DockingPort}.
-     * @see DockingMonitor#addDockingListener(DockingListener)
+     * @see org.flexdock.docking.event.DockingMonitor#addDockingListener(DockingListener)
      * @see #getDockingListeners()
      * @see #removeDockingListener(DockingListener)
      */
@@ -1823,7 +1821,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      *
      * @return an array of all {@code DockingListeners} added to this
      *         {@code DockingPort}.
-     * @see DockingMonitor#getDockingListeners()
+     * @see org.flexdock.docking.event.DockingMonitor#getDockingListeners()
      * @see #addDockingListener(DockingListener)
      * @see #removeDockingListener(DockingListener)
      */
@@ -1843,7 +1841,7 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      * @param listener
      *            the {@code DockingListener} to remove from this
      *            {@code DockingPort}
-     * @see DockingMonitor#removeDockingListener(DockingListener)
+     * @see org.flexdock.docking.event.DockingMonitor#removeDockingListener(DockingListener)
      * @see #addDockingListener(DockingListener)
      * @see #getDockingListeners()
      */

@@ -445,7 +445,7 @@ public class DockingUtility implements DockingConstants {
      * @return an {@code int} value representing the current minimization
      *         constraint for the specified {@code Dockable}
      * @see MinimizationManager#UNSPECIFIED_LAYOUT_CONSTRAINT
-     * @see DockingState#getMinimizedConstraint()()
+     * @see DockingState#getMinimizedConstraint()
      * @see DockingManager#getLayoutManager()
      * @see org.flexdock.docking.state.LayoutManager#getDockingState(Dockable)
      */

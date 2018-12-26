@@ -334,11 +334,11 @@ public class SwingUtility {
     /* Color utility */
 
     /**
-    * @param color
-    * @param factor
+    * @param color the color to brighten
+    * @param factor the factor by which the color ought to be brightened
     * @return a new color, brighter than the one passed as argument by a percentage factor
     *
-    * <br>author Cyril Gambis  - [Mar 17, 2005]
+    * @author Cyril Gambis  - [Mar 17, 2005]
     */
     public static Color brighter(Color color, double factor) {
         int red = color.getRed();
@@ -363,21 +363,21 @@ public class SwingUtility {
     }
 
     /**
-     * @param color
-     * @param factor
+     * @param color the color to darken
+     * @param factor the factor by which the color ought to be darkened
      * @return a new color, darker than the one passed as argument by a percentage factor
      *
-     * <br>author Cyril Gambis  - [Mar 17, 2005]
+     * @author Cyril Gambis  - [Mar 17, 2005]
      */
     public static Color darker(Color color, double factor) {
         return new Color(Math.max((int) (color.getRed() * factor), 0), Math.max((int) (color.getGreen() * factor), 0), Math.max((int) (color.getBlue() * factor), 0));
     }
 
     /**
-     * @param color
+     * @param color the color to transform to grayscale
      * @return the grey color corresponding to the color passed as parameter
      *
-     * <br>author Cyril Gambis  - [Mar 17, 2005]
+     * @author Cyril Gambis  - [Mar 17, 2005]
      */
     public static Color grayScale(Color color) {
         int grayTone = ((color.getRed() + color.getGreen() + color.getBlue())/3);
@@ -453,18 +453,18 @@ public class SwingUtility {
 
     /**
      * Moves the supplied <code>JSplitPane</code> divider to the specified <code>proportion</code>.
-     * Valid values for <code>proportion</code> range from <code>0.0F<code>
+     * Valid values for <code>proportion</code> range from <code>0.0F</code>
      * to <code>1.0F</code>.  For example, a <code>proportion</code> of <code>0.3F</code> will move the
      * divider to 30% of the "size" (<i>width</i> for horizontal split, <i>height</i> for vertical split) of the
      * split container that contains the specified <code>Dockable</code>.  If a <code>proportion</code> of less
-     * than <code>0.0F</code> is supplied, the value </code>0.0F</code> is used.  If a <code>proportion</code>
-     * greater than <code>1.0F</code> is supplied, the value </code>1.0F</code> is used.
-     * <br/>
+     * than <code>0.0F</code> is supplied, the value <code>0.0F</code> is used.  If a <code>proportion</code>
+     * greater than <code>1.0F</code> is supplied, the value <code>1.0F</code> is used.
+     *
      * This method should be effective regardless of whether the split layout in question has been fully realized
      * and is currently visible on the screen.  This should alleviate common problems associated with setting
      * percentages of unrealized <code>Component</code> dimensions, which are initially <code>0x0</code> before
      * the <code>Component</code> has been rendered to the screen.
-     * <br/>
+     *
      * If the specified <code>JSplitPane</code> is <code>null</code>, then this method returns with no action
      * taken.
      *

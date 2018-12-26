@@ -527,15 +527,16 @@ public class Utilities {
      * It should be understood that this method will not function properly for
      * inaccessible fields in the presence of a {@code SecurityManager}. Nor
      * will it function properly for non-existent fields (if a field called
-     * {@code fieldName} does not exist on the class). All {@code Throwables}
+     * {@code fieldName} does not exist on the class). All {@code Throwable}s
      * encountered by this method will be caught and eaten and the method will
      * return {@code false}. This works under the assumption that the operation
      * might likely fail because the method itself is, in reality, a convenience
      * hack. Therefore, specifics of any generated errors on the call stack are
-     * discarded and only the final outcome ({@code true/false} of the
-     * operation is deemed relevant. <b>If call stack data is required within
-     * the application for any thrown exceptions, then this method should not be
-     * used.}
+     * discarded and only the final outcome ({@code true}/{@code false}) of the
+     * operation is deemed relevant.
+     *
+     * If call stack data is required within the application for any thrown
+     * exceptions, then this method should not be used.
      *
      * @param obj
      *            the object for which the represented field's value is to be
@@ -544,6 +545,7 @@ public class Utilities {
      *            the name of the field to be set
      * @param value
      *            the new value for the field of {@code obj} being modified
+     * @return as described
      * @see Object#getClass()
      * @see Class#getDeclaredField(java.lang.String)
      * @see Field#isAccessible()
@@ -599,7 +601,7 @@ public class Utilities {
      * will it function properly for non-existent fields (if a field called
      * {@code fieldName} does not exist on the class). All {@code Throwables}
      * encountered by this method will be rethrown as
-     * {@code IllegalAccessException}. For wrapped {@code Throwables}, the
+     * {@code IllegalAccessException}. For wrapped {@code Throwable}s, the
      * original cause can be accessed via {@code IllegalAccessException's}
      * {@code getCause()} method.
      *
@@ -611,6 +613,7 @@ public class Utilities {
      * @return the value of the represented field in object {@code obj};
      *         primitive values are wrapped in an appropriate object before
      *         being returned
+     * @throws IllegalAccessException all {@code Throwable}s as described
      * @see Object#getClass()
      * @see Class#getDeclaredField(java.lang.String)
      * @see Field#isAccessible()

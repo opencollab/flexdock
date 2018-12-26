@@ -44,6 +44,10 @@ public interface DockingPort extends DockingListener, DockingMonitor {
     /**
      * Returns a boolean indicating whether or not docking is allowed within the
      * specified region. Used by {@code DockingManager} during drag operations.
+     *
+     * @param comp the component to check
+     * @param region the region to check
+     * @return {@code true} if docking is allowed for {@code comp} in {@code region}, {@code false} otherwise
      */
     boolean isDockingAllowed(Component comp, String region);
 
@@ -53,20 +57,27 @@ public interface DockingPort extends DockingListener, DockingMonitor {
     void clear();
 
     /**
-     * Docks the specified Dockable in the specified region. The
-     * {@code Dockable's} {@code getDockable()} component is used as the docking
-     * component.
+     * Docks the specified Dockable in the specified region.
+     *
+     * @param dockable the dockable to dock
+     * @param region the region where to dock
+     * @return {@code true} if the docking was successful, {@code false} otherwise
      */
     boolean dock(Dockable dockable, String region);
 
     /**
-     * Docks the specified Component in the specified region. Returns
-     * {@code true} for success and {@code false} for failure.
+     * Docks the specified component in the specified region.
+     *
+     * @param comp the component to dock
+     * @param region the region where to dock
+     * @return {@code true} for success and {@code false} for failure
      */
     boolean dock(Component comp, String region);
 
     /**
      * Returns a reference to the currently docked component.
+     *
+     * @return as described
      */
     Component getDockedComponent();
 
@@ -75,6 +86,9 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * Returns null if there is no Dockable there. If a tabbed layout is
      * present, this method will return the Dockable in the currently selected
      * tab.
+     *
+     * @param region the region to retrieve for
+     * @return as described
      */
     Dockable getDockable(String region);
 
@@ -83,6 +97,9 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * Returns null if there is no Component there. If a tabbed layout is
      * present, this method will return the Component in the currently selected
      * tab.
+     *
+     * @param region the region to retrieve for
+     * @return as described
      */
     Component getComponent(String region);
 
@@ -96,6 +113,8 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * instances, but it should also be consistent from JVM to JVM so that the
      * association between a {@code DockingPort} instance and its ID can be
      * remembered from session to session.
+     *
+     * @return as described
      */
     String getPersistentId();
 
@@ -109,14 +128,19 @@ public interface DockingPort extends DockingListener, DockingMonitor {
     void setPersistentId(String id);
 
     /**
-     * Indicates whether or not the specified component is a child component
+     * Checks whether or not the specified component is a child component
      * docked within the {@code DockingPort}.
+     *
+     * @param comp the component to check
+     * @return {@code true} if {@code comp} is a parent docking port, {@code false} otherwise
      */
     boolean isParentDockingPort(Component comp);
 
     /**
-     * Removes the specified Component in from the {@code DockingPort}. Returns
-     * {@code true} for success and {@code false} for failure.
+     * Removes the specified Component in from the {@code DockingPort}.
+     *
+     * @param comp the component to undock
+     * @return {@code true} for success and {@code false} for failure
      */
     boolean undock(Component comp);
 
@@ -128,17 +152,17 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * {@code SOUTH_REGION}, {@code EAST_REGION}, {@code WEST_REGION}, or
      * {@code UNKNOWN_REGION}.
      *
+     * @param point the point to retrieve the region for
      * @return the region containing the specified {@code Point}.
      */
-    String getRegion(Point p);
+    String getRegion(Point point);
 
     /**
      * Returns the value of the property with the specified key. Only properties
      * added with {@code putClientProperty} will return a non-{@code null}
      * value.
      *
-     * @param key
-     *            the being queried
+     * @param key the key being queried
      * @return the value of this property or {@code null}
      * @see javax.swing.JComponent#getClientProperty(java.lang.Object)
      */
@@ -148,6 +172,8 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * Adds an arbitrary key/value "client property" to this {@code DockingPort}.
      * {@code null} values are allowed.
      *
+     * @param key the key being set
+     * @param value the value to set for {@code key}
      * @see javax.swing.JComponent#putClientProperty(java.lang.Object,
      *      java.lang.Object)
      */
@@ -178,6 +204,7 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * Returns the {@code DockingStrategy} instance used by this
      * {@code DockingPort} for docking operations.
      *
+     * @return as described
      * @see DockingStrategy
      */
     DockingStrategy getDockingStrategy();
@@ -201,6 +228,8 @@ public interface DockingPort extends DockingListener, DockingMonitor {
      * method will return {@code false}. If the this {@code DockingPort} is not
      * validated and/or is not part of a container hierarchy, this method should
      * return {@code true}.
+     *
+     * @return as described
      */
     boolean isRoot();
 

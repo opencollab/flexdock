@@ -35,7 +35,7 @@ import org.flexdock.docking.floating.frames.DockingFrame;
  * <code>DockingFrame</code> to be recreated and displayed with the previous screen bounds and all
  * of the <code>Dockables</code> contained within the group to be restored to their previous state
  * within the <code>DockingFrame</code>.
- * <br/>
+ *
  * In addition to providing persistent state across application sessions, the <code>FloatingGroup</code>
  * allows for a floating <code>Dockable</code> to be closed and then later restored to its original
  * floating state within the same JVM session.  The currently installed <code>FloatManager</code> may

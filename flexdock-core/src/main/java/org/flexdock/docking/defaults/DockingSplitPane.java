@@ -72,7 +72,7 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
      * @param region
      *            the region within the specified {@code DockingPort} for which
      *            this {@code DockingSplitPane} is to be created.
-     * @throws {@code IllegalArgumentException}
+     * @throws IllegalArgumentException
      *             if either {@code port} is {@code null} or }region} is
      *             {@code null} or invalid.
      * @see DockingManager#isValidDockingRegion(String)

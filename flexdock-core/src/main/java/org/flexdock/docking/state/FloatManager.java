@@ -29,7 +29,7 @@ import org.flexdock.docking.floating.frames.DockingFrame;
  * This interface defines the API used for floating and grouping <code>Dockables</code>.  Classes
  * implementing this interface will be responsible for sending <code>Dockables</code> into
  * <code>DockingFrames</code> and managing the grouping of floating <code>Dockables</code>.
- * <br/>
+ *
  * Sending a <code>Dockable</code> into a floating <code>DockingFrame</code> is relatively straightforward
  * when supplied the <code>Dockable</code> and a dialog owner.  However, state must be maintained
  * for each <code>FloatingGroup</code> to allow the system to track which <code>Dockables</code>

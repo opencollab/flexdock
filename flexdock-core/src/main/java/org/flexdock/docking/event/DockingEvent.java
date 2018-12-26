@@ -50,18 +50,26 @@ public class DockingEvent extends Event {
     private Map dragContext;
 
     /**
-     * Constructor to create a DockingEvent object with the provided Dockable,
-     * the originating docking part, the destination docking port and whether
-     * the dock is completed or canceled.
+     * Constructor to create a DockingEvent object. The AWT trigger of the created event is {@code null}.
+     *
+     * @param source the provided dockable
+     * @param oldPort the originating docking part
+     * @param newPort the destination docking port
+     * @param eventType allows to specify whether the dock is completed or canceled
+     * @param context the docking content
      */
     public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType, Map context) {
         this(source, oldPort, newPort, eventType, null, context);
     }
 
     /**
-     * Constructor to create a DockingEvent object with the provided Dockable,
-     * the originating docking part, the destination docking port and whether
-     * the dock is completed or canceled.
+     * Constructor to create a DockingEvent object.
+     * @param source the provided dockable
+     * @param oldPort the originating docking part
+     * @param newPort the destination docking port
+     * @param eventType allows to specify whether the dock is completed or canceled
+     * @param trigger the AWT trigger
+     * @param context the docking content
      */
     public DockingEvent(Dockable source, DockingPort oldPort, DockingPort newPort, int eventType, AWTEvent trigger, Map context) {
         super(source, eventType);
