@@ -652,12 +652,12 @@ public class DockingManager implements DockingConstants {
 
     /**
      * Indicates whether tabbed layouts are supported by default for
-     * {@code DockingPorts} with a single {@code Dockable} in the CENTER region.
-     * This is a global default setting and applies to any <cod>DockingPort}
+     * {@code DockingPorts} with a single {@code Dockable} in the {@link DockingConstants#CENTER} region.
+     * This is a global default setting and applies to any {@code DockingPort}
      * that does not have a specific contradictory local setting.
      * <p>
      * This method defers processing to
-     * {@code org.flexdock.docking.props.PropertyManager.getDockingPortRoot()}.
+     * {@link org.flexdock.docking.props.PropertyManager#getDockingPortRoot()}.
      * As such, there are multiple "scopes" at which this property may be
      * overridden.
      *
@@ -1293,8 +1293,8 @@ public class DockingManager implements DockingConstants {
      *
      * @return {@code true} if the current layout model was succesfully stored,
      *         {@code false} otherwise.
-     * @throws IOException
-     * @throws PersisterException
+     * @throws IOException if an I/O exception occurs during storage
+     * @throws PersistenceException wraps all specific exceptions which can occur during storage
      * @see #getLayoutManager()
      * @see #setLayoutManager(LayoutManager)
      * @see LayoutManager#store()
@@ -1326,8 +1326,8 @@ public class DockingManager implements DockingConstants {
      *
      * @return {@code true} if the current layout model was succesfully loaded,
      *         {@code false} otherwise.
-     * @throws IOException
-     * @throws PersisterException
+     * @throws IOException if an I/O exception occurs during loading
+     * @throws PersistenceException wraps all specific exceptions which can occur during loading
      * @see #loadLayoutModel(boolean)
      * @see LayoutManager#load()
      */
@@ -1358,10 +1358,11 @@ public class DockingManager implements DockingConstants {
      * previous layout model found in storage). If a problem occurs during the
      * loading process, an {@code IOException} is thrown.
      *
+     * @param restore whether or not to restore the loaded layout
      * @return {@code true} if the current layout model was succesfully loaded,
      *         {@code false} otherwise.
-     * @throws IOException
-     * @throws PersisterException
+     * @throws IOException if an I/O exception occurs during loading
+     * @throws PersistenceException wraps all specific exceptions which can occur during loading
      * @see #getLayoutManager()
      * @see #setLayoutManager(LayoutManager)
      * @see #restoreLayout(boolean)
@@ -1394,7 +1395,6 @@ public class DockingManager implements DockingConstants {
      *
      * @return {@code true} if the in-memory layout model was properly restored
      *         to the application view, {@code false} otherwise.
-     * @throws PersisterException
      * @see #restoreLayout(boolean)
      * @see #getLayoutManager()
      * @see #setLayoutManager(LayoutManager)
@@ -1435,7 +1435,8 @@ public class DockingManager implements DockingConstants {
      *            storage into memory before synchronizing the application view.
      * @return {@code true} if the in-memory layout model was properly restored
      *         to the application view, {@code false} otherwise.
-     * @throws PersisterException
+     * @throws IOException if an I/O exception occurs during restoring
+     * @throws PersistenceException wraps all specific exceptions which can occur during restoring
      * @see #getLayoutManager()
      * @see #setLayoutManager(LayoutManager)
      * @see LayoutManager#restore(boolean)
@@ -2742,7 +2743,7 @@ public class DockingManager implements DockingConstants {
      * obtaining the {@code Dockable} associated to the component via
      * {@link #getDockable(Component)}.
      *
-     * @param comp
+     * @param comp the component to toggle maximization for
      * @see #toggleMaximized(Dockable)
      */
     public static void toggleMaximized(Component comp) {
@@ -2766,7 +2767,7 @@ public class DockingManager implements DockingConstants {
      * {@code DockingPort} is asked to return to its original state and the
      * {@code Dockable} is returned to its original {@code DockingPort}.
      *
-     * @param dockable
+     * @param dockable the dockable to toggle maximization for
      */
     public static void toggleMaximized(Dockable dockable) {
         DockingPort rootPort = getRootDockingPort(dockable.getComponent());

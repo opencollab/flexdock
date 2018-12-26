@@ -115,6 +115,7 @@ public class RootWindow {
      *
      * @param c
      *            the {@code Component} we wish to check
+     * @return {@code true} if {@code c} is a valid root container, {@code false} otherwise
      */
     public static boolean isValidRootContainer(Component c) {
         return c != null
@@ -151,6 +152,7 @@ public class RootWindow {
     /**
      * Creates a new {@code RootSwingContainer} wrapping the specified
      * component.
+     * @param root the component to wrap
      */
     protected RootWindow(Component root) {
         setMaximizationLayer(DEFAULT_MAXED_LAYER);

@@ -100,34 +100,34 @@ public class DefaultDockingStrategy implements DockingStrategy,
 
     /**
      * Returns the sibling {@code Dockable} relative to the specified
-     * {@code Dockable's} supplied region in the current docking layout. If
+     * {@code Dockable}'s supplied region in the current docking layout. If
      * {@code dockable} is {@code null} or {@code region} is either invalid or
      * equal to {@code CENTER_REGION}, then this method returns a {@code null}
      * reference.
      * <p>
      * If the specified {@code Dockable} is in a {@code DockingPort} that
-     * equally splits the layout between two {@code Dockables} in a fashion that
+     * equally splits the layout between two {@code Dockable}s in a fashion that
      * matches up with the specified region, then the immediate sibling
      * {@code Dockable} is returned. Otherwise, a fuzzy search is performed
      * throughout the docking layout for a {@code Dockable} that "looks like" it
      * is docked to the supplied region of the specified {@code Dockable} from a
      * visual standpoint.
      * <p>
-     * For instance, a docking layout may consist of four quadrants <i>Dockable1</i>
-     * (top-left), <i>Dockable2</i> (top-right), <i>Dockable3</i>
-     * (bottom-left) and <i>Dockable4</i> (bottom-right). The layout is built
-     * by docking <i>Dockable2>/i> to the {@code EAST_REGION} of <i>Dockable1</i>,
-     * <i>Dockable3</i> to the {@code SOUTH_REGION} of <i>Dockable1</i>, and
-     * <i>Dockable4</i> to the {@code SOUTH_REGION} of <i>Dockable2</i>.
-     * Within this layout, <i>Dockable1</i> and <i>Dockable3</i> are immediate
-     * siblings, as are <i>Dockable2</i> and <i>Dockable4</i>. Thus,
-     * requesting sibling NORTH_REGION of <i>Dockable3</i> will easily yield
-     * <i>Dockable1</i>. However, <i>Dockable3</i> has no immediate
+     * For instance, a docking layout may consist of four quadrants {@code dockable1}
+     * (top-left), {@code dockable2} (top-right), {@code dockable3}
+     * (bottom-left) and {@code dockable4} (bottom-right). The layout is built
+     * by docking {@code dockable2} to the {@code EAST_REGION} of {@code dockable1},
+     * {@code dockable3} to the {@code SOUTH_REGION} of {@code dockable1}, and
+     * {@code dockable4} to the {@code SOUTH_REGION} of {@code dockable2}.
+     * Within this layout, {@code dockable1} and {@code dockable3} are immediate
+     * siblings, as are {@code dockable2} and {@code dockable4}. Thus,
+     * requesting sibling NORTH_REGION of {@code dockable3} will easily yield
+     * {@code dockable1}. However, {@code dockable3} has no immediate
      * {@code EAST_REGION} sibling. In this case, a fuzzy search through the
      * layout is performed to determine the visual sibling, and this method
-     * returns <i>Dockable4</i>. Likewise, this method will return a
+     * returns {@code dockable4}. Likewise, this method will return a
      * {@code null} reference for the {@code WEST_REGION} sibling of
-     * <i>Dockable3}, since there are no {@code Dockables} in the visual layout
+     * {@code dockable3}, since there are no {@code Dockable}s in the visual layout
      * to the west of this {@code Dockable}.
      *
      * @param dockable
@@ -287,7 +287,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * method may return {@code false} if the territory is blocked. Finally,
      * this method will return {@code false} if the specified {@code Dockable}
      * is already docked within the supplied region of the specified
-     * <code.DockingPort}.
+     * {@code DockingPort}.
      *
      * @param dockable
      *            the {@code Dockable} we wish to dock
@@ -300,7 +300,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      *         {@code false}. otherwise.
      * @see #dock(Dockable, DockingPort, String, DragOperation)
      * @see Dockable#getDockingProperties()
-     * @see DockablePropertySet#isTerritoryBlocked(String)
+     * @see org.flexdock.docking.props.DockablePropertySet#isTerritoryBlocked(String)
      */
     @Override
     public boolean dock(Dockable dockable, DockingPort port, String region) {
@@ -341,7 +341,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      * {@code false} if the required drag threshold has not been exceeded.
      * Finally, this method will return {@code false} if the specified
      * {@code Dockable} is already docked within the supplied region of the
-     * specified <code.DockingPort}.
+     * specified {@code DockingPort}.
      *
      * @param dockable
      *            the {@code Dockable} we wish to dock
@@ -354,7 +354,7 @@ public class DefaultDockingStrategy implements DockingStrategy,
      *         {@code false}. otherwise.
      * @see #dock(Dockable, DockingPort, String, DragOperation)
      * @see Dockable#getDockingProperties()
-     * @see DockablePropertySet#isTerritoryBlocked(String)
+     * @see org.flexdock.docking.props.DockablePropertySet#isTerritoryBlocked(String)
      */
     @Override
     public boolean dock(Dockable dockable, DockingPort port, String region,

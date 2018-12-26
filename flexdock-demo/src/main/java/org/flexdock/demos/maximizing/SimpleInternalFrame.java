@@ -75,8 +75,6 @@ public class SimpleInternalFrame extends JPanel {
 
     /**
      * Constructs a <code>SimpleInternalFrame</code> with an empty title.
-     *
-     * @param title the initial title
      */
     public SimpleInternalFrame() {
         this(null, "", null, null);

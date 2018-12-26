@@ -429,6 +429,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * greater than {@code RegionChecker.MAX_REGION_SIZE}, then
      * {@code RegionChecker.MAX_REGION_SIZE} is returned.
      *
+     * @param size the size to validate
      * @return a valid {@code size} value between
      *         {@code RegionChecker.MIN_REGION_SIZE} and
      *         {@code RegionChecker.MAX_REGION_SIZE}, inclusive.
@@ -446,6 +447,7 @@ public class DefaultRegionChecker implements RegionChecker, DockingConstants {
      * greater than {@code RegionChecker.MAX_SIBILNG_SIZE}, then
      * {@code RegionChecker.MAX_SIBILNG_SIZE} is returned.
      *
+     * @param size the size to validate
      * @return a valid {@code size} value between
      *         {@code RegionChecker.MIN_SIBILNG_SIZE} and
      *         {@code RegionChecker.MAX_SIBILNG_SIZE}, inclusive.

@@ -31,6 +31,7 @@ public interface DockingStub {
      * operations. The component may or may not be the same as the Component
      * returned by {@code getFrameDragSource()}.
      *
+     * @return as described
      * @see #getFrameDragSource()
      */
     Component getDragSource();
@@ -46,6 +47,7 @@ public interface DockingStub {
      * reposition" behavior will supercede any "drag-to-dock" behavior while
      * this stub is in a floating state.
      *
+     * @return as described
      * @see #getDragSource()
      */
     Component getFrameDragSource();
@@ -63,6 +65,8 @@ public interface DockingStub {
      * <p>
      * The framework performs indexing on the persistent ID. Consequently, this
      * method may <b>not</b> return a {@code null} reference.
+     *
+     * @return as described
      */
     String getPersistentId();
 

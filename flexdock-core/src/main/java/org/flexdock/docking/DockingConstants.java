@@ -69,15 +69,12 @@ public interface DockingConstants {
      *
      * @see java.beans.PropertyChangeListener
      * @see Dockable#addPropertyChangeListener(java.beans.PropertyChangeListener)
-     * @see org.flexdock.view.Titlebar
      */
     String PIN_ACTION = "pin";
 
     /**
      * A constant representing a "close" action. Such actions are added to title
      * bars to enable the close effect.
-     *
-     * @see org.flexdock.view.Titlebar
      */
     String CLOSE_ACTION = "close";
 
