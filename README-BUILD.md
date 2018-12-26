@@ -50,6 +50,6 @@ Simply run
 
     cd flexdock-demo
     mvn package
-    java -jar target/flexdock-demo-1.3.jar
+    java -jar flexdock-demo/target/flexdock-demo-1.3.jar
 
 which will run a launcher for all available demos.
