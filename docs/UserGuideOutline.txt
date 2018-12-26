@@ -36,7 +36,7 @@ Managing Docking State
 	Persisting Docking State
 	Creating a Working Example
 	
-Minimization and Collapsable Toolbars
+Minimization and Collapsible Toolbars
 	Dockbar as a Minimization Manager
 	Dockbar Edges and Constraints
 	Dockable Preview

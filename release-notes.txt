@@ -80,7 +80,7 @@ This version is tagged 1.0 in order to show that it reached a stable status.
 It has been used by Scilab for years without any big issues.
 
 Updates:
-    - Consitent indentation of the java source code.
+    - Consistent indentation of the java source code.
       Done with astyle --style=java
     - Add a static method
       DefaultDockingStrategy.keepConstantPercentage(boolean) to force the
@@ -131,7 +131,7 @@ Fixed:
 	  and RootWindow instances caching).
 	- Issue 117.  TextIcon.setRotation() did not recalculate on change.
 	- Issue 118.  Two threads were trying to control the focus causing some 
-	  wierd behavior. Thanks to Calixte Denizet for the fix.
+	  weird behavior. Thanks to Calixte Denizet for the fix.
 
 
 CHANGES FROM 0.5:
@@ -165,7 +165,7 @@ Fixed:
 	- Issue 87.  Maximization now workings with the DefaultDockingPort.  This
 	  was accomplished by creating a createBorderManager method in
 	  DefaultDockingPort that is called during creation.  This method is
-	  designed to be overriden by subclasses.  The DefaultDockingPort creates
+	  designed to be overridden by subclasses.  The DefaultDockingPort creates
 	  an EmptyBorder with 0-sized insets.
 	- Issue 88.  There was a bug in DockingPortTracker.findByWindow(Component)
 	  that caused a symptom where maximized dockables would not appear in the 
@@ -174,8 +174,8 @@ Fixed:
 	  reverted.  In 0.5.0 it gave the message "UIDefaults.getUI() failed:" with
 	  some stack trace is printed to System.err.  This was not a bug.  This
 	  trace is printed from the underlying Swing L&F management.  The flexdock
-	  L&F exensions could possibly exist for some L&Fs, so it was considered
-	  preferrable to check with the UIManager before checking with the flexdock
+	  L&F extensions could possibly exist for some L&Fs, so it was considered
+	  preferable to check with the UIManager before checking with the flexdock
 	  extension manager (PlafManager).  Given the ugliness of the error
 	  messages, this code change was reverted.
 	- Issue 92.  Users can now use JComponent subclassed status bars with the
