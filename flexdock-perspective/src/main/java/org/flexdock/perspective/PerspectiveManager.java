@@ -638,7 +638,8 @@ public class PerspectiveManager implements LayoutManager {
         for(Iterator it=rootPorts.iterator(); it.hasNext();) {
             DockingPort port = (DockingPort)it.next();
             Window win = SwingUtilities.getWindowAncestor((Component)port);
-            if(win instanceof Dialog) {
+            // skip dialogs and detached ports (e.g. of a closed window that has not been garbage collected yet)
+            if(win == null || win instanceof Dialog) {
                 continue;
             }
 
