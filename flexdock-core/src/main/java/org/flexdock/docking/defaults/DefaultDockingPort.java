@@ -870,7 +870,27 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
      */
     @Override
     public void clear() {
+        clearSubPorts(this);
         removeAll();
+    }
+
+    /**
+     * Clears the nested {@code DockingPorts} and empties the wrapper containers (split panes, tabs) between them,
+     * otherwise the {@code Dockables} within them (that are not docked again later) would keep their stale parent
+     * containers and still look like being docked.
+     */
+    private static void clearSubPorts(Container container) {
+        for (Component child : container.getComponents()) {
+            // do not look inside of the dockables
+            if (child instanceof Container && DockingManager.getDockable(child) == null) {
+                if (child instanceof DockingPort) {
+                    ((DockingPort) child).clear();
+                } else {
+                    clearSubPorts((Container) child);
+                    ((Container) child).removeAll();
+                }
+            }
+        }
     }
 
     /**
