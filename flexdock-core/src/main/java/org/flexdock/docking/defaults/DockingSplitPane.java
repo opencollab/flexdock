@@ -24,8 +24,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JSplitPane;
@@ -53,8 +51,6 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     protected double initialDividerRatio = .5;
 
     protected double percent = -1;
-
-    private int dividerHashCode = -1;
 
     private boolean constantPercent;
 
@@ -96,33 +92,38 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         int weight = controllerInTopLeft ? 1 : 0;
         setResizeWeight(weight);
 
-        addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, new PropertyChangeListener() {
-
-                @Override
-                public void propertyChange(PropertyChangeEvent pce) {
-                    if (constantPercent && getUI() instanceof BasicSplitPaneUI) {
-                        BasicSplitPaneUI ui = (BasicSplitPaneUI) getUI();
-                        if (dividerHashCode != ui.getDivider().hashCode()) {
-                            dividerHashCode = ui.getDivider().hashCode();
-                            ui.getDivider().addMouseListener(new MouseAdapter() {
-
-                                @Override
-                                    public void mouseReleased(MouseEvent e) {
-                                        DockingSplitPane.this.percent = SwingUtility.getDividerProportion(DockingSplitPane.this);
-                                        DockingSplitPane.this.setResizeWeight(percent);
-                                    }
-                                });
-                        }
-                    }
-                }
-            });
-
         getActionMap().put("toggleFocus", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     SwingUtility.toggleFocus(+1);
                 }
             });
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+        // The divider is recreated with the UI, so the listener is attached right away (not on the first
+        // divider move, as that would miss the very first drag of the divider by the user).
+        // It is registered after the divider's own handler, so the drag is already completed when it runs.
+        if (getUI() instanceof BasicSplitPaneUI) {
+            ((BasicSplitPaneUI) getUI()).getDivider().addMouseListener(new MouseAdapter() {
+
+                    @Override
+                    public void mouseReleased(MouseEvent e) {
+                        updatePercentFromDivider();
+                    }
+                });
+        }
+    }
+
+    private void updatePercentFromDivider() {
+        int splitSize = getSplitSize();
+        if (constantPercent && splitSize > 0) {
+            // setBounds() applies the percentage as (int) (percent * splitSize)
+            percent = (getDividerLocation() + 0.5) / splitSize;
+            setResizeWeight(percent);
+        }
     }
 
     @Override
