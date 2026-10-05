@@ -185,8 +185,22 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
     @Override
     public void setDividerLocation(double percent) {
         this.percent = percent;
-        super.setDividerLocation(percent);
+        int splitSize = getSplitSize();
+        boolean valid = (percent >= 0) && (percent <= 1);
+        if (constantPercent && valid) {
+            // same formula as in setBounds(), otherwise the divider shifts on the next layout;
+            // if the size is not known yet, then setBounds() applies the percentage once it is
+            if (splitSize > 0) {
+                super.setDividerLocation((int) (percent * splitSize));
+            }
+        } else {
+            super.setDividerLocation(percent);
+        }
         setResizeWeight(percent);
+    }
+
+    public boolean isConstantPercent() {
+        return constantPercent;
     }
 
     public double getPercent() {
