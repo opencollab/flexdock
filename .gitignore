@@ -6,3 +6,8 @@
 /flexdock-perspective/target/
 /flexdock-dockbar/target/
 flexdock-demo/dependency-reduced-pom.xml
+
+# InteliJ IDEA
+/.idea/
+/.shelf/
+/**/*.iml
