@@ -83,10 +83,13 @@ public class DockingPathSerializer implements ISerializer {
 
         ISerializer layoutNodeSerializer = SerializerRegistry.getSerializer(LayoutNode.class);
         NodeList splitNodeList = element.getElementsByTagName(PersistenceConstants.SPLIT_NODE_ELEMENT_NAME);
-        if (splitNodeList.getLength() > 0 && splitNodeList.item(0) instanceof Element) {
-            Element splitNodeElement = (Element) splitNodeList.item(0);
-            SplitNode splitNode = (SplitNode) layoutNodeSerializer.deserialize(splitNodeElement);
-            dockingPath.getNodes().add(splitNode);
+        // the path consists of all the split nodes, not just the first one
+        for (int i = 0; i < splitNodeList.getLength(); i++) {
+            if (splitNodeList.item(i) instanceof Element) {
+                Element splitNodeElement = (Element) splitNodeList.item(i);
+                SplitNode splitNode = (SplitNode) layoutNodeSerializer.deserialize(splitNodeElement);
+                dockingPath.getNodes().add(splitNode);
+            }
         }
 
         return dockingPath;
