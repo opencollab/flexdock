@@ -483,6 +483,16 @@ public class SwingUtility {
         final float percent = Math.min(1f, proportion);
         int size = getSplitPaneSize(split);
 
+        // a split pane with constant percentage remembers it and applies when it gets its size, no need to wait
+        if(split instanceof DockingSplitPane && ((DockingSplitPane) split).isConstantPercent()
+                && EventQueue.isDispatchThread()) {
+            split.setDividerLocation(percent);
+            if(size>0) {
+                split.validate();
+            }
+            return;
+        }
+
         if(split.isVisible() && size>0 && EventQueue.isDispatchThread()) {
             split.setDividerLocation(proportion);
             split.validate();
