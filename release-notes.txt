@@ -1,21 +1,3 @@
-== flexdock 1.3.1 RELEASE NOTES ==
-
-Fixes:
-* DockingSplitPane: track the divider percentage from the very first drag, as the mouse listener
-  was attached too late and the first drag was missed, so the divider reverted on the next layout
-* DockingSplitPane: apply the percentage in setDividerLocation(double) the same way as in setBounds(),
-  so that the divider does not shift on every layout
-* DockingStateListener: validate pending layout before capturing the docking state of a dockable, instead of
-  skipping the update and keeping a stale state (e.g. split ratio after the divider has just been moved)
-* DockingSplitPane: remember the percentage set while the size is not known yet and apply it on the first layout,
-  SwingUtility.setSplitDivider() does not defer such split panes, which used to lose the restored split ratio
-* DefaultDockingPort: clear() also clears the nested docking ports, otherwise the dockables within them that are
-  not docked again (e.g. when applying a stored layout) keep stale parents and still look docked
-* DockingPathSerializer: read all the split nodes of a stored docking path, only the first one was read before,
-  so closed dockables could not be restored to their previous place after loading a stored layout
-* PerspectiveManager: ignore detached docking ports when looking for the main one, otherwise a layout
-  could be stored from the closed window of a previous session in the same JVM
-
 == flexdock 1.3 RELEASE NOTES ==
 
 Updates:

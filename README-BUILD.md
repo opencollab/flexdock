@@ -15,7 +15,7 @@ a `maven` project add
     <dependency>
         <groupId>org.flexdock</groupId>
         <artifactId>flexdock-core</artifactId>
-        <version>1.3.1</version>
+        <version>1.3</version>
         <type>jar</type>
     </dependency>
     <dependency>
@@ -27,19 +27,19 @@ a `maven` project add
     <dependency>
         <groupId>org.flexdock</groupId>
         <artifactId>flexdock-view</artifactId>
-        <version>1.3.1</version>
+        <version>1.3</version>
         <type>jar</type>
     </dependency>
     <dependency>
         <groupId>org.flexdock</groupId>
         <artifactId>flexdock-perspective</artifactId>
-        <version>1.3.1</version>
+        <version>1.3</version>
         <type>jar</type>
     </dependency>
     <dependency>
         <groupId>org.flexdock</groupId>
         <artifactId>flexdock-drag</artifactId>
-        <version>1.3.1</version>
+        <version>1.3</version>
         <type>jar</type>
     </dependency>
 
@@ -50,6 +50,6 @@ Simply run
 
     cd flexdock-demo
     mvn package
-    java -jar flexdock-demo/target/flexdock-demo-1.3.1.jar
+    java -jar flexdock-demo/target/flexdock-demo-1.3.jar
 
 which will run a launcher for all available demos.
