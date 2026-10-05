@@ -108,8 +108,17 @@ public class DockingStateListener extends DockingListener.Stub {
     }
 
     private void updateEmbedded(Dockable dockable) {
-        if(!dockable.getComponent().isValid()) {
-            return;
+        Component comp = dockable.getComponent();
+        if(!comp.isValid()) {
+            // complete the pending layout (e.g. after the user has moved a divider), otherwise the state
+            // would not be updated and the previously stored one (e.g. split ratio) would be kept
+            RootWindow window = RootWindow.getRootContainer(comp);
+            if(window != null) {
+                window.getContentPane().validate();
+            }
+            if(!comp.isValid()) {
+                return;
+            }
         }
 
         updateCenterPoint(dockable);
