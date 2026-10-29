@@ -1,10 +1,8 @@
 Building Flexdock
 --------------------------
 
-To build this project, obtain a copy of Apache's Maven from
-https://maven.apache.org. We recommend to use version 3.0 or later.
-Building requires JDK 21 or later (needed by the Checkstyle version used in the
-build). The compiled classes still target Java 8.
+To build this project you need JDK 21+ and Maven 3.6.3+.
+The resulting jars target Java 8.
 
 From this directory you should be able to build everything by running
 the command
