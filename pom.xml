@@ -59,6 +59,8 @@
     <properties>
         <javaVersion>1.8</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- severity of checkstyle Javadoc checks (overridden in modules that do not need Javadoc) -->
+        <checkstyle.javadoc.severity>warning</checkstyle.javadoc.severity>
     </properties>
 
     <dependencies>
@@ -196,6 +198,7 @@
                 </executions>
                 <configuration>
                     <configLocation>check_style.xml</configLocation>
+                    <propertyExpansion>javadoc.severity=${checkstyle.javadoc.severity}</propertyExpansion>
                 </configuration>
             </plugin>
         </plugins>
