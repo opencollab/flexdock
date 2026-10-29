@@ -37,6 +37,12 @@
         <!-- Checks that a method or constructor has Javadoc. -->
         <module name="MissingJavadocMethod">
             <property name="scope" value="public"/>
+            <!-- Simple getters and setters do not need Javadoc -->
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <!-- Short methods (up to this many lines) do not need Javadoc -->
+            <property name="minLineCount" value="3"/>
+            <!-- Overridden methods and tests do not need Javadoc -->
+            <property name="allowedAnnotations" value="Override, Test"/>
             <property name="severity" value="warning"/>
         </module>
         <!-- Checks that a class or interface definition has Javadoc. -->
