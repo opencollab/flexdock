@@ -45,14 +45,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
-            <artifactId>skinlf</artifactId>
-            <version>6.7</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
