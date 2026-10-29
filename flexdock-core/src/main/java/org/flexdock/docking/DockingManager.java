@@ -1118,7 +1118,7 @@ public class DockingManager implements DockingConstants {
 
     /**
      * Returns an array of {@code RootWindows} known to the docking framework
-     * that contain {@code DockingPorts}. Any {@code Frame}, {@code Applet},
+     * that contain {@code DockingPorts}. Any {@code Frame},
      * {@code Dialog}, or {@code Window} that has a {@code DockingPort} added
      * as a descendent {@code Component} will automatically have an
      * {@code org.flexdock.util.RootWindow} wrapper instance associated with it.
