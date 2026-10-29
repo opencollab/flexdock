@@ -19,7 +19,6 @@
  */
 package org.flexdock.docking.floating.frames;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Frame;
@@ -29,7 +28,6 @@ import java.awt.event.ComponentListener;
 
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
-import javax.swing.SwingUtilities;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
@@ -55,11 +53,6 @@ public class DockingFrame extends JDialog implements DockingConstants {
         Component window = rootWin.getRootContainer();
         if (window instanceof DockingFrame) {
             window = ((Window) window).getOwner();
-        }
-
-        //Applets are actually contained in a frame
-        if (window instanceof Applet) {
-            window = SwingUtilities.windowForComponent(window);
         }
 
         if (window instanceof Frame) {

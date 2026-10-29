@@ -19,7 +19,6 @@
  */
 package org.flexdock.docking.event.hierarchy;
 
-import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Window;
@@ -278,6 +277,6 @@ public class DockingPortTracker implements HierarchyListener {
     }
 
     private static boolean isWindowRoot(Component comp) {
-        return comp instanceof Window || comp instanceof Applet;
+        return comp instanceof Window;
     }
 }
