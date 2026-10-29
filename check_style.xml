@@ -34,13 +34,13 @@
         <module name="NeedBraces">
             <property name="severity" value="error"/>
         </module>
-        <!-- Checks the Javadoc of a method or constructor. -->
-        <module name="JavadocMethod">
+        <!-- Checks that a method or constructor has Javadoc. -->
+        <module name="MissingJavadocMethod">
             <property name="scope" value="public"/>
             <property name="severity" value="warning"/>
         </module>
-        <!-- Checks Javadoc comments for class and interface definitions. -->
-        <module name="JavadocType">
+        <!-- Checks that a class or interface definition has Javadoc. -->
+        <module name="MissingJavadocType">
             <property name="scope" value="public"/>
             <property name="severity" value="warning"/>
         </module>
