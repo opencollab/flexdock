@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javax.swing.JApplet;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -43,7 +42,7 @@ import javax.swing.SwingUtilities;
 
 /**
  * This class provides an abstraction of root containers used in Swing. It
- * allows transparent use of methods common to {@code JFrame}, {@code JApplet},
+ * allows transparent use of methods common to {@code JFrame},
  * {@code JWindow}, and {@code JDialog} without making an outward distinction
  * between the different container types. This is accomplished by wrapping the
  * root component.
@@ -119,8 +118,7 @@ public class RootWindow {
      */
     public static boolean isValidRootContainer(Component c) {
         return c != null
-               && (c instanceof JFrame || c instanceof JApplet
-                   || c instanceof JWindow || c instanceof JDialog);
+               && (c instanceof JFrame || c instanceof JWindow || c instanceof JDialog);
     }
 
     public static RootWindow[] getVisibleWindows() {
@@ -240,7 +238,7 @@ public class RootWindow {
     }
 
     /**
-     * Returns the the wrapped component. ({@code JFrame}, {@code JApplet},
+     * Returns the the wrapped component. ({@code JFrame}, {@code JWindow},
      * etc...)
      *
      * @return the wrapped root container
