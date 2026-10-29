@@ -622,7 +622,7 @@ public class Utilities {
      * @see IllegalAccessException#getCause()
      */
     public static Object getValue(Object obj, String fieldName)
-    throws IllegalAccessException {
+            throws IllegalAccessException {
         if (obj == null || fieldName == null) {
             return null;
         }
