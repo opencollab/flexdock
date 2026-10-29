@@ -63,14 +63,6 @@
         <checkstyle.javadoc.severity>warning</checkstyle.javadoc.severity>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
-            <artifactId>skinlf</artifactId>
-            <version>6.7</version>
-        </dependency>
-    </dependencies>
-
     <build>
         <pluginManagement>
             <plugins>
