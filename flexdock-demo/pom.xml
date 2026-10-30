@@ -13,6 +13,11 @@
     <name>${project.artifactId}</name>
     <description>${project.name}</description>
 
+    <properties>
+        <!-- demo application code does not need Javadoc -->
+        <checkstyle.javadoc.severity>ignore</checkstyle.javadoc.severity>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.flexdock</groupId>

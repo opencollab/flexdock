@@ -34,15 +34,23 @@
         <module name="NeedBraces">
             <property name="severity" value="error"/>
         </module>
-        <!-- Checks the Javadoc of a method or constructor. -->
-        <module name="JavadocMethod">
+        <!-- Checks that a method or constructor has Javadoc. -->
+        <module name="MissingJavadocMethod">
             <property name="scope" value="public"/>
-            <property name="severity" value="warning"/>
+            <!-- Simple getters and setters do not need Javadoc -->
+            <property name="allowMissingPropertyJavadoc" value="true"/>
+            <!-- Short methods (up to this many lines) do not need Javadoc -->
+            <property name="minLineCount" value="3"/>
+            <!-- Overridden methods and tests do not need Javadoc -->
+            <property name="allowedAnnotations" value="Override, Test"/>
+            <!-- Severity is set via `checkstyle.javadoc.severity` Maven property -->
+            <property name="severity" value="${javadoc.severity}" default="warning"/>
         </module>
-        <!-- Checks Javadoc comments for class and interface definitions. -->
-        <module name="JavadocType">
+        <!-- Checks that a class or interface definition has Javadoc. -->
+        <module name="MissingJavadocType">
             <property name="scope" value="public"/>
-            <property name="severity" value="warning"/>
+            <!-- Severity is set via `checkstyle.javadoc.severity` Maven property -->
+            <property name="severity" value="${javadoc.severity}" default="warning"/>
         </module>
         <!-- Checks for Naming Conventions.              -->
         <!-- See http://checkstyle.sourceforge.net/config_naming.html -->

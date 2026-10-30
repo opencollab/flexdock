@@ -40,9 +40,27 @@
         </license>
     </licenses>
 
+    <!-- Parent POMs of some dependencies (jvnet-parent) declare the retired
+         maven.java.net repository, which causes certificate warnings. Redefine
+         it with the same id to point to Maven Central instead. -->
+    <repositories>
+        <repository>
+            <id>jvnet-nexus-releases</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jvnet-nexus-releases</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <properties>
         <javaVersion>1.8</javaVersion>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- severity of checkstyle Javadoc checks (overridden in modules that do not need Javadoc) -->
+        <checkstyle.javadoc.severity>warning</checkstyle.javadoc.severity>
     </properties>
 
     <dependencies>
@@ -99,7 +117,14 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-checkstyle-plugin</artifactId>
-                    <version>2.17</version>
+                    <version>3.6.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>14.3.0</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -173,6 +198,7 @@
                 </executions>
                 <configuration>
                     <configLocation>check_style.xml</configLocation>
+                    <propertyExpansion>javadoc.severity=${checkstyle.javadoc.severity}</propertyExpansion>
                 </configuration>
             </plugin>
         </plugins>
