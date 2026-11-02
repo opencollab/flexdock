@@ -21,20 +21,14 @@ package org.flexdock.docking.drag.effects;
 
 import java.awt.Graphics2D;
 import java.awt.Polygon;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingPort;
-import org.flexdock.util.OsInfo;
 import org.flexdock.util.ResourceManager;
 import org.flexdock.util.Utilities;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  *
@@ -56,7 +50,7 @@ public class EffectsManager {
     public static void prime() {
         Document config = ResourceManager.getDocument(CONFIG_URI);
         defaultPreview = loadDefaultPreview(config);
-        defaultRubberband = loadSystemRubberband(config);
+        defaultRubberband = loadDefaultRubberband(config);
     }
 
     public static RubberBand getRubberBand() {
@@ -103,65 +97,17 @@ public class EffectsManager {
         }
     }
 
-    private static final Document loadConfig() {
-        return ResourceManager.getDocument(CONFIG_URI);
-    }
-
     private static RubberBand createRubberBand(String implClass) {
-        boolean failSilent = !Boolean.getBoolean(RubberBand.DEBUG_OUTPUT);
-        return (RubberBand)Utilities.createInstance(implClass, RubberBand.class, failSilent);
+        return (RubberBand)Utilities.createInstance(implClass, RubberBand.class);
     }
 
     private static DragPreview createPreview(String implClass) {
         return (DragPreview)Utilities.createInstance(implClass, DragPreview.class);
     }
 
-
-
-    private static HashMap loadRubberBandInfoByOS(Document config) {
-        HashMap map = new HashMap();
-
+    private static RubberBand loadDefaultRubberband(Document config) {
         Element root = (Element)config.getElementsByTagName("rubber-bands").item(0);
-        map.put("default", root.getAttribute("default"));
-        NodeList nodes = root.getElementsByTagName("os");
-
-        for(int i=0; i<nodes.getLength(); i++) {
-            Element osElem = (Element)nodes.item(i);
-            String osName = osElem.getAttribute("name");
-            NodeList items = osElem.getElementsByTagName("rubber-band");
-            ArrayList classes = new ArrayList(items.getLength());
-            map.put(osName, classes);
-            for(int j=0; j<items.getLength(); j++) {
-                Element classElem = (Element)items.item(j);
-                String className = classElem.getAttribute("class");
-                classes.add(className);
-            }
-        }
-        return map;
-    }
-
-    private static RubberBand loadSystemRubberband(Document config) {
-        List osList = OsInfo.getInstance().getOsNames();
-        HashMap info = loadRubberBandInfoByOS(config);
-
-        for(Iterator it=osList.iterator(); it.hasNext();) {
-            String osName = (String)it.next();
-            List classes = (List)info.get(osName);
-            if(classes==null) {
-                continue;
-            }
-
-            for(Iterator it2=classes.iterator(); it2.hasNext();) {
-                String implClass = (String)it2.next();
-                RubberBand rb = createRubberBand(implClass);
-                if(rb!=null) {
-                    return rb;
-                }
-            }
-        }
-
-        String implClass = (String)info.get("default");
-        RubberBand rb = createRubberBand(implClass);
+        RubberBand rb = createRubberBand(root.getAttribute("default"));
         return rb==null? new RubberBand(): rb;
     }
 
