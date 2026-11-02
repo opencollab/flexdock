@@ -19,7 +19,6 @@
  */
 package org.flexdock.docking.drag.effects;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -28,8 +27,6 @@ import java.awt.Rectangle;
  *
  */
 public class RubberBand {
-    public static final String DEBUG_OUTPUT = "rubberband.debug";
-
     public void paint(Graphics g, int x, int y, int width, int height) {
         paint(g, new Rectangle(x, y, width, height));
     }
@@ -42,16 +39,17 @@ public class RubberBand {
         paint(null, r);
     }
 
+    /**
+     * Paints the outline of the specified screen rectangle (no-op by default).
+     */
     public void paint(Graphics g, Rectangle r) {
-        if(g==null || r==null || true) {
-            return;
-        }
-
-        g.setXORMode(Color.BLACK);
-        g.drawRect(r.x, r.y, r.width, r.height);
-        g.setXORMode(null);
+        // no-op by default
     }
 
+    /**
+     * Removes the painted outline (no-op by default).
+     */
     public void clear() {
+        // no-op by default
     }
 }

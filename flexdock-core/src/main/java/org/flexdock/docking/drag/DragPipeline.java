@@ -236,8 +236,7 @@ public class DragPipeline {
         DragGlasspane pane = currentGlasspane;
         currentGlasspane = null;
 
-        // clear out the old glasspane and redraw the rubberband
-        Rectangle screenRect = dragToken.getDragRect(true);
+        // clear out the old glasspane
         pane.setPostPainter(null);
         pane.clear();
     }
@@ -247,7 +246,6 @@ public class DragPipeline {
         currentGlasspane = newGlassPane;
 
         // process the new glasspane
-        Rectangle screenRect = dragToken.getDragRect(true);
         currentGlasspane.setPostPainter(null);
         currentGlasspane.processDragEvent(dragToken);
     }
@@ -259,14 +257,10 @@ public class DragPipeline {
 
 
     private Runnable getPostPainter(final Rectangle rect) {
-//                if(!ResourceManager.isWindowsPlatform())
-//                        return null;
-
         return new Runnable() {
             @Override
             public void run() {
                 deferRubberBandDrawing(rect);
-//                                drawRubberBand(rect);
             }
         };
     }
