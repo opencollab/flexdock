@@ -193,8 +193,15 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                <version>2.3.7</version>
+                <version>6.2.0</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <!-- keep the manifests free of java.* imports and execution environment requirements -->
+                        <_noimportjava>true</_noimportjava>
+                        <_noee>true</_noee>
+                    </instructions>
+                </configuration>
                 <executions>
                     <execution>
                         <id>bundle-manifest</id>
