@@ -1,3 +1,22 @@
+== Changes since last release (to become flexdock x.x RELEASE NOTES) ==
+
+Updates:
+* Require Java 8 to run and JDK 21+, Maven 3.6.3+ to build
+* Remove Applet/JApplet handling (removed in Java 26)
+* Remove unused public API: OsInfo, ResourceManager.loadLibrary(),
+  LIBRARY_EXTENSION and isWindowsPlatform()
+* Remove unused native rubberband leftovers (RubberBand.dll, libRubberBand.so,
+  OS entries in drag-effects.xml, rubberband.debug, dev-props.properties)
+
+Fixes:
+* DockingPathSerializer: read all split nodes of a stored docking path
+* PerspectiveManager: ignore detached docking ports when finding the main one
+* DefaultDockingPort: clear() also clears the nested docking ports
+* DockingStateListener: validate pending layout before capturing docking state
+* DockingSplitPane: track the divider percentage from the first drag
+* DockingSplitPane: apply the percentage consistently in setDividerLocation()
+* DockingSplitPane: keep the percentage set before the size is known
+
 == flexdock 1.3 RELEASE NOTES ==
 
 Updates:
