@@ -104,8 +104,6 @@ public class DockingManager implements DockingConstants {
 
     public static final String LAYOUT_MANAGER = "layout.manager";
 
-    private static final String DEV_PROPS = "org/flexdock/util/dev-props.properties";
-
     private static final String CONFIG_PROPS = "org/flexdock/docking/flexdock-core.properties";
 
     private static final DockingManager SINGLETON = new DockingManager();
@@ -193,12 +191,6 @@ public class DockingManager implements DockingConstants {
     }
 
     private static void init() {
-        // load the dev system properties
-        Properties p = ResourceManager.getProperties(DEV_PROPS, true);
-        if (p != null) {
-            System.getProperties().putAll(p);
-        }
-
         // prime the drag manager for use
         DragManager.prime();
 
