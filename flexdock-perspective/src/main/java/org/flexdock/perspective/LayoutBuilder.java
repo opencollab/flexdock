@@ -61,6 +61,12 @@ public class LayoutBuilder {
         node.setUserObject(port);
         Component docked = port.getDockedComponent();
         link(node, docked);
+        if (docked instanceof JTabbedPane) {
+            Dockable selected = DockingManager.getDockable(((JTabbedPane) docked).getSelectedComponent());
+            if (selected != null) {
+                node.setSelectedDockableId(selected.getPersistentId());
+            }
+        }
         return node;
     }
 

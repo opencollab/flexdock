@@ -32,6 +32,17 @@ import org.flexdock.docking.DockingStrategy;
 @SuppressWarnings(value = { "serial" })
 public class DockingPortNode extends DockingNode {
 
+    // Persistent id of the dockable selected in the tabbed group of this port, or null
+    private String selectedDockableId;
+
+    public String getSelectedDockableId() {
+        return selectedDockableId;
+    }
+
+    public void setSelectedDockableId(String selectedDockableId) {
+        this.selectedDockableId = selectedDockableId;
+    }
+
     @Override
     public Object getDockingObject() {
         TreeNode parent = getParent();
@@ -64,6 +75,8 @@ public class DockingPortNode extends DockingNode {
 
     @Override
     protected DockingNode shallowClone() {
-        return new DockingPortNode();
+        DockingPortNode clone = new DockingPortNode();
+        clone.selectedDockableId = selectedDockableId;
+        return clone;
     }
 }

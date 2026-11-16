@@ -7,6 +7,8 @@ Updates:
   LIBRARY_EXTENSION and isWindowsPlatform()
 * Remove unused native rubberband leftovers (RubberBand.dll, libRubberBand.so,
   OS entries in drag-effects.xml, rubberband.debug, dev-props.properties)
+* Persist the selected tab of each tabbed docking group in the layout;
+  restore the first tab if none is stored (was the last docked tab)
 
 Fixes:
 * DockingPathSerializer: read all split nodes of a stored docking path
