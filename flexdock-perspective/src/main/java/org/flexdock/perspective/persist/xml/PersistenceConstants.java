@@ -85,6 +85,7 @@ public interface PersistenceConstants {
     String DOCKABLE_NODE_ATTRIBUTE_DOCKABLE_ID = "dockableId";
 
     String DOCKING_PORT_NODE_ELEMENT_NAME = "DockingPortNode";
+    String DOCKING_PORT_NODE_ATTRIBUTE_SELECTED_DOCKABLE_ID = "selectedDockableId";
 
     String DOCKABLE_ELEMENT_NAME = "Dockable";
     String DOCKABLE_ATTRIBUTE_ID = "id";

@@ -35,6 +35,11 @@ public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer impl
     public Element serialize(Document document, Object object) {
         DockingPortNode dockingPortNode = (DockingPortNode) object;
         Element dockingPortNodeElement = super.serialize(document, dockingPortNode);
+        String selectedDockableId = dockingPortNode.getSelectedDockableId();
+        if (selectedDockableId != null) {
+            dockingPortNodeElement.setAttribute(PersistenceConstants.DOCKING_PORT_NODE_ATTRIBUTE_SELECTED_DOCKABLE_ID,
+                    selectedDockableId);
+        }
 
         return dockingPortNodeElement;
     }
@@ -46,7 +51,14 @@ public class DockingPortNodeSerializer extends AbstractLayoutNodeSerializer impl
 
     @Override
     public Object deserialize(Element element) {
-        return super.deserialize(element);
+        DockingPortNode dockingPortNode = (DockingPortNode) super.deserialize(element);
+        String selectedDockableId = element.getAttribute(
+                PersistenceConstants.DOCKING_PORT_NODE_ATTRIBUTE_SELECTED_DOCKABLE_ID);
+        if (!selectedDockableId.isEmpty()) {
+            dockingPortNode.setSelectedDockableId(selectedDockableId);
+        }
+
+        return dockingPortNode;
     }
 
     @Override
