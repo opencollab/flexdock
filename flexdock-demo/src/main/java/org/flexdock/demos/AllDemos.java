@@ -38,8 +38,7 @@ import org.flexdock.util.SwingUtility;
 
 /**
  * Generic launcher for all demos.
- * It allows us to deliver a single entry point demo via a runnable jar or JNLP launched
- * app that runs all of our demonstration apps.
+ * It allows us to deliver a single entry point demo as a runnable jar.
  */
 public class AllDemos extends JFrame {
 
