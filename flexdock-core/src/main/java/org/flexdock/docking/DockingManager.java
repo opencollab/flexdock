@@ -120,6 +120,8 @@ public class DockingManager implements DockingConstants {
 
     private static Object persistentIdLock = new Object();
 
+    private static boolean selectFirstTabByDefault;
+
     private String defaultLayoutManagerClass;
 
     private String defaultMinimizeManagerClass;
@@ -2483,6 +2485,30 @@ public class DockingManager implements DockingConstants {
      */
     public static void setSingleTabsAllowed(boolean allowed) {
         PropertyManager.getDockingPortRoot().setSingleTabsAllowed(allowed);
+    }
+
+    /**
+     * Indicates whether a restored tabbed docking group selects its first tab
+     * when no selected tab is stored in the layout (or the stored one is not in
+     * the group). The default is {@code false}, which selects the last tab.
+     *
+     * @return {@code true} to select the first tab, {@code false} to select
+     *         the last tab.
+     */
+    public static boolean isSelectFirstTabByDefault() {
+        return selectFirstTabByDefault;
+    }
+
+    /**
+     * Sets which tab a restored tabbed docking group selects when no selected
+     * tab is stored in the layout (or the stored one is not in the group).
+     *
+     * @param first
+     *            {@code true} to select the first tab, {@code false} (the
+     *            default) to select the last tab.
+     */
+    public static void setSelectFirstTabByDefault(boolean first) {
+        selectFirstTabByDefault = first;
     }
 
     /**
