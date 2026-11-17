@@ -64,27 +64,40 @@ class TabSelectionPersistenceTest {
     }
 
     @Test
-    void testFirstDockableIsSelectedWithoutStoredId() {
+    void testLastDockableIsSelectedWithoutStoredId() {
         Dockable[] d = createDockables(3);
         JTabbedPane tabs = importLayout(createNode(null, d));
 
-        assertSame(d[0].getComponent(), tabs.getSelectedComponent());
+        assertSame(d[2].getComponent(), tabs.getSelectedComponent());
     }
 
     @Test
-    void testFirstDockableIsSelectedWithUnknownStoredId() {
+    void testLastDockableIsSelectedWithUnknownStoredId() {
         Dockable[] d = createDockables(3);
         JTabbedPane tabs = importLayout(createNode("no-such-dockable", d));
 
-        assertSame(d[0].getComponent(), tabs.getSelectedComponent());
+        assertSame(d[2].getComponent(), tabs.getSelectedComponent());
     }
 
     @Test
-    void testStoredIdOfDockableOutsideGroupSelectsFirst() {
+    void testStoredIdOfDockableOutsideGroupSelectsLast() {
         Dockable[] d = createDockables(3);
         JTabbedPane tabs = importLayout(createNode(d[2].getPersistentId(), d[0], d[1]));
 
-        assertSame(d[0].getComponent(), tabs.getSelectedComponent());
+        assertSame(d[1].getComponent(), tabs.getSelectedComponent());
+    }
+
+    @Test
+    void testFirstDockableIsSelectedByOption() {
+        Dockable[] d = createDockables(3);
+        DockingManager.setSelectFirstTabByDefault(true);
+        try {
+            assertSame(d[0].getComponent(), importLayout(createNode(null, d)).getSelectedComponent());
+            assertSame(d[0].getComponent(), importLayout(createNode("no-such-dockable", d)).getSelectedComponent());
+            assertSame(d[1].getComponent(), importLayout(createNode(d[1].getPersistentId(), d)).getSelectedComponent());
+        } finally {
+            DockingManager.setSelectFirstTabByDefault(false);
+        }
     }
 
     @Test
@@ -93,8 +106,8 @@ class TabSelectionPersistenceTest {
         DefaultDockingPort port = new DefaultDockingPort();
         port.importLayout(createNode(d[0].getPersistentId(), d));
 
-        assertNotNull(port.getDockedComponent());
-        assertTrue(port.getDockables().contains(d[0]));
+        // A single dockable gets no tabbed pane, so there is no tab to select
+        assertSame(d[0].getComponent(), port.getDockedComponent());
     }
 
     @Test

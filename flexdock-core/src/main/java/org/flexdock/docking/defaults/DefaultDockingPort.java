@@ -2210,17 +2210,21 @@ public class DefaultDockingPort extends JPanel implements DockingPort,
             }
         }
 
-        // Docking selects the last tab, so select the stored one afterwards (or the first one if none is stored)
+        // Docking selects the last tab, so select the stored one afterwards (or the default one if none is stored)
         if (port.getDockedComponent() instanceof JTabbedPane) {
             JTabbedPane tabs = (JTabbedPane) port.getDockedComponent();
             String selectedId = node.getSelectedDockableId();
-            Dockable selected = selectedId == null ? null : DockingManager.getDockable(selectedId);
-            int index = selected == null ? -1 : tabs.indexOfComponent(selected.getComponent());
-            if (index < 0) {
-                index = 0;
+            // Look only among the tabs, so a stale id never reaches the dockable factory
+            for (int i = 0; i < tabs.getTabCount(); i++) {
+                Dockable dockable = DockingManager.getDockable(tabs.getComponentAt(i));
+                if (dockable != null && dockable.getPersistentId().equals(selectedId)) {
+                    tabs.setSelectedIndex(i);
+                    return;
+                }
             }
-            if (index < tabs.getTabCount()) {
-                tabs.setSelectedIndex(index);
+
+            if (tabs.getTabCount() > 0) {
+                tabs.setSelectedIndex(DockingManager.isSelectFirstTabByDefault() ? 0 : tabs.getTabCount() - 1);
             }
         }
     }
