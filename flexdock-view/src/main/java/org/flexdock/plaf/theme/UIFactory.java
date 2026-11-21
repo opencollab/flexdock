@@ -203,6 +203,10 @@ public class UIFactory implements XMLConstants {
         }
 
         Theme base = getTheme(PlafManager.getSystemThemeName());
+        if(base==null) {
+            // look and feel without a <plaf> mapping
+            base = getTheme(DEFAULT);
+        }
 
         ViewUI view = getViewUI(p);
         if(view==null) {
