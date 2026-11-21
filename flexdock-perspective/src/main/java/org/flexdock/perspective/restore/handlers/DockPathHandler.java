@@ -35,6 +35,10 @@ public class DockPathHandler implements RestorationHandler {
 
     @Override
     public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
+        if (dockingState == null) {
+            return false;
+        }
+
         DockingPath dockingPath = dockingState.getPath();
         if (dockingPath == null) {
             return false;

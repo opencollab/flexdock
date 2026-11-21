@@ -88,6 +88,9 @@ public class Titlebar extends JComponent {
     protected void setActions(Action[] actions) {
         if (actions == null) {
             actions = new Action[0];
+        }
+
+        if (actionList == null) {
             actionList = new ArrayList(3);
             actionButtons = new HashMap(3);
         }
