@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- User theme preferences read by Configurator.loadUserPrefs, for the tests only -->
+<flexview-themes>
+    <titlebar-ui name="test.base">
+        <property name="a" value="base-a"/>
+        <property name="b" value="base-b"/>
+    </titlebar-ui>
+    <titlebar-ui name="test.child" extends="test.base">
+        <property name="b" value="child-b"/>
+        <property name="c" value="child-c"/>
+    </titlebar-ui>
+    <titlebar-ui name="test.grandchild" extends="test.child">
+        <property name="c" value="grandchild-c"/>
+    </titlebar-ui>
+    <titlebar-ui name="test.dangling" extends="test.missing">
+        <property name="d" value="dangling-d"/>
+    </titlebar-ui>
+    <button-ui name="rounded" inherits="true">
+        <property name="test.added" value="added"/>
+    </button-ui>
+</flexview-themes>
