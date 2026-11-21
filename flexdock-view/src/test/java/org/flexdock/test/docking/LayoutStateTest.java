@@ -126,6 +126,16 @@ class LayoutStateTest {
     }
 
     @Test
+    void testCloneCopiesFloatingGroupWithoutBounds() {
+        layout.addFloatingGroup(new FloatingGroup("state.unbounded"));
+
+        Layout clone = (Layout) layout.clone();
+
+        assertNotNull(clone.getGroup("state.unbounded"));
+        assertNull(clone.getGroup("state.unbounded").getBounds());
+    }
+
+    @Test
     void testDockableJoinsOneFloatingGroupAtATime() {
         layout.add(known);
         layout.addFloatingGroup(new FloatingGroup("state.first"));

@@ -189,7 +189,7 @@ public class FloatingGroup implements Cloneable, Serializable {
         HashSet set = (HashSet)dockables.clone();
         FloatingGroup clone = new FloatingGroup(name, set);
         clone.frame = frame;
-        clone.windowBounds = (Rectangle)windowBounds.clone();
+        clone.windowBounds = getBounds();
         return clone;
     }
 
