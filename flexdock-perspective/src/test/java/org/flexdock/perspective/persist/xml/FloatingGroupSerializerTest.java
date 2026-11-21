@@ -56,15 +56,16 @@ class FloatingGroupSerializerTest {
         assertEquals(0, result.getDockableCount());
     }
 
-    // Known bug (https://github.com/opencollab/flexdock/issues/32):
-    // a group whose bounds were never set cannot be serialized (NPE in
-    // RectangleSerializer). Once fixed, assertThrows fails: round-trip the group instead and
-    // check that its bounds stay null.
     @Test
-    void testGroupWithoutBoundsKnownBug() {
+    void testGroupWithoutBoundsSurvives() throws Exception {
         FloatingGroup group = new FloatingGroup("unbounded");
+        group.addDockable("first");
 
-        assertThrows(NullPointerException.class, () -> XmlRoundTrip.roundTrip(serializer, group));
+        FloatingGroup result = (FloatingGroup) XmlRoundTrip.roundTrip(serializer, group);
+
+        assertEquals("unbounded", result.getName());
+        assertNull(result.getBounds());
+        assertEquals(getDockableIds(group), getDockableIds(result));
     }
 
 }

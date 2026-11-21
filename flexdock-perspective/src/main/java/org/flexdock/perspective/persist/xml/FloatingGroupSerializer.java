@@ -45,9 +45,14 @@ public class FloatingGroupSerializer implements ISerializer {
         Element floatingGroupElement = document.createElement(PersistenceConstants.FLOATING_GROUP_ELEMENT_NAME);
         floatingGroupElement.setAttribute(PersistenceConstants.FLOATING_GROUP_ATTRIBUTE_NAME, floatingGroup.getName());
 
-        ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
-        Element rectangleElement = rectangleSerializer.serialize(document, floatingGroup.getBounds());
-        floatingGroupElement.appendChild(rectangleElement);
+        // Bounds are null until the group's frame is first shown; deserialize
+        // already accepts a missing Rectangle element
+        Rectangle bounds = floatingGroup.getBounds();
+        if (bounds != null) {
+            ISerializer rectangleSerializer = SerializerRegistry.getSerializer(Rectangle.class);
+            Element rectangleElement = rectangleSerializer.serialize(document, bounds);
+            floatingGroupElement.appendChild(rectangleElement);
+        }
 
         for (Iterator it = floatingGroup.getDockableIterator(); it.hasNext();) {
             String dockableId = (String) it.next();
