@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -68,17 +68,13 @@ class ThemeConfigurationTest {
         assertNull(PlafManager.removeCustomTheme(THEME_NAME));
     }
 
-    // Known bug (https://github.com/opencollab/flexdock/issues/35):
-    // under a look and feel without a <plaf> mapping (e.g. Aqua on macOS, Nimbus)
-    // there is no base theme, so a custom theme with missing UIs throws an NPE in
-    // UIFactory.createTheme. Once fixed, assertThrows fails: check that the theme is created.
     @Test
-    void testCustomThemeUnderUnmappedLookAndFeelKnownBug() throws Exception {
+    void testCustomThemeUnderUnmappedLookAndFeel() throws Exception {
         LookAndFeel original = UIManager.getLookAndFeel();
-        UIManager.setLookAndFeel(new NimbusLookAndFeel());
+        // The anonymous subclass has a class name that no <plaf> mapping knows
+        UIManager.setLookAndFeel(new MetalLookAndFeel() { });
         try {
-            assertThrows(NullPointerException.class,
-                    () -> PlafManager.addCustomTheme(THEME_NAME, new Properties()));
+            assertNotNull(PlafManager.addCustomTheme(THEME_NAME, new Properties()));
         } finally {
             UIManager.setLookAndFeel(original);
             PlafManager.removeCustomTheme(THEME_NAME);

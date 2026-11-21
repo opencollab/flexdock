@@ -19,6 +19,7 @@ Fixes:
 * DockingSplitPane: track the divider percentage from the first drag
 * DockingSplitPane: apply the percentage consistently in setDividerLocation()
 * DockingSplitPane: keep the percentage set before the size is known
+* UIFactory: create a custom theme under a look and feel without a theme mapping
 
 == flexdock 1.3 RELEASE NOTES ==
 
