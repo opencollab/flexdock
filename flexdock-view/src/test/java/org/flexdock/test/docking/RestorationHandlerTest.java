@@ -6,6 +6,8 @@ import org.flexdock.docking.DockingManager;
 import org.flexdock.docking.state.DockingState;
 import org.flexdock.perspective.PerspectiveManager;
 import org.flexdock.perspective.restore.handlers.AlreadyRestoredHandler;
+import org.flexdock.perspective.restore.handlers.DockPathHandler;
+import org.flexdock.perspective.restore.handlers.PointHandler;
 import org.flexdock.perspective.restore.handlers.RelativeHandler;
 import org.flexdock.view.View;
 import org.flexdock.view.Viewport;
@@ -101,6 +103,23 @@ class RestorationHandlerTest {
         assertTrue(new AlreadyRestoredHandler().restore(docked, new DockingState("restore.docked"), new HashMap()));
         assertFalse(new AlreadyRestoredHandler().restore(closed, new DockingState("restore.never.docked"),
                 new HashMap()));
+    }
+
+    @Test
+    void testDockPathHandlerDeclinesWithoutStateOrPath() {
+        View view = new View("restore.nopath", "No path");
+
+        assertFalse(new DockPathHandler().restore(view, null, new HashMap()));
+        assertFalse(new DockPathHandler().restore(view, new DockingState("restore.nopath"), new HashMap()));
+    }
+
+    @Test
+    void testPointHandlerDeclinesWithoutStateOrWindow() {
+        View view = new View("restore.nopoint", "No point");
+
+        assertFalse(new PointHandler().restore(view, null, new HashMap()));
+        // Headless, so there is no docking window to restore into
+        assertFalse(new PointHandler().restore(view, new DockingState("restore.nopoint"), new HashMap()));
     }
 
 }

@@ -44,7 +44,7 @@ public class PointHandler implements RestorationHandler, DockingConstants {
 
     @Override
     public boolean restore(Dockable dockable, DockingState dockingState, Map context) {
-        if(DockingManager.isDocked(dockable)) {
+        if(dockingState == null || DockingManager.isDocked(dockable)) {
             return false;
         }
 
@@ -54,6 +54,10 @@ public class PointHandler implements RestorationHandler, DockingConstants {
 
     private boolean restoreDockable(Dockable dockable, Component win, DockingState dockingState) {
         RootWindow window = RootWindow.getRootContainer(win);
+        if(window == null) {
+            return false;
+        }
+
         Container contentPane = window.getContentPane();
 
         Point dropPoint = getDropPoint(dockable, contentPane, dockingState);
