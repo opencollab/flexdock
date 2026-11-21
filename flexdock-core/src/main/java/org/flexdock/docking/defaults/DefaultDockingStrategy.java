@@ -239,6 +239,10 @@ public class DefaultDockingStrategy implements DockingStrategy,
         }
 
         DockingPort port = DockingManager.getDockingPort(comp);
+        if (port == null) {
+            return null;
+        }
+
         Component docked = port.getDockedComponent();
 
         if (!(docked instanceof JSplitPane)) {

@@ -3,6 +3,7 @@ package org.flexdock.test.docking;
 import org.flexdock.docking.Dockable;
 import org.flexdock.docking.DockingConstants;
 import org.flexdock.docking.defaults.DefaultDockingStrategy;
+import org.flexdock.view.View;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,6 +40,15 @@ class SiblingDockingTest extends SiblingLayoutBase {
         assertSibling(null, left, DockingConstants.WEST_REGION);
         assertSibling(null, right, DockingConstants.EAST_REGION);
         assertSibling(null, bottom, DockingConstants.SOUTH_REGION);
+    }
+
+    @Test
+    void testNoSiblingForUndockedDockable() {
+        View undocked = new View(getClass().getSimpleName() + ".undocked", "Undocked");
+
+        assertNull(DefaultDockingStrategy.findRegion(undocked));
+        assertNull(DefaultDockingStrategy.getSibling(undocked));
+        assertNull(DefaultDockingStrategy.getSibling(undocked, DockingConstants.WEST_REGION));
     }
 
     @Test
