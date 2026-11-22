@@ -108,7 +108,11 @@ public class PlafManager {
     public static void installPreferredTheme(boolean update) {
         Theme theme = getPreferredTheme();
 
+        // UI_DEFAULTS also holds the preferred theme name, which must survive
+        // the next look and feel change
+        String themeName = (String) UI_DEFAULTS.get(PREFERRED_THEME_KEY);
         UI_DEFAULTS.clear();
+        setProperty(PREFERRED_THEME_KEY, themeName);
         setProperty(View.class, theme.getViewUI());
         setProperty(Titlebar.class, theme.getTitlebarUI());
         setProperty(Button.class, theme.getButtonUI());
