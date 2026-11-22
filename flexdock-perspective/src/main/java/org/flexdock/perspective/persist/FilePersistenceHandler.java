@@ -128,7 +128,7 @@ public class FilePersistenceHandler implements PersistenceHandler {
     }
 
     protected void validatePerspectiveFile(File file) throws IOException {
-        File dir = file.getParentFile();
+        File dir = file.getAbsoluteFile().getParentFile();
         if(!dir.exists()) {
             dir.mkdirs();
         }

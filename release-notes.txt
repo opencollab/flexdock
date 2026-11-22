@@ -26,6 +26,7 @@ Fixes:
 * UIFactory: create a custom theme under a look and feel without a theme mapping
 * FloatingGroup: save and clone a floating group whose bounds were never set
 * XMLPersister: write layout XML as UTF-8, as its header declares
+* FilePersistenceHandler: save to a relative layout file without a directory
 
 == flexdock 1.3 RELEASE NOTES ==
 
