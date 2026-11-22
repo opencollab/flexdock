@@ -24,7 +24,6 @@ import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -91,7 +90,7 @@ public class XMLPersister implements Persister {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
             DOMSource source = new DOMSource(document);
-            StreamResult result = new StreamResult(new OutputStreamWriter(os));
+            StreamResult result = new StreamResult(os);
 
             transformer.transform(source, result);
         } catch (TransformerConfigurationException ex) {
