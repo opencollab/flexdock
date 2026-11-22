@@ -19,6 +19,8 @@ Fixes:
 * DockingSplitPane: track the divider percentage from the first drag
 * DockingSplitPane: apply the percentage consistently in setDividerLocation()
 * DockingSplitPane: keep the percentage set before the size is known
+* DockingManager: use stub managers when flexdock-view or flexdock-perspective
+  is missing, instead of overflowing the stack
 * UIFactory: create a custom theme under a look and feel without a theme mapping
 * FloatingGroup: save and clone a floating group whose bounds were never set
 
