@@ -4,6 +4,8 @@ import org.flexdock.plaf.Configurator;
 import org.flexdock.plaf.PlafManager;
 import org.flexdock.plaf.theme.Theme;
 import org.flexdock.plaf.theme.UIFactory;
+import org.flexdock.plaf.theme.ViewUI;
+import org.flexdock.view.View;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.LookAndFeel;
@@ -25,6 +27,12 @@ class ThemeConfigurationTest {
         properties.setProperty(UIFactory.BUTTON_KEY, "rounded");
 
         return properties;
+    }
+
+    private static String getInstalledViewUiName() {
+        ViewUI ui = (ViewUI) PlafManager.getUI(new View("theme.view", "View"));
+
+        return ui.getCreationParameters().getName();
     }
 
     @Test
@@ -78,6 +86,23 @@ class ThemeConfigurationTest {
         } finally {
             UIManager.setLookAndFeel(original);
             PlafManager.removeCustomTheme(THEME_NAME);
+        }
+    }
+
+    @Test
+    void testPreferredThemeSurvivesLookAndFeelChange() throws Exception {
+        LookAndFeel original = UIManager.getLookAndFeel();
+        try {
+            PlafManager.setPreferredTheme("officeXP");
+            assertEquals("officeXP", getInstalledViewUiName());
+
+            // A new instance, so the look and feel change event fires and the theme is reinstalled
+            UIManager.setLookAndFeel(new MetalLookAndFeel());
+
+            assertEquals("officeXP", getInstalledViewUiName());
+        } finally {
+            PlafManager.setPreferredTheme((String) null);
+            UIManager.setLookAndFeel(original);
         }
     }
 
