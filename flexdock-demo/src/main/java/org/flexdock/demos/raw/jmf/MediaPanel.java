@@ -155,15 +155,6 @@ public class MediaPanel extends Panel implements DockingStub {
     }
 
     @Override
-    protected void finalize() {
-        if(player!=null) {
-            player.stop();
-            player.close();
-            player = null;
-        }
-    }
-
-    @Override
     public Component getDragSource() {
         return titlebar;
     }
