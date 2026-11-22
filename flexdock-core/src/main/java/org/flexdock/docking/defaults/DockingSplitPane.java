@@ -332,9 +332,8 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 
     /**
      * Releases any internal references to external objects to aid garbage
-     * collection. This method is {@code public} and may be invoked manually for
-     * proactive memory management. Otherwise, this method is invoked by this
-     * {@code DockingSplitPane's} {@code finalize()} method.
+     * collection. {@code DefaultDockingPort} invokes it when it discards this
+     * split pane; it may also be invoked manually.
      */
     public void cleanup() {
         dockingPort = null;
@@ -358,9 +357,4 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         initialDividerRatio = ratio;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        cleanup();
-        super.finalize();
-    }
 }
