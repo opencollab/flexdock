@@ -122,4 +122,12 @@ class FilePersistenceHandlerTest {
         assertEquals(0, dir.list().length);
     }
 
+    @Test
+    void testRelativeFileWithoutDirectoryIsValid(@TempDir File dir) throws Exception {
+        FilePersistenceHandler handler = new FilePersistenceHandler(new File(dir, "default.xml"));
+
+        // Validated only: storing would write to the working directory
+        assertDoesNotThrow(() -> handler.validatePerspectiveFile(new File("relative.xml")));
+    }
+
 }
