@@ -10,6 +10,8 @@ Updates:
 * Persist the selected tab of each tabbed docking group in the layout;
   if none is stored, restore the last tab (as before), or the first tab
   after DockingManager.setSelectFirstTabByDefault(true)
+* DockingSplitPane: remove finalize(), which freed nothing (deprecated for
+  removal since Java 18)
 
 Fixes:
 * DockingPathSerializer: read all split nodes of a stored docking path
