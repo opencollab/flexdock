@@ -20,8 +20,12 @@ package org.flexdock.perspective.persist;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 import org.flexdock.docking.state.PersistenceException;
 import org.flexdock.perspective.persist.xml.XMLPersister;
@@ -73,11 +77,29 @@ public class FilePersistenceHandler implements PersistenceHandler {
 
 //        XMLDebugger.println(perspectiveModel);
 
-        FileOutputStream fos = new FileOutputStream(file);
+        // Write to a temporary file and replace the layout file only once it
+        // is complete, so that a failure keeps the previous layout
+        Path target = file.toPath();
+        Path temp = Files.createTempFile(file.getAbsoluteFile().getParentFile().toPath(), file.getName(), ".tmp");
         try {
-            return this.persister.store(fos, perspectiveModel);
+            boolean stored;
+            OutputStream os = Files.newOutputStream(temp);
+            try {
+                stored = this.persister.store(os, perspectiveModel);
+            } finally {
+                os.close();
+            }
+
+            if(stored) {
+                try {
+                    Files.move(temp, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+                } catch(AtomicMoveNotSupportedException e) {
+                    Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+            }
+            return stored;
         } finally {
-            fos.close();
+            Files.deleteIfExists(temp);
         }
     }
 
@@ -109,10 +131,6 @@ public class FilePersistenceHandler implements PersistenceHandler {
         File dir = file.getParentFile();
         if(!dir.exists()) {
             dir.mkdirs();
-        }
-
-        if(!file.exists()) {
-            file.createNewFile();
         }
     }
 
