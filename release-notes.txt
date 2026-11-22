@@ -13,6 +13,7 @@ Updates:
 
 Fixes:
 * DockingPathSerializer: read all split nodes of a stored docking path
+* FilePersistenceHandler: keep the previous layout file if saving fails
 * PerspectiveManager: ignore detached docking ports when finding the main one
 * DefaultDockingPort: clear() also clears the nested docking ports
 * DockingStateListener: validate pending layout before capturing docking state

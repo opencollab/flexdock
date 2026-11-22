@@ -5,6 +5,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +18,22 @@ class FilePersistenceHandlerTest {
         Perspective perspective = new Perspective("one", "First perspective");
 
         return new PerspectiveModel("one", "one", new Perspective[] {perspective});
+    }
+
+    // Writes part of a layout, then fails, as a serializer error would
+    private static Persister createFailingPersister() {
+        return new Persister() {
+            @Override
+            public boolean store(OutputStream os, PerspectiveModel model) throws IOException {
+                os.write("<PerspectiveModel".getBytes());
+                throw new IOException("store failed");
+            }
+
+            @Override
+            public PerspectiveModel load(InputStream is) {
+                return null;
+            }
+        };
     }
 
     @Test
@@ -76,6 +96,30 @@ class FilePersistenceHandlerTest {
         assertEquals("one", result.getCurrentPerspective());
         assertEquals(1, result.getPerspectives().length);
         assertEquals("First perspective", result.getPerspectives()[0].getName());
+    }
+
+    @Test
+    void testFailedStoreKeepsPreviousFile(@TempDir File dir) throws Exception {
+        File file = new File(dir, "default.xml");
+        new FilePersistenceHandler(file).store(null, createModel());
+        byte[] stored = Files.readAllBytes(file.toPath());
+        FilePersistenceHandler handler = new FilePersistenceHandler(file, createFailingPersister());
+
+        assertThrows(IOException.class, () -> handler.store(null, createModel()));
+
+        assertArrayEquals(stored, Files.readAllBytes(file.toPath()));
+        // No temporary file is left behind
+        assertArrayEquals(new String[] {"default.xml"}, dir.list());
+    }
+
+    @Test
+    void testFailedFirstStoreLeavesNoFile(@TempDir File dir) {
+        FilePersistenceHandler handler = new FilePersistenceHandler(new File(dir, "default.xml"),
+                createFailingPersister());
+
+        assertThrows(IOException.class, () -> handler.store(null, createModel()));
+
+        assertEquals(0, dir.list().length);
     }
 
 }
