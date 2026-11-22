@@ -2389,10 +2389,10 @@ public class DockingManager implements DockingConstants {
         DockingManager dockingManager = getDockingManager();
         if (mgr == null) {
             // do not allow null minimization managers
-            setMinimizeManager(dockingManager.defaultMinimizeManagerClass);
-        } else {
-            dockingManager.minimizeManager = mgr;
+            mgr = (MinimizationManager) Utilities.getInstance(dockingManager.defaultMinimizeManagerClass);
         }
+        // the default class is missing if flexdock-view is not on the classpath
+        dockingManager.minimizeManager = mgr == null ? MinimizationManager.DEFAULT_STUB : mgr;
     }
 
     /**
@@ -2543,10 +2543,10 @@ public class DockingManager implements DockingConstants {
         DockingManager dockingManager = getDockingManager();
         if (mgr == null) {
             // do not allow a null layout manager.
-            setLayoutManager(dockingManager.defaultLayoutManagerClass);
-        } else {
-            getDockingManager().layoutManager = mgr;
+            mgr = (LayoutManager) Utilities.getInstance(dockingManager.defaultLayoutManagerClass);
         }
+        // the default class is missing if flexdock-perspective is not on the classpath
+        dockingManager.layoutManager = mgr == null ? LayoutManager.DEFAULT_STUB : mgr;
     }
 
     /**

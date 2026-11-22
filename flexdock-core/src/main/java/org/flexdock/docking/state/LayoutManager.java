@@ -29,6 +29,8 @@ import org.flexdock.docking.DockingPort;
  */
 public interface LayoutManager {
 
+    LayoutManager DEFAULT_STUB = new Stub();
+
     DockingState getDockingState(String dockableId);
 
     DockingState getDockingState(Dockable dockable);
@@ -52,5 +54,70 @@ public interface LayoutManager {
     String getDefaultPersistenceKey();
 
     void setDefaultPersistenceKey(String key);
+
+    // Used when the default layout manager (in flexdock-perspective) is not
+    // on the classpath
+    public static class Stub implements LayoutManager {
+
+        @Override
+        public DockingState getDockingState(String dockableId) {
+            return null;
+        }
+
+        @Override
+        public DockingState getDockingState(Dockable dockable) {
+            return null;
+        }
+
+        @Override
+        public FloatManager getFloatManager() {
+            return FloatManager.DEFAULT_STUB;
+        }
+
+        @Override
+        public LayoutNode createLayout(DockingPort port) {
+            return null;
+        }
+
+        @Override
+        public boolean display(Dockable dockable) {
+            return false;
+        }
+
+        @Override
+        public boolean store() {
+            return false;
+        }
+
+        @Override
+        public boolean store(String persistenceKey) {
+            return false;
+        }
+
+        @Override
+        public boolean load() {
+            return false;
+        }
+
+        @Override
+        public boolean load(String persistenceKey) {
+            return false;
+        }
+
+        @Override
+        public boolean restore(boolean loadFromStorage) {
+            return false;
+        }
+
+        @Override
+        public String getDefaultPersistenceKey() {
+            return null;
+        }
+
+        @Override
+        public void setDefaultPersistenceKey(String key) {
+        }
+
+    }
 
 }
