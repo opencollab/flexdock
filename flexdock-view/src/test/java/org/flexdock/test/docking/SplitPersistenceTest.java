@@ -68,12 +68,12 @@ class SplitPersistenceTest {
         }
     }
 
-    // Proportion of the split after importing a stored 0.3 layout into a sized port. There is no
+    // Proportion of the split after importing a stored layout into a sized port. There is no
     // peer, so validate() does nothing: size the port and run doLayout() on the whole tree instead.
-    private static float importStoredProportion(boolean constantPercent) throws Exception {
+    private static float importStoredProportion(boolean constantPercent, float percent) throws Exception {
         DefaultDockingPort source = createSplitPort(DockingConstants.WEST_REGION);
         LayoutNode layout = source.exportLayout();
-        getSplitNode(layout).setPercentage(.3f);
+        getSplitNode(layout).setPercentage(percent);
         LayoutNode restored = roundTripThroughXml(layout);
 
         // The flag is read when the split panes are created, so set it before the import
@@ -132,18 +132,14 @@ class SplitPersistenceTest {
 
     @Test
     void testProportionIsRestoredWithConstantPercent() throws Exception {
-        assertEquals(.3f, importStoredProportion(true), DELTA);
+        assertEquals(.3f, importStoredProportion(true, .3f), DELTA);
     }
 
-    // Known bug (https://github.com/opencollab/flexdock/issues/33):
-    // without constant percent the stored proportion is lost on import (the split comes
-    // back at 0.5). Expected to fail until it is fixed; then the assertion below holds,
-    // assertThrows fails and the wrapper is to be removed.
+    // Below 1/3 the unsized split used to come back at 0.5, from 1/3 at Swing's preferred sizes
     @Test
-    void testProportionIsRestoredWithoutConstantPercentKnownBug() throws Exception {
-        float restored = importStoredProportion(false);
-
-        assertThrows(AssertionError.class, () -> assertEquals(.3f, restored, DELTA));
+    void testProportionIsRestoredWithoutConstantPercent() throws Exception {
+        assertEquals(.3f, importStoredProportion(false, .3f), DELTA);
+        assertEquals(.7f, importStoredProportion(false, .7f), DELTA);
     }
 
 }
