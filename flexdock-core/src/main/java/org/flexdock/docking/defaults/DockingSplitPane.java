@@ -54,6 +54,8 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
 
     private boolean constantPercent;
 
+    private boolean percentPending;
+
     /**
      * Creates a new {@code DockingSplitPane} for the specified
      * {@code DockingPort} with the understanding that the resulting
@@ -132,6 +134,9 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
         if (constantPercent) {
             setResizeWeight(percent);
             super.setDividerLocation((int) (percent * getSplitSize()));
+        } else if (percentPending && getSplitSize() > 0) {
+            percentPending = false;
+            super.setDividerLocation(percent);
         }
     }
 
@@ -193,10 +198,21 @@ public class DockingSplitPane extends JSplitPane implements DockingConstants {
             if (splitSize > 0) {
                 super.setDividerLocation((int) (percent * splitSize));
             }
+        } else if (valid && splitSize <= 0) {
+            // JSplitPane would compute a location from the zero size and lose the percentage,
+            // so setBounds() applies it once the size is known
+            percentPending = true;
         } else {
             super.setDividerLocation(percent);
         }
         setResizeWeight(percent);
+    }
+
+    @Override
+    public void setDividerLocation(int location) {
+        // an explicit location replaces a percentage that still waits for the size
+        percentPending = false;
+        super.setDividerLocation(location);
     }
 
     public boolean isConstantPercent() {

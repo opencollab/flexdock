@@ -20,9 +20,10 @@ Fixes:
 * DefaultDockingPort: clear() also clears the nested docking ports
 * DockingStateListener: validate pending layout before capturing docking state
 * PlafManager: keep the preferred theme after a look and feel change
-* DockingSplitPane: track the divider percentage from the first drag
-* DockingSplitPane: apply the percentage consistently in setDividerLocation()
-* DockingSplitPane: keep the percentage set before the size is known
+* DockingSplitPane: track the divider percentage from the first drag and
+  apply it consistently in setDividerLocation()
+* DockingSplitPane: apply a percentage set before the size is known once it is,
+  also without constant percent, so imported layouts keep their proportions
 * DockingManager: use stub managers when flexdock-view or flexdock-perspective
   is missing, instead of overflowing the stack
 * UIFactory: create a custom theme under a look and feel without a theme mapping
