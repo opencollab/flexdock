@@ -7,7 +7,6 @@
         <version>1.3</version>
     </parent>
     <artifactId>flexdock-view</artifactId>
-    <version>1.3</version>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -17,13 +16,13 @@
         <dependency>
             <groupId>org.flexdock</groupId>
             <artifactId>flexdock-core</artifactId>
-            <version>1.3</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.flexdock</groupId>
             <artifactId>flexdock-perspective</artifactId>
-            <version>1.3</version>
+            <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
