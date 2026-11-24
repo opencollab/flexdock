@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.flexdock</groupId>
         <artifactId>flexdock</artifactId>
-        <version>1.3</version>
+        <version>1.4</version>
     </parent>
     <artifactId>flexdock-core</artifactId>
     <packaging>jar</packaging>
