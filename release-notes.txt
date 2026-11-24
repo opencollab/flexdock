@@ -1,35 +1,31 @@
-== Changes since last release (to become flexdock x.x RELEASE NOTES) ==
+== flexdock 1.4 RELEASE NOTES ==
 
 Updates:
+* Persist the selected tab of tabbed groups; if none is stored, restore the
+  last tab, or the first after DockingManager.setSelectFirstTabByDefault(true)
 * Require Java 8 to run and JDK 21+, Maven 3.6.3+ to build
 * Remove Applet/JApplet handling (removed in Java 26)
 * Remove unused public API: OsInfo, ResourceManager.loadLibrary(),
   LIBRARY_EXTENSION and isWindowsPlatform()
-* Remove unused native rubberband leftovers (RubberBand.dll, libRubberBand.so,
-  OS entries in drag-effects.xml, rubberband.debug, dev-props.properties)
-* Persist the selected tab of each tabbed docking group in the layout;
-  if none is stored, restore the last tab (as before), or the first tab
-  after DockingManager.setSelectFirstTabByDefault(true)
-* DockingSplitPane: remove finalize(), which freed nothing (deprecated for
-  removal since Java 18)
+* Remove native rubberband leftovers, rubberband.debug and dev-props.properties
+* Declare the MIT licence in pom.xml, as in LICENSE.txt
 
 Fixes:
-* DockingPathSerializer: read all split nodes of a stored docking path
-* FilePersistenceHandler: keep the previous layout file if saving fails
-* PerspectiveManager: ignore detached docking ports when finding the main one
+* DockingManager: use stub managers if flexdock-view or flexdock-perspective
+  is missing; getSibling() returns null for an undocked dockable
+* DockingSplitPane: keep the divider percentage from the first drag and from
+  imported layouts, also when set before the split pane has a size
 * DefaultDockingPort: clear() also clears the nested docking ports
 * DockingStateListener: validate pending layout before capturing docking state
-* PlafManager: keep the preferred theme after a look and feel change
-* DockingSplitPane: track the divider percentage from the first drag and
-  apply it consistently in setDividerLocation()
-* DockingSplitPane: apply a percentage set before the size is known once it is,
-  also without constant percent, so imported layouts keep their proportions
-* DockingManager: use stub managers when flexdock-view or flexdock-perspective
-  is missing, instead of overflowing the stack
-* UIFactory: create a custom theme under a look and feel without a theme mapping
-* FloatingGroup: save and clone a floating group whose bounds were never set
-* XMLPersister: write layout XML as UTF-8, as its header declares
-* FilePersistenceHandler: save to a relative layout file without a directory
+* Titlebar: setActions() with a non-null array no longer breaks addAction()
+* PlafManager, UIFactory: keep the preferred theme after a look and feel
+  change; create a custom theme under a look and feel without a theme mapping
+* FilePersistenceHandler, XMLPersister: keep the old layout file if saving
+  fails; save to a relative file without a directory; write XML as UTF-8
+* DockingPathSerializer, FloatingGroup: read all split nodes of a docking
+  path; save and clone a floating group whose bounds were never set
+* PerspectiveManager, DockPathHandler, PointHandler: ignore detached ports
+  for the main port; skip dockables without docking state on restore
 
 == flexdock 1.3 RELEASE NOTES ==
 
